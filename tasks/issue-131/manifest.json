@@ -1,0 +1,61 @@
+{
+  "issue": 131,
+  "branch_base": "feature/issue-131",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-131-A",
+      "file": "tasks/issue-131/subtask-A.txt",
+      "content": "Subtask A completed",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-131-B",
+      "file": "tasks/issue-131/subtask-B.txt",
+      "content": "Subtask B completed",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-131-C",
+      "file": "tasks/issue-131/subtask-C.txt",
+      "content": "Subtask C completed",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-131-D",
+      "file": "tasks/issue-131/subtask-D.txt",
+      "content": "Subtask D completed — depends on A and B",
+      "depends_on": [
+        "A",
+        "B"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-131-E",
+      "file": "tasks/issue-131/subtask-E.txt",
+      "content": "Subtask E completed — depends on D",
+      "depends_on": [
+        "D"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "F",
+      "branch": "task/issue-131-F",
+      "file": "tasks/issue-131/subtask-F.txt",
+      "content": "Subtask F completed — depends on C",
+      "depends_on": [
+        "C"
+      ],
+      "status": "pending"
+    }
+  ]
+}
