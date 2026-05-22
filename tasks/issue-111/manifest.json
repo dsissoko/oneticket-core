@@ -16,7 +16,7 @@
       "file": "tasks/issue-111/tasks/subtask-B.txt",
       "content": "Subtask B completed",
       "depends_on": [],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": "C",
