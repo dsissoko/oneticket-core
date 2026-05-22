@@ -76,6 +76,7 @@ jobs:
       # [LLM] Seule zone non-déterministe.
       # L'agent lit params.json, crée le fichier texte, commite et pushe.
       # Le push sur task/* est le signal GATHER → déclenche on-task-push.yml → orchestrate.mjs
+      # .opencode/config.json fournit le modèle et la config provider
       - name: Run agent via anomalyco
         uses: anomalyco/opencode/github@latest
         env:
@@ -83,6 +84,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
           GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
         with:
+          model: opencode/claude-haiku-4-5
           share: false
           prompt: >
             Read the file params.json at the root of the repository.
