@@ -8,7 +8,7 @@
       "file": "tasks/issue-150/subtask-A.txt",
       "content": "Subtask A completed",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
@@ -16,7 +16,7 @@
       "file": "tasks/issue-150/subtask-B.txt",
       "content": "Subtask B completed",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "C",
@@ -24,7 +24,7 @@
       "file": "tasks/issue-150/subtask-C.txt",
       "content": "Subtask C completed",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "D",
