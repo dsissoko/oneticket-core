@@ -99,7 +99,7 @@ jobs:
             FIRST ACTION - no exception: run bash command: git checkout ${{ inputs.branch }}.
             Then read params.json at the root of the repository.
             Create the file at the path in params.json field file with the content in params.json field content.
-            Then append exactly this line at the end of tasks/workflow.md (create the file if it does not exist):
+            Then append exactly this line at the end of tasks/issue-${{ inputs.issue_number }}/workflow.md:
             $(date -u '+%Y-%m-%d %H:%M') | ${{ inputs.task_id }} | ${{ inputs.file }}
             Commit all changes with message: feat: complete task ${{ inputs.task_id }}.
             Do NOT push. Do NOT create a PR. Do nothing else.
@@ -111,7 +111,7 @@ jobs:
             FIRST ACTION - no exception: run bash command: git checkout ${{ inputs.branch }}.
             Then read params.json at the root of the repository.
             Create the file at the path in params.json field file with the content in params.json field content.
-            Then append exactly this line at the end of tasks/workflow.md (create the file if it does not exist):
+            Then append exactly this line at the end of tasks/issue-${{ inputs.issue_number }}/workflow.md:
             $(date -u '+%Y-%m-%d %H:%M') | ${{ inputs.task_id }} | ${{ inputs.file }}
             Commit all changes with message: feat: complete task ${{ inputs.task_id }}.
             Do NOT push. Do NOT create a PR. Do nothing else.

@@ -1,3 +1,3 @@
-# tasks/workflow.md est un fichier append-only — union merge évite les conflits
+# tasks/issue-*/workflow.md est un fichier append-only — union merge évite les conflits
 # quand plusieurs branches ajoutent chacune une ligne à la fin
-tasks/workflow.md merge=union
+tasks/issue-*/workflow.md merge=union

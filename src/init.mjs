@@ -132,13 +132,15 @@ async function main() {
   }
 
   // --- 2. Construire le manifest --------------------------------------------
+  // Le champ file est préfixé par tasks/issue-<N>/ pour isoler chaque issue
+  // dans son propre répertoire — zéro collision entre issues parallèles sur main.
   const manifest = {
     issue: parseInt(issueNumber, 10),
     branch_base: featureBranch,
     tasks: parsed.tasks.map(t => ({
       id:         t.id,
       branch:     `task/issue-${issueNumber}-${t.id}`,
-      file:       t.file,
+      file:       `tasks/issue-${issueNumber}/${t.file}`,
       content:    t.content,
       depends_on: t.depends_on || [],
       status:     'pending',
@@ -154,20 +156,21 @@ async function main() {
     run(`git checkout -b ${featureBranch}`);
   }
 
-  // --- 4. Écrire le manifest.json et tasks/workflow.md, puis commiter ---------
+  // --- 4. Écrire le manifest.json et tasks/issue-<N>/workflow.md, puis commiter ---------
   // [SOURCE DE VÉRITÉ] Le manifest en git est l'unique état partagé entre tous les runs.
-  // tasks/workflow.md est le journal d'exécution — chaque agent y appende sa ligne de trace.
+  // tasks/issue-<N>/workflow.md est le journal d'exécution isolé par issue.
+  // L'isolation par répertoire issue-<N>/ évite toute collision entre issues parallèles.
   const manifestPath  = path.join(process.cwd(), 'manifest.json');
-  const workflowDir   = path.join(process.cwd(), 'tasks');
+  const workflowDir   = path.join(process.cwd(), 'tasks', `issue-${issueNumber}`);
   const workflowPath  = path.join(workflowDir, 'workflow.md');
 
   fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
 
-  // Créer tasks/ si nécessaire et initialiser workflow.md vide
+  // Créer tasks/issue-<N>/ et initialiser workflow.md vide
   if (!fs.existsSync(workflowDir)) fs.mkdirSync(workflowDir, { recursive: true });
   fs.writeFileSync(workflowPath, '');
 
-  run('git add manifest.json tasks/workflow.md');
+  run(`git add manifest.json tasks/issue-${issueNumber}/workflow.md`);
   run(`git commit -m "chore: init manifest for issue #${issueNumber}" --allow-empty`);
   run(`git push origin ${featureBranch}`);
 
