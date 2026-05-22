@@ -87,12 +87,13 @@ jobs:
       # L'action crée opencode/dispatch-* (fantôme local)
       # Prompt force git checkout task/* → branchIsDirty() détecte switched=true
       # → PAS de push ni PR par l'action
-      # TOKEN = useEnvGithubToken() dans github.ts (skippe OIDC exchange)
+      # USE_GITHUB_TOKEN=true → skippe OIDC exchange, utilise GITHUB_TOKEN directement
       - name: Run agent via anomalyco
         uses: anomalyco/opencode/github@latest
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
-          TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
           SHARE: "false"
           MODEL: opencode/claude-haiku-4-5
           PROMPT: >-
@@ -104,6 +105,7 @@ jobs:
         with:
           model: opencode/claude-haiku-4-5
           share: false
+          use_github_token: true
           prompt: >-
             FIRST ACTION - no exception: run bash command: git checkout ${{ inputs.branch }}.
             Then read params.json at the root of the repository.
