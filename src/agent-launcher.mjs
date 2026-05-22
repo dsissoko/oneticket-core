@@ -157,7 +157,14 @@ export async function launchReadyTasks(manifest, repo, token) {
   // [FAN-OUT] Déclencher un workflow indépendant par tâche
   // Chaque workflow s'exécute en parallèle sur sa propre branche task/issue-<N>-<ID>
   // Le push final de chaque workflow déclenche on-task-push.yml (signal GATHER)
+  // En cas d'échec sur une tâche, on logue et on continue les suivantes
   for (const task of readyTasks) {
-    await triggerAgentWorkflow(task, manifest, repo, token);
+    try {
+      await triggerAgentWorkflow(task, manifest, repo, token);
+    } catch (err) {
+      console.error(
+        `[agent-launcher] Échec déclenchement workflow pour tâche ${task.id} : ${err.message}`
+      );
+    }
   }
 }

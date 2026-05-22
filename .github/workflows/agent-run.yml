@@ -170,3 +170,25 @@ jobs:
         if: steps.run-agent.outcome == 'success'
         run: |
           git push origin ${{ inputs.branch }}
+
+  # [FAILURE NOTIFICATION] Posté sur l'issue si le job run-agent échoue définitivement
+  # (max retries atteint ou erreur non-recoverable sur les steps déterministes).
+  # Fournit le lien direct vers le run Actions pour faciliter le debug.
+  notify-failure:
+    needs: run-agent
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post failure comment on issue
+        env:
+          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+        run: |
+          gh issue comment ${{ inputs.issue_number }} \
+            --repo ${{ github.repository }} \
+            --body "## Agent Run failure — tâche \`${{ inputs.task_id }}\`
+
+          Le workflow d'exécution de la tâche **${{ inputs.task_id }}** a échoué (retry_count=${{ inputs.retry_count }}).
+
+          **Run Actions :** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          > La tâche reste en état \`in_progress\` dans le manifest. Intervention manuelle requise."

@@ -49,3 +49,23 @@ jobs:
           ISSUE_BODY: ${{ github.event.issue.body }}
           REPO: ${{ github.repository }}
         run: node src/init.mjs
+
+  # [FAILURE NOTIFICATION] Posté sur l'issue si le job dispatch échoue.
+  notify-failure:
+    needs: dispatch
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post failure comment on issue
+        env:
+          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+        run: |
+          gh issue comment ${{ github.event.issue.number }} \
+            --repo ${{ github.repository }} \
+            --body "## Initialisation failure
+
+          Le workflow d'initialisation déclenché par \`/start\` a échoué.
+
+          **Run Actions :** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          > Vérifier les logs du run pour identifier la cause (fixture manquante, erreur git, secret absent)."

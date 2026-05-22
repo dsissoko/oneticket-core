@@ -70,7 +70,12 @@ function readManifest(issueNumber) {
   if (!fs.existsSync(manifestPath)) {
     throw new Error(`manifest.json introuvable : ${manifestPath}`);
   }
-  return JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  const raw = fs.readFileSync(manifestPath, 'utf8');
+  try {
+    return JSON.parse(raw);
+  } catch (err) {
+    throw new Error(`manifest.json corrompu (JSON invalide) : ${manifestPath} — ${err.message}`);
+  }
 }
 
 /**
@@ -203,27 +208,42 @@ async function createFinalPR(manifest, repo, token) {
 /**
  * [MERGE FAILURE] Assure l'existence du label "merge error" sur le repo
  * et l'applique à l'issue.
+ * Non-bloquant : toute erreur est loguée et absorbée.
  */
 async function ensureAndApplyLabel(issueNumber, repo, token) {
-  const [owner, repoName] = repo.split('/');
-  const labelName  = 'merge error';
-  const labelColor = 'b60205'; // rouge
+  try {
+    const labelName  = 'merge error';
+    const labelColor = 'b60205'; // rouge
 
-  // Créer le label s'il n'existe pas
-  const checkRes = await fetch(
-    `https://api.github.com/repos/${repo}/labels/${encodeURIComponent(labelName)}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/vnd.github+json',
-        'X-GitHub-Api-Version': '2022-11-28',
-      },
+    // Créer le label s'il n'existe pas
+    const checkRes = await fetch(
+      `https://api.github.com/repos/${repo}/labels/${encodeURIComponent(labelName)}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/vnd.github+json',
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
+      }
+    );
+
+    if (checkRes.status === 404) {
+      console.log(`[orchestrate] Création du label "${labelName}"...`);
+      await fetch(`https://api.github.com/repos/${repo}/labels`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/vnd.github+json',
+          'Content-Type': 'application/json',
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
+        body: JSON.stringify({ name: labelName, color: labelColor }),
+      });
     }
-  );
 
-  if (checkRes.status === 404) {
-    console.log(`[orchestrate] Création du label "${labelName}"...`);
-    await fetch(`https://api.github.com/repos/${repo}/labels`, {
+    // Appliquer le label à l'issue
+    console.log(`[orchestrate] Application du label "${labelName}" sur l'issue #${issueNumber}...`);
+    await fetch(`https://api.github.com/repos/${repo}/issues/${issueNumber}/labels`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -231,73 +251,71 @@ async function ensureAndApplyLabel(issueNumber, repo, token) {
         'Content-Type': 'application/json',
         'X-GitHub-Api-Version': '2022-11-28',
       },
-      body: JSON.stringify({ name: labelName, color: labelColor }),
+      body: JSON.stringify({ labels: [labelName] }),
     });
+  } catch (err) {
+    console.warn(`[orchestrate] Impossible d'appliquer le label sur #${issueNumber} : ${err.message}`);
   }
-
-  // Appliquer le label à l'issue
-  console.log(`[orchestrate] Application du label "${labelName}" sur l'issue #${issueNumber}...`);
-  await fetch(`https://api.github.com/repos/${repo}/issues/${issueNumber}/labels`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: 'application/vnd.github+json',
-      'Content-Type': 'application/json',
-      'X-GitHub-Api-Version': '2022-11-28',
-    },
-    body: JSON.stringify({ labels: [labelName] }),
-  });
 }
 
 /**
  * [MERGE FAILURE] Poste un commentaire de notification sur l'issue.
+ * Non-bloquant : toute erreur est loguée et absorbée.
  */
 async function postMergeFailureComment(issueNumber, taskId, branch, featureBranch, repo, token) {
-  const body = [
-    `## Merge failure — intervention requise`,
-    '',
-    `La branche \`${branch}\` (tâche **${taskId}**) n'a pas pu être mergée dans \`${featureBranch}\`.`,
-    '',
-    '**Action requise :** résoudre le conflit manuellement et relancer la tâche.',
-    '',
-    `> Statut mis à jour dans \`manifest.json\` : \`merge-failed\``,
-  ].join('\n');
+  try {
+    const body = [
+      `## Merge failure — intervention requise`,
+      '',
+      `La branche \`${branch}\` (tâche **${taskId}**) n'a pas pu être mergée dans \`${featureBranch}\`.`,
+      '',
+      '**Action requise :** résoudre le conflit manuellement et relancer la tâche.',
+      '',
+      `> Statut mis à jour dans \`manifest.json\` : \`merge-failed\``,
+    ].join('\n');
 
-  await fetch(`https://api.github.com/repos/${repo}/issues/${issueNumber}/comments`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: 'application/vnd.github+json',
-      'Content-Type': 'application/json',
-      'X-GitHub-Api-Version': '2022-11-28',
-    },
-    body: JSON.stringify({ body }),
-  });
+    await fetch(`https://api.github.com/repos/${repo}/issues/${issueNumber}/comments`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/vnd.github+json',
+        'Content-Type': 'application/json',
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+      body: JSON.stringify({ body }),
+    });
+  } catch (err) {
+    console.warn(`[orchestrate] Impossible de poster le commentaire merge-failure sur #${issueNumber} : ${err.message}`);
+  }
 }
 
 /**
  * Supprime une branche distante via l'API GitHub.
  * Appelée après chaque merge réussi de task/* dans feature/* —
  * nettoyage immédiat pour éviter l'accumulation de branches temporaires.
+ * Non-bloquant : toute erreur est loguée et absorbée.
  */
 async function deleteRemoteBranch(branch, repo, token) {
-  const res = await fetch(
-    `https://api.github.com/repos/${repo}/git/refs/heads/${branch}`,
-    {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/vnd.github+json',
-        'X-GitHub-Api-Version': '2022-11-28',
-      },
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${repo}/git/refs/heads/${branch}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/vnd.github+json',
+          'X-GitHub-Api-Version': '2022-11-28',
+        },
+      }
+    );
+    if (res.ok || res.status === 422) {
+      // 422 = ref n'existe pas (déjà supprimée) — idempotent
+      console.log(`[orchestrate] Branche ${branch} supprimée.`);
+    } else {
+      console.warn(`[orchestrate] Impossible de supprimer ${branch} : HTTP ${res.status}`);
     }
-  );
-  if (res.ok || res.status === 422) {
-    // 422 = ref n'existe pas (déjà supprimée) — idempotent
-    console.log(`[orchestrate] Branche ${branch} supprimée.`);
-  } else {
-    // Non bloquant — on log mais on n'arrête pas le workflow
-    console.warn(`[orchestrate] Impossible de supprimer ${branch} : ${res.status}`);
+  } catch (err) {
+    console.warn(`[orchestrate] Erreur réseau lors de la suppression de ${branch} : ${err.message}`);
   }
 }
 

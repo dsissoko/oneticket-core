@@ -71,3 +71,24 @@ jobs:
           PUSHED_BRANCH: ${{ github.ref_name }}
           REPO: ${{ github.repository }}
         run: node src/orchestrate.mjs
+
+  # [FAILURE NOTIFICATION] Posté sur l'issue si le job orchestrate échoue.
+  # Le numéro d'issue est extrait du nom de branche (même logique que le job extract).
+  notify-failure:
+    needs: [extract, orchestrate]
+    if: failure() && needs.extract.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post failure comment on issue
+        env:
+          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+        run: |
+          gh issue comment ${{ needs.extract.outputs.issue_number }} \
+            --repo ${{ github.repository }} \
+            --body "## Orchestration failure — branche \`${{ github.ref_name }}\`
+
+          Le workflow d'orchestration a échoué lors du traitement du signal GATHER.
+
+          **Run Actions :** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          > Vérifier les logs du run pour identifier la cause (merge conflict, manifest corrompu, erreur réseau)."

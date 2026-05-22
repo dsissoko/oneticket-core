@@ -78,7 +78,12 @@ function loadDefaultTaskGraph() {
     );
   }
   console.warn('[init] WARN : aucun bloc JSON dans le corps de l\'issue — utilisation du graphe par défaut (test/fixtures/tasks-graph.json)');
-  return JSON.parse(fs.readFileSync(fixturePath, 'utf8'));
+  const raw = fs.readFileSync(fixturePath, 'utf8');
+  try {
+    return JSON.parse(raw);
+  } catch (err) {
+    throw new Error(`Fixture tasks-graph.json corrompu (JSON invalide) : ${fixturePath} — ${err.message}`);
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -113,7 +118,13 @@ async function main() {
     run(`git checkout -B ${featureBranch} origin/${featureBranch}`);
     const manifestPath = path.join(process.cwd(), 'manifest.json');
     if (fs.existsSync(manifestPath)) {
-      const existing = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+      const raw = fs.readFileSync(manifestPath, 'utf8');
+      let existing;
+      try {
+        existing = JSON.parse(raw);
+      } catch (err) {
+        throw new Error(`manifest.json existant corrompu (JSON invalide) : ${manifestPath} — ${err.message}`);
+      }
       const hasActiveTasks = existing.tasks.some(t => t.status !== 'pending');
       if (hasActiveTasks) {
         console.log(
