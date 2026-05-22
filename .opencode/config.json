@@ -1,0 +1,7 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "opencode/claude-haiku-4-5",
+  "autoupdate": false,
+  "share": "manual",
+  "disabled_providers": ["openai", "gemini", "anthropic"]
+}
