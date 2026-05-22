@@ -4,3 +4,4 @@ $(date -u '+%Y-%m-%d %H:%M') | B | tasks/issue-113/tasks/subtask-B.txt
 $(date -u '+%Y-%m-%d %H:%M') | C | tasks/issue-113/tasks/subtask-C.txt
 $(date -u '+%Y-%m-%d %H:%M') | D | tasks/issue-113/tasks/subtask-D.txt
 $(date -u '+%Y-%m-%d %H:%M') | F | tasks/issue-113/tasks/subtask-F.txt
+$(date -u '+%Y-%m-%d %H:%M') | E | tasks/issue-113/tasks/subtask-E.txt
