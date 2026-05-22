@@ -101,25 +101,38 @@ function getReadyTasks(manifest) {
 }
 
 /**
- * [LOCK OPTIMISTE] Marque une tâche done, met à jour le manifest et push.
- * En cas de push non fast-forward (conflit concurrent), re-lit le manifest
- * depuis origin et réapplique la mutation avant de réessayer.
- * Ainsi l'état final reflète toujours la réalité distante + la mutation locale.
+ * [LOCK OPTIMISTE] Merge la branche task/*, marque la tâche done, push.
+ * Le merge EST dans la boucle de retry — en cas de push non fast-forward,
+ * on repart de l'état origin et on re-merge pour ne jamais perdre les fichiers.
  *
- * Retourne le manifest final (potentiellement re-lu depuis origin).
+ * Bug corrigé : l'ancienne version faisait le merge AVANT cette fonction,
+ * puis en cas de retry faisait checkout -B origin/feature/ qui écrasait
+ * les fichiers mergés (subtask-X.txt, workflow.md).
+ *
+ * Retourne { manifest, mergeError } — mergeError non-null si merge conflict.
  */
-async function markDoneAndPush(manifest, taskId, featureBranch, maxAttempts = 3) {
+async function markDoneAndPush(manifest, taskId, pushedBranch, featureBranch, maxAttempts = 3) {
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    // Appliquer la mutation sur le manifest courant
     const task = manifest.tasks.find(t => t.id === taskId);
     if (!task) throw new Error(`Tâche "${taskId}" introuvable dans le manifest.`);
 
     // Idempotence : si déjà done (re-lecture après conflit), sortir proprement
     if (task.status === 'done') {
       console.log(`[orchestrate] IDEMPOTENCE (retry ${attempt}) : tâche ${taskId} déjà done.`);
-      return manifest;
+      return { manifest, mergeError: null };
     }
 
+    // [MERGE] Intègre les fichiers de la tâche dans feature/
+    // Fait ici pour être re-exécuté à chaque tentative si push non fast-forward
+    console.log(`[orchestrate] Merge de ${pushedBranch} dans ${featureBranch} (tentative ${attempt})`);
+    try {
+      run(`git merge --no-ff origin/${pushedBranch} -m "chore: merge task ${taskId} into ${featureBranch}"`);
+    } catch (mergeError) {
+      try { run('git merge --abort'); } catch (_) {}
+      return { manifest, mergeError };
+    }
+
+    // [MANIFEST] Marquer la tâche done et commiter
     task.status = 'done';
     writeManifest(manifest);
     run(`git add tasks/issue-${manifest.issue}/manifest.json`);
@@ -127,18 +140,18 @@ async function markDoneAndPush(manifest, taskId, featureBranch, maxAttempts = 3)
 
     try {
       run(`git push origin ${featureBranch}`);
-      return manifest; // succès
+      return { manifest, mergeError: null }; // succès
     } catch (e) {
       if (attempt === maxAttempts) throw e;
       console.log(`[orchestrate] Push non fast-forward (tentative ${attempt}/${maxAttempts}) — re-fetch et ré-application...`);
       await new Promise(r => setTimeout(r, attempt * 1000));
 
-      // Annuler le commit local et re-synchroniser depuis origin
-      run(`git reset --hard HEAD~1`);
+      // Annuler le merge + le commit manifest (2 commits)
+      run(`git reset --hard HEAD~2`);
       run(`git fetch origin ${featureBranch}`);
       run(`git checkout -B ${featureBranch} origin/${featureBranch}`);
 
-      // Re-lire le manifest depuis l'état origin (inclut les mutations des autres runners)
+      // Re-lire le manifest depuis l'état origin
       manifest = readManifest(manifest.issue);
     }
   }
@@ -331,16 +344,16 @@ async function main() {
     return;
   }
 
-  // --- 4. Merger la branche task/* dans feature/ ---------------------------
-  // En cas d'échec : log manifest, label "merge error", commentaire issue, exit 1
-  console.log(`[orchestrate] Merge de ${pushedBranch} dans ${featureBranch}`);
-  try {
-    run(`git merge --no-ff origin/${pushedBranch} -m "chore: merge task ${taskId} into ${featureBranch}"`);
-  } catch (mergeError) {
-    console.error(`[orchestrate] MERGE FAILURE : ${mergeError.message}`);
+  // --- 4 & 5. Merger + marquer done + push (lock optimiste) -----------------
+  // Le merge EST dans markDoneAndPush pour être re-exécuté à chaque retry —
+  // évite que les fichiers de la tâche soient perdus lors d'un push non fast-forward.
+  const { manifest: updatedManifest, mergeError } = await markDoneAndPush(
+    manifest, taskId, pushedBranch, featureBranch
+  );
+  manifest = updatedManifest;
 
-    // Annuler le merge en cours
-    try { run('git merge --abort'); } catch (_) {}
+  if (mergeError) {
+    console.error(`[orchestrate] MERGE FAILURE : ${mergeError.message}`);
 
     // Mettre à jour le manifest avec merge-failed
     task.status = 'merge-failed';
@@ -357,15 +370,7 @@ async function main() {
     process.exit(1);
   }
 
-  // --- 5. Mettre à jour le manifest ----------------------------------------
-  // [LOCK OPTIMISTE] markDoneAndPush gère les conflits concurrents :
-  // en cas de push non fast-forward, il re-lit le manifest depuis origin
-  // et réapplique la mutation pour garantir la cohérence de l'état final.
-  manifest = await markDoneAndPush(manifest, taskId, featureBranch);
-
   console.log(`[orchestrate] Tâche ${taskId} marquée done et mergée dans ${featureBranch}.`);
-
-  // Supprimer la branche task/* immédiatement après le merge réussi
   // Nettoyage au fil de l'eau — pas d'accumulation de branches temporaires
   await deleteRemoteBranch(pushedBranch, repo, ghToken);
 
