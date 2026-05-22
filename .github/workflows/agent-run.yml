@@ -2,19 +2,19 @@ name: Agent Run
 
 # [EXÉCUTION TÂCHE] Déclenché par agent-launcher.mjs via workflow_dispatch.
 #
-# Séparation stricte des responsabilités :
-#   DÉTERMINISTE : checkout, création branche task/*, params.json, MOCK_EVENT, push final
+# Architecture :
+#   DÉTERMINISTE : checkout, création branche task/*, params.json, push final (signal GATHER)
 #   LLM (anomalyco) : lire params.json, créer le fichier texte, commiter UNIQUEMENT
 #
-# Mécanisme branche fantôme :
-#   L'action anomalyco crée sa branche opencode/* localement (jamais pushée).
-#   Le prompt force git checkout task/* en première action → opencode/* reste clean.
-#   branchIsDirty() = false sur opencode/* → PAS de PR, PAS de push par l'action.
-#   Le push final est fait par un step déterministe (Step 7) = signal GATHER.
+# Mécanisme anti-PR :
+#   - workflow_dispatch est supporté nativement par l'action (REPO_EVENTS)
+#   - L'action crée opencode/dispatch-* localement (fantôme, jamais pushée)
+#   - Le prompt force git checkout task/* en première action
+#   - branchIsDirty() détecte switched=true → PAS de push ni PR par l'action
+#   - Le push final est fait par le step déterministe Step 5 = signal GATHER
 #
-# MOCK_EVENT nécessaire pour bypasser assertContextEvent("issue_comment", ...)
-# L'action refuse tout événement autre que issue_comment / pull_request_review_comment.
-# TOKEN (pas GITHUB_TOKEN) est la variable lue par useEnvGithubToken() dans index.ts.
+# PROMPT env var est consommé pour workflow_dispatch events (REPO_EVENTS path)
+# TOKEN = variable lue par useEnvGithubToken() dans github.ts
 
 on:
   workflow_dispatch:
@@ -48,7 +48,7 @@ jobs:
 
     steps:
       # [DÉTERMINISTE] Checkout de la branche base (feature/issue-N)
-      # C'est le point de départ de la branche task — contient les merges des tâches précédentes
+      # C'est le point de départ de la branche task — contient les merges précédents
       - name: Checkout branch base
         uses: actions/checkout@v4
         with:
@@ -57,9 +57,9 @@ jobs:
           fetch-depth: 0
 
       # [DÉTERMINISTE] Création + push de la branche task isolée depuis branch_base
-      # Chaque tâche part d'un feature/ à jour (dépendances déjà mergées)
-      # isMock=true → l'action skippe configureGit → on configure ici
-      - name: Create task branch and configure git
+      # isMock=false → l'action configure git elle-même (configureGit skippé uniquement si isMock)
+      # On configure ici pour le step params.json
+      - name: Create task branch
         run: |
           git config user.name "oneticket-bot"
           git config user.email "oneticket-bot@users.noreply.github.com"
@@ -82,54 +82,38 @@ jobs:
           git commit -m "chore: add params.json for task ${{ inputs.task_id }}"
           git push origin ${{ inputs.branch }}
 
-      # [DÉTERMINISTE] Construction du MOCK_EVENT via node pour garantir un JSON valide
-      # Nécessaire pour bypasser assertContextEvent() dans l'action anomalyco
-      # Le prompt est dans comment.body — c'est l'unique canal de prompt vers opencode
-      # PREMIERE ACTION obligatoire : git checkout sur notre branche task
-      # → opencode/* reste clean → branchIsDirty()=false → pas de PR, pas de push par l'action
-      - name: Build MOCK_EVENT
-        run: |
-          MOCK=$(node -e "
-          const prompt = [
-            '/oc FIRST ACTION - no exception: run bash command: git checkout ${{ inputs.branch }}',
-            'Then read params.json at the root of the repository.',
-            'Create the file at the path in params.json field file with content in params.json field content.',
-            'Commit with message: feat: complete task ${{ inputs.task_id }}.',
-            'Do NOT push. Do NOT create a PR. Do nothing else.'
-          ].join(' ');
-          console.log(JSON.stringify({
-            eventName: 'issue_comment',
-            repo: { owner: '${{ github.repository_owner }}', repo: '${{ github.event.repository.name }}' },
-            actor: 'oneticket-bot',
-            payload: {
-              issue: { number: ${{ inputs.issue_number }}, pull_request: null },
-              comment: { id: 1, body: prompt }
-            }
-          }));
-          ")
-          echo "MOCK_EVENT=$MOCK" >> $GITHUB_ENV
-          echo "MOCK_EVENT construit : $MOCK"
-
       # [LLM] Seule zone non-déterministe.
-      # L'agent checkoute task/*, lit params.json, crée le fichier, commite.
-      # TOKEN (pas GITHUB_TOKEN) = variable lue par useEnvGithubToken() dans index.ts
-      # MODEL passé via with: ET env: — action.yml set MODEL=${{inputs.model}} dans son step
-      # SHARE=false → pas de partage de session
+      # workflow_dispatch → chemin REPO_EVENTS → PROMPT requis et consommé
+      # L'action crée opencode/dispatch-* (fantôme local)
+      # Prompt force git checkout task/* → branchIsDirty() détecte switched=true
+      # → PAS de push ni PR par l'action
+      # TOKEN = useEnvGithubToken() dans github.ts (skippe OIDC exchange)
       - name: Run agent via anomalyco
         uses: anomalyco/opencode/github@latest
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
           TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
-          MOCK_EVENT: ${{ env.MOCK_EVENT }}
           SHARE: "false"
           MODEL: opencode/claude-haiku-4-5
+          PROMPT: >-
+            FIRST ACTION - no exception: run bash command: git checkout ${{ inputs.branch }}.
+            Then read params.json at the root of the repository.
+            Create the file at the path in params.json field file with the content in params.json field content.
+            Commit with message: feat: complete task ${{ inputs.task_id }}.
+            Do NOT push. Do NOT create a PR. Do nothing else.
         with:
           model: opencode/claude-haiku-4-5
           share: false
+          prompt: >-
+            FIRST ACTION - no exception: run bash command: git checkout ${{ inputs.branch }}.
+            Then read params.json at the root of the repository.
+            Create the file at the path in params.json field file with the content in params.json field content.
+            Commit with message: feat: complete task ${{ inputs.task_id }}.
+            Do NOT push. Do NOT create a PR. Do nothing else.
 
       # [DÉTERMINISTE] Push final = signal GATHER
-      # L'agent a commité localement sur task/* — le push déclenche on-task-push.yml
-      # qui appellera orchestrate.mjs pour merger, mettre à jour le manifest, et router la suite
+      # L'agent a commité localement sur task/* après git checkout
+      # Ce push déclenche on-task-push.yml → orchestrate.mjs
       - name: Push task branch (GATHER signal)
         run: |
           git push origin ${{ inputs.branch }}
