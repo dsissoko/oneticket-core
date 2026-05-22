@@ -1,10 +1,14 @@
 name: On Task Push
 
 # [GATHER] Point de collecte des signaux de fin de tâche.
-# Chaque push sur task/* signifie qu'un agent a terminé son travail.
-# Ce workflow reconstruit l'état complet depuis le manifest et décide de la suite :
-#   - nouvelles tâches prêtes → FAN-OUT vers agent-launcher
-#   - toutes les tâches done  → création de la PR finale
+# Déclenché uniquement par le push FINAL de agent-run.yml (Step 7 déterministe).
+#
+# IMPORTANT : agent-run.yml pousse plusieurs fois sur task/* :
+#   - "chore: add params.json for task X"  → push de setup, NE doit PAS orchestrer
+#   - "feat: complete task X"               → push final agent, DOIT orchestrer
+#
+# Le filtre sur github.event.head_commit.message garantit que seul le signal
+# GATHER réel (commit de l'agent) déclenche l'orchestration.
 #
 # Pattern : Scatter/Gather — ce workflow est le Gather
 
@@ -18,6 +22,9 @@ jobs:
   # ex: task/issue-42-A → 42
   # Nécessaire pour scoper le concurrency par issue (voir job orchestrate)
   extract:
+    # [FILTRE GATHER] Ne s'exécute que sur le commit final de l'agent (feat:)
+    # Ignore les commits déterministes de setup (chore:) poussés par agent-run.yml
+    if: startsWith(github.event.head_commit.message, 'feat:')
     runs-on: ubuntu-latest
     outputs:
       issue_number: ${{ steps.parse.outputs.issue_number }}

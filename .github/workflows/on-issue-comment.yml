@@ -20,9 +20,7 @@ concurrency:
 jobs:
   dispatch:
     # Ne se déclenche que sur /start dans un commentaire d'issue (pas PR)
-    if: |
-      github.event.issue.pull_request == null &&
-      startsWith(github.event.comment.body, '/start')
+    if: "github.event.issue.pull_request == null && startsWith(github.event.comment.body, '/start')"
     runs-on: ubuntu-latest
     permissions:
       contents: write
