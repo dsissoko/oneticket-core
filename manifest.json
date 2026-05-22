@@ -1,0 +1,61 @@
+{
+  "issue": 111,
+  "branch_base": "feature/issue-111",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-111-A",
+      "file": "tasks/issue-111/tasks/subtask-A.txt",
+      "content": "Subtask A completed",
+      "depends_on": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-111-B",
+      "file": "tasks/issue-111/tasks/subtask-B.txt",
+      "content": "Subtask B completed",
+      "depends_on": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-111-C",
+      "file": "tasks/issue-111/tasks/subtask-C.txt",
+      "content": "Subtask C completed",
+      "depends_on": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-111-D",
+      "file": "tasks/issue-111/tasks/subtask-D.txt",
+      "content": "Subtask D completed — depends on A and B",
+      "depends_on": [
+        "A",
+        "B"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-111-E",
+      "file": "tasks/issue-111/tasks/subtask-E.txt",
+      "content": "Subtask E completed — depends on D",
+      "depends_on": [
+        "D"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "F",
+      "branch": "task/issue-111-F",
+      "file": "tasks/issue-111/tasks/subtask-F.txt",
+      "content": "Subtask F completed — depends on C",
+      "depends_on": [
+        "C"
+      ],
+      "status": "pending"
+    }
+  ]
+}
