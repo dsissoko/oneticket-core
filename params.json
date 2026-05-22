@@ -1,0 +1,7 @@
+{
+  "task_id": "F",
+  "file": "tasks/subtask-F.txt",
+  "content": "Subtask F completed — depends on C",
+  "branch": "task/issue-25-F",
+  "branch_base": "feature/issue-25"
+}
