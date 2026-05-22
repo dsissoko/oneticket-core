@@ -1,12 +1,16 @@
 name: Agent Run
 
-# [EXÉCUTION TÂCHE] Workflow réutilisable déclenché par agent-launcher.mjs via l'API GitHub.
-# Responsabilité unique : écrire params.json et lancer opencode pour qu'il crée le fichier demandé.
-# Ce workflow est la seule frontière LLM — tout le reste est déterministe.
+# [EXÉCUTION TÂCHE] Déclenché par agent-launcher.mjs via workflow_dispatch.
+# Responsabilité unique : préparer le contexte (déterministe) puis déléguer
+# la création du fichier témoin à l'agent via anomalyco/opencode/github@latest.
 #
-# [FAN-OUT receiver] Plusieurs instances de ce workflow peuvent tourner en parallèle
-# (une par tâche prête). Aucune collision possible car chaque instance travaille
-# sur sa propre branche task/issue-<N>-<ID>.
+# [FAN-OUT receiver] Plusieurs instances tournent en parallèle, une par tâche prête.
+# Aucune collision : chaque instance travaille sur sa propre branche task/issue-<N>-<ID>.
+#
+# Séparation stricte des responsabilités :
+#   DÉTERMINISTE (ce workflow) : checkout, création branche, écriture params.json, push initial
+#   LLM (anomalyco action)     : lire params.json, créer le fichier texte, commiter + pusher
+#   GATHER (on-task-push.yml)  : déclenché par le push de l'agent sur task/*
 
 on:
   workflow_dispatch:
@@ -35,8 +39,10 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      id-token: write
 
     steps:
+      # [DÉTERMINISTE] Checkout de la branche base (feature/issue-<N>)
       - name: Checkout branch base
         uses: actions/checkout@v4
         with:
@@ -44,47 +50,44 @@ jobs:
           token: ${{ secrets.ONETICKET_GH_PAT }}
           fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install dependencies
-        run: npm ci
-
-      # [PARAMS] Matérialise les inputs du workflow en fichier params.json
-      # C'est le seul canal de communication vers opencode — pas de variables d'env complexes
-      - name: Write params.json
-        run: |
-          node -e "
-          const params = {
-            task_id: '${{ inputs.task_id }}',
-            file: '${{ inputs.file }}',
-            content: '${{ inputs.content }}',
-            branch: '${{ inputs.branch }}',
-            branch_base: '${{ inputs.branch_base }}'
-          };
-          require('fs').writeFileSync('params.json', JSON.stringify(params, null, 2));
-          "
-
-      - name: Install opencode CLI
-        run: npm install -g opencode-ai@1.14.50
-
-      - name: Configure git identity
+      # [DÉTERMINISTE] Création + push de la branche task isolée depuis branch_base
+      # Chaque tâche a sa propre branche — aucune interférence entre tâches parallèles
+      - name: Create task branch
         run: |
           git config user.name "oneticket-bot"
           git config user.email "oneticket-bot@users.noreply.github.com"
-
-      # [ISOLATION] Chaque tâche crée sa propre branche depuis branch_base
-      # Le push final sur cette branche est le signal de fin (GATHER trigger)
-      - name: Create and checkout task branch
-        run: |
           git checkout -b ${{ inputs.branch }}
+          git push origin ${{ inputs.branch }}
 
-      # [LLM] Seule zone non-déterministe — opencode lit params.json et crée le fichier
-      # Le prompt est volontairement minimal : pas de skills, pas de profils, pas de directives complexes
-      - name: Run opencode agent
+      # [DÉTERMINISTE] Matérialise les inputs en params.json
+      # Seul canal de communication vers l'agent — pas de variables d'env complexes
+      - name: Write params.json
+        run: |
+          cat > params.json << 'EOF'
+          {
+            "task_id": "${{ inputs.task_id }}",
+            "file": "${{ inputs.file }}",
+            "content": "${{ inputs.content }}",
+            "branch": "${{ inputs.branch }}",
+            "branch_base": "${{ inputs.branch_base }}"
+          }
+          EOF
+
+      # [LLM] Seule zone non-déterministe.
+      # L'agent lit params.json, crée le fichier texte, commite et pushe.
+      # Le push sur task/* est le signal GATHER → déclenche on-task-push.yml → orchestrate.mjs
+      - name: Run agent via anomalyco
+        uses: anomalyco/opencode/github@latest
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
-        run: |
-          opencode run --non-interactive "Read params.json at the root of the repository. Create the file at the path specified in params.json[\"file\"] with the content specified in params.json[\"content\"]. Commit with message \"feat: complete task ${{ inputs.task_id }}\" and push to the branch specified in params.json[\"branch\"]. Nothing else."
+          GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+        with:
+          share: false
+          prompt: >
+            Read the file params.json at the root of the repository.
+            Create the file at the path specified in params.json["file"]
+            with the content specified in params.json["content"].
+            Commit with message "feat: complete task ${{ inputs.task_id }}".
+            Push to the branch specified in params.json["branch"].
+            Do nothing else.
