@@ -10,11 +10,12 @@
  *   2. Checkout de feature/issue-<N> et lecture du manifest.json
  *   3. [IDEMPOTENCE] Si tâche déjà done → sortie propre
  *   4. Merger la branche task/* dans feature/issue-<N>
+ *      → En cas d'échec : log manifest, label "merge error", commentaire issue, exit 1
  *   5. Marquer la tâche comme "done" dans le manifest
  *   6. [ROUTING DÉTERMINISTE] Décider de la suite :
  *      → tâches prêtes  : [FAN-OUT] via agent-launcher
  *      → toutes done    : créer la PR finale
- *      → en attente     : rien à faire, un prochain push déclenchera ce workflow
+ *      → en attente     : rien, un prochain push déclenchera ce workflow
  *
  * [QUEUE PAR ISSUE] La sérialisation est gérée par le concurrency GitHub Actions
  * dans on-task-push.yml — ce code n'a donc pas à gérer les accès concurrents.
@@ -29,7 +30,7 @@ import path from 'path';
 import { launchReadyTasks } from './agent-launcher.mjs';
 
 // ---------------------------------------------------------------------------
-// Helpers
+// Helpers git
 // ---------------------------------------------------------------------------
 
 function run(cmd, opts = {}) {
@@ -80,7 +81,6 @@ function writeManifest(manifest) {
 /**
  * [FAN-IN check] Détermine si toutes les dépendances d'une tâche sont satisfaites.
  * Une tâche n'est prête que si TOUTES ses dépendances sont "done".
- * Exemple : D depends_on [A, B] → prête seulement quand A=done ET B=done.
  */
 function areDependenciesSatisfied(task, allTasks) {
   if (!task.depends_on || task.depends_on.length === 0) return true;
@@ -96,6 +96,10 @@ function getReadyTasks(manifest) {
     t => t.status === 'pending' && areDependenciesSatisfied(t, manifest.tasks)
   );
 }
+
+// ---------------------------------------------------------------------------
+// Helpers GitHub API
+// ---------------------------------------------------------------------------
 
 /**
  * Crée la PR finale via l'API GitHub.
@@ -132,8 +136,83 @@ async function createFinalPR(manifest, repo, token) {
   if (!res.ok) {
     throw new Error(`Échec création PR : ${JSON.stringify(data)}`);
   }
-  console.log(`[orchestrate] PR créée : ${data.html_url}`);
+  console.log(`[orchestrate] PR finale créée : ${data.html_url}`);
   return data;
+}
+
+/**
+ * [MERGE FAILURE] Assure l'existence du label "merge error" sur le repo
+ * et l'applique à l'issue.
+ */
+async function ensureAndApplyLabel(issueNumber, repo, token) {
+  const [owner, repoName] = repo.split('/');
+  const labelName  = 'merge error';
+  const labelColor = 'b60205'; // rouge
+
+  // Créer le label s'il n'existe pas
+  const checkRes = await fetch(
+    `https://api.github.com/repos/${repo}/labels/${encodeURIComponent(labelName)}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+    }
+  );
+
+  if (checkRes.status === 404) {
+    console.log(`[orchestrate] Création du label "${labelName}"...`);
+    await fetch(`https://api.github.com/repos/${repo}/labels`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/vnd.github+json',
+        'Content-Type': 'application/json',
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+      body: JSON.stringify({ name: labelName, color: labelColor }),
+    });
+  }
+
+  // Appliquer le label à l'issue
+  console.log(`[orchestrate] Application du label "${labelName}" sur l'issue #${issueNumber}...`);
+  await fetch(`https://api.github.com/repos/${repo}/issues/${issueNumber}/labels`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/vnd.github+json',
+      'Content-Type': 'application/json',
+      'X-GitHub-Api-Version': '2022-11-28',
+    },
+    body: JSON.stringify({ labels: [labelName] }),
+  });
+}
+
+/**
+ * [MERGE FAILURE] Poste un commentaire de notification sur l'issue.
+ */
+async function postMergeFailureComment(issueNumber, taskId, branch, featureBranch, repo, token) {
+  const body = [
+    `## Merge failure — intervention requise`,
+    '',
+    `La branche \`${branch}\` (tâche **${taskId}**) n'a pas pu être mergée dans \`${featureBranch}\`.`,
+    '',
+    '**Action requise :** résoudre le conflit manuellement et relancer la tâche.',
+    '',
+    `> Statut mis à jour dans \`manifest.json\` : \`merge-failed\``,
+  ].join('\n');
+
+  await fetch(`https://api.github.com/repos/${repo}/issues/${issueNumber}/comments`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/vnd.github+json',
+      'Content-Type': 'application/json',
+      'X-GitHub-Api-Version': '2022-11-28',
+    },
+    body: JSON.stringify({ body }),
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -174,14 +253,36 @@ async function main() {
   }
 
   // --- 3. [IDEMPOTENCE] Tâche déjà traitée ? --------------------------------
-  if (task.status === 'done') {
-    console.log(`[orchestrate] IDEMPOTENCE : tâche ${taskId} déjà done — sortie sans modification.`);
+  if (task.status === 'done' || task.status === 'merge-failed') {
+    console.log(`[orchestrate] IDEMPOTENCE : tâche ${taskId} déjà en état "${task.status}" — sortie sans modification.`);
     return;
   }
 
   // --- 4. Merger la branche task/* dans feature/ ---------------------------
+  // En cas d'échec : log manifest, label "merge error", commentaire issue, exit 1
   console.log(`[orchestrate] Merge de ${pushedBranch} dans ${featureBranch}`);
-  run(`git merge --no-ff origin/${pushedBranch} -m "chore: merge task ${taskId} into ${featureBranch}"`);
+  try {
+    run(`git merge --no-ff origin/${pushedBranch} -m "chore: merge task ${taskId} into ${featureBranch}"`);
+  } catch (mergeError) {
+    console.error(`[orchestrate] MERGE FAILURE : ${mergeError.message}`);
+
+    // Annuler le merge en cours
+    try { run('git merge --abort'); } catch (_) {}
+
+    // Mettre à jour le manifest
+    task.status = 'merge-failed';
+    writeManifest(manifest);
+    run('git add manifest.json');
+    run(`git commit -m "chore: mark task ${taskId} as merge-failed"`);
+    run(`git push origin ${featureBranch}`);
+
+    // Notifier : label + commentaire sur l'issue
+    await ensureAndApplyLabel(issueNumber, repo, ghToken);
+    await postMergeFailureComment(issueNumber, taskId, pushedBranch, featureBranch, repo, ghToken);
+
+    console.error(`[orchestrate] Workflow arrêté — intervention humaine requise.`);
+    process.exit(1);
+  }
 
   // --- 5. Mettre à jour le manifest ----------------------------------------
   // [SOURCE DE VÉRITÉ] Mise à jour atomique : lecture → mutation → écriture → push
@@ -192,7 +293,7 @@ async function main() {
   run(`git commit -m "chore: mark task ${taskId} as done in manifest"`);
   run(`git push origin ${featureBranch}`);
 
-  console.log(`[orchestrate] Tâche ${taskId} marquée done.`);
+  console.log(`[orchestrate] Tâche ${taskId} marquée done et mergée dans ${featureBranch}.`);
 
   // --- 6. [ROUTING DÉTERMINISTE] Décider de la suite -----------------------
   const allDone    = manifest.tasks.every(t => t.status === 'done');
@@ -205,7 +306,6 @@ async function main() {
 
   } else if (readyTasks.length > 0) {
     // [FAN-IN → FAN-OUT] Des tâches viennent d'être débloquées par cette complétion
-    // Exemple : D était bloquée par A+B, B vient de finir et A était déjà done → D est prête
     console.log(
       `[orchestrate] [FAN-IN → FAN-OUT] ${readyTasks.length} tâche(s) débloquée(s) : ` +
       readyTasks.map(t => t.id).join(', ')

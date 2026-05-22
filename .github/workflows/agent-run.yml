@@ -1,16 +1,20 @@
 name: Agent Run
 
 # [EXÉCUTION TÂCHE] Déclenché par agent-launcher.mjs via workflow_dispatch.
-# Responsabilité unique : préparer le contexte (déterministe) puis déléguer
-# la création du fichier témoin à l'agent via anomalyco/opencode/github@latest.
-#
-# [FAN-OUT receiver] Plusieurs instances tournent en parallèle, une par tâche prête.
-# Aucune collision : chaque instance travaille sur sa propre branche task/issue-<N>-<ID>.
 #
 # Séparation stricte des responsabilités :
-#   DÉTERMINISTE (ce workflow) : checkout, création branche, écriture params.json, push initial
-#   LLM (anomalyco action)     : lire params.json, créer le fichier texte, commiter + pusher
-#   GATHER (on-task-push.yml)  : déclenché par le push de l'agent sur task/*
+#   DÉTERMINISTE : checkout, création branche task/*, params.json, MOCK_EVENT, push final
+#   LLM (anomalyco) : lire params.json, créer le fichier texte, commiter UNIQUEMENT
+#
+# Mécanisme branche fantôme :
+#   L'action anomalyco crée sa branche opencode/* localement (jamais pushée).
+#   Le prompt force git checkout task/* en première action → opencode/* reste clean.
+#   branchIsDirty() = false sur opencode/* → PAS de PR, PAS de push par l'action.
+#   Le push final est fait par un step déterministe (Step 7) = signal GATHER.
+#
+# MOCK_EVENT nécessaire pour bypasser assertContextEvent("issue_comment", ...)
+# L'action refuse tout événement autre que issue_comment / pull_request_review_comment.
+# TOKEN (pas GITHUB_TOKEN) est la variable lue par useEnvGithubToken() dans index.ts.
 
 on:
   workflow_dispatch:
@@ -39,10 +43,12 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      issues: write
       id-token: write
 
     steps:
-      # [DÉTERMINISTE] Checkout de la branche base (feature/issue-<N>)
+      # [DÉTERMINISTE] Checkout de la branche base (feature/issue-N)
+      # C'est le point de départ de la branche task — contient les merges des tâches précédentes
       - name: Checkout branch base
         uses: actions/checkout@v4
         with:
@@ -51,18 +57,18 @@ jobs:
           fetch-depth: 0
 
       # [DÉTERMINISTE] Création + push de la branche task isolée depuis branch_base
-      # Chaque tâche a sa propre branche — aucune interférence entre tâches parallèles
-      - name: Create task branch
+      # Chaque tâche part d'un feature/ à jour (dépendances déjà mergées)
+      # isMock=true → l'action skippe configureGit → on configure ici
+      - name: Create task branch and configure git
         run: |
           git config user.name "oneticket-bot"
           git config user.email "oneticket-bot@users.noreply.github.com"
           git checkout -b ${{ inputs.branch }}
           git push origin ${{ inputs.branch }}
 
-      # [DÉTERMINISTE] Matérialise les inputs en params.json
-      # Seul canal de communication vers l'agent — pas de variables d'env complexes
-      # Note : printf utilisé pour éviter les espaces d'indentation du heredoc YAML
-      - name: Write params.json
+      # [DÉTERMINISTE] Matérialise les inputs en params.json et le commite sur la branche task
+      # Seul canal de communication vers l'agent
+      - name: Write and commit params.json
         run: |
           printf '{\n  "task_id": "%s",\n  "file": "%s",\n  "content": "%s",\n  "branch": "%s",\n  "branch_base": "%s"\n}\n' \
             "${{ inputs.task_id }}" \
@@ -70,33 +76,52 @@ jobs:
             "${{ inputs.content }}" \
             "${{ inputs.branch }}" \
             "${{ inputs.branch_base }}" > params.json
-          echo "params.json écrit :"
+          echo "params.json:"
           cat params.json
+          git add params.json
+          git commit -m "chore: add params.json for task ${{ inputs.task_id }}"
+          git push origin ${{ inputs.branch }}
 
-      # [DÉTERMINISTE] Charge le prompt dans GITHUB_ENV pour éviter les problèmes
-      # de quotes/JSON dans l'input with.prompt de l'action anomalyco
-      - name: Prepare prompt
+      # [DÉTERMINISTE] Construction du MOCK_EVENT
+      # Nécessaire pour bypasser assertContextEvent() dans l'action anomalyco
+      # Le prompt est dans comment.body — c'est l'unique canal de prompt vers opencode
+      # PREMIÈRE ACTION obligatoire : git checkout sur notre branche task
+      # → opencode/* reste clean → branchIsDirty()=false → pas de PR, pas de push par l'action
+      - name: Build MOCK_EVENT
         run: |
-          echo "AGENT_PROMPT<<EOF_MARKER" >> "$GITHUB_ENV"
-          echo "Read the file params.json at the root of the repository." >> "$GITHUB_ENV"
-          echo "Create the file at the path specified in params.json[file] with the content specified in params.json[content]." >> "$GITHUB_ENV"
-          echo "Commit with message feat: complete task ${{ inputs.task_id }}." >> "$GITHUB_ENV"
-          echo "Push to the branch specified in params.json[branch]." >> "$GITHUB_ENV"
-          echo "Do nothing else." >> "$GITHUB_ENV"
-          echo "EOF_MARKER" >> "$GITHUB_ENV"
+          REPO_OWNER="${{ github.repository_owner }}"
+          REPO_NAME="${{ github.event.repository.name }}"
+          PROMPT="/oc FIRST ACTION — no exception: run the bash command: git checkout ${{ inputs.branch }}
+          Then read the file params.json at the root of the repository.
+          Create the file at the path specified in params.json file field with the content specified in params.json content field.
+          Commit with message: feat: complete task ${{ inputs.task_id }}.
+          Do NOT push. Do NOT create a PR. Do nothing else."
+
+          MOCK=$(printf '{"eventName":"issue_comment","repo":{"owner":"%s","repo":"%s"},"actor":"oneticket-bot","payload":{"issue":{"number":%s,"pull_request":null},"comment":{"id":1,"body":"%s"}}}' \
+            "$REPO_OWNER" \
+            "$REPO_NAME" \
+            "${{ inputs.issue_number }}" \
+            "$(echo "$PROMPT" | tr -d '\n' | sed 's/"/\\"/g')")
+
+          echo "MOCK_EVENT=$MOCK" >> $GITHUB_ENV
 
       # [LLM] Seule zone non-déterministe.
-      # L'agent lit params.json, crée le fichier texte, commite et pushe.
-      # Le push sur task/* est le signal GATHER → déclenche on-task-push.yml → orchestrate.mjs
+      # L'agent checkoute task/*, lit params.json, crée le fichier, commite.
+      # TOKEN (pas GITHUB_TOKEN) = variable lue par useEnvGithubToken() dans index.ts
+      # SHARE=false → pas de partage de session
+      # MODEL = modèle opencode via OpenCode Zen
       - name: Run agent via anomalyco
         uses: anomalyco/opencode/github@latest
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
-          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
-          USE_GITHUB_TOKEN: "true"
-        with:
-          model: opencode/claude-haiku-4-5
-          share: false
-          prompt: ${{ env.AGENT_PROMPT }}
-          use_github_token: true
+          TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          MOCK_EVENT: ${{ env.MOCK_EVENT }}
+          SHARE: "false"
+          MODEL: opencode/claude-haiku-4-5
+
+      # [DÉTERMINISTE] Push final = signal GATHER
+      # L'agent a commité localement sur task/* — le push déclenche on-task-push.yml
+      # qui appellera orchestrate.mjs pour merger, mettre à jour le manifest, et router la suite
+      - name: Push task branch (GATHER signal)
+        run: |
+          git push origin ${{ inputs.branch }}
