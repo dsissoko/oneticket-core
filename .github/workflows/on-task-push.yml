@@ -11,24 +11,21 @@ name: On Task Push
 # GATHER réel (commit de l'agent) déclenche l'orchestration.
 #
 # Pattern : Scatter/Gather — ce workflow est le Gather
+#
+# [CONCURRENCY] Aucun concurrency GitHub ici — les conflits d'accès au manifest
+# sont gérés dans orchestrate.mjs avec retry sur push (lock optimiste git).
+# Raison : le concurrency job-level GitHub n'offre qu'une seule place en queue —
+# si deux runs arrivent quasi-simultanément, l'un est annulé même avec cancel-in-progress: false.
+# Le retry git est plus fiable car il ne perd aucun signal.
 
 on:
   push:
     branches:
       - 'task/**'
 
-# [QUEUE GLOBALE] Sérialise TOUS les runs de ce workflow par branche poussée.
-# Inclut le job extract — évite qu'un run soit annulé avant même d'atteindre orchestrate.
-# Le concurrency sur orchestrate (par issue) garantit en plus la sérialisation intra-issue.
-# cancel-in-progress: false → aucun signal de fin ne doit jamais être perdu
-concurrency:
-  group: on-task-push-${{ github.ref_name }}
-  cancel-in-progress: false
-
 jobs:
   # [PARSE] Extrait le numéro d'issue depuis le nom de la branche poussée
   # ex: task/issue-42-A → 42
-  # Nécessaire pour scoper le concurrency par issue (voir job orchestrate)
   extract:
     # [FILTRE GATHER] Ne s'exécute que sur le commit final de l'agent (feat:)
     # Ignore les commits déterministes de setup (chore:) poussés par agent-run.yml
@@ -49,14 +46,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-
-    # [QUEUE PAR ISSUE] Sérialise les signaux de fin de la même issue
-    # Garantit qu'un seul runner lit/écrit le manifest à la fois pour une issue donnée
-    # Les issues différentes orchestrent en parallèle — pas de goulot d'étranglement global
-    # cancel-in-progress: false → on attend, on n'annule jamais un signal de fin
-    concurrency:
-      group: manifest-${{ github.repository }}-${{ needs.extract.outputs.issue_number }}
-      cancel-in-progress: false
+      issues: write
 
     steps:
       - name: Checkout
@@ -74,6 +64,7 @@ jobs:
         run: npm ci
 
       # [ROUTING DÉTERMINISTE] orchestrate.mjs décide de la suite — jamais le LLM
+      # Les conflits git (push non fast-forward) sont gérés avec retry dans le code JS
       - name: Run orchestrator — merge, update manifest, route or create PR
         env:
           GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}

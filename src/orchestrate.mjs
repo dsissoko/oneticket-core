@@ -17,8 +17,11 @@
  *      → toutes done    : créer la PR finale
  *      → en attente     : rien, un prochain push déclenchera ce workflow
  *
- * [QUEUE PAR ISSUE] La sérialisation est gérée par le concurrency GitHub Actions
- * dans on-task-push.yml — ce code n'a donc pas à gérer les accès concurrents.
+ * [LOCK OPTIMISTE] Pas de concurrency GitHub Actions — les conflits d'accès au manifest
+ * sont gérés ici avec retry sur push (git pull --rebase + re-push).
+ * Raison : le concurrency job-level GitHub ne maintient qu'une seule place en queue —
+ * deux signaux quasi-simultanés = l'un est annulé même avec cancel-in-progress: false.
+ * Le retry git est plus fiable : aucun signal n'est perdu.
  *
  * Variables d'environnement attendues :
  *   GITHUB_TOKEN, PUSHED_BRANCH (ex: task/issue-42-B), REPO
@@ -95,6 +98,27 @@ function getReadyTasks(manifest) {
   return manifest.tasks.filter(
     t => t.status === 'pending' && areDependenciesSatisfied(t, manifest.tasks)
   );
+}
+
+/**
+ * [LOCK OPTIMISTE] Push avec retry sur non fast-forward.
+ * Si deux orchestrateurs tournent en parallèle sur la même issue, l'un des deux
+ * échouera sur le push (non fast-forward). On fait git pull --rebase et on réessaie.
+ * Max 3 tentatives, délai exponentiel entre chaque.
+ */
+async function pushWithRetry(branch, maxAttempts = 3) {
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      run(`git push origin ${branch}`);
+      return; // succès
+    } catch (e) {
+      if (attempt === maxAttempts) throw e;
+      console.log(`[orchestrate] Push non fast-forward, tentative ${attempt}/${maxAttempts} — rebase et retry...`);
+      await new Promise(r => setTimeout(r, attempt * 2000)); // délai exponentiel
+      run(`git fetch origin ${branch}`);
+      run(`git rebase origin/${branch}`);
+    }
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -274,7 +298,7 @@ async function main() {
     writeManifest(manifest);
     run('git add manifest.json');
     run(`git commit -m "chore: mark task ${taskId} as merge-failed"`);
-    run(`git push origin ${featureBranch}`);
+    await pushWithRetry(featureBranch);
 
     // Notifier : label + commentaire sur l'issue
     await ensureAndApplyLabel(issueNumber, repo, ghToken);
@@ -285,13 +309,14 @@ async function main() {
   }
 
   // --- 5. Mettre à jour le manifest ----------------------------------------
-  // [SOURCE DE VÉRITÉ] Mise à jour atomique : lecture → mutation → écriture → push
+  // [LOCK OPTIMISTE] Mise à jour atomique avec retry sur push non fast-forward.
+  // Si deux orchestrateurs tournent en parallèle, l'un des deux rebasera et réessaiera.
   task.status = 'done';
   writeManifest(manifest);
 
   run('git add manifest.json');
   run(`git commit -m "chore: mark task ${taskId} as done in manifest"`);
-  run(`git push origin ${featureBranch}`);
+  await pushWithRetry(featureBranch);
 
   console.log(`[orchestrate] Tâche ${taskId} marquée done et mergée dans ${featureBranch}.`);
 
