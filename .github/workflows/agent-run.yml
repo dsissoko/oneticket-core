@@ -108,9 +108,9 @@ jobs:
             FIRST ACTION - no exception: run bash command: git checkout ${{ inputs.branch }}.
             Then read tasks/issue-${{ inputs.issue_number }}/params-${{ inputs.task_id }}.json.
             Create the file at the path in params field file with the content in params field content.
-            Then append exactly this line at the end of tasks/issue-${{ inputs.issue_number }}/workflow.md:
-            $(date -u '+%Y-%m-%d %H:%M') | ${{ inputs.task_id }} | ${{ inputs.file }}
-            Commit all changes with message: feat: complete task ${{ inputs.task_id }}.
+            Then run this exact bash command to append the trace line:
+            echo "$(date -u '+%Y-%m-%d %H:%M') | ${{ inputs.task_id }} | ${{ inputs.file }}" >> tasks/issue-${{ inputs.issue_number }}/workflow.md
+            Then run: git add -A && git commit -m "feat: complete task ${{ inputs.task_id }}"
             Do NOT push. Do NOT create a PR. Do nothing else.
         with:
           model: opencode/claude-haiku-4-5
@@ -120,9 +120,9 @@ jobs:
             FIRST ACTION - no exception: run bash command: git checkout ${{ inputs.branch }}.
             Then read tasks/issue-${{ inputs.issue_number }}/params-${{ inputs.task_id }}.json.
             Create the file at the path in params field file with the content in params field content.
-            Then append exactly this line at the end of tasks/issue-${{ inputs.issue_number }}/workflow.md:
-            $(date -u '+%Y-%m-%d %H:%M') | ${{ inputs.task_id }} | ${{ inputs.file }}
-            Commit all changes with message: feat: complete task ${{ inputs.task_id }}.
+            Then run this exact bash command to append the trace line:
+            echo "$(date -u '+%Y-%m-%d %H:%M') | ${{ inputs.task_id }} | ${{ inputs.file }}" >> tasks/issue-${{ inputs.issue_number }}/workflow.md
+            Then run: git add -A && git commit -m "feat: complete task ${{ inputs.task_id }}"
             Do NOT push. Do NOT create a PR. Do nothing else.
 
       # [DÉTERMINISTE] Push final = signal GATHER
