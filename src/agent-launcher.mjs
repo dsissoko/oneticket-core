@@ -135,10 +135,12 @@ export async function launchReadyTasks(manifest, repo, token) {
   }
 
   // [SOURCE DE VÉRITÉ] Commiter l'état in_progress avant de déclencher
+  // --allow-empty : après un rebase de orchestrate.mjs, le manifest peut déjà
+  // être à jour — on commit quand même pour garantir un push signalant l'état
   writeManifest(manifest);
   run('git add manifest.json');
   run(
-    `git commit -m "chore: mark tasks ${readyTasks.map(t => t.id).join(', ')} as in_progress"`
+    `git commit --allow-empty -m "chore: mark tasks ${readyTasks.map(t => t.id).join(', ')} as in_progress"`
   );
   run(`git push origin ${manifest.branch_base}`);
 
