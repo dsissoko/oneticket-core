@@ -3,5 +3,13 @@
   "model": "opencode/claude-haiku-4-5",
   "autoupdate": false,
   "share": "manual",
-  "disabled_providers": ["openai", "gemini", "anthropic"]
+  "disabled_providers": ["openai", "gemini", "anthropic"],
+  "provider": {
+    "opencode": {
+      "options": {
+        "timeout": 900000,
+        "chunkTimeout": 30000
+      }
+    }
+  }
 }
