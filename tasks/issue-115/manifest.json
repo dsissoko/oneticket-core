@@ -8,7 +8,7 @@
       "file": "tasks/issue-115/subtask-A.txt",
       "content": "Subtask A completed",
       "depends_on": [],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": "B",
