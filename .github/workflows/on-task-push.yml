@@ -1,7 +1,7 @@
 name: On Task Push
 
 # [GATHER] Point de collecte des signaux de fin de tâche.
-# Déclenché uniquement par le push FINAL de agent-run.yml (Step 7 déterministe).
+# Déclenché uniquement par le push FINAL de agent-run.yml (Step déterministe).
 #
 # IMPORTANT : agent-run.yml pousse plusieurs fois sur task/* :
 #   - "chore: add params.json for task X"  → push de setup, NE doit PAS orchestrer
@@ -16,6 +16,14 @@ on:
   push:
     branches:
       - 'task/**'
+
+# [QUEUE GLOBALE] Sérialise TOUS les runs de ce workflow par branche poussée.
+# Inclut le job extract — évite qu'un run soit annulé avant même d'atteindre orchestrate.
+# Le concurrency sur orchestrate (par issue) garantit en plus la sérialisation intra-issue.
+# cancel-in-progress: false → aucun signal de fin ne doit jamais être perdu
+concurrency:
+  group: on-task-push-${{ github.ref_name }}
+  cancel-in-progress: false
 
 jobs:
   # [PARSE] Extrait le numéro d'issue depuis le nom de la branche poussée
