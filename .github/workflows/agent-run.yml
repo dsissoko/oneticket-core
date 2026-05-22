@@ -37,6 +37,10 @@ on:
       branch_base:
         required: true
         type: string
+      retry_count:
+        required: false
+        type: string
+        default: "0"
 
 jobs:
   run-agent:
@@ -96,7 +100,10 @@ jobs:
       # Prompt force git checkout task/* → branchIsDirty() détecte switched=true
       # → PAS de push ni PR par l'action
       # USE_GITHUB_TOKEN=true → skippe OIDC exchange, utilise GITHUB_TOKEN directement
+      # continue-on-error: true → permet au step de retry de s'exécuter en cas d'échec
       - name: Run agent via anomalyco
+        id: run-agent
+        continue-on-error: true
         uses: anomalyco/opencode/github@latest
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
@@ -125,9 +132,41 @@ jobs:
             Commit all changes with message: feat: complete task ${{ inputs.task_id }}.
             Do NOT push. Do NOT create a PR. Do nothing else.
 
+      # [RETRY] Si anomalyco échoue (ex: rate-limit GitHub API sur curl releases/latest)
+      # et que retry_count < 3 → re-dispatch ce même workflow avec retry_count+1 et exit 0.
+      # Délai croissant : 10s × retry_count pour laisser passer le rate-limit.
+      # Si retry_count >= 3 → échec définitif (exit 1).
+      - name: Retry on agent failure
+        if: steps.run-agent.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+        run: |
+          RETRY=${{ inputs.retry_count }}
+          echo "[retry] Agent a échoué. retry_count=$RETRY"
+          if [ "$RETRY" -ge 3 ]; then
+            echo "[retry] Max retries atteint (3). Échec définitif."
+            exit 1
+          fi
+          NEXT_RETRY=$((RETRY + 1))
+          DELAY=$((NEXT_RETRY * 10))
+          echo "[retry] Attente ${DELAY}s avant re-dispatch (tentative $NEXT_RETRY/3)..."
+          sleep $DELAY
+          gh workflow run agent-run.yml \
+            --repo ${{ github.repository }} \
+            --field issue_number=${{ inputs.issue_number }} \
+            --field task_id=${{ inputs.task_id }} \
+            --field file="${{ inputs.file }}" \
+            --field content="${{ inputs.content }}" \
+            --field branch=${{ inputs.branch }} \
+            --field branch_base=${{ inputs.branch_base }} \
+            --field retry_count=$NEXT_RETRY
+          echo "[retry] Re-dispatch déclenché (tentative $NEXT_RETRY/3). Ce run se termine proprement."
+
       # [DÉTERMINISTE] Push final = signal GATHER
       # L'agent a commité localement sur task/* après git checkout
       # Ce push déclenche on-task-push.yml → orchestrate.mjs
+      # Skippé si l'agent a échoué (le retry prend le relais)
       - name: Push task branch (GATHER signal)
+        if: steps.run-agent.outcome == 'success'
         run: |
           git push origin ${{ inputs.branch }}
