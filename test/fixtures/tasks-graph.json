@@ -2,37 +2,37 @@
   "tasks": [
     {
       "id": "A",
-      "file": "tasks/subtask-A.txt",
+      "file": "subtask-A.txt",
       "content": "Subtask A completed",
       "depends_on": []
     },
     {
       "id": "B",
-      "file": "tasks/subtask-B.txt",
+      "file": "subtask-B.txt",
       "content": "Subtask B completed",
       "depends_on": []
     },
     {
       "id": "C",
-      "file": "tasks/subtask-C.txt",
+      "file": "subtask-C.txt",
       "content": "Subtask C completed",
       "depends_on": []
     },
     {
       "id": "D",
-      "file": "tasks/subtask-D.txt",
+      "file": "subtask-D.txt",
       "content": "Subtask D completed — depends on A and B",
       "depends_on": ["A", "B"]
     },
     {
       "id": "E",
-      "file": "tasks/subtask-E.txt",
+      "file": "subtask-E.txt",
       "content": "Subtask E completed — depends on D",
       "depends_on": ["D"]
     },
     {
       "id": "F",
-      "file": "tasks/subtask-F.txt",
+      "file": "subtask-F.txt",
       "content": "Subtask F completed — depends on C",
       "depends_on": ["C"]
     }

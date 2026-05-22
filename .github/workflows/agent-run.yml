@@ -82,7 +82,7 @@ jobs:
           echo "params-${{ inputs.task_id }}.json :"
           cat tasks/issue-${{ inputs.issue_number }}/params-${{ inputs.task_id }}.json
           git add tasks/issue-${{ inputs.issue_number }}/params-${{ inputs.task_id }}.json
-          git commit -m "chore: add params.json for task ${{ inputs.task_id }}"
+          git commit --allow-empty -m "chore: add params.json for task ${{ inputs.task_id }}"
           git push origin ${{ inputs.branch }}
 
       # [LLM] Seule zone non-déterministe.
