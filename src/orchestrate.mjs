@@ -101,22 +101,45 @@ function getReadyTasks(manifest) {
 }
 
 /**
- * [LOCK OPTIMISTE] Push avec retry sur non fast-forward.
- * Si deux orchestrateurs tournent en parallèle sur la même issue, l'un des deux
- * échouera sur le push (non fast-forward). On fait git pull --rebase et on réessaie.
- * Max 3 tentatives, délai exponentiel entre chaque.
+ * [LOCK OPTIMISTE] Marque une tâche done, met à jour le manifest et push.
+ * En cas de push non fast-forward (conflit concurrent), re-lit le manifest
+ * depuis origin et réapplique la mutation avant de réessayer.
+ * Ainsi l'état final reflète toujours la réalité distante + la mutation locale.
+ *
+ * Retourne le manifest final (potentiellement re-lu depuis origin).
  */
-async function pushWithRetry(branch, maxAttempts = 3) {
+async function markDoneAndPush(manifest, taskId, featureBranch, maxAttempts = 3) {
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    // Appliquer la mutation sur le manifest courant
+    const task = manifest.tasks.find(t => t.id === taskId);
+    if (!task) throw new Error(`Tâche "${taskId}" introuvable dans le manifest.`);
+
+    // Idempotence : si déjà done (re-lecture après conflit), sortir proprement
+    if (task.status === 'done') {
+      console.log(`[orchestrate] IDEMPOTENCE (retry ${attempt}) : tâche ${taskId} déjà done.`);
+      return manifest;
+    }
+
+    task.status = 'done';
+    writeManifest(manifest);
+    run('git add manifest.json');
+    run(`git commit -m "chore: mark task ${taskId} as done in manifest"`);
+
     try {
-      run(`git push origin ${branch}`);
-      return; // succès
+      run(`git push origin ${featureBranch}`);
+      return manifest; // succès
     } catch (e) {
       if (attempt === maxAttempts) throw e;
-      console.log(`[orchestrate] Push non fast-forward, tentative ${attempt}/${maxAttempts} — rebase et retry...`);
-      await new Promise(r => setTimeout(r, attempt * 2000)); // délai exponentiel
-      run(`git fetch origin ${branch}`);
-      run(`git rebase origin/${branch}`);
+      console.log(`[orchestrate] Push non fast-forward (tentative ${attempt}/${maxAttempts}) — re-fetch et ré-application...`);
+      await new Promise(r => setTimeout(r, attempt * 1000));
+
+      // Annuler le commit local et re-synchroniser depuis origin
+      run(`git reset --hard HEAD~1`);
+      run(`git fetch origin ${featureBranch}`);
+      run(`git checkout -B ${featureBranch} origin/${featureBranch}`);
+
+      // Re-lire le manifest depuis l'état origin (inclut les mutations des autres runners)
+      manifest = readManifest();
     }
   }
 }
@@ -269,7 +292,7 @@ async function main() {
   run(`git checkout -B ${featureBranch} origin/${featureBranch}`);
 
   // --- 2. [GATHER] Lire le manifest — reconstitution de l'état complet -----
-  const manifest = readManifest();
+  let manifest = readManifest();
 
   const task = manifest.tasks.find(t => t.id === taskId);
   if (!task) {
@@ -293,12 +316,12 @@ async function main() {
     // Annuler le merge en cours
     try { run('git merge --abort'); } catch (_) {}
 
-    // Mettre à jour le manifest
+    // Mettre à jour le manifest avec merge-failed
     task.status = 'merge-failed';
     writeManifest(manifest);
     run('git add manifest.json');
     run(`git commit -m "chore: mark task ${taskId} as merge-failed"`);
-    await pushWithRetry(featureBranch);
+    run(`git push origin ${featureBranch}`);
 
     // Notifier : label + commentaire sur l'issue
     await ensureAndApplyLabel(issueNumber, repo, ghToken);
@@ -309,14 +332,10 @@ async function main() {
   }
 
   // --- 5. Mettre à jour le manifest ----------------------------------------
-  // [LOCK OPTIMISTE] Mise à jour atomique avec retry sur push non fast-forward.
-  // Si deux orchestrateurs tournent en parallèle, l'un des deux rebasera et réessaiera.
-  task.status = 'done';
-  writeManifest(manifest);
-
-  run('git add manifest.json');
-  run(`git commit -m "chore: mark task ${taskId} as done in manifest"`);
-  await pushWithRetry(featureBranch);
+  // [LOCK OPTIMISTE] markDoneAndPush gère les conflits concurrents :
+  // en cas de push non fast-forward, il re-lit le manifest depuis origin
+  // et réapplique la mutation pour garantir la cohérence de l'état final.
+  manifest = await markDoneAndPush(manifest, taskId, featureBranch);
 
   console.log(`[orchestrate] Tâche ${taskId} marquée done et mergée dans ${featureBranch}.`);
 
