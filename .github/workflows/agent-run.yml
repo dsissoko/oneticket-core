@@ -1,0 +1,90 @@
+name: Agent Run
+
+# [EXÉCUTION TÂCHE] Workflow réutilisable déclenché par agent-launcher.mjs via l'API GitHub.
+# Responsabilité unique : écrire params.json et lancer opencode pour qu'il crée le fichier demandé.
+# Ce workflow est la seule frontière LLM — tout le reste est déterministe.
+#
+# [FAN-OUT receiver] Plusieurs instances de ce workflow peuvent tourner en parallèle
+# (une par tâche prête). Aucune collision possible car chaque instance travaille
+# sur sa propre branche task/issue-<N>-<ID>.
+
+on:
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        required: true
+        type: string
+      task_id:
+        required: true
+        type: string
+      file:
+        required: true
+        type: string
+      content:
+        required: true
+        type: string
+      branch:
+        required: true
+        type: string
+      branch_base:
+        required: true
+        type: string
+
+jobs:
+  run-agent:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout branch base
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch_base }}
+          token: ${{ secrets.ONETICKET_GH_PAT }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # [PARAMS] Matérialise les inputs du workflow en fichier params.json
+      # C'est le seul canal de communication vers opencode — pas de variables d'env complexes
+      - name: Write params.json
+        run: |
+          node -e "
+          const params = {
+            task_id: '${{ inputs.task_id }}',
+            file: '${{ inputs.file }}',
+            content: '${{ inputs.content }}',
+            branch: '${{ inputs.branch }}',
+            branch_base: '${{ inputs.branch_base }}'
+          };
+          require('fs').writeFileSync('params.json', JSON.stringify(params, null, 2));
+          "
+
+      - name: Install opencode CLI
+        run: npm install -g opencode-ai@1.14.50
+
+      - name: Configure git identity
+        run: |
+          git config user.name "oneticket-bot"
+          git config user.email "oneticket-bot@users.noreply.github.com"
+
+      # [ISOLATION] Chaque tâche crée sa propre branche depuis branch_base
+      # Le push final sur cette branche est le signal de fin (GATHER trigger)
+      - name: Create and checkout task branch
+        run: |
+          git checkout -b ${{ inputs.branch }}
+
+      # [LLM] Seule zone non-déterministe — opencode lit params.json et crée le fichier
+      # Le prompt est volontairement minimal : pas de skills, pas de profils, pas de directives complexes
+      - name: Run opencode agent
+        env:
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+        run: |
+          opencode run --non-interactive "Read params.json at the root of the repository. Create the file at the path specified in params.json[\"file\"] with the content specified in params.json[\"content\"]. Commit with message \"feat: complete task ${{ inputs.task_id }}\" and push to the branch specified in params.json[\"branch\"]. Nothing else."

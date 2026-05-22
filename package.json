@@ -1,0 +1,14 @@
+{
+  "name": "oneticket-core",
+  "version": "0.1.0",
+  "description": "Deterministic orchestration engine for oneticket — zero-LLM routing, manifest-driven task sequencing",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test test/**/*.mjs"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

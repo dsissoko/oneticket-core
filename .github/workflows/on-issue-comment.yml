@@ -1,0 +1,53 @@
+name: On Issue Comment
+
+# [BOOTSTRAP] Point d'entrée du workflow complet.
+# Un commentaire /start sur une issue déclenche init.mjs qui :
+#   - parse les tâches (depuis l'issue ou le fixture par défaut)
+#   - crée le manifest en git (source de vérité)
+#   - déclenche le premier FAN-OUT vers les tâches sans dépendances
+
+on:
+  issue_comment:
+    types: [created]
+
+# [IDEMPOTENCE] Sérialise les déclenchements sur la même issue
+# Protège contre le double-clic ou le retry GitHub sur le même /start
+# Les issues différentes restent parallèles entre elles
+concurrency:
+  group: init-${{ github.repository }}-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    # Ne se déclenche que sur /start dans un commentaire d'issue (pas PR)
+    if: |
+      github.event.issue.pull_request == null &&
+      startsWith(github.event.comment.body, '/start')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ONETICKET_GH_PAT }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run init — create manifest + feature branch + first FAN-OUT
+        env:
+          GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          REPO: ${{ github.repository }}
+        run: node src/init.mjs

@@ -1,0 +1,67 @@
+name: On Task Push
+
+# [GATHER] Point de collecte des signaux de fin de tâche.
+# Chaque push sur task/* signifie qu'un agent a terminé son travail.
+# Ce workflow reconstruit l'état complet depuis le manifest et décide de la suite :
+#   - nouvelles tâches prêtes → FAN-OUT vers agent-launcher
+#   - toutes les tâches done  → création de la PR finale
+#
+# Pattern : Scatter/Gather — ce workflow est le Gather
+
+on:
+  push:
+    branches:
+      - 'task/**'
+
+jobs:
+  # [PARSE] Extrait le numéro d'issue depuis le nom de la branche poussée
+  # ex: task/issue-42-A → 42
+  # Nécessaire pour scoper le concurrency par issue (voir job orchestrate)
+  extract:
+    runs-on: ubuntu-latest
+    outputs:
+      issue_number: ${{ steps.parse.outputs.issue_number }}
+    steps:
+      - id: parse
+        run: |
+          BRANCH="${{ github.ref_name }}"
+          ISSUE=$(echo "$BRANCH" | sed 's/task\/issue-\([0-9]*\)-.*/\1/')
+          echo "issue_number=$ISSUE" >> $GITHUB_OUTPUT
+
+  orchestrate:
+    needs: extract
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    # [QUEUE PAR ISSUE] Sérialise les signaux de fin de la même issue
+    # Garantit qu'un seul runner lit/écrit le manifest à la fois pour une issue donnée
+    # Les issues différentes orchestrent en parallèle — pas de goulot d'étranglement global
+    # cancel-in-progress: false → on attend, on n'annule jamais un signal de fin
+    concurrency:
+      group: manifest-${{ github.repository }}-${{ needs.extract.outputs.issue_number }}
+      cancel-in-progress: false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ONETICKET_GH_PAT }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # [ROUTING DÉTERMINISTE] orchestrate.mjs décide de la suite — jamais le LLM
+      - name: Run orchestrator — merge, update manifest, route or create PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          PUSHED_BRANCH: ${{ github.ref_name }}
+          REPO: ${{ github.repository }}
+        run: node src/orchestrate.mjs
