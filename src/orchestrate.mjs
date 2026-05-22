@@ -262,6 +262,32 @@ async function postMergeFailureComment(issueNumber, taskId, branch, featureBranc
   });
 }
 
+/**
+ * Supprime une branche distante via l'API GitHub.
+ * Appelée après chaque merge réussi de task/* dans feature/* —
+ * nettoyage immédiat pour éviter l'accumulation de branches temporaires.
+ */
+async function deleteRemoteBranch(branch, repo, token) {
+  const res = await fetch(
+    `https://api.github.com/repos/${repo}/git/refs/heads/${branch}`,
+    {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+    }
+  );
+  if (res.ok || res.status === 422) {
+    // 422 = ref n'existe pas (déjà supprimée) — idempotent
+    console.log(`[orchestrate] Branche ${branch} supprimée.`);
+  } else {
+    // Non bloquant — on log mais on n'arrête pas le workflow
+    console.warn(`[orchestrate] Impossible de supprimer ${branch} : ${res.status}`);
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
@@ -338,6 +364,10 @@ async function main() {
   manifest = await markDoneAndPush(manifest, taskId, featureBranch);
 
   console.log(`[orchestrate] Tâche ${taskId} marquée done et mergée dans ${featureBranch}.`);
+
+  // Supprimer la branche task/* immédiatement après le merge réussi
+  // Nettoyage au fil de l'eau — pas d'accumulation de branches temporaires
+  await deleteRemoteBranch(pushedBranch, repo, ghToken);
 
   // --- 6. [ROUTING DÉTERMINISTE] Décider de la suite -----------------------
   const allDone    = manifest.tasks.every(t => t.status === 'done');
