@@ -57,14 +57,19 @@ jobs:
           fetch-depth: 0
 
       # [DÉTERMINISTE] Création + push de la branche task isolée depuis branch_base
-      # isMock=false → l'action configure git elle-même (configureGit skippé uniquement si isMock)
-      # On configure ici pour le step params.json
+      # Si la branche existe déjà (double-lancement rare), on la checkoute sans recréer
       - name: Create task branch
         run: |
           git config user.name "oneticket-bot"
           git config user.email "oneticket-bot@users.noreply.github.com"
-          git checkout -b ${{ inputs.branch }}
-          git push origin ${{ inputs.branch }}
+          if git ls-remote --heads origin ${{ inputs.branch }} | grep -q ${{ inputs.branch }}; then
+            echo "Branche ${{ inputs.branch }} existe déjà, checkout."
+            git fetch origin ${{ inputs.branch }}
+            git checkout -B ${{ inputs.branch }} origin/${{ inputs.branch }}
+          else
+            git checkout -b ${{ inputs.branch }}
+            git push origin ${{ inputs.branch }}
+          fi
 
       # [DÉTERMINISTE] Matérialise les inputs en tasks/issue-<N>/params-<ID>.json
       # Nommé par tâche (params-A.json, params-B.json...) pour éviter les conflits

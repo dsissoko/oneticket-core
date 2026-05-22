@@ -43,10 +43,13 @@ function areDependenciesSatisfied(task, allTasks) {
 }
 
 /**
- * Écrit le manifest.json depuis le working tree.
+ * Écrit le manifest depuis le working tree.
+ * Le chemin est tasks/issue-<N>/manifest.json.
  */
 function writeManifest(manifest) {
-  const manifestPath = path.join(process.cwd(), 'manifest.json');
+  const manifestPath = path.join(
+    process.cwd(), 'tasks', `issue-${manifest.issue}`, 'manifest.json'
+  );
   fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
 }
 
@@ -135,14 +138,21 @@ export async function launchReadyTasks(manifest, repo, token) {
   }
 
   // [SOURCE DE VÉRITÉ] Commiter l'état in_progress avant de déclencher
-  // --allow-empty : après un rebase de orchestrate.mjs, le manifest peut déjà
-  // être à jour — on commit quand même pour garantir un push signalant l'état
+  // --allow-empty : après un rebase, le manifest peut déjà être à jour
   writeManifest(manifest);
-  run('git add manifest.json');
+  run(`git add tasks/issue-${manifest.issue}/manifest.json`);
   run(
     `git commit --allow-empty -m "chore: mark tasks ${readyTasks.map(t => t.id).join(', ')} as in_progress"`
   );
-  run(`git push origin ${manifest.branch_base}`);
+
+  // [DOUBLE-LANCEMENT] Tenter le push. Si non fast-forward (un autre runner a gagné),
+  // ne PAS déclencher les workflows — l'autre runner s'en charge.
+  try {
+    run(`git push origin ${manifest.branch_base}`);
+  } catch (e) {
+    console.log('[agent-launcher] Push non fast-forward — un autre runner a déjà lancé ces tâches. Abandon.');
+    return;
+  }
 
   // [FAN-OUT] Déclencher un workflow indépendant par tâche
   // Chaque workflow s'exécute en parallèle sur sa propre branche task/issue-<N>-<ID>
