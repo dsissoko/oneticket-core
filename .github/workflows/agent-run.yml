@@ -89,7 +89,7 @@ jobs:
       # → opencode/* reste clean → branchIsDirty()=false → pas de PR, pas de push par l'action
       - name: Build MOCK_EVENT
         run: |
-          node -e "
+          MOCK=$(node -e "
           const prompt = [
             '/oc FIRST ACTION - no exception: run bash command: git checkout ${{ inputs.branch }}',
             'Then read params.json at the root of the repository.',
@@ -97,7 +97,7 @@ jobs:
             'Commit with message: feat: complete task ${{ inputs.task_id }}.',
             'Do NOT push. Do NOT create a PR. Do nothing else.'
           ].join(' ');
-          const mock = JSON.stringify({
+          console.log(JSON.stringify({
             eventName: 'issue_comment',
             repo: { owner: '${{ github.repository_owner }}', repo: '${{ github.event.repository.name }}' },
             actor: 'oneticket-bot',
@@ -105,9 +105,10 @@ jobs:
               issue: { number: ${{ inputs.issue_number }}, pull_request: null },
               comment: { id: 1, body: prompt }
             }
-          });
-          console.log('MOCK_EVENT=' + mock);
-          " >> \$GITHUB_ENV
+          }));
+          ")
+          echo "MOCK_EVENT=$MOCK" >> $GITHUB_ENV
+          echo "MOCK_EVENT construit : $MOCK"
 
       # [LLM] Seule zone non-déterministe.
       # L'agent checkoute task/*, lit params.json, crée le fichier, commite.
