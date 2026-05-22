@@ -55,7 +55,7 @@
       "depends_on": [
         "C"
       ],
-      "status": "pending"
+      "status": "done"
     }
   ]
 }
