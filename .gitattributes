@@ -1,0 +1,2 @@
+# workflow.md est append-only — merge=union évite les conflits sur ajouts parallèles
+tasks/issue-*/workflow.md merge=union
