@@ -24,7 +24,7 @@
       "file": "tasks/issue-111/tasks/subtask-C.txt",
       "content": "Subtask C completed",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "D",
@@ -55,7 +55,7 @@
       "depends_on": [
         "C"
       ],
-      "status": "pending"
+      "status": "in_progress"
     }
   ]
 }
