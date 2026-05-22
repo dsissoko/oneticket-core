@@ -82,28 +82,32 @@ jobs:
           git commit -m "chore: add params.json for task ${{ inputs.task_id }}"
           git push origin ${{ inputs.branch }}
 
-      # [DÉTERMINISTE] Construction du MOCK_EVENT
+      # [DÉTERMINISTE] Construction du MOCK_EVENT via node pour garantir un JSON valide
       # Nécessaire pour bypasser assertContextEvent() dans l'action anomalyco
       # Le prompt est dans comment.body — c'est l'unique canal de prompt vers opencode
-      # PREMIÈRE ACTION obligatoire : git checkout sur notre branche task
+      # PREMIERE ACTION obligatoire : git checkout sur notre branche task
       # → opencode/* reste clean → branchIsDirty()=false → pas de PR, pas de push par l'action
       - name: Build MOCK_EVENT
         run: |
-          REPO_OWNER="${{ github.repository_owner }}"
-          REPO_NAME="${{ github.event.repository.name }}"
-          PROMPT="/oc FIRST ACTION — no exception: run the bash command: git checkout ${{ inputs.branch }}
-          Then read the file params.json at the root of the repository.
-          Create the file at the path specified in params.json file field with the content specified in params.json content field.
-          Commit with message: feat: complete task ${{ inputs.task_id }}.
-          Do NOT push. Do NOT create a PR. Do nothing else."
-
-          MOCK=$(printf '{"eventName":"issue_comment","repo":{"owner":"%s","repo":"%s"},"actor":"oneticket-bot","payload":{"issue":{"number":%s,"pull_request":null},"comment":{"id":1,"body":"%s"}}}' \
-            "$REPO_OWNER" \
-            "$REPO_NAME" \
-            "${{ inputs.issue_number }}" \
-            "$(echo "$PROMPT" | tr -d '\n' | sed 's/"/\\"/g')")
-
-          echo "MOCK_EVENT=$MOCK" >> $GITHUB_ENV
+          node -e "
+          const prompt = [
+            '/oc FIRST ACTION - no exception: run bash command: git checkout ${{ inputs.branch }}',
+            'Then read params.json at the root of the repository.',
+            'Create the file at the path in params.json field file with content in params.json field content.',
+            'Commit with message: feat: complete task ${{ inputs.task_id }}.',
+            'Do NOT push. Do NOT create a PR. Do nothing else.'
+          ].join(' ');
+          const mock = JSON.stringify({
+            eventName: 'issue_comment',
+            repo: { owner: '${{ github.repository_owner }}', repo: '${{ github.event.repository.name }}' },
+            actor: 'oneticket-bot',
+            payload: {
+              issue: { number: ${{ inputs.issue_number }}, pull_request: null },
+              comment: { id: 1, body: prompt }
+            }
+          });
+          console.log('MOCK_EVENT=' + mock);
+          " >> \$GITHUB_ENV
 
       # [LLM] Seule zone non-déterministe.
       # L'agent checkoute task/*, lit params.json, crée le fichier, commite.
