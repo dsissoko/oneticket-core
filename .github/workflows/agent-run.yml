@@ -66,9 +66,11 @@ jobs:
           git checkout -b ${{ inputs.branch }}
           git push origin ${{ inputs.branch }}
 
-      # [DÉTERMINISTE] Matérialise les inputs en params.json et le commite sur la branche task
-      # Seul canal de communication vers l'agent
-      - name: Write and commit params.json
+      # [DÉTERMINISTE] Matérialise les inputs en params.json
+      # params.json N'EST PAS commité — il reste uniquement sur le filesystem du runner
+      # L'agent le lit, crée le fichier demandé, puis commite uniquement ce fichier
+      # Évite les conflits de merge sur params.json lors du merge task/* → feature/*
+      - name: Write params.json
         run: |
           printf '{\n  "task_id": "%s",\n  "file": "%s",\n  "content": "%s",\n  "branch": "%s",\n  "branch_base": "%s"\n}\n' \
             "${{ inputs.task_id }}" \
@@ -76,11 +78,8 @@ jobs:
             "${{ inputs.content }}" \
             "${{ inputs.branch }}" \
             "${{ inputs.branch_base }}" > params.json
-          echo "params.json:"
+          echo "params.json (non commité) :"
           cat params.json
-          git add params.json
-          git commit -m "chore: add params.json for task ${{ inputs.task_id }}"
-          git push origin ${{ inputs.branch }}
 
       # [LLM] Seule zone non-déterministe.
       # workflow_dispatch → chemin REPO_EVENTS → PROMPT requis et consommé
