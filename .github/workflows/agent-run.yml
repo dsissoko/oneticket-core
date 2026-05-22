@@ -73,23 +73,30 @@ jobs:
           echo "params.json écrit :"
           cat params.json
 
+      # [DÉTERMINISTE] Charge le prompt dans GITHUB_ENV pour éviter les problèmes
+      # de quotes/JSON dans l'input with.prompt de l'action anomalyco
+      - name: Prepare prompt
+        run: |
+          echo "AGENT_PROMPT<<EOF_MARKER" >> "$GITHUB_ENV"
+          echo "Read the file params.json at the root of the repository." >> "$GITHUB_ENV"
+          echo "Create the file at the path specified in params.json[file] with the content specified in params.json[content]." >> "$GITHUB_ENV"
+          echo "Commit with message feat: complete task ${{ inputs.task_id }}." >> "$GITHUB_ENV"
+          echo "Push to the branch specified in params.json[branch]." >> "$GITHUB_ENV"
+          echo "Do nothing else." >> "$GITHUB_ENV"
+          echo "EOF_MARKER" >> "$GITHUB_ENV"
+
       # [LLM] Seule zone non-déterministe.
       # L'agent lit params.json, crée le fichier texte, commite et pushe.
       # Le push sur task/* est le signal GATHER → déclenche on-task-push.yml → orchestrate.mjs
-      # .opencode/config.json fournit le modèle et la config provider
       - name: Run agent via anomalyco
         uses: anomalyco/opencode/github@latest
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
           GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          USE_GITHUB_TOKEN: "true"
         with:
           model: opencode/claude-haiku-4-5
           share: false
-          prompt: >
-            Read the file params.json at the root of the repository.
-            Create the file at the path specified in params.json["file"]
-            with the content specified in params.json["content"].
-            Commit with message "feat: complete task ${{ inputs.task_id }}".
-            Push to the branch specified in params.json["branch"].
-            Do nothing else.
+          prompt: ${{ env.AGENT_PROMPT }}
+          use_github_token: true
