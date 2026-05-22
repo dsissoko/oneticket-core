@@ -108,8 +108,8 @@ jobs:
       # [LLM] Seule zone non-déterministe.
       # L'agent checkoute task/*, lit params.json, crée le fichier, commite.
       # TOKEN (pas GITHUB_TOKEN) = variable lue par useEnvGithubToken() dans index.ts
+      # MODEL passé via with: ET env: — action.yml set MODEL=${{inputs.model}} dans son step
       # SHARE=false → pas de partage de session
-      # MODEL = modèle opencode via OpenCode Zen
       - name: Run agent via anomalyco
         uses: anomalyco/opencode/github@latest
         env:
@@ -118,6 +118,9 @@ jobs:
           MOCK_EVENT: ${{ env.MOCK_EVENT }}
           SHARE: "false"
           MODEL: opencode/claude-haiku-4-5
+        with:
+          model: opencode/claude-haiku-4-5
+          share: false
 
       # [DÉTERMINISTE] Push final = signal GATHER
       # L'agent a commité localement sur task/* — le push déclenche on-task-push.yml
