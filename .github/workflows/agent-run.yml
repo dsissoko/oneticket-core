@@ -61,17 +61,17 @@ jobs:
 
       # [DÉTERMINISTE] Matérialise les inputs en params.json
       # Seul canal de communication vers l'agent — pas de variables d'env complexes
+      # Note : printf utilisé pour éviter les espaces d'indentation du heredoc YAML
       - name: Write params.json
         run: |
-          cat > params.json << 'EOF'
-          {
-            "task_id": "${{ inputs.task_id }}",
-            "file": "${{ inputs.file }}",
-            "content": "${{ inputs.content }}",
-            "branch": "${{ inputs.branch }}",
-            "branch_base": "${{ inputs.branch_base }}"
-          }
-          EOF
+          printf '{\n  "task_id": "%s",\n  "file": "%s",\n  "content": "%s",\n  "branch": "%s",\n  "branch_base": "%s"\n}\n' \
+            "${{ inputs.task_id }}" \
+            "${{ inputs.file }}" \
+            "${{ inputs.content }}" \
+            "${{ inputs.branch }}" \
+            "${{ inputs.branch_base }}" > params.json
+          echo "params.json écrit :"
+          cat params.json
 
       # [LLM] Seule zone non-déterministe.
       # L'agent lit params.json, crée le fichier texte, commite et pushe.
