@@ -156,21 +156,25 @@ async function main() {
     run(`git checkout -b ${featureBranch}`);
   }
 
-  // --- 4. Écrire le manifest.json et tasks/issue-<N>/workflow.md, puis commiter ---------
-  // [SOURCE DE VÉRITÉ] Le manifest en git est l'unique état partagé entre tous les runs.
-  // tasks/issue-<N>/workflow.md est le journal d'exécution isolé par issue.
-  // L'isolation par répertoire issue-<N>/ évite toute collision entre issues parallèles.
-  const manifestPath  = path.join(process.cwd(), 'manifest.json');
-  const workflowDir   = path.join(process.cwd(), 'tasks', `issue-${issueNumber}`);
-  const workflowPath  = path.join(workflowDir, 'workflow.md');
+  // --- 4. Créer tasks/issue-<N>/ et écrire tous les artefacts ------------------
+  // Isolation complète par issue : manifest, workflow, params (via agent-run)
+  // sous le même répertoire tasks/issue-<N>/ → zéro collision entre issues sur main.
+  const issueDir     = path.join(process.cwd(), 'tasks', `issue-${issueNumber}`);
+  const manifestPath = path.join(issueDir, 'manifest.json');
+  const workflowPath = path.join(issueDir, 'workflow.md');
 
+  if (!fs.existsSync(issueDir)) fs.mkdirSync(issueDir, { recursive: true });
+
+  // [SOURCE DE VÉRITÉ] manifest.json isolé par issue
   fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
 
-  // Créer tasks/issue-<N>/ et initialiser workflow.md vide
-  if (!fs.existsSync(workflowDir)) fs.mkdirSync(workflowDir, { recursive: true });
-  fs.writeFileSync(workflowPath, '');
+  // workflow.md — journal d'exécution append-only
+  // La ligne d'en-tête garantit que le fichier n'est pas vide au départ :
+  // les agents parallèles appendant après cette ligne → Git merge 3-way propre
+  // sans besoin de merge=union dans .gitattributes
+  fs.writeFileSync(workflowPath, '# Execution trace\n');
 
-  run(`git add manifest.json tasks/issue-${issueNumber}/workflow.md`);
+  run(`git add tasks/issue-${issueNumber}/`);
   run(`git commit -m "chore: init manifest for issue #${issueNumber}" --allow-empty`);
   run(`git push origin ${featureBranch}`);
 

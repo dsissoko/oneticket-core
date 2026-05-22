@@ -62,22 +62,22 @@ function parseBranchName(branch) {
 }
 
 /**
- * Lit le manifest.json depuis le working tree courant.
+ * Lit le manifest.json depuis tasks/issue-<N>/manifest.json.
  * [SOURCE DE VÉRITÉ] Le manifest en git est l'unique état partagé entre les runs.
  */
-function readManifest() {
-  const manifestPath = path.join(process.cwd(), 'manifest.json');
+function readManifest(issueNumber) {
+  const manifestPath = path.join(process.cwd(), 'tasks', `issue-${issueNumber}`, 'manifest.json');
   if (!fs.existsSync(manifestPath)) {
-    throw new Error('manifest.json introuvable dans le répertoire courant.');
+    throw new Error(`manifest.json introuvable : ${manifestPath}`);
   }
   return JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 }
 
 /**
- * Écrit le manifest.json mis à jour.
+ * Écrit le manifest.json mis à jour dans tasks/issue-<N>/manifest.json.
  */
 function writeManifest(manifest) {
-  const manifestPath = path.join(process.cwd(), 'manifest.json');
+  const manifestPath = path.join(process.cwd(), 'tasks', `issue-${manifest.issue}`, 'manifest.json');
   fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
 }
 
@@ -122,7 +122,7 @@ async function markDoneAndPush(manifest, taskId, featureBranch, maxAttempts = 3)
 
     task.status = 'done';
     writeManifest(manifest);
-    run('git add manifest.json');
+    run(`git add tasks/issue-${manifest.issue}/manifest.json`);
     run(`git commit -m "chore: mark task ${taskId} as done in manifest"`);
 
     try {
@@ -139,7 +139,7 @@ async function markDoneAndPush(manifest, taskId, featureBranch, maxAttempts = 3)
       run(`git checkout -B ${featureBranch} origin/${featureBranch}`);
 
       // Re-lire le manifest depuis l'état origin (inclut les mutations des autres runners)
-      manifest = readManifest();
+      manifest = readManifest(manifest.issue);
     }
   }
 }
@@ -292,7 +292,7 @@ async function main() {
   run(`git checkout -B ${featureBranch} origin/${featureBranch}`);
 
   // --- 2. [GATHER] Lire le manifest — reconstitution de l'état complet -----
-  let manifest = readManifest();
+  let manifest = readManifest(issueNumber);
 
   const task = manifest.tasks.find(t => t.id === taskId);
   if (!task) {
@@ -319,7 +319,7 @@ async function main() {
     // Mettre à jour le manifest avec merge-failed
     task.status = 'merge-failed';
     writeManifest(manifest);
-    run('git add manifest.json');
+    run(`git add tasks/issue-${issueNumber}/manifest.json`);
     run(`git commit -m "chore: mark task ${taskId} as merge-failed"`);
     run(`git push origin ${featureBranch}`);
 

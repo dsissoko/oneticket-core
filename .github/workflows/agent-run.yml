@@ -66,20 +66,22 @@ jobs:
           git checkout -b ${{ inputs.branch }}
           git push origin ${{ inputs.branch }}
 
-      # [DÉTERMINISTE] Matérialise les inputs en params.json
-      # params.json N'EST PAS commité — il reste uniquement sur le filesystem du runner
-      # L'agent le lit, crée le fichier demandé, puis commite uniquement ce fichier
-      # Évite les conflits de merge sur params.json lors du merge task/* → feature/*
-      - name: Write params.json
+      # [DÉTERMINISTE] Matérialise les inputs en tasks/issue-<N>/params.json
+      # Commité sur la branche task/* pour audit et traçabilité
+      - name: Write and commit params.json
         run: |
+          mkdir -p tasks/issue-${{ inputs.issue_number }}
           printf '{\n  "task_id": "%s",\n  "file": "%s",\n  "content": "%s",\n  "branch": "%s",\n  "branch_base": "%s"\n}\n' \
             "${{ inputs.task_id }}" \
             "${{ inputs.file }}" \
             "${{ inputs.content }}" \
             "${{ inputs.branch }}" \
-            "${{ inputs.branch_base }}" > params.json
-          echo "params.json (non commité) :"
-          cat params.json
+            "${{ inputs.branch_base }}" > tasks/issue-${{ inputs.issue_number }}/params.json
+          echo "params.json :"
+          cat tasks/issue-${{ inputs.issue_number }}/params.json
+          git add tasks/issue-${{ inputs.issue_number }}/params.json
+          git commit -m "chore: add params.json for task ${{ inputs.task_id }}"
+          git push origin ${{ inputs.branch }}
 
       # [LLM] Seule zone non-déterministe.
       # workflow_dispatch → chemin REPO_EVENTS → PROMPT requis et consommé
@@ -97,7 +99,7 @@ jobs:
           MODEL: opencode/claude-haiku-4-5
           PROMPT: >-
             FIRST ACTION - no exception: run bash command: git checkout ${{ inputs.branch }}.
-            Then read params.json at the root of the repository.
+            Then read tasks/issue-${{ inputs.issue_number }}/params.json.
             Create the file at the path in params.json field file with the content in params.json field content.
             Then append exactly this line at the end of tasks/issue-${{ inputs.issue_number }}/workflow.md:
             $(date -u '+%Y-%m-%d %H:%M') | ${{ inputs.task_id }} | ${{ inputs.file }}
@@ -109,7 +111,7 @@ jobs:
           use_github_token: true
           prompt: >-
             FIRST ACTION - no exception: run bash command: git checkout ${{ inputs.branch }}.
-            Then read params.json at the root of the repository.
+            Then read tasks/issue-${{ inputs.issue_number }}/params.json.
             Create the file at the path in params.json field file with the content in params.json field content.
             Then append exactly this line at the end of tasks/issue-${{ inputs.issue_number }}/workflow.md:
             $(date -u '+%Y-%m-%d %H:%M') | ${{ inputs.task_id }} | ${{ inputs.file }}
