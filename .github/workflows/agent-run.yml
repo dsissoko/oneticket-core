@@ -99,7 +99,9 @@ jobs:
             FIRST ACTION - no exception: run bash command: git checkout ${{ inputs.branch }}.
             Then read params.json at the root of the repository.
             Create the file at the path in params.json field file with the content in params.json field content.
-            Commit with message: feat: complete task ${{ inputs.task_id }}.
+            Then append exactly this line at the end of tasks/workflow.md (create the file if it does not exist):
+            $(date -u '+%Y-%m-%d %H:%M') | ${{ inputs.task_id }} | ${{ inputs.file }}
+            Commit all changes with message: feat: complete task ${{ inputs.task_id }}.
             Do NOT push. Do NOT create a PR. Do nothing else.
         with:
           model: opencode/claude-haiku-4-5
@@ -109,7 +111,9 @@ jobs:
             FIRST ACTION - no exception: run bash command: git checkout ${{ inputs.branch }}.
             Then read params.json at the root of the repository.
             Create the file at the path in params.json field file with the content in params.json field content.
-            Commit with message: feat: complete task ${{ inputs.task_id }}.
+            Then append exactly this line at the end of tasks/workflow.md (create the file if it does not exist):
+            $(date -u '+%Y-%m-%d %H:%M') | ${{ inputs.task_id }} | ${{ inputs.file }}
+            Commit all changes with message: feat: complete task ${{ inputs.task_id }}.
             Do NOT push. Do NOT create a PR. Do nothing else.
 
       # [DÉTERMINISTE] Push final = signal GATHER

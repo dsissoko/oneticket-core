@@ -154,13 +154,20 @@ async function main() {
     run(`git checkout -b ${featureBranch}`);
   }
 
-  // --- 4. Écrire le manifest.json et commiter --------------------------------
+  // --- 4. Écrire le manifest.json et tasks/workflow.md, puis commiter ---------
   // [SOURCE DE VÉRITÉ] Le manifest en git est l'unique état partagé entre tous les runs.
-  // Pas d'état en mémoire, pas de base de données — git est le coordinateur.
-  const manifestPath = path.join(process.cwd(), 'manifest.json');
+  // tasks/workflow.md est le journal d'exécution — chaque agent y appende sa ligne de trace.
+  const manifestPath  = path.join(process.cwd(), 'manifest.json');
+  const workflowDir   = path.join(process.cwd(), 'tasks');
+  const workflowPath  = path.join(workflowDir, 'workflow.md');
+
   fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
 
-  run('git add manifest.json');
+  // Créer tasks/ si nécessaire et initialiser workflow.md vide
+  if (!fs.existsSync(workflowDir)) fs.mkdirSync(workflowDir, { recursive: true });
+  fs.writeFileSync(workflowPath, '');
+
+  run('git add manifest.json tasks/workflow.md');
   run(`git commit -m "chore: init manifest for issue #${issueNumber}" --allow-empty`);
   run(`git push origin ${featureBranch}`);
 
