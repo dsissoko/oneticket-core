@@ -88,7 +88,7 @@ function buildTaskPrompt(task, manifest) {
  */
 async function triggerAgentWorkflow(task, manifest, repo, token, ref = 'main') {
   const url = `https://api.github.com/repos/${repo}/actions/workflows/agent-execute.yml/dispatches`;
-
+  const config = loadConfig();
   const prompt = buildTaskPrompt(task, manifest);
 
   const inputs = {
@@ -101,8 +101,6 @@ async function triggerAgentWorkflow(task, manifest, repo, token, ref = 'main') {
   };
 
   console.log(`[agent-launcher] [FAN-OUT] Déclenchement agent-execute pour tâche ${task.id}`);
-
-  const config = loadConfig();
 
   const res = await fetch(url, {
     method: 'POST',
