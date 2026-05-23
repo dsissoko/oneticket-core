@@ -8,7 +8,7 @@
       "file": "hello.txt",
       "content": "Créer le fichier hello.txt avec le contenu exactement : Hello World",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
@@ -16,7 +16,7 @@
       "file": "world.txt",
       "content": "Créer le fichier world.txt avec le contenu exactement : World",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "C",
@@ -24,7 +24,7 @@
       "file": "readme.txt",
       "content": "Créer le fichier readme.txt avec le contenu exactement : README",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     }
   ]
 }
