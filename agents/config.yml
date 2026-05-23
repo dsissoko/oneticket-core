@@ -44,7 +44,7 @@ agent_config:
   opencode:
     $schema: "https://opencode.ai/config.json"
     model: opencode/claude-haiku-4-5
-    share: "false"
+    share: "disabled"
     autoupdate: false
     disabled_providers:
       - openai
