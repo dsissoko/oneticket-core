@@ -52,6 +52,17 @@ Si et seulement si la demande nécessite une décomposition en tâches, produis 
 - `status` : toujours `"pending"` à la création
 - Maximiser le parallélisme : les tâches indépendantes ont `depends_on: []`
 
+### Message de commit obligatoire
+
+Quand tu produis le manifest, commite **uniquement** avec ce message exact :
+
+```
+feat: decompose issue #<issue_number>
+```
+
+Ce message est le signal qui déclenche le pipeline d'exécution automatique.
+Tout autre message de commit empêchera le démarrage des tâches.
+
 ## Contraintes absolues
 
 - Ne push pas
