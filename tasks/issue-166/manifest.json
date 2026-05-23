@@ -24,7 +24,7 @@
       "file": "readme.txt",
       "content": "Créer le fichier readme.txt avec le contenu exactement : README",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     }
   ]
 }
