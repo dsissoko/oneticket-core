@@ -1,0 +1,30 @@
+{
+  "issue": 166,
+  "branch_base": "feature/issue-166",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-166-A",
+      "file": "hello.txt",
+      "content": "Créer le fichier hello.txt avec le contenu exactement : Hello World",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-166-B",
+      "file": "world.txt",
+      "content": "Créer le fichier world.txt avec le contenu exactement : World",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-166-C",
+      "file": "readme.txt",
+      "content": "Créer le fichier readme.txt avec le contenu exactement : README",
+      "depends_on": [],
+      "status": "pending"
+    }
+  ]
+}
