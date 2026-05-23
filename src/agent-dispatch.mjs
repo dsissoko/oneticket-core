@@ -26,6 +26,7 @@ import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { loadConfig } from './config.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -75,23 +76,6 @@ function parseComment(comment) {
 // ---------------------------------------------------------------------------
 // Chargement config et profil
 // ---------------------------------------------------------------------------
-
-/**
- * Charge agents/config.yml — minimaliste, parse manuellement les clés simples.
- * Évite une dépendance yaml externe pour 2 clés.
- */
-function loadConfig() {
-  const configPath = path.join(__dirname, '..', 'agents', 'config.yml');
-  if (!fs.existsSync(configPath)) {
-    console.warn('[agent-dispatch] agents/config.yml introuvable — valeurs par défaut.');
-    return { language: null, autonomous_mode: true };
-  }
-  const raw = fs.readFileSync(configPath, 'utf8');
-  const language = (raw.match(/^language:\s*(\S+)/m) || [])[1] || null;
-  const autonomousRaw = (raw.match(/^autonomous_mode:\s*(\S+)/m) || [])[1];
-  const autonomous_mode = autonomousRaw !== 'false';
-  return { language, autonomous_mode };
-}
 
 /**
  * Charge le profil d'un agent depuis agents/<role>/profile.md.
@@ -178,7 +162,7 @@ function buildPrompt({ role, demande, issueNumber, issueTitle, issueBody, config
 /**
  * Déclenche agent-execute.yml via l'API GitHub workflow_dispatch.
  */
-async function dispatchAgentExecute({ issueNumber, branch, prompt, repo, token }) {
+async function dispatchAgentExecute({ issueNumber, branch, prompt, repo, token, config }) {
   const url = `https://api.github.com/repos/${repo}/actions/workflows/agent-execute.yml/dispatches`;
 
   console.log(`[agent-dispatch] Dispatch Agent Execute — issue #${issueNumber}, branche ${branch}`);
@@ -197,6 +181,8 @@ async function dispatchAgentExecute({ issueNumber, branch, prompt, repo, token }
         issue_number: String(issueNumber),
         branch,
         prompt,
+        model:     config.model,
+        retry_max: String(config.retry_max),
       },
     }),
   });
@@ -231,9 +217,13 @@ async function main() {
   const { role, demande } = parsed;
   const featureBranch = `feature/issue-${issueNumber}`;
 
-  // --- 2. Créer la branche feature si elle n'existe pas ----------------
-  run('git config user.name "oneticket-bot"');
-  run('git config user.email "oneticket-bot@users.noreply.github.com"');
+  // --- 2. Charger la config --------------------------------------------
+  const config  = loadConfig();
+  const profile = loadProfile(role);
+
+  // --- 3. Créer la branche feature si elle n'existe pas ----------------
+  run(`git config user.name "${config.git_user_name}"`);
+  run(`git config user.email "${config.git_user_email}"`);
 
   if (ghToken) {
     run(`git remote set-url origin https://x-access-token:${ghToken}@github.com/${repo}.git`);
@@ -250,10 +240,6 @@ async function main() {
     run(`git push origin ${featureBranch}`);
     run(`git checkout -`); // retour sur la branche d'origine
   }
-
-  // --- 3. Charger config + profil --------------------------------------
-  const config  = loadConfig();
-  const profile = loadProfile(role);
 
   // --- 4. Construire le prompt -----------------------------------------
   const prompt = buildPrompt({
@@ -275,6 +261,7 @@ async function main() {
     prompt,
     repo,
     token: ghToken,
+    config,
   });
 
   console.log('[agent-dispatch] Dispatch terminé.');

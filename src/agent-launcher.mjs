@@ -22,6 +22,7 @@
 import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
+import { loadConfig } from './config.mjs';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -95,9 +96,13 @@ async function triggerAgentWorkflow(task, manifest, repo, token, ref = 'main') {
     branch:       task.branch,
     branch_base:  manifest.branch_base,
     prompt,
+    model:        config.model,
+    retry_max:    String(config.retry_max),
   };
 
   console.log(`[agent-launcher] [FAN-OUT] Déclenchement agent-execute pour tâche ${task.id}`);
+
+  const config = loadConfig();
 
   const res = await fetch(url, {
     method: 'POST',

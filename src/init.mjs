@@ -26,6 +26,7 @@ import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { loadConfig } from './config.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -94,9 +95,11 @@ async function main() {
   const featureBranch = `feature/issue-${issueNumber}`;
   const ghToken       = process.env.GITHUB_TOKEN;
 
+  const config = loadConfig();
+
   // --- Configurer git -------------------------------------------------------
-  run('git config user.name "oneticket-bot"');
-  run('git config user.email "oneticket-bot@users.noreply.github.com"');
+  run(`git config user.name "${config.git_user_name}"`);
+  run(`git config user.email "${config.git_user_email}"`);
 
   if (ghToken) {
     run(`git remote set-url origin https://x-access-token:${ghToken}@github.com/${repo}.git`);

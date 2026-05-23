@@ -1,2 +1,66 @@
+# OneTicket Core — Configuration centrale
+#
+# Source de vérité unique pour tous les paramètres du framework.
+#
+# Deux usages :
+#   1. Lue par les scripts JS (src/config.mjs) pour les workflows déterministes
+#   2. Section agent_config.<cli> générée à la volée en sandbox CI via
+#      src/generate-config.mjs → injectée dans OPENCODE_CONFIG_CONTENT
+#
+# La config locale du développeur (opencode.json) n'est PAS gérée ici —
+# chaque développeur maintient sa propre config locale non commitée.
+
+# ---------------------------------------------------------------------------
+# Paramètres framework
+# ---------------------------------------------------------------------------
+
 language: fr
 autonomous_mode: true
+
+# CLI utilisé en sandbox CI — détermine quelle section agent_config utiliser
+cli: opencode
+
+# Modèle par défaut pour les agents CI
+model: opencode/claude-haiku-4-5
+
+# Nombre maximum de retries sur échec anomalyco
+retry_max: 3
+
+# Identité git utilisée par le bot en sandbox CI
+git_user_name: oneticket-bot
+git_user_email: oneticket-bot@users.noreply.github.com
+
+# Branche cible des PRs finales
+pr_base: main
+
+# ---------------------------------------------------------------------------
+# Configuration des agents CI — générée à la volée via src/generate-config.mjs
+# La clé active est déterminée par le champ `cli` ci-dessus.
+# ---------------------------------------------------------------------------
+
+agent_config:
+  # Config injectée via OPENCODE_CONFIG_CONTENT quand cli: opencode
+  # Format : opencode.json schema (https://opencode.ai/config.json)
+  opencode:
+    $schema: "https://opencode.ai/config.json"
+    model: opencode/claude-haiku-4-5
+    share: "false"
+    autoupdate: false
+    disabled_providers:
+      - openai
+      - gemini
+      - anthropic
+    provider:
+      opencode:
+        options:
+          timeout: 900000
+          chunkTimeout: 30000
+
+  # Prévu pour le futur :
+  # claude:
+  #   $schema: "https://opencode.ai/config.json"
+  #   model: anthropic/claude-sonnet-4-5
+  #   ...
+  #
+  # gemini:
+  #   ...

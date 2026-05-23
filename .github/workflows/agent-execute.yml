@@ -9,17 +9,19 @@ name: Agent Execute
 #                         prompt = instructions bornées pour produire un fichier
 #
 # Dans les deux cas le mécanisme est identique :
-#   1. Checkout déterministe de la branche
-#   2. anomalyco reçoit le prompt complet — output libre
-#   3. Push déterministe
+#   1. Génération config opencode depuis agents/config.yml → OPENCODE_CONFIG_CONTENT
+#   2. Checkout déterministe de la branche
+#   3. anomalyco reçoit le prompt complet — output libre
+#   4. Push déterministe
 #
-# L'agent reçoit l'instruction : Do NOT push. Do NOT create a PR.
-# Le push est toujours fait par le step déterministe Step 3.
+# Config agent CI : générée à la volée par src/generate-config.mjs
+# → injectée via OPENCODE_CONFIG_CONTENT (mécanisme officiel opencode)
+# → aucun fichier de config écrit sur le disque
 #
 # Retry sur échec anomalyco (rate-limit GitHub API) :
 #   - continue-on-error: true sur le step agentique
 #   - re-dispatch avec retry_count+1 et délai croissant (10s × n)
-#   - max 3 retries puis échec définitif → notify-failure
+#   - max défini par retry_max dans agents/config.yml (défaut: 3)
 
 on:
   workflow_dispatch:
@@ -41,6 +43,14 @@ on:
         required: false
         type: string
         default: "0"
+      retry_max:
+        required: false
+        type: string
+        default: "3"
+      model:
+        required: false
+        type: string
+        default: "opencode/claude-haiku-4-5"
 
 jobs:
   execute:
@@ -86,9 +96,20 @@ jobs:
             git push origin ${{ inputs.branch }}
           fi
 
+      # [DÉTERMINISTE] Génère la config opencode depuis agents/config.yml
+      # → injectée dans OPENCODE_CONFIG_CONTENT (override runtime officiel opencode)
+      # Aucun fichier écrit — config éphémère, jamais versionnée
+      - name: Generate opencode config
+        id: agent-config
+        run: |
+          npm ci --silent
+          CONFIG=$(node src/generate-config.mjs)
+          echo "config=$CONFIG" >> $GITHUB_OUTPUT
+
       # [AGENTIQUE] Invocation anomalyco avec le prompt complet
       # Le prompt est construit en amont par le code déterministe (.mjs)
       # L'agent ne push pas, ne crée pas de PR — step déterministe s'en charge
+      # OPENCODE_CONFIG_CONTENT : config injectée depuis agents/config.yml
       - name: Run agent
         id: run-agent
         continue-on-error: true
@@ -97,31 +118,31 @@ jobs:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
           GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
-          SHARE: "false"
-          MODEL: opencode/claude-haiku-4-5
+          OPENCODE_CONFIG_CONTENT: ${{ steps.agent-config.outputs.config }}
           PROMPT: ${{ inputs.prompt }}
         with:
-          model: opencode/claude-haiku-4-5
+          model: ${{ inputs.model }}
           share: false
           use_github_token: true
           prompt: ${{ inputs.prompt }}
 
       # [RETRY] Echec anomalyco → re-dispatch avec délai croissant
-      # Couvre notamment le rate-limit sur curl releases/latest lors de lancements massifs
+      # retry_max lu depuis agents/config.yml, passé en input par agent-launcher/dispatch
       - name: Retry on agent failure
         if: steps.run-agent.outcome == 'failure'
         env:
           GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
         run: |
           RETRY=${{ inputs.retry_count }}
-          echo "[retry] Agent a échoué. retry_count=$RETRY"
-          if [ "$RETRY" -ge 3 ]; then
-            echo "[retry] Max retries atteint (3). Échec définitif."
+          RETRY_MAX=${{ inputs.retry_max }}
+          echo "[retry] Agent a échoué. retry_count=$RETRY / max=$RETRY_MAX"
+          if [ "$RETRY" -ge "$RETRY_MAX" ]; then
+            echo "[retry] Max retries atteint ($RETRY_MAX). Échec définitif."
             exit 1
           fi
           NEXT_RETRY=$((RETRY + 1))
           DELAY=$((NEXT_RETRY * 10))
-          echo "[retry] Attente ${DELAY}s avant re-dispatch (tentative $NEXT_RETRY/3)..."
+          echo "[retry] Attente ${DELAY}s avant re-dispatch (tentative $NEXT_RETRY/$RETRY_MAX)..."
           sleep $DELAY
           gh workflow run agent-execute.yml \
             --repo ${{ github.repository }} \
@@ -129,8 +150,10 @@ jobs:
             --field branch=${{ inputs.branch }} \
             --field branch_base=${{ inputs.branch_base }} \
             --field prompt="${{ inputs.prompt }}" \
-            --field retry_count=$NEXT_RETRY
-          echo "[retry] Re-dispatch déclenché (tentative $NEXT_RETRY/3). Ce run se termine proprement."
+            --field retry_count=$NEXT_RETRY \
+            --field retry_max=${{ inputs.retry_max }} \
+            --field model=${{ inputs.model }}
+          echo "[retry] Re-dispatch déclenché (tentative $NEXT_RETRY/$RETRY_MAX)."
 
       # [DÉTERMINISTE] Push final
       # Skippé si l'agent a échoué (le retry prend le relais)
@@ -143,7 +166,6 @@ jobs:
       # Détecte tasks/issue-N/manifest.json dans le working tree après le push.
       # Si présent → lance init.mjs en mode MANIFEST_ALREADY_PRESENT (FAN-OUT direct).
       # Si absent → no-op silencieux (cas invocation libre sans décomposition).
-      # Lu depuis main via workflow_dispatch → toujours le bon fichier workflow.
       - name: Launch FAN-OUT if manifest present
         if: steps.run-agent.outcome == 'success'
         env:
@@ -154,7 +176,6 @@ jobs:
         run: |
           if [ -f "tasks/issue-${{ inputs.issue_number }}/manifest.json" ]; then
             echo "Manifest détecté — lancement FAN-OUT"
-            npm ci --silent
             node src/init.mjs
           else
             echo "Pas de manifest — rien à faire"
@@ -174,7 +195,7 @@ jobs:
             --repo ${{ github.repository }} \
             --body "## Agent Execute failure
 
-          Le workflow d'exécution a échoué (retry_count=${{ inputs.retry_count }}).
+          Le workflow d'exécution a échoué (retry_count=${{ inputs.retry_count }}/${{ inputs.retry_max }}).
 
           **Branche :** \`${{ inputs.branch }}\`
           **Run Actions :** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

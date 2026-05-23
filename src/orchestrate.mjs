@@ -31,6 +31,7 @@ import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { launchReadyTasks } from './agent-launcher.mjs';
+import { loadConfig } from './config.mjs';
 
 // ---------------------------------------------------------------------------
 // Helpers git
@@ -170,7 +171,7 @@ async function markDoneAndPush(manifest, taskId, pushedBranch, featureBranch, ma
  * Crée la PR finale via l'API GitHub.
  * Appelée uniquement quand toutes les tâches sont "done".
  */
-async function createFinalPR(manifest, repo, token) {
+async function createFinalPR(manifest, repo, token, config) {
   const { issue, branch_base } = manifest;
   const title = `feat: complete all tasks for issue #${issue}`;
   const body  = [
@@ -193,7 +194,7 @@ async function createFinalPR(manifest, repo, token) {
       title,
       body,
       head: branch_base,
-      base: 'main',
+      base: config.pr_base,
     }),
   });
 
@@ -337,9 +338,11 @@ async function main() {
 
   console.log(`[orchestrate] Signal de fin reçu : tâche ${taskId} (issue #${issueNumber})`);
 
+  const config = loadConfig();
+
   // --- Configurer git -------------------------------------------------------
-  run('git config user.name "oneticket-bot"');
-  run('git config user.email "oneticket-bot@users.noreply.github.com"');
+  run(`git config user.name "${config.git_user_name}"`);
+  run(`git config user.email "${config.git_user_email}"`);
 
   if (ghToken) {
     run(`git remote set-url origin https://x-access-token:${ghToken}@github.com/${repo}.git`);
@@ -399,7 +402,7 @@ async function main() {
   if (allDone) {
     // Toutes les tâches done → fin du workflow complet
     console.log('[orchestrate] Toutes les tâches sont done. Création de la PR finale.');
-    await createFinalPR(manifest, repo, ghToken);
+    await createFinalPR(manifest, repo, ghToken, config);
 
   } else if (readyTasks.length > 0) {
     // [FAN-IN → FAN-OUT] Des tâches viennent d'être débloquées par cette complétion
