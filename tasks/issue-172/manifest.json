@@ -8,14 +8,16 @@
       "file": "tasks/issue-172/epic-1-fondations.md",
       "content": "# Epic 1 : Fondations et Rendu\n\n## Description\nMise en place de l'infrastructure de base du jeu Breakout : structure HTML, canvas, contexte 2D et boucle de rendu.\n\n## Contenu du fichier\nCréer un fichier HTML avec :\n- Un canvas 800x600px\n- CSS minimal pour centrer le canvas\n- Boucle de jeu avec requestAnimationFrame\n- Système de rendu (effacer et redessiner le canvas)\n- Structure de base pour les entités du jeu\n\n## Critères d'acceptation\n- Canvas affiché et fonctionnel\n- Boucle de jeu tourne à 60fps\n- Écran noir nettoyé à chaque frame\n- Pas d'erreurs console",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
       "branch": "task/issue-172-B",
       "file": "tasks/issue-172/epic-2-raquette.md",
       "content": "# Epic 2 : Mécanique de la Raquette\n\n## Description\nImplémentation de la raquette jouable : création, rendu, contrôles clavier.\n\n## Contenu du fichier\nAjouter au jeu :\n- Classe/objet Raquette avec position et dimensions\n- Rendu de la raquette (rectangle blanc)\n- Écoute des événements clavier (flèches ou A/D)\n- Mouvement fluide avec limites de l'écran\n- Position initiale au centre bas du canvas\n\n## Critères d'acceptation\n- Raquette visible et se déplace avec les flèches\n- Ne sort pas des limites du canvas\n- Mouvements fluides et responsifs\n- Contrôles A/D ou flèches acceptés",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending"
     },
     {
@@ -23,7 +25,9 @@
       "branch": "task/issue-172-C",
       "file": "tasks/issue-172/epic-3-balle.md",
       "content": "# Epic 3 : Mécanique de la Balle\n\n## Description\nImplémentation de la balle avec physique simple, collisions et rebonds.\n\n## Contenu du fichier\nAjouter au jeu :\n- Classe/objet Balle avec position, rayon et vélocité (vx, vy)\n- Rendu de la balle (cercle blanc)\n- Mouvement linéaire à chaque frame\n- Rebond sur les murs (haut, gauche, droite)\n- Détection de collision avec la raquette (rebond)\n- Gestion de la balle qui sort en bas (lose condition ou relance)\n- Vitesse initiale diagonale\n\n## Critères d'acceptation\n- Balle se déplace et rebondit correctement\n- Collision avec raquette fonctionne\n- Rebond sur murs fonctionne\n- Balle qui sort en bas est détectée",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending"
     },
     {
@@ -31,7 +35,10 @@
       "branch": "task/issue-172-D",
       "file": "tasks/issue-172/epic-4-briques-score.md",
       "content": "# Epic 4 : Système de Briques et Score\n\n## Description\nCréation du système de briques destructibles et du système de scoring.\n\n## Contenu du fichier\nAjouter au jeu :\n- Grille de briques (10 colonnes x 4 lignes)\n- Chaque brique : position, dimensions, état (active/inactive)\n- Rendu des briques actives (rectangles colorés)\n- Détection de collision balle-brique\n- Destruction de brique au contact de la balle\n- Système de score : +10 points par brique détruite\n- Affichage du score en temps réel (coin haut gauche)\n- Détection de victoire (toutes briques détruites)\n\n## Critères d'acceptation\n- Grille de briques visible\n- Briques se détruisent au contact de la balle\n- Score augmente correctement\n- Affichage du score visible et à jour\n- Condition de victoire détectée",
-      "depends_on": ["A", "C"],
+      "depends_on": [
+        "A",
+        "C"
+      ],
       "status": "pending"
     },
     {
@@ -39,7 +46,10 @@
       "branch": "task/issue-172-E",
       "file": "tasks/issue-172/epic-5-etats-ui.md",
       "content": "# Epic 5 : États du Jeu et UI\n\n## Description\nGestion des états du jeu (menu, en cours, victoire, game over) et affichage des écrans correspondants.\n\n## Contenu du fichier\nAjouter au jeu :\n- Machine d'états : START, PLAYING, WIN, GAME_OVER\n- Écran de démarrage : \"Appuyez sur ESPACE pour commencer\"\n- Écran de victoire : Score final + \"Vous avez gagné! Appuyez sur ESPACE pour rejouer\"\n- Écran de game over : Score final + \"Game Over! Appuyez sur ESPACE pour rejouer\"\n- Transition entre états\n- Possibilité de redémarrer après victoire ou défaite\n- Pause du jeu hors état PLAYING\n\n## Critères d'acceptation\n- Écran de démarrage affiché au lancement\n- Jeu démarre au premier ESPACE\n- Écrans de fin affichés correctement\n- Redémarrage fonctionne (ESPACE)\n- États bien séparés et pas d'appels redondants",
-      "depends_on": ["B", "D"],
+      "depends_on": [
+        "B",
+        "D"
+      ],
       "status": "pending"
     }
   ]
