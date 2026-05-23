@@ -8,7 +8,7 @@
       "file": "hello.txt",
       "content": "Créer le fichier hello.txt avec le contenu exactement : Hello World",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
