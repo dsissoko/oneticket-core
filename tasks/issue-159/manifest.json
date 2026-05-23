@@ -1,0 +1,30 @@
+{
+  "issue": 159,
+  "branch_base": "feature/issue-159",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-159-A",
+      "file": "hello.txt",
+      "content": "Crée un fichier hello.txt à la racine du repo avec le contenu : Hello",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-159-B",
+      "file": "world.txt",
+      "content": "Crée un fichier world.txt à la racine du repo avec le contenu : World",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-159-C",
+      "file": "readme.txt",
+      "content": "Crée un fichier readme.txt à la racine du repo avec le contenu : Readme",
+      "depends_on": [],
+      "status": "pending"
+    }
+  ]
+}
