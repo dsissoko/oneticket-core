@@ -139,6 +139,27 @@ jobs:
         run: |
           git push origin ${{ inputs.branch }}
 
+      # [DÉTERMINISTE] FAN-OUT si l'agent a produit un manifest
+      # Détecte tasks/issue-N/manifest.json dans le working tree après le push.
+      # Si présent → lance init.mjs en mode MANIFEST_ALREADY_PRESENT (FAN-OUT direct).
+      # Si absent → no-op silencieux (cas invocation libre sans décomposition).
+      # Lu depuis main via workflow_dispatch → toujours le bon fichier workflow.
+      - name: Launch FAN-OUT if manifest present
+        if: steps.run-agent.outcome == 'success'
+        env:
+          GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          ISSUE_NUMBER: ${{ inputs.issue_number }}
+          REPO: ${{ github.repository }}
+          MANIFEST_ALREADY_PRESENT: "true"
+        run: |
+          if [ -f "tasks/issue-${{ inputs.issue_number }}/manifest.json" ]; then
+            echo "Manifest détecté — lancement FAN-OUT"
+            npm ci --silent
+            node src/init.mjs
+          else
+            echo "Pas de manifest — rien à faire"
+          fi
+
   # [FAILURE NOTIFICATION] Posté sur l'issue si échec définitif
   notify-failure:
     needs: execute
