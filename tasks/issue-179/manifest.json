@@ -24,7 +24,7 @@
       "file": "readme.txt",
       "content": "Créer un fichier texte nommé readme.txt à la racine du repository contenant exactement le texte : README",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     }
   ]
 }
