@@ -1,16 +1,12 @@
 name: Workflow Gather
 
-# [GATHER] Point de collecte des signaux de fin de tâche.
-# Déclenché uniquement par le push FINAL de agent-run.yml (Step déterministe).
+# [DÉTERMINISTE] Collecte les signaux de fin de tâche et orchestre la suite.
+# Déclenché par le push final de agent-execute.yml (step "Push branch").
 #
-# IMPORTANT : agent-run.yml pousse plusieurs fois sur task/* :
-#   - "chore: add params.json for task X"  → push de setup, NE doit PAS orchestrer
-#   - "feat: complete task X"               → push final agent, DOIT orchestrer
+# Filtre : seuls les commits dont le message commence par "feat:" déclenchent
+# l'orchestration — les pushs de création de branche (message "chore:") sont ignorés.
 #
-# Le filtre sur github.event.head_commit.message garantit que seul le signal
-# GATHER réel (commit de l'agent) déclenche l'orchestration.
-#
-# Pattern : Scatter/Gather — ce workflow est le Gather
+# Pattern : Scatter/Gather — ce workflow est le Gather + FAN-IN + re-Scatter éventuel
 #
 # [CONCURRENCY] Aucun concurrency GitHub ici — les conflits d'accès au manifest
 # sont gérés dans orchestrate.mjs avec retry sur push (lock optimiste git).

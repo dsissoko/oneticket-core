@@ -30,6 +30,10 @@ on:
       branch:
         required: true
         type: string
+      branch_base:
+        required: false
+        type: string
+        default: ""
       prompt:
         required: true
         type: string
@@ -48,10 +52,14 @@ jobs:
 
     steps:
       # [DÉTERMINISTE] Checkout de la branche de travail
+      # - Cas FAN-OUT (branch_base fourni) : checkout branch_base (toujours existante)
+      #   la branche task/* sera créée depuis cette base dans le step suivant
+      # - Cas invocation libre (branch_base vide) : checkout branch directement
+      #   (feature/issue-N déjà créée par agent-dispatch.mjs)
       - name: Checkout branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.branch }}
+          ref: ${{ inputs.branch_base != '' && inputs.branch_base || inputs.branch }}
           token: ${{ secrets.ONETICKET_GH_PAT }}
           fetch-depth: 0
 
@@ -60,17 +68,20 @@ jobs:
           git config user.name "oneticket-bot"
           git config user.email "oneticket-bot@users.noreply.github.com"
 
-      # [DÉTERMINISTE] Crée la branche de travail si elle n'existe pas encore
-      # Pour les tâches FAN-OUT : task/issue-N-X créée depuis feature/issue-N
-      # Pour les invocations libres : feature/issue-N déjà créée par agent-dispatch.mjs
+      # [DÉTERMINISTE] Crée la branche task/* depuis branch_base (cas FAN-OUT uniquement)
+      # Si branch_base est vide (invocation libre), on est déjà sur la bonne branche
       - name: Ensure task branch exists
         run: |
+          if [ -z "${{ inputs.branch_base }}" ]; then
+            echo "Pas de branch_base — branche ${{ inputs.branch }} déjà checkoutée."
+            exit 0
+          fi
           if git ls-remote --heads origin ${{ inputs.branch }} | grep -q ${{ inputs.branch }}; then
-            echo "Branche ${{ inputs.branch }} existe déjà."
+            echo "Branche ${{ inputs.branch }} existe déjà, checkout."
             git fetch origin ${{ inputs.branch }}
             git checkout -B ${{ inputs.branch }} origin/${{ inputs.branch }}
           else
-            echo "Création de la branche ${{ inputs.branch }}."
+            echo "Création de la branche ${{ inputs.branch }} depuis ${{ inputs.branch_base }}."
             git checkout -b ${{ inputs.branch }}
             git push origin ${{ inputs.branch }}
           fi
@@ -116,6 +127,7 @@ jobs:
             --repo ${{ github.repository }} \
             --field issue_number=${{ inputs.issue_number }} \
             --field branch=${{ inputs.branch }} \
+            --field branch_base=${{ inputs.branch_base }} \
             --field prompt="${{ inputs.prompt }}" \
             --field retry_count=$NEXT_RETRY
           echo "[retry] Re-dispatch déclenché (tentative $NEXT_RETRY/3). Ce run se termine proprement."

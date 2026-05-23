@@ -60,7 +60,6 @@ function writeManifest(manifest) {
  */
 function buildTaskPrompt(task, manifest) {
   return [
-    `FIRST ACTION - no exception: run bash command: git checkout ${task.branch}.`,
     `Create the file ${task.file} with this exact content: ${task.content}`,
     `Run this exact bash command (do not modify it):`,
     `echo "$(date -u '+%Y-%m-%d %H:%M') | ${task.id} | ${task.file}" >> tasks/issue-${manifest.issue}/workflow.md`,
@@ -87,6 +86,7 @@ async function triggerAgentWorkflow(task, manifest, repo, token, ref = 'main') {
   const inputs = {
     issue_number: String(manifest.issue),
     branch:       task.branch,
+    branch_base:  manifest.branch_base,
     prompt,
   };
 
