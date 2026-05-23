@@ -111,13 +111,13 @@ function getReadyTasks(manifest) {
  * Le merge EST dans la boucle de retry — en cas de push non fast-forward,
  * on repart de l'état origin et on re-merge pour ne jamais perdre les fichiers.
  *
- * Bug corrigé : l'ancienne version faisait le merge AVANT cette fonction,
- * puis en cas de retry faisait checkout -B origin/feature/ qui écrasait
- * les fichiers mergés (subtask-X.txt, workflow.md).
+ * Stratégie de retry : backoff exponentiel avec jitter
+ *   délai = 2^attempt * 1000ms + jitter aléatoire [0, 500ms]
+ *   → réduit la contention quand beaucoup de runners retentent simultanément
  *
  * Retourne { manifest, mergeError } — mergeError non-null si merge conflict.
  */
-async function markDoneAndPush(manifest, taskId, pushedBranch, featureBranch, maxAttempts = 3) {
+async function markDoneAndPush(manifest, taskId, pushedBranch, featureBranch, maxAttempts = 5) {
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     const task = manifest.tasks.find(t => t.id === taskId);
     if (!task) throw new Error(`Tâche "${taskId}" introuvable dans le manifest.`);
@@ -129,7 +129,6 @@ async function markDoneAndPush(manifest, taskId, pushedBranch, featureBranch, ma
     }
 
     // [MERGE] Intègre les fichiers de la tâche dans feature/
-    // Fait ici pour être re-exécuté à chaque tentative si push non fast-forward
     console.log(`[orchestrate] Merge de ${pushedBranch} dans ${featureBranch} (tentative ${attempt})`);
     try {
       run(`git merge --no-ff origin/${pushedBranch} -m "chore: merge task ${taskId} into ${featureBranch}"`);
@@ -149,8 +148,14 @@ async function markDoneAndPush(manifest, taskId, pushedBranch, featureBranch, ma
       return { manifest, mergeError: null }; // succès
     } catch (e) {
       if (attempt === maxAttempts) throw e;
-      console.log(`[orchestrate] Push non fast-forward (tentative ${attempt}/${maxAttempts}) — re-fetch et ré-application...`);
-      await new Promise(r => setTimeout(r, attempt * 1000));
+
+      // Backoff exponentiel avec jitter : 2^attempt * 1000ms + [0, 500ms]
+      const backoff = Math.pow(2, attempt) * 1000 + Math.floor(Math.random() * 500);
+      console.log(
+        `[orchestrate] Push non fast-forward (tentative ${attempt}/${maxAttempts}) — ` +
+        `backoff ${backoff}ms avant re-tentative...`
+      );
+      await new Promise(r => setTimeout(r, backoff));
 
       // Annuler le merge + le commit manifest (2 commits)
       run(`git reset --hard HEAD~2`);
@@ -369,7 +374,7 @@ async function main() {
   // Le merge EST dans markDoneAndPush pour être re-exécuté à chaque retry —
   // évite que les fichiers de la tâche soient perdus lors d'un push non fast-forward.
   const { manifest: updatedManifest, mergeError } = await markDoneAndPush(
-    manifest, taskId, pushedBranch, featureBranch
+    manifest, taskId, pushedBranch, featureBranch, config.orchestrate_retry_max
   );
   manifest = updatedManifest;
 

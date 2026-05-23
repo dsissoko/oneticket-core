@@ -23,8 +23,12 @@ cli: opencode
 # Modèle par défaut pour les agents CI
 model: opencode/claude-haiku-4-5
 
-# Nombre maximum de retries sur échec anomalyco
+# Nombre maximum de retries sur échec anomalyco (Agent Execute)
 retry_max: 3
+
+# Nombre maximum de retries sur push non fast-forward (orchestrate — lock optimiste git)
+# Augmenté pour supporter des graphes larges avec beaucoup de tâches parallèles
+orchestrate_retry_max: 5
 
 # Identité git utilisée par le bot en sandbox CI
 git_user_name: oneticket-bot

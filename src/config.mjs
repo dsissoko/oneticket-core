@@ -55,14 +55,15 @@ export function loadConfig() {
   }
 
   return {
-    language:       parsed.language       || null,
-    autonomous_mode: parsed.autonomous_mode !== false,
-    cli:            parsed.cli            || 'opencode',
-    model:          parsed.model          || 'opencode/claude-haiku-4-5',
-    retry_max:      typeof parsed.retry_max === 'number' ? parsed.retry_max : 3,
-    git_user_name:  parsed.git_user_name  || 'oneticket-bot',
-    git_user_email: parsed.git_user_email || 'oneticket-bot@users.noreply.github.com',
-    pr_base:        parsed.pr_base        || 'main',
-    agent_config:   parsed.agent_config   || {},
+    language:               parsed.language       || null,
+    autonomous_mode:        parsed.autonomous_mode !== false,
+    cli:                    parsed.cli            || 'opencode',
+    model:                  parsed.model          || 'opencode/claude-haiku-4-5',
+    retry_max:              typeof parsed.retry_max === 'number' ? parsed.retry_max : 3,
+    orchestrate_retry_max:  typeof parsed.orchestrate_retry_max === 'number' ? parsed.orchestrate_retry_max : 5,
+    git_user_name:          parsed.git_user_name  || 'oneticket-bot',
+    git_user_email:         parsed.git_user_email || 'oneticket-bot@users.noreply.github.com',
+    pr_base:                parsed.pr_base        || 'main',
+    agent_config:           parsed.agent_config   || {},
   };
 }
