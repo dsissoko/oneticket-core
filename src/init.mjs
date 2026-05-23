@@ -1,33 +1,25 @@
 /**
  * init.mjs
  *
- * [BOOTSTRAP] Point d'entrée du workflow complet, déclenché par /start sur une issue.
- * 100% déterministe — aucun LLM impliqué.
+ * [BOOTSTRAP] Démarre le pipeline FAN-OUT depuis un manifest.
+ * Deux modes d'entrée :
  *
- * Responsabilités :
- *   1. Parser le corps de l'issue pour extraire la liste des tâches
- *      → si absent, fallback sur test/fixtures/tasks-graph.json
- *   2. Construire le manifest.json (source de vérité en git)
- *   3. Créer la branche feature/issue-<N>
- *   4. Commiter le manifest.json sur cette branche
- *   5. Déclencher le premier [FAN-OUT] via agent-launcher → tâches sans dépendances
+ *   Mode MANIFEST_ALREADY_PRESENT (nouveau) :
+ *     Déclenché par Workflow Scatter (on-feature-push.yml) après qu'un agent
+ *     a produit tasks/issue-N/manifest.json sur feature/issue-N.
+ *     → Lit le manifest existant sur la branche → launchReadyTasks()
+ *
+ *   Mode BOOTSTRAP (existant, conservé pour les tests) :
+ *     Déclenché directement (tests, fixture).
+ *     → Parse l'issue body ou charge la fixture → crée branche + manifest → launchReadyTasks()
  *
  * [IDEMPOTENCE] Si la branche feature existe déjà avec un manifest actif
  * (au moins une tâche non-pending), on sort proprement sans rien écraser.
- * Protège contre le double déclenchement de /start.
  *
- * Format attendu dans le corps de l'issue (bloc JSON entre triple backticks) :
- * ```json
- * {
- *   "tasks": [
- *     { "id": "A", "file": "subtask-A.txt", "content": "...", "depends_on": [] },
- *     { "id": "B", "file": "subtask-B.txt", "content": "...", "depends_on": ["A"] }
- *   ]
- * }
- * ```
- *
- * Variables d'environnement attendues (injectées par le workflow) :
- *   GITHUB_TOKEN, ISSUE_NUMBER, ISSUE_TITLE, ISSUE_BODY, REPO
+ * Variables d'environnement attendues :
+ *   GITHUB_TOKEN, ISSUE_NUMBER, REPO
+ *   MANIFEST_ALREADY_PRESENT (optionnel, mode Scatter)
+ *   ISSUE_TITLE, ISSUE_BODY (optionnel, mode bootstrap)
  */
 
 import { execSync } from 'child_process';
@@ -91,9 +83,10 @@ function loadDefaultTaskGraph() {
 // ---------------------------------------------------------------------------
 
 async function main() {
-  const issueNumber = process.env.ISSUE_NUMBER;
-  const issueBody   = process.env.ISSUE_BODY   || '';
-  const repo        = process.env.REPO;
+  const issueNumber             = process.env.ISSUE_NUMBER;
+  const issueBody               = process.env.ISSUE_BODY   || '';
+  const repo                    = process.env.REPO;
+  const manifestAlreadyPresent  = process.env.MANIFEST_ALREADY_PRESENT === 'true';
 
   if (!issueNumber) throw new Error('ISSUE_NUMBER manquant');
   if (!repo)        throw new Error('REPO manquant');
@@ -111,12 +104,52 @@ async function main() {
 
   run('git fetch origin');
 
+  // =========================================================================
+  // MODE MANIFEST_ALREADY_PRESENT
+  // Déclenché par Workflow Scatter — l'agent a déjà produit le manifest.
+  // On lit le manifest existant sur la branche et on lance le FAN-OUT.
+  // =========================================================================
+  if (manifestAlreadyPresent) {
+    console.log(`[init] Mode MANIFEST_ALREADY_PRESENT — lecture du manifest existant sur ${featureBranch}`);
+    run(`git checkout -B ${featureBranch} origin/${featureBranch}`);
+
+    const manifestPath = path.join(process.cwd(), 'tasks', `issue-${issueNumber}`, 'manifest.json');
+    if (!fs.existsSync(manifestPath)) {
+      throw new Error(`MANIFEST_ALREADY_PRESENT=true mais manifest introuvable : ${manifestPath}`);
+    }
+    const raw = fs.readFileSync(manifestPath, 'utf8');
+    let manifest;
+    try {
+      manifest = JSON.parse(raw);
+    } catch (err) {
+      throw new Error(`manifest.json corrompu (JSON invalide) : ${manifestPath} — ${err.message}`);
+    }
+
+    // Vérifier que le manifest a des tâches pending avant de lancer le FAN-OUT
+    const pendingTasks = manifest.tasks.filter(t => t.status === 'pending');
+    if (pendingTasks.length === 0) {
+      console.log('[init] Aucune tâche pending dans le manifest — FAN-OUT non nécessaire.');
+      return;
+    }
+
+    console.log(`[init] ${pendingTasks.length} tâche(s) pending — lancement FAN-OUT.`);
+    const { launchReadyTasks } = await import('./agent-launcher.mjs');
+    await launchReadyTasks(manifest, repo, ghToken);
+    console.log('[init] FAN-OUT lancé depuis manifest existant.');
+    return;
+  }
+
+  // =========================================================================
+  // MODE BOOTSTRAP (conservé pour les tests)
+  // Crée la branche, le manifest depuis fixture, et lance le FAN-OUT.
+  // =========================================================================
+
   // --- [IDEMPOTENCE] Guard : branche + manifest déjà actifs ? ---------------
   const remoteBranches = runCapture('git branch -r');
   if (remoteBranches.includes(`origin/${featureBranch}`)) {
     // La branche existe — vérifier l'état du manifest
     run(`git checkout -B ${featureBranch} origin/${featureBranch}`);
-    const manifestPath = path.join(process.cwd(), 'manifest.json');
+    const manifestPath = path.join(process.cwd(), 'tasks', `issue-${issueNumber}`, 'manifest.json');
     if (fs.existsSync(manifestPath)) {
       const raw = fs.readFileSync(manifestPath, 'utf8');
       let existing;
@@ -168,8 +201,7 @@ async function main() {
   }
 
   // --- 4. Créer tasks/issue-<N>/ et écrire tous les artefacts ------------------
-  // Isolation complète par issue : manifest, workflow, params (via agent-run)
-  // sous le même répertoire tasks/issue-<N>/ → zéro collision entre issues sur main.
+  // Isolation complète par issue sous tasks/issue-<N>/ → zéro collision entre issues sur main.
   const issueDir     = path.join(process.cwd(), 'tasks', `issue-${issueNumber}`);
   const manifestPath = path.join(issueDir, 'manifest.json');
   const workflowPath = path.join(issueDir, 'workflow.md');

@@ -1,0 +1,147 @@
+name: Agent Execute
+
+# [AGENTIQUE] Seul workflow impliquant un LLM (anomalyco/opencode).
+#
+# Invoqué dans deux contextes :
+#   - Invocation libre  : déclenché par Comment Dispatcher via agent-dispatch.mjs
+#                         prompt = "tu es /role, <demande> + contexte issue"
+#   - Exécution tâche   : déclenché par agent-launcher.mjs (FAN-OUT)
+#                         prompt = instructions bornées pour produire un fichier
+#
+# Dans les deux cas le mécanisme est identique :
+#   1. Checkout déterministe de la branche
+#   2. anomalyco reçoit le prompt complet — output libre
+#   3. Push déterministe
+#
+# L'agent reçoit l'instruction : Do NOT push. Do NOT create a PR.
+# Le push est toujours fait par le step déterministe Step 3.
+#
+# Retry sur échec anomalyco (rate-limit GitHub API) :
+#   - continue-on-error: true sur le step agentique
+#   - re-dispatch avec retry_count+1 et délai croissant (10s × n)
+#   - max 3 retries puis échec définitif → notify-failure
+
+on:
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        required: true
+        type: string
+      branch:
+        required: true
+        type: string
+      prompt:
+        required: true
+        type: string
+      retry_count:
+        required: false
+        type: string
+        default: "0"
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      id-token: write
+
+    steps:
+      # [DÉTERMINISTE] Checkout de la branche de travail
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+          token: ${{ secrets.ONETICKET_GH_PAT }}
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name "oneticket-bot"
+          git config user.email "oneticket-bot@users.noreply.github.com"
+
+      # [DÉTERMINISTE] Crée la branche de travail si elle n'existe pas encore
+      # Pour les tâches FAN-OUT : task/issue-N-X créée depuis feature/issue-N
+      # Pour les invocations libres : feature/issue-N déjà créée par agent-dispatch.mjs
+      - name: Ensure task branch exists
+        run: |
+          if git ls-remote --heads origin ${{ inputs.branch }} | grep -q ${{ inputs.branch }}; then
+            echo "Branche ${{ inputs.branch }} existe déjà."
+            git fetch origin ${{ inputs.branch }}
+            git checkout -B ${{ inputs.branch }} origin/${{ inputs.branch }}
+          else
+            echo "Création de la branche ${{ inputs.branch }}."
+            git checkout -b ${{ inputs.branch }}
+            git push origin ${{ inputs.branch }}
+          fi
+
+      # [AGENTIQUE] Invocation anomalyco avec le prompt complet
+      # Le prompt est construit en amont par le code déterministe (.mjs)
+      # L'agent ne push pas, ne crée pas de PR — step déterministe s'en charge
+      - name: Run agent
+        id: run-agent
+        continue-on-error: true
+        uses: anomalyco/opencode/github@latest
+        env:
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          SHARE: "false"
+          MODEL: opencode/claude-haiku-4-5
+          PROMPT: ${{ inputs.prompt }}
+        with:
+          model: opencode/claude-haiku-4-5
+          share: false
+          use_github_token: true
+          prompt: ${{ inputs.prompt }}
+
+      # [RETRY] Echec anomalyco → re-dispatch avec délai croissant
+      # Couvre notamment le rate-limit sur curl releases/latest lors de lancements massifs
+      - name: Retry on agent failure
+        if: steps.run-agent.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+        run: |
+          RETRY=${{ inputs.retry_count }}
+          echo "[retry] Agent a échoué. retry_count=$RETRY"
+          if [ "$RETRY" -ge 3 ]; then
+            echo "[retry] Max retries atteint (3). Échec définitif."
+            exit 1
+          fi
+          NEXT_RETRY=$((RETRY + 1))
+          DELAY=$((NEXT_RETRY * 10))
+          echo "[retry] Attente ${DELAY}s avant re-dispatch (tentative $NEXT_RETRY/3)..."
+          sleep $DELAY
+          gh workflow run agent-execute.yml \
+            --repo ${{ github.repository }} \
+            --field issue_number=${{ inputs.issue_number }} \
+            --field branch=${{ inputs.branch }} \
+            --field prompt="${{ inputs.prompt }}" \
+            --field retry_count=$NEXT_RETRY
+          echo "[retry] Re-dispatch déclenché (tentative $NEXT_RETRY/3). Ce run se termine proprement."
+
+      # [DÉTERMINISTE] Push final
+      # Skippé si l'agent a échoué (le retry prend le relais)
+      - name: Push branch
+        if: steps.run-agent.outcome == 'success'
+        run: |
+          git push origin ${{ inputs.branch }}
+
+  # [FAILURE NOTIFICATION] Posté sur l'issue si échec définitif
+  notify-failure:
+    needs: execute
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post failure comment on issue
+        env:
+          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+        run: |
+          gh issue comment ${{ inputs.issue_number }} \
+            --repo ${{ github.repository }} \
+            --body "## Agent Execute failure
+
+          Le workflow d'exécution a échoué (retry_count=${{ inputs.retry_count }}).
+
+          **Branche :** \`${{ inputs.branch }}\`
+          **Run Actions :** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

@@ -1,26 +1,29 @@
-name: On Issue Comment
+name: Comment Dispatcher
 
-# [BOOTSTRAP] Point d'entrée du workflow complet.
-# Un commentaire /start sur une issue déclenche init.mjs qui :
-#   - parse les tâches (depuis l'issue ou le fixture par défaut)
-#   - crée le manifest en git (source de vérité)
-#   - déclenche le premier FAN-OUT vers les tâches sans dépendances
+# [DÉTERMINISTE] Point d'entrée des invocations agents via commentaires GitHub.
+#
+# Déclenché sur tout commentaire commençant par / dans une issue (pas une PR).
+# Délègue à agent-dispatch.mjs qui :
+#   1. Parse le commentaire → role + demande
+#   2. Crée feature/issue-N si elle n'existe pas
+#   3. Construit le prompt complet
+#   4. Dispatche Agent Execute (workflow_dispatch)
+#
+# [IDEMPOTENCE] Sérialise les déclenchements sur la même issue
+# Les issues différentes restent parallèles entre elles
 
 on:
   issue_comment:
     types: [created]
 
-# [IDEMPOTENCE] Sérialise les déclenchements sur la même issue
-# Protège contre le double-clic ou le retry GitHub sur le même /start
-# Les issues différentes restent parallèles entre elles
 concurrency:
-  group: init-${{ github.repository }}-${{ github.event.issue.number }}
+  group: dispatch-${{ github.repository }}-${{ github.event.issue.number }}
   cancel-in-progress: false
 
 jobs:
   dispatch:
-    # Ne se déclenche que sur /start dans un commentaire d'issue (pas PR)
-    if: "github.event.issue.pull_request == null && startsWith(github.event.comment.body, '/start')"
+    # Ne se déclenche que sur un commentaire /role dans une issue (pas PR)
+    if: "github.event.issue.pull_request == null && startsWith(github.event.comment.body, '/')"
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -41,16 +44,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run init — create manifest + feature branch + first FAN-OUT
+      - name: Dispatch agent
         env:
           GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           ISSUE_TITLE: ${{ github.event.issue.title }}
           ISSUE_BODY: ${{ github.event.issue.body }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
           REPO: ${{ github.repository }}
-        run: node src/init.mjs
+        run: node src/agent-dispatch.mjs
 
-  # [FAILURE NOTIFICATION] Posté sur l'issue si le job dispatch échoue.
+  # [FAILURE NOTIFICATION] Posté sur l'issue si le dispatch échoue
   notify-failure:
     needs: dispatch
     if: failure()
@@ -62,10 +66,10 @@ jobs:
         run: |
           gh issue comment ${{ github.event.issue.number }} \
             --repo ${{ github.repository }} \
-            --body "## Initialisation failure
+            --body "## Dispatch failure
 
-          Le workflow d'initialisation déclenché par \`/start\` a échoué.
+          Le workflow de dispatch a échoué lors du traitement de votre commande.
 
           **Run Actions :** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
-          > Vérifier les logs du run pour identifier la cause (fixture manquante, erreur git, secret absent)."
+          > Vérifier les logs du run pour identifier la cause."

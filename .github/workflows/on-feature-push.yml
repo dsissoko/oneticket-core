@@ -1,0 +1,90 @@
+name: Workflow Scatter
+
+# [DÉTERMINISTE] Démarre le FAN-OUT quand un manifest est poussé sur feature/*.
+#
+# Déclenché par tout push sur feature/** contenant tasks/issue-N/manifest.json.
+# Cela couvre deux cas :
+#   - L'agent /po (ou tout autre agent) a produit un manifest → FAN-OUT automatique
+#   - Un manifest est poussé manuellement → même déclenchement (découplage intentionnel)
+#
+# Filtre : seuls les commits dont le message commence par "feat: decompose"
+# sont traités — les autres pushs sur feature/* (ex: merges de tâches) sont ignorés.
+#
+# Le FAN-OUT lui-même est dans agent-launcher.mjs (launchReadyTasks).
+# Ce workflow est un déclencheur pur — il ne fait que lire et appeler.
+
+on:
+  push:
+    branches:
+      - 'feature/**'
+    paths:
+      - 'tasks/*/manifest.json'
+
+jobs:
+  scatter:
+    # Filtre : uniquement les commits de décomposition agent
+    if: startsWith(github.event.head_commit.message, 'feat: decompose')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ONETICKET_GH_PAT }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Extraire le numéro d'issue depuis le nom de la branche feature/issue-N
+      - name: Extract issue number
+        id: parse
+        run: |
+          BRANCH="${{ github.ref_name }}"
+          ISSUE=$(echo "$BRANCH" | sed 's/feature\/issue-\([0-9]*\)/\1/')
+          echo "issue_number=$ISSUE" >> $GITHUB_OUTPUT
+
+      # Lancer le FAN-OUT depuis le manifest produit par l'agent
+      - name: Launch FAN-OUT from manifest
+        env:
+          GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          ISSUE_NUMBER: ${{ steps.parse.outputs.issue_number }}
+          REPO: ${{ github.repository }}
+          MANIFEST_ALREADY_PRESENT: "true"
+        run: node src/init.mjs
+
+  # [FAILURE NOTIFICATION] Posté sur l'issue si le scatter échoue
+  notify-failure:
+    needs: scatter
+    if: failure() && needs.scatter.result != 'skipped'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract issue number
+        id: parse
+        run: |
+          BRANCH="${{ github.ref_name }}"
+          ISSUE=$(echo "$BRANCH" | sed 's/feature\/issue-\([0-9]*\)/\1/')
+          echo "issue_number=$ISSUE" >> $GITHUB_OUTPUT
+
+      - name: Post failure comment on issue
+        env:
+          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+        run: |
+          gh issue comment ${{ steps.parse.outputs.issue_number }} \
+            --repo ${{ github.repository }} \
+            --body "## Workflow Scatter failure
+
+          Le démarrage du FAN-OUT a échoué après la production du manifest.
+
+          **Branche :** \`${{ github.ref_name }}\`
+          **Run Actions :** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          > Vérifier que le manifest est valide et que toutes les tâches sont en état \`pending\`."

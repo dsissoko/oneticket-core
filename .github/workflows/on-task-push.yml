@@ -1,4 +1,4 @@
-name: On Task Push
+name: Workflow Gather
 
 # [GATHER] Point de collecte des signaux de fin de tâche.
 # Déclenché uniquement par le push FINAL de agent-run.yml (Step déterministe).

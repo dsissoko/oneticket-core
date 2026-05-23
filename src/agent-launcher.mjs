@@ -9,13 +9,13 @@
  *   2. [IDEMPOTENCE] Marquer toutes les tâches prêtes "in_progress" AVANT de déclencher
  *      → évite le double-lancement si agent-launcher est appelé deux fois sur le même état
  *   3. Commiter + pusher le manifest mis à jour
- *   4. [FAN-OUT] Déclencher un workflow agent-run.yml par tâche via l'API GitHub
+ *   4. [FAN-OUT] Construire le prompt de chaque tâche + déclencher agent-execute.yml
  *
  * Ce module est importé par :
  *   - init.mjs       → premier FAN-OUT (bootstrap)
  *   - orchestrate.mjs → FAN-OUT suivants (après chaque FAN-IN)
  *
- * L'exécution réelle (opencode) se fait dans agent-run.yml.
+ * L'exécution réelle (opencode) se fait dans agent-execute.yml.
  * Ce fichier ne fait que préparer et déclencher les workflows.
  */
 
@@ -54,7 +54,23 @@ function writeManifest(manifest) {
 }
 
 /**
- * [FAN-OUT] Déclenche le workflow agent-run.yml via l'API GitHub (workflow_dispatch).
+ * Construit le prompt complet pour une tâche bornée.
+ * Toutes les informations nécessaires sont injectées directement —
+ * l'agent n'a pas besoin de lire de fichier intermédiaire.
+ */
+function buildTaskPrompt(task, manifest) {
+  return [
+    `FIRST ACTION - no exception: run bash command: git checkout ${task.branch}.`,
+    `Create the file ${task.file} with this exact content: ${task.content}`,
+    `Run this exact bash command (do not modify it):`,
+    `echo "$(date -u '+%Y-%m-%d %H:%M') | ${task.id} | ${task.file}" >> tasks/issue-${manifest.issue}/workflow.md`,
+    `Commit all changes with message: feat: complete task ${task.id}.`,
+    `Do NOT push. Do NOT create a PR. Do nothing else.`,
+  ].join(' ');
+}
+
+/**
+ * [FAN-OUT] Déclenche le workflow agent-execute.yml via l'API GitHub (workflow_dispatch).
  * Chaque appel lance une instance isolée du workflow sur sa propre branche task/*.
  *
  * @param {object} task     - La tâche à lancer
@@ -64,18 +80,17 @@ function writeManifest(manifest) {
  * @param {string} ref      - Branche sur laquelle le workflow est défini (default: main)
  */
 async function triggerAgentWorkflow(task, manifest, repo, token, ref = 'main') {
-  const url = `https://api.github.com/repos/${repo}/actions/workflows/agent-run.yml/dispatches`;
+  const url = `https://api.github.com/repos/${repo}/actions/workflows/agent-execute.yml/dispatches`;
+
+  const prompt = buildTaskPrompt(task, manifest);
 
   const inputs = {
     issue_number: String(manifest.issue),
-    task_id:      task.id,
-    file:         task.file,
-    content:      task.content,
     branch:       task.branch,
-    branch_base:  manifest.branch_base,
+    prompt,
   };
 
-  console.log(`[agent-launcher] [FAN-OUT] Déclenchement agent-run pour tâche ${task.id} :`, inputs);
+  console.log(`[agent-launcher] [FAN-OUT] Déclenchement agent-execute pour tâche ${task.id}`);
 
   const res = await fetch(url, {
     method: 'POST',
@@ -131,14 +146,11 @@ export async function launchReadyTasks(manifest, repo, token) {
   );
 
   // [IDEMPOTENCE] Marquer toutes les tâches in_progress AVANT de déclencher les workflows
-  // Si agent-launcher est appelé deux fois sur le même état (ex: retry),
-  // la deuxième passe ne trouvera aucune tâche pending → pas de double-lancement
   for (const task of readyTasks) {
     task.status = 'in_progress';
   }
 
   // [SOURCE DE VÉRITÉ] Commiter l'état in_progress avant de déclencher
-  // --allow-empty : après un rebase, le manifest peut déjà être à jour
   writeManifest(manifest);
   run(`git add tasks/issue-${manifest.issue}/manifest.json`);
   run(
@@ -155,8 +167,6 @@ export async function launchReadyTasks(manifest, repo, token) {
   }
 
   // [FAN-OUT] Déclencher un workflow indépendant par tâche
-  // Chaque workflow s'exécute en parallèle sur sa propre branche task/issue-<N>-<ID>
-  // Le push final de chaque workflow déclenche on-task-push.yml (signal GATHER)
   // En cas d'échec sur une tâche, on logue et on continue les suivantes
   for (const task of readyTasks) {
     try {
