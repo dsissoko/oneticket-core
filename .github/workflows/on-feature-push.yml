@@ -23,7 +23,8 @@ on:
 jobs:
   scatter:
     # Filtre : uniquement les commits de décomposition agent
-    if: startsWith(github.event.head_commit.message, 'feat: decompose')
+    # ET uniquement sur les branches feature/* (pas main, pas opencode/*)
+    if: startsWith(github.event.head_commit.message, 'feat: decompose') && startsWith(github.ref_name, 'feature/')
     runs-on: ubuntu-latest
     permissions:
       contents: write

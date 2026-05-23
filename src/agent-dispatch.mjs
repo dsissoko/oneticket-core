@@ -113,14 +113,23 @@ function loadProfile(role) {
 /**
  * Construit le prompt complet injecté dans Agent Execute.
  * Structure :
+ *   - Première action : git checkout <branch> (mécanisme switched=true anomalyco)
  *   - Profil de l'agent (agents/<role>/profile.md)
  *   - Directives de mode (language, autonomous_mode)
  *   - Contexte de la branche de travail
  *   - Demande active
  *   - Contexte de l'issue (titre + body)
+ *
+ * NOTE : le "git checkout <branch>" en tête du prompt est le signal que anomalyco
+ * interprète comme switched=true → désactive son push automatique et sa création de PR.
  */
 function buildPrompt({ role, demande, issueNumber, issueTitle, issueBody, config, profile }) {
+  const branch = `feature/issue-${issueNumber}`;
   const lines = [];
+
+  // Première action : git checkout — mécanisme switched=true anomalyco
+  lines.push(`FIRST ACTION - no exception: run bash command: git checkout ${branch}.`);
+  lines.push('');
 
   // Profil de l'agent
   if (profile) {
@@ -141,7 +150,7 @@ function buildPrompt({ role, demande, issueNumber, issueTitle, issueBody, config
 
   // Branche de travail
   lines.push(`## Branche de travail`);
-  lines.push(`feature/issue-${issueNumber}`);
+  lines.push(branch);
   lines.push('');
 
   // Demande active

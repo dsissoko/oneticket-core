@@ -57,9 +57,16 @@ function writeManifest(manifest) {
  * Construit le prompt complet pour une tâche bornée.
  * Toutes les informations nécessaires sont injectées directement —
  * l'agent n'a pas besoin de lire de fichier intermédiaire.
+ *
+ * NOTE : le "git checkout <branch>" en première action est intentionnel —
+ * anomalyco détecte le changement de branche (switched=true) et désactive
+ * son mécanisme automatique de push et de création de PR.
+ * Sans ce checkout, anomalyco pousserait sur une branche opencode/dispatch-*
+ * et créerait une PR non souhaitée.
  */
 function buildTaskPrompt(task, manifest) {
   return [
+    `FIRST ACTION - no exception: run bash command: git checkout ${task.branch}.`,
     `Create the file ${task.file} with this exact content: ${task.content}`,
     `Run this exact bash command (do not modify it):`,
     `echo "$(date -u '+%Y-%m-%d %H:%M') | ${task.id} | ${task.file}" >> tasks/issue-${manifest.issue}/workflow.md`,
