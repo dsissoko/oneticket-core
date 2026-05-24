@@ -14,6 +14,7 @@
  *   GITHUB_TOKEN, ISSUE_NUMBER, ISSUE_TITLE, ISSUE_BODY, COMMENT_BODY, REPO
  */
 
+import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -121,8 +122,26 @@ async function main() {
   const { role, demande } = parsed;
   const featureBranch = `feature/issue-${issueNumber}`;
 
-  // --- 2. Charger la config + profil -----------------------------------
-  const config  = loadConfig();
+  // --- 2. Charger la config --------------------------------------------
+  const config = loadConfig();
+
+  // --- Cas spécial : /start → mode bootstrap direct (tests, fixture) ---
+  // Déclenche init.mjs sans passer par un agent LLM
+  if (role === 'start') {
+    console.log('[agent-dispatch] /start détecté — bootstrap direct via init.mjs');
+    execSync('node src/init.mjs', {
+      stdio: 'inherit',
+      env: {
+        ...process.env,
+        ISSUE_NUMBER: issueNumber,
+        REPO:         repo,
+        GITHUB_TOKEN: ghToken,
+        ISSUE_BODY:   process.env.ISSUE_BODY || '',
+      }
+    });
+    console.log('[agent-dispatch] Bootstrap /start terminé.');
+    return;
+  }
   const profile = loadProfile(role);
 
   // --- 3. Setup git + créer la branche feature si elle n'existe pas ----
