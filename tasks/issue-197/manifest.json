@@ -1,0 +1,12 @@
+{
+  "issue": 197,
+  "branch_base": "feature/issue-197",
+  "tasks": [
+    {"id":"A","branch":"task/issue-197-A","file":"tasks/issue-197/subtask-A.txt","content":"Subtask A completed","depends_on":[],"status":"pending"},
+    {"id":"B","branch":"task/issue-197-B","file":"tasks/issue-197/subtask-B.txt","content":"Subtask B completed","depends_on":[],"status":"pending"},
+    {"id":"C","branch":"task/issue-197-C","file":"tasks/issue-197/subtask-C.txt","content":"Subtask C completed","depends_on":[],"status":"pending"},
+    {"id":"D","branch":"task/issue-197-D","file":"tasks/issue-197/subtask-D.txt","content":"Subtask D completed","depends_on":["A","B"],"status":"pending"},
+    {"id":"E","branch":"task/issue-197-E","file":"tasks/issue-197/subtask-E.txt","content":"Subtask E completed","depends_on":["D"],"status":"pending"},
+    {"id":"F","branch":"task/issue-197-F","file":"tasks/issue-197/subtask-F.txt","content":"Subtask F completed","depends_on":["C"],"status":"pending"}
+  ]
+}
