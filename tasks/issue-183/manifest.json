@@ -1,0 +1,30 @@
+{
+  "issue": 183,
+  "branch_base": "feature/issue-183",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-183-A",
+      "file": "hello.txt",
+      "content": "Crée un fichier nommé hello.txt à la racine du repository avec exactement le contenu suivant : Hello World",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-183-B",
+      "file": "world.txt",
+      "content": "Crée un fichier nommé world.txt à la racine du repository avec exactement le contenu suivant : World",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-183-C",
+      "file": "readme.txt",
+      "content": "Crée un fichier nommé readme.txt à la racine du repository avec exactement le contenu suivant : README",
+      "depends_on": [],
+      "status": "pending"
+    }
+  ]
+}
