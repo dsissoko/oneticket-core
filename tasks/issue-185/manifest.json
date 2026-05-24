@@ -8,7 +8,7 @@
       "file": "docs/epics/breakout-epic-1-architecture-et-rendu.md",
       "content": "Crée un fichier markdown décrivant l'EPIC-1 'Architecture et rendu du jeu Breakout'. L'epic couvre la mise en place de la structure HTML, du canvas pour le rendu, et de la boucle de jeu. Inclus le titre 'EPIC-1 : Architecture de base & rendu', une description détaillée, et liste 3 user stories : US-1.1 Créer la structure HTML et CSS (canvas + interface), US-1.2 Implémenter la boucle de jeu (requestAnimationFrame), US-1.3 Mettre en place le système de rendu des objets du jeu.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
@@ -16,7 +16,7 @@
       "file": "docs/epics/breakout-epic-2-raquette.md",
       "content": "Crée un fichier markdown décrivant l'EPIC-2 'Mécanique de raquette'. L'epic couvre le contrôle de la raquette au clavier et à la souris. Inclus le titre 'EPIC-2 : Mécanique de raquette (contrôle)', une description détaillée, et liste 3 user stories : US-2.1 Créer l'objet raquette et son rendu, US-2.2 Implémenter le contrôle au clavier (flèches), US-2.3 Ajouter le contrôle à la souris en option.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "C",
@@ -24,7 +24,7 @@
       "file": "docs/epics/breakout-epic-3-balle-et-physique.md",
       "content": "Crée un fichier markdown décrivant l'EPIC-3 'Mécanique de balle et physique'. L'epic couvre la création de la balle, sa trajectoire, et une physique simple (rebonds). Inclus le titre 'EPIC-3 : Mécanique de balle (physique simple)', une description détaillée, et liste 3 user stories : US-3.1 Créer l'objet balle et son rendu, US-3.2 Implémenter le mouvement et les rebonds sur les murs, US-3.3 Gérer les rebonds sur la raquette avec angle de déflection.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "D",
@@ -32,7 +32,7 @@
       "file": "docs/epics/breakout-epic-4-briques-et-collisions.md",
       "content": "Crée un fichier markdown décrivant l'EPIC-4 'Système de briques et collisions'. L'epic couvre la création des briques, leur destruction, et le système de collisions. Inclus le titre 'EPIC-4 : Système de briques et collisions', une description détaillée, et liste 4 user stories : US-4.1 Créer la grille de briques, US-4.2 Implémenter le rendu des briques, US-4.3 Gérer les collisions balle-briques, US-4.4 Détruire les briques après impact.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "E",
@@ -40,7 +40,7 @@
       "file": "docs/epics/breakout-epic-5-score-et-etats.md",
       "content": "Crée un fichier markdown décrivant l'EPIC-5 'Système de score, game over et victoire'. L'epic couvre le suivi du score, la gestion des états de jeu, et les écrans de victoire/défaite. Inclus le titre 'EPIC-5 : Système de score, game over et victoire', une description détaillée, et liste 4 user stories : US-5.1 Implémenter le système de score et l'affichage, US-5.2 Gérer les états du jeu (en cours, pause, game over, victoire), US-5.3 Créer l'écran de game over avec bouton redémarrer, US-5.4 Créer l'écran de victoire.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     }
   ]
 }
