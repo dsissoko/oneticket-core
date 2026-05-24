@@ -1,0 +1,1 @@
+Crée un fichier markdown décrivant l'EPIC-5 'Polish et optimisation' avec ses 3 user stories : US-5.1 (effets visuels et CSS), US-5.2 (sons et feedback), US-5.3 (tests et débogues). Inclus des critères d'acceptation pour chaque US.
