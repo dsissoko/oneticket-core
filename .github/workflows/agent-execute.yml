@@ -183,11 +183,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
           ISSUE_NUMBER: ${{ inputs.issue_number }}
           REPO: ${{ github.repository }}
-          MANIFEST_ALREADY_PRESENT: "true"
         run: |
           if [ -f "tasks/issue-${{ inputs.issue_number }}/manifest.json" ]; then
             echo "Manifest détecté — lancement FAN-OUT"
-            node src/init.mjs
+            node src/launch-fanout.mjs
           else
             echo "Pas de manifest — rien à faire"
           fi
