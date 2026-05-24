@@ -32,7 +32,7 @@
       "file": "docs/epics/breakout-epic-4-briques-et-collisions.md",
       "content": "Crée un fichier markdown décrivant l'EPIC-4 'Système de briques et collisions'. L'epic couvre la création des briques, leur destruction, et le système de collisions. Inclus le titre 'EPIC-4 : Système de briques et collisions', une description détaillée, et liste 4 user stories : US-4.1 Créer la grille de briques, US-4.2 Implémenter le rendu des briques, US-4.3 Gérer les collisions balle-briques, US-4.4 Détruire les briques après impact.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "E",
