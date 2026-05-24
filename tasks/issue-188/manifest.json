@@ -16,7 +16,7 @@
       "file": "world.txt",
       "content": "Créer un fichier world.txt à la racine du projet avec le contenu exact : World",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "C",
