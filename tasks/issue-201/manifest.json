@@ -1,0 +1,46 @@
+{
+  "issue": 201,
+  "branch_base": "feature/issue-201",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-201-A",
+      "file": "docs/epics/EPIC-1-Fondations-et-physique.md",
+      "content": "Crée un fichier markdown décrivant l'EPIC-1 'Fondations et physique du jeu' avec ses 3 user stories : US-1.1 (structure HTML/canvas), US-1.2 (physique de base), US-1.3 (balle et rebonds). Inclus des critères d'acceptation pour chaque US.",
+      "depends_on": [],
+      "status": "done"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-201-B",
+      "file": "docs/epics/EPIC-2-Elements-du-jeu.md",
+      "content": "Crée un fichier markdown décrivant l'EPIC-2 'Éléments du jeu (raquette & briques)' avec ses 3 user stories : US-2.1 (créer et contrôler raquette), US-2.2 (grille de briques), US-2.3 (destruction briques). Inclus des critères d'acceptation pour chaque US.",
+      "depends_on": [],
+      "status": "done"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-201-C",
+      "file": "docs/epics/EPIC-3-Gameplay-et-scoring.md",
+      "content": "Crée un fichier markdown décrivant l'EPIC-3 'Gameplay et mécanique de scoring' avec ses 3 user stories : US-3.1 (système de score), US-3.2 (gestion vies), US-3.3 (équilibrage difficulté). Inclus des critères d'acceptation pour chaque US.",
+      "depends_on": [],
+      "status": "done"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-201-D",
+      "file": "docs/epics/EPIC-4-Etats-et-ecrans.md",
+      "content": "Crée un fichier markdown décrivant l'EPIC-4 'États du jeu et écrans' avec ses 3 user stories : US-4.1 (accueil et pause), US-4.2 (écran victoire), US-4.3 (écran game over). Inclus des critères d'acceptation pour chaque US.",
+      "depends_on": [],
+      "status": "done"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-201-E",
+      "file": "docs/epics/EPIC-5-Polish-et-optimisation.md",
+      "content": "Crée un fichier markdown décrivant l'EPIC-5 'Polish et optimisation' avec ses 3 user stories : US-5.1 (effets visuels et CSS), US-5.2 (sons et feedback), US-5.3 (tests et débogues). Inclus des critères d'acceptation pour chaque US.",
+      "depends_on": [],
+      "status": "done"
+    }
+  ]
+}
