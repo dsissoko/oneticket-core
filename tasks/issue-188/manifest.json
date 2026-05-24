@@ -24,7 +24,7 @@
       "file": "readme.txt",
       "content": "Créer un fichier readme.txt à la racine du projet avec le contenu exact : README",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     }
   ]
 }
