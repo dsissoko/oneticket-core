@@ -16,7 +16,7 @@
       "file": "docs/epics/breakout-epic-2-raquette.md",
       "content": "Crée un fichier markdown décrivant l'EPIC-2 'Mécanique de raquette'. L'epic couvre le contrôle de la raquette au clavier et à la souris. Inclus le titre 'EPIC-2 : Mécanique de raquette (contrôle)', une description détaillée, et liste 3 user stories : US-2.1 Créer l'objet raquette et son rendu, US-2.2 Implémenter le contrôle au clavier (flèches), US-2.3 Ajouter le contrôle à la souris en option.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "C",
