@@ -66,17 +66,19 @@ issue_number() {
 
 # ---------------------------------------------------------------------------
 # Mode : fanout
+# L'agent /po reçoit une demande explicite d'utiliser la fixture de test.
+# Pas de /start — tout passe par le pipeline agent standard.
 # ---------------------------------------------------------------------------
 
 run_fanout() {
   echo "=== MODE FANOUT — $N issue(s) ==="
-  echo "Graphe : A,B,C en parallèle → D(A+B) → E / C → F"
+  echo "Graphe fixture : A,B,C en parallèle → D(A+B) → E / C → F"
   echo ""
 
   for i in $(seq 1 "$N"); do
     URL=$(create_issue "[TEST-FANOUT] Issue $i — graphe A/B/C/D/E/F" "")
     NUM=$(issue_number "$URL")
-    post_comment "$NUM" "/start"
+    post_comment "$NUM" "/po utilise le fichier test/fixtures/tasks-graph.json disponible dans le repo pour créer le manifest et lancer le pipeline de tâches."
     echo "Issue #$NUM lancée ($URL)"
   done
 

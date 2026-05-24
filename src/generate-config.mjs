@@ -7,22 +7,27 @@
  * Mécanisme :
  *   1. Lit agents/config.yml via loadConfig()
  *   2. Extrait agent_config[cli] (ex: agent_config.opencode)
- *   3. Sérialise en JSON sur stdout
+ *   3. Injecte default_agent si un role est fourni en argument
+ *      → opencode charge directement le bon profil agent sans instruction dans le prompt
+ *   4. Sérialise en JSON sur stdout
  *
  * Le JSON est capturé par le step CI et injecté dans OPENCODE_CONFIG_CONTENT
  * — mécanisme officiel opencode pour les overrides runtime.
  * Aucun fichier n'est écrit sur le disque.
  *
  * Usage :
- *   node src/generate-config.mjs
- *   → écrit le JSON sur stdout
+ *   node src/generate-config.mjs [role]
+ *   node src/generate-config.mjs po
+ *   node src/generate-config.mjs        ← sans role, pas de default_agent
  */
 
 import { loadConfig } from './config.mjs';
 
+const role = process.argv[2] || null;
+
 try {
   const config = loadConfig();
-  const cli = config.cli;
+  const cli    = config.cli;
   const agentConfig = config.agent_config[cli];
 
   if (!agentConfig) {
@@ -32,7 +37,17 @@ try {
     );
   }
 
-  process.stdout.write(JSON.stringify(agentConfig));
+  // Injecter default_agent si un role est fourni
+  // → opencode charge directement le bon profil sans instruction dans le prompt
+  const output = role
+    ? { ...agentConfig, default_agent: role }
+    : agentConfig;
+
+  if (role) {
+    process.stderr.write(`[generate-config] default_agent=${role}\n`);
+  }
+
+  process.stdout.write(JSON.stringify(output));
 } catch (err) {
   process.stderr.write(`[generate-config] ERREUR : ${err.message}\n`);
   process.exit(1);

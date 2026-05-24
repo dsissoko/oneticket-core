@@ -51,6 +51,10 @@ on:
         required: false
         type: string
         default: "opencode/claude-haiku-4-5"
+      role:
+        required: false
+        type: string
+        default: ""
 
 jobs:
   execute:
@@ -98,6 +102,7 @@ jobs:
 
       # [DÉTERMINISTE] Génère la config opencode depuis agents/config.yml
       # → injectée dans OPENCODE_CONFIG_CONTENT (override runtime officiel opencode)
+      # Si role fourni → default_agent injecté pour que opencode charge le bon profil
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -108,7 +113,7 @@ jobs:
         id: agent-config
         run: |
           npm ci --silent
-          CONFIG=$(node src/generate-config.mjs)
+          CONFIG=$(node src/generate-config.mjs "${{ inputs.role }}")
           echo "config=$CONFIG" >> $GITHUB_OUTPUT
 
       # [AGENTIQUE] Invocation anomalyco avec le prompt complet
@@ -157,7 +162,8 @@ jobs:
             --field prompt="${{ inputs.prompt }}" \
             --field retry_count=$NEXT_RETRY \
             --field retry_max=${{ inputs.retry_max }} \
-            --field model=${{ inputs.model }}
+            --field model=${{ inputs.model }} \
+            --field role=${{ inputs.role }}
           echo "[retry] Re-dispatch déclenché (tentative $NEXT_RETRY/$RETRY_MAX)."
 
       # [DÉTERMINISTE] Push final

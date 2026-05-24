@@ -2,12 +2,22 @@ name: Comment Dispatcher
 
 # [DÉTERMINISTE] Point d'entrée des invocations agents via commentaires GitHub.
 #
-# Déclenché sur tout commentaire commençant par / dans une issue (pas une PR).
-# Délègue à agent-dispatch.mjs qui :
-#   1. Parse le commentaire → role + demande
-#   2. Crée feature/issue-N si elle n'existe pas
-#   3. Construit le prompt complet
-#   4. Dispatche Agent Execute (workflow_dispatch)
+# Trigger : issue_comment (commentaire sur une issue, pas une PR)
+#
+# Responsabilités de ce workflow :
+#   1. Filtrer : commentaire /<role> sur une issue (pas PR)
+#   2. Construire CONTEXT_BLOCK — contexte spécifique à ce trigger
+#   3. Déléguer à agent-dispatch.mjs avec le contrat d'interface minimal
+#
+# Contrat d'interface vers agent-dispatch.mjs :
+#   COMMENT_BODY   — texte du commentaire (contient /<role> + demande)
+#   ISSUE_NUMBER   — numéro d'issue
+#   REPO           — owner/repo
+#   CONTEXT_BLOCK  — contexte construit par ce workflow (spécifique issue_comment)
+#
+# Extensibilité : pour un nouveau trigger (PR comment, label, etc.),
+# créer un nouveau workflow qui expose le même contrat + son propre CONTEXT_BLOCK.
+# agent-dispatch.mjs ne change pas.
 #
 # [IDEMPOTENCE] Sérialise les déclenchements sur la même issue
 # Les issues différentes restent parallèles entre elles
@@ -22,7 +32,7 @@ concurrency:
 
 jobs:
   dispatch:
-    # Ne se déclenche que sur un commentaire /role dans une issue (pas PR)
+    # Filtre : commentaire /<role> sur une issue (pas PR)
     if: "github.event.issue.pull_request == null && startsWith(github.event.comment.body, '/')"
     runs-on: ubuntu-latest
     permissions:
@@ -45,15 +55,33 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Construit le CONTEXT_BLOCK spécifique au trigger issue_comment.
+      # Ce bloc sera inséré tel quel dans le prompt système par agent-dispatch.mjs.
+      # Chaque trigger est libre de construire son propre format.
+      - name: Build context block
+        id: context
+        run: |
+          CONTEXT=$(cat <<'CONTEXT_EOF'
+          ## Contexte de l'issue #${{ github.event.issue.number }}
+          **Titre :** ${{ github.event.issue.title }}
+
+          ${{ github.event.issue.body }}
+          CONTEXT_EOF
+          )
+          # Encode en base64 pour éviter les problèmes de caractères spéciaux
+          echo "block=$(echo "$CONTEXT" | base64 -w 0)" >> $GITHUB_OUTPUT
+
       - name: Dispatch agent
         env:
           GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
-          ISSUE_TITLE: ${{ github.event.issue.title }}
-          ISSUE_BODY: ${{ github.event.issue.body }}
           COMMENT_BODY: ${{ github.event.comment.body }}
           REPO: ${{ github.repository }}
-        run: node src/agent-dispatch.mjs
+          CONTEXT_BLOCK: ${{ steps.context.outputs.block }}
+        run: |
+          # Décoder le CONTEXT_BLOCK avant de passer à agent-dispatch.mjs
+          export CONTEXT_BLOCK=$(echo "$CONTEXT_BLOCK" | base64 -d)
+          node src/agent-dispatch.mjs
 
   # [FAILURE NOTIFICATION] Posté sur l'issue si le dispatch échoue
   notify-failure:

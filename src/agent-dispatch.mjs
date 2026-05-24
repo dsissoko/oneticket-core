@@ -1,20 +1,26 @@
 /**
  * agent-dispatch.mjs
  *
- * [DÉTERMINISTE] Traite les invocations agents depuis les commentaires GitHub.
- * Appelé par Comment Dispatcher (on-issue-comment.yml).
+ * [DÉTERMINISTE] Traite les invocations agents depuis les triggers GitHub.
+ * Point d'entrée unique pour tout déclenchement agent.
  *
- * Responsabilités :
- *   1. Parser le commentaire : premier /role → paramètre role, reste → paramètre demande
- *   2. Créer feature/issue-N si elle n'existe pas (déterministe)
- *   3. Construire le prompt complet : profil role + demande + contexte issue
- *   4. Dispatcher Agent Execute (agent-execute.yml) via API GitHub workflow_dispatch
+ * Contrat d'interface — variables d'environnement obligatoires :
+ *   COMMENT_BODY   — texte du commentaire contenant /<role> + demande
+ *   ISSUE_NUMBER   — numéro d'issue GitHub (pour branche feature/issue-N)
+ *   REPO           — owner/repo
+ *   GITHUB_TOKEN   — PAT GitHub
  *
- * Variables d'environnement attendues :
- *   GITHUB_TOKEN, ISSUE_NUMBER, ISSUE_TITLE, ISSUE_BODY, COMMENT_BODY, REPO
+ * Variable optionnelle fournie par chaque trigger :
+ *   CONTEXT_BLOCK  — bloc texte libre construit par le workflow YAML du trigger
+ *                    (contexte issue, PR diff, historique, etc.)
+ *                    Inséré tel quel dans le prompt système.
+ *                    Chaque trigger est autonome pour construire ce bloc.
+ *
+ * Extensibilité : pour ajouter un nouveau trigger, créer un nouveau workflow
+ * YAML qui expose ces variables + construit son propre CONTEXT_BLOCK.
+ * Ce fichier ne change pas.
  */
 
-import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -24,17 +30,23 @@ import { run, runCapture, runWithRetry, setupGit, dispatchWorkflow } from './uti
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // ---------------------------------------------------------------------------
-// Parsing commentaire
+// Parsing commentaire — zone commune
 // ---------------------------------------------------------------------------
 
-function parseComment(comment) {
-  const match = comment.match(/\/([a-zA-Z][a-zA-Z0-9_-]*)/);
+/**
+ * Parse le commentaire pour extraire role et demande.
+ * Premier /<role> trouvé → role. Reste du commentaire → demande.
+ *
+ * @returns {{ role: string, demande: string } | null}
+ */
+function parseComment(commentBody) {
+  const match = commentBody.match(/\/([a-zA-Z][a-zA-Z0-9_-]*)/);
   if (!match) {
     console.log('[agent-dispatch] Aucun /role trouvé dans le commentaire — sortie sans action.');
     return null;
   }
-  const role = match[1].toLowerCase();
-  const demande = comment.replace(match[0], '').trim();
+  const role   = match[1].toLowerCase();
+  const demande = commentBody.replace(match[0], '').trim();
   console.log(`[agent-dispatch] role="${role}", demande="${demande.slice(0, 80)}..."`);
   return { role, demande };
 }
@@ -43,6 +55,10 @@ function parseComment(comment) {
 // Chargement profil
 // ---------------------------------------------------------------------------
 
+/**
+ * Charge agents/<role>/profile.md.
+ * Retourne le contenu brut ou chaîne vide si introuvable.
+ */
 function loadProfile(role) {
   const profilePath = path.join(__dirname, '..', 'agents', role, 'profile.md');
   if (!fs.existsSync(profilePath)) {
@@ -53,17 +69,28 @@ function loadProfile(role) {
 }
 
 // ---------------------------------------------------------------------------
-// Construction du prompt
+// Construction du prompt système
 // ---------------------------------------------------------------------------
 
 /**
- * NOTE : le "git checkout <branch>" en tête du prompt est le signal que anomalyco
- * interprète comme switched=true → désactive son push automatique et sa création de PR.
+ * Construit le prompt système injecté dans Agent Execute.
+ *
+ * Structure :
+ *   [Tronc commun]
+ *     - git checkout (mécanisme switched=true anomalyco)
+ *     - Profil agent
+ *     - Language + autonomous_mode
+ *     - Demande
+ *   [Contexte trigger]
+ *     - CONTEXT_BLOCK tel quel (construit par le workflow YAML du trigger)
+ *
+ * NOTE : git checkout en tête → anomalyco détecte switched=true →
+ * désactive push automatique et création PR.
  */
-function buildPrompt({ role, demande, issueNumber, issueTitle, issueBody, config, profile }) {
-  const branch = `feature/issue-${issueNumber}`;
+function buildPrompt({ role, demande, branch, config, profile, contextBlock }) {
   const lines = [];
 
+  // Tronc commun — obligatoire quel que soit le trigger
   lines.push(`FIRST ACTION - no exception: run bash command: git checkout ${branch}.`);
   lines.push('');
 
@@ -90,11 +117,9 @@ function buildPrompt({ role, demande, issueNumber, issueTitle, issueBody, config
   lines.push(demande || `/${role}`);
   lines.push('');
 
-  lines.push(`## Contexte de l'issue #${issueNumber}`);
-  if (issueTitle) lines.push(`**Titre :** ${issueTitle}`);
-  if (issueBody) {
-    lines.push('');
-    lines.push(issueBody);
+  // Contexte trigger — spécifique, construit par le workflow YAML
+  if (contextBlock) {
+    lines.push(contextBlock);
   }
 
   return lines.join('\n');
@@ -105,43 +130,24 @@ function buildPrompt({ role, demande, issueNumber, issueTitle, issueBody, config
 // ---------------------------------------------------------------------------
 
 async function main() {
-  const commentBody = process.env.COMMENT_BODY || '';
-  const issueNumber = process.env.ISSUE_NUMBER;
-  const issueTitle  = process.env.ISSUE_TITLE  || '';
-  const issueBody   = process.env.ISSUE_BODY   || '';
-  const repo        = process.env.REPO;
-  const ghToken     = process.env.GITHUB_TOKEN;
+  const commentBody  = process.env.COMMENT_BODY  || '';
+  const issueNumber  = process.env.ISSUE_NUMBER;
+  const repo         = process.env.REPO;
+  const ghToken      = process.env.GITHUB_TOKEN;
+  const contextBlock = process.env.CONTEXT_BLOCK || '';
 
   if (!issueNumber) throw new Error('ISSUE_NUMBER manquant');
   if (!repo)        throw new Error('REPO manquant');
 
-  // --- 1. Parser le commentaire ----------------------------------------
+  // --- 1. Parser le commentaire — zone commune -------------------------
   const parsed = parseComment(commentBody);
   if (!parsed) return;
 
   const { role, demande } = parsed;
   const featureBranch = `feature/issue-${issueNumber}`;
 
-  // --- 2. Charger la config --------------------------------------------
-  const config = loadConfig();
-
-  // --- Cas spécial : /start → mode bootstrap direct (tests, fixture) ---
-  // Déclenche init.mjs sans passer par un agent LLM
-  if (role === 'start') {
-    console.log('[agent-dispatch] /start détecté — bootstrap direct via init.mjs');
-    execSync('node src/init.mjs', {
-      stdio: 'inherit',
-      env: {
-        ...process.env,
-        ISSUE_NUMBER: issueNumber,
-        REPO:         repo,
-        GITHUB_TOKEN: ghToken,
-        ISSUE_BODY:   process.env.ISSUE_BODY || '',
-      }
-    });
-    console.log('[agent-dispatch] Bootstrap /start terminé.');
-    return;
-  }
+  // --- 2. Charger config + profil --------------------------------------
+  const config  = loadConfig();
   const profile = loadProfile(role);
 
   // --- 3. Setup git + créer la branche feature si elle n'existe pas ----
@@ -157,16 +163,24 @@ async function main() {
     run('agent-dispatch', `git checkout -`);
   }
 
-  // --- 4. Construire le prompt -----------------------------------------
-  const prompt = buildPrompt({ role, demande, issueNumber, issueTitle, issueBody, config, profile });
+  // --- 4. Construire le prompt système ---------------------------------
+  const prompt = buildPrompt({
+    role,
+    demande,
+    branch:       featureBranch,
+    config,
+    profile,
+    contextBlock,
+  });
   console.log(`[agent-dispatch] Prompt construit (${prompt.length} caractères).`);
 
-  // --- 5. Dispatcher Agent Execute ------------------------------------
-  console.log(`[agent-dispatch] Dispatch Agent Execute — issue #${issueNumber}, branche ${featureBranch}`);
+  // --- 5. Dispatcher Agent Execute -------------------------------------
+  console.log(`[agent-dispatch] Dispatch Agent Execute — role=${role}, issue #${issueNumber}, branche ${featureBranch}`);
   await dispatchWorkflow('agent-execute.yml', {
     issue_number: String(issueNumber),
     branch:       featureBranch,
     prompt,
+    role,
     model:        config.model,
     retry_max:    String(config.retry_max),
   }, repo, ghToken);
