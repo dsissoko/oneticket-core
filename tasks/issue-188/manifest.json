@@ -1,0 +1,30 @@
+{
+  "issue": 188,
+  "branch_base": "feature/issue-188",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-188-A",
+      "file": "hello.txt",
+      "content": "Créer un fichier hello.txt à la racine du projet avec le contenu exact : Hello World",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-188-B",
+      "file": "world.txt",
+      "content": "Créer un fichier world.txt à la racine du projet avec le contenu exact : World",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-188-C",
+      "file": "readme.txt",
+      "content": "Créer un fichier readme.txt à la racine du projet avec le contenu exact : README",
+      "depends_on": [],
+      "status": "pending"
+    }
+  ]
+}
