@@ -8,7 +8,7 @@
       "file": "docs/epics/breakout-epic-1-architecture-et-rendu.md",
       "content": "Crée un fichier markdown décrivant l'EPIC-1 'Architecture et rendu du jeu Breakout'. L'epic couvre la mise en place de la structure HTML, du canvas pour le rendu, et de la boucle de jeu. Inclus le titre 'EPIC-1 : Architecture de base & rendu', une description détaillée, et liste 3 user stories : US-1.1 Créer la structure HTML et CSS (canvas + interface), US-1.2 Implémenter la boucle de jeu (requestAnimationFrame), US-1.3 Mettre en place le système de rendu des objets du jeu.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
