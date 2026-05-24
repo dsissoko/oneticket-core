@@ -33,7 +33,7 @@ concurrency:
 jobs:
   dispatch:
     # Filtre : commentaire @<role> sur une issue (pas PR)
-    if: "github.event.issue.pull_request == null && contains(github.event.comment.body, '@')"
+    if: "github.event.issue.pull_request == null && startsWith(github.event.comment.body, '@')"
     runs-on: ubuntu-latest
     permissions:
       contents: write
