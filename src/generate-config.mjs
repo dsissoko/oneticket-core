@@ -37,11 +37,17 @@ try {
     );
   }
 
-  // Injecter default_agent si un role est fourni
-  // → opencode charge directement le bon profil sans instruction dans le prompt
-  const output = role
-    ? { ...agentConfig, default_agent: role }
-    : agentConfig;
+  // TODO: default_agent — réservé pour intégration future avec APM (Agent Protocol Manager)
+  // Quand opencode supportera un registre d'agents externe (ex: Microsoft APM),
+  // ce champ permettra de charger dynamiquement le bon agent par son identifiant de rôle.
+  // Actuellement désactivé : opencode ne reconnaît que ses agents natifs (build, plan).
+  // Le profil agent est injecté directement dans le prompt système via agents/<role>/profile.md.
+  //
+  // const output = role
+  //   ? { ...agentConfig, default_agent: role }
+  //   : agentConfig;
+
+  const output = agentConfig;
 
   if (role) {
     process.stderr.write(`[generate-config] default_agent=${role}\n`);
