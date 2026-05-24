@@ -1,0 +1,1 @@
+Crée un fichier markdown décrivant l'EPIC-3 'Gameplay et mécanique de scoring' avec ses 3 user stories : US-3.1 (système de score), US-3.2 (gestion vies), US-3.3 (équilibrage difficulté). Inclus des critères d'acceptation pour chaque US.
