@@ -8,7 +8,7 @@
       "file": "hello.txt",
       "content": "Crée un fichier nommé hello.txt à la racine du repository avec exactement le contenu suivant : Hello World",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
