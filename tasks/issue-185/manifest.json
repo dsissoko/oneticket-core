@@ -40,7 +40,7 @@
       "file": "docs/epics/breakout-epic-5-score-et-etats.md",
       "content": "Crée un fichier markdown décrivant l'EPIC-5 'Système de score, game over et victoire'. L'epic couvre le suivi du score, la gestion des états de jeu, et les écrans de victoire/défaite. Inclus le titre 'EPIC-5 : Système de score, game over et victoire', une description détaillée, et liste 4 user stories : US-5.1 Implémenter le système de score et l'affichage, US-5.2 Gérer les états du jeu (en cours, pause, game over, victoire), US-5.3 Créer l'écran de game over avec bouton redémarrer, US-5.4 Créer l'écran de victoire.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     }
   ]
 }
