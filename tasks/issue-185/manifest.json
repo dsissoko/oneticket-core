@@ -24,7 +24,7 @@
       "file": "docs/epics/breakout-epic-3-balle-et-physique.md",
       "content": "Crée un fichier markdown décrivant l'EPIC-3 'Mécanique de balle et physique'. L'epic couvre la création de la balle, sa trajectoire, et une physique simple (rebonds). Inclus le titre 'EPIC-3 : Mécanique de balle (physique simple)', une description détaillée, et liste 3 user stories : US-3.1 Créer l'objet balle et son rendu, US-3.2 Implémenter le mouvement et les rebonds sur les murs, US-3.3 Gérer les rebonds sur la raquette avec angle de déflection.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "D",
