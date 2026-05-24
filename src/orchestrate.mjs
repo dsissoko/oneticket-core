@@ -18,34 +18,26 @@
  *      → en attente     : rien, un prochain push déclenchera ce workflow
  *
  * [LOCK OPTIMISTE] Pas de concurrency GitHub Actions — les conflits d'accès au manifest
- * sont gérés ici avec retry sur push (git pull --rebase + re-push).
- * Raison : le concurrency job-level GitHub ne maintient qu'une seule place en queue —
- * deux signaux quasi-simultanés = l'un est annulé même avec cancel-in-progress: false.
- * Le retry git est plus fiable : aucun signal n'est perdu.
+ * sont gérés ici avec retry sur push (backoff exponentiel + jitter).
  *
  * Variables d'environnement attendues :
  *   GITHUB_TOKEN, PUSHED_BRANCH (ex: task/issue-42-B), REPO
  */
 
-import { execSync } from 'child_process';
-import fs from 'fs';
-import path from 'path';
 import { launchReadyTasks } from './agent-launcher.mjs';
 import { loadConfig } from './config.mjs';
+import {
+  run,
+  runWithRetry,
+  setupGit,
+  writeManifest,
+  readManifest,
+  areDependenciesSatisfied,
+} from './utils.mjs';
 
 // ---------------------------------------------------------------------------
-// Helpers git
+// Helpers locaux
 // ---------------------------------------------------------------------------
-
-function run(cmd, opts = {}) {
-  console.log(`[orchestrate] $ ${cmd}`);
-  return execSync(cmd, { stdio: 'inherit', ...opts });
-}
-
-function runCapture(cmd) {
-  console.log(`[orchestrate] $ ${cmd}`);
-  return execSync(cmd, { encoding: 'utf8' }).trim();
-}
 
 /**
  * Parse le nom de la branche task/issue-<N>-<ID>.
@@ -60,41 +52,6 @@ function parseBranchName(branch) {
     );
   }
   return { issueNumber: match[1], taskId: match[2] };
-}
-
-/**
- * Lit le manifest.json depuis tasks/issue-<N>/manifest.json.
- * [SOURCE DE VÉRITÉ] Le manifest en git est l'unique état partagé entre les runs.
- */
-function readManifest(issueNumber) {
-  const manifestPath = path.join(process.cwd(), 'tasks', `issue-${issueNumber}`, 'manifest.json');
-  if (!fs.existsSync(manifestPath)) {
-    throw new Error(`manifest.json introuvable : ${manifestPath}`);
-  }
-  const raw = fs.readFileSync(manifestPath, 'utf8');
-  try {
-    return JSON.parse(raw);
-  } catch (err) {
-    throw new Error(`manifest.json corrompu (JSON invalide) : ${manifestPath} — ${err.message}`);
-  }
-}
-
-/**
- * Écrit le manifest.json mis à jour dans tasks/issue-<N>/manifest.json.
- */
-function writeManifest(manifest) {
-  const manifestPath = path.join(process.cwd(), 'tasks', `issue-${manifest.issue}`, 'manifest.json');
-  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
-}
-
-/**
- * [FAN-IN check] Détermine si toutes les dépendances d'une tâche sont satisfaites.
- * Une tâche n'est prête que si TOUTES ses dépendances sont "done".
- */
-function areDependenciesSatisfied(task, allTasks) {
-  if (!task.depends_on || task.depends_on.length === 0) return true;
-  const doneIds = new Set(allTasks.filter(t => t.status === 'done').map(t => t.id));
-  return task.depends_on.every(dep => doneIds.has(dep));
 }
 
 /**
@@ -122,34 +79,30 @@ async function markDoneAndPush(manifest, taskId, pushedBranch, featureBranch, ma
     const task = manifest.tasks.find(t => t.id === taskId);
     if (!task) throw new Error(`Tâche "${taskId}" introuvable dans le manifest.`);
 
-    // Idempotence : si déjà done (re-lecture après conflit), sortir proprement
     if (task.status === 'done') {
       console.log(`[orchestrate] IDEMPOTENCE (retry ${attempt}) : tâche ${taskId} déjà done.`);
       return { manifest, mergeError: null };
     }
 
-    // [MERGE] Intègre les fichiers de la tâche dans feature/
     console.log(`[orchestrate] Merge de ${pushedBranch} dans ${featureBranch} (tentative ${attempt})`);
     try {
-      run(`git merge --no-ff origin/${pushedBranch} -m "chore: merge task ${taskId} into ${featureBranch}"`);
+      run('orchestrate', `git merge --no-ff origin/${pushedBranch} -m "chore: merge task ${taskId} into ${featureBranch}"`);
     } catch (mergeError) {
-      try { run('git merge --abort'); } catch (_) {}
+      try { run('orchestrate', 'git merge --abort'); } catch (_) {}
       return { manifest, mergeError };
     }
 
-    // [MANIFEST] Marquer la tâche done et commiter
     task.status = 'done';
     writeManifest(manifest);
-    run(`git add tasks/issue-${manifest.issue}/manifest.json`);
-    run(`git commit -m "chore: mark task ${taskId} as done in manifest"`);
+    run('orchestrate', `git add tasks/issue-${manifest.issue}/manifest.json`);
+    run('orchestrate', `git commit -m "chore: mark task ${taskId} as done in manifest"`);
 
     try {
-      run(`git push origin ${featureBranch}`);
-      return { manifest, mergeError: null }; // succès
+      runWithRetry('orchestrate', `git push origin ${featureBranch}`);
+      return { manifest, mergeError: null };
     } catch (e) {
       if (attempt === maxAttempts) throw e;
 
-      // Backoff exponentiel avec jitter : 2^attempt * 1000ms + [0, 500ms]
       const backoff = Math.pow(2, attempt) * 1000 + Math.floor(Math.random() * 500);
       console.log(
         `[orchestrate] Push non fast-forward (tentative ${attempt}/${maxAttempts}) — ` +
@@ -157,12 +110,10 @@ async function markDoneAndPush(manifest, taskId, pushedBranch, featureBranch, ma
       );
       await new Promise(r => setTimeout(r, backoff));
 
-      // Annuler le merge + le commit manifest (2 commits)
-      run(`git reset --hard HEAD~2`);
-      run(`git fetch origin ${featureBranch}`);
-      run(`git checkout -B ${featureBranch} origin/${featureBranch}`);
+      run('orchestrate', `git reset --hard HEAD~2`);
+      runWithRetry('orchestrate', `git fetch origin ${featureBranch}`);
+      run('orchestrate', `git checkout -B ${featureBranch} origin/${featureBranch}`);
 
-      // Re-lire le manifest depuis l'état origin
       manifest = readManifest(manifest.issue);
     }
   }
@@ -172,10 +123,6 @@ async function markDoneAndPush(manifest, taskId, pushedBranch, featureBranch, ma
 // Helpers GitHub API
 // ---------------------------------------------------------------------------
 
-/**
- * Crée la PR finale via l'API GitHub.
- * Appelée uniquement quand toutes les tâches sont "done".
- */
 async function createFinalPR(manifest, repo, token, config) {
   const { issue, branch_base } = manifest;
   const title = `feat: complete all tasks for issue #${issue}`;
@@ -195,68 +142,36 @@ async function createFinalPR(manifest, repo, token, config) {
       'Content-Type': 'application/json',
       'X-GitHub-Api-Version': '2022-11-28',
     },
-    body: JSON.stringify({
-      title,
-      body,
-      head: branch_base,
-      base: config.pr_base,
-    }),
+    body: JSON.stringify({ title, body, head: branch_base, base: config.pr_base }),
   });
 
   const data = await res.json();
-  if (!res.ok) {
-    throw new Error(`Échec création PR : ${JSON.stringify(data)}`);
-  }
+  if (!res.ok) throw new Error(`Échec création PR : ${JSON.stringify(data)}`);
   console.log(`[orchestrate] PR finale créée : ${data.html_url}`);
   return data;
 }
 
-/**
- * [MERGE FAILURE] Assure l'existence du label "merge error" sur le repo
- * et l'applique à l'issue.
- * Non-bloquant : toute erreur est loguée et absorbée.
- */
 async function ensureAndApplyLabel(issueNumber, repo, token) {
   try {
     const labelName  = 'merge error';
-    const labelColor = 'b60205'; // rouge
+    const labelColor = 'b60205';
 
-    // Créer le label s'il n'existe pas
     const checkRes = await fetch(
       `https://api.github.com/repos/${repo}/labels/${encodeURIComponent(labelName)}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/vnd.github+json',
-          'X-GitHub-Api-Version': '2022-11-28',
-        },
-      }
+      { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' } }
     );
 
     if (checkRes.status === 404) {
-      console.log(`[orchestrate] Création du label "${labelName}"...`);
       await fetch(`https://api.github.com/repos/${repo}/labels`, {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/vnd.github+json',
-          'Content-Type': 'application/json',
-          'X-GitHub-Api-Version': '2022-11-28',
-        },
+        headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json', 'X-GitHub-Api-Version': '2022-11-28' },
         body: JSON.stringify({ name: labelName, color: labelColor }),
       });
     }
 
-    // Appliquer le label à l'issue
-    console.log(`[orchestrate] Application du label "${labelName}" sur l'issue #${issueNumber}...`);
     await fetch(`https://api.github.com/repos/${repo}/issues/${issueNumber}/labels`, {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/vnd.github+json',
-        'Content-Type': 'application/json',
-        'X-GitHub-Api-Version': '2022-11-28',
-      },
+      headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json', 'X-GitHub-Api-Version': '2022-11-28' },
       body: JSON.stringify({ labels: [labelName] }),
     });
   } catch (err) {
@@ -264,10 +179,6 @@ async function ensureAndApplyLabel(issueNumber, repo, token) {
   }
 }
 
-/**
- * [MERGE FAILURE] Poste un commentaire de notification sur l'issue.
- * Non-bloquant : toute erreur est loguée et absorbée.
- */
 async function postMergeFailureComment(issueNumber, taskId, branch, featureBranch, repo, token) {
   try {
     const body = [
@@ -282,12 +193,7 @@ async function postMergeFailureComment(issueNumber, taskId, branch, featureBranc
 
     await fetch(`https://api.github.com/repos/${repo}/issues/${issueNumber}/comments`, {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/vnd.github+json',
-        'Content-Type': 'application/json',
-        'X-GitHub-Api-Version': '2022-11-28',
-      },
+      headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json', 'X-GitHub-Api-Version': '2022-11-28' },
       body: JSON.stringify({ body }),
     });
   } catch (err) {
@@ -295,27 +201,13 @@ async function postMergeFailureComment(issueNumber, taskId, branch, featureBranc
   }
 }
 
-/**
- * Supprime une branche distante via l'API GitHub.
- * Appelée après chaque merge réussi de task/* dans feature/* —
- * nettoyage immédiat pour éviter l'accumulation de branches temporaires.
- * Non-bloquant : toute erreur est loguée et absorbée.
- */
 async function deleteRemoteBranch(branch, repo, token) {
   try {
     const res = await fetch(
       `https://api.github.com/repos/${repo}/git/refs/heads/${branch}`,
-      {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/vnd.github+json',
-          'X-GitHub-Api-Version': '2022-11-28',
-        },
-      }
+      { method: 'DELETE', headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' } }
     );
     if (res.ok || res.status === 422) {
-      // 422 = ref n'existe pas (déjà supprimée) — idempotent
       console.log(`[orchestrate] Branche ${branch} supprimée.`);
     } else {
       console.warn(`[orchestrate] Impossible de supprimer ${branch} : HTTP ${res.status}`);
@@ -337,7 +229,6 @@ async function main() {
   if (!pushedBranch) throw new Error('PUSHED_BRANCH manquant');
   if (!repo)         throw new Error('REPO manquant');
 
-  // --- 1. Parser la branche poussée (signal de fin) ------------------------
   const { issueNumber, taskId } = parseBranchName(pushedBranch);
   const featureBranch = `feature/issue-${issueNumber}`;
 
@@ -345,34 +236,20 @@ async function main() {
 
   const config = loadConfig();
 
-  // --- Configurer git -------------------------------------------------------
-  run(`git config user.name "${config.git_user_name}"`);
-  run(`git config user.email "${config.git_user_email}"`);
+  // Setup git + fetch avec retry réseau
+  setupGit('orchestrate', config, repo, ghToken);
+  run('orchestrate', `git checkout -B ${featureBranch} origin/${featureBranch}`);
 
-  if (ghToken) {
-    run(`git remote set-url origin https://x-access-token:${ghToken}@github.com/${repo}.git`);
-  }
-
-  run('git fetch origin');
-  run(`git checkout -B ${featureBranch} origin/${featureBranch}`);
-
-  // --- 2. [GATHER] Lire le manifest — reconstitution de l'état complet -----
   let manifest = readManifest(issueNumber);
 
   const task = manifest.tasks.find(t => t.id === taskId);
-  if (!task) {
-    throw new Error(`Tâche "${taskId}" introuvable dans le manifest.`);
-  }
+  if (!task) throw new Error(`Tâche "${taskId}" introuvable dans le manifest.`);
 
-  // --- 3. [IDEMPOTENCE] Tâche déjà traitée ? --------------------------------
   if (task.status === 'done' || task.status === 'merge-failed') {
     console.log(`[orchestrate] IDEMPOTENCE : tâche ${taskId} déjà en état "${task.status}" — sortie sans modification.`);
     return;
   }
 
-  // --- 4 & 5. Merger + marquer done + push (lock optimiste) -----------------
-  // Le merge EST dans markDoneAndPush pour être re-exécuté à chaque retry —
-  // évite que les fichiers de la tâche soient perdus lors d'un push non fast-forward.
   const { manifest: updatedManifest, mergeError } = await markDoneAndPush(
     manifest, taskId, pushedBranch, featureBranch, config.orchestrate_retry_max
   );
@@ -381,14 +258,12 @@ async function main() {
   if (mergeError) {
     console.error(`[orchestrate] MERGE FAILURE : ${mergeError.message}`);
 
-    // Mettre à jour le manifest avec merge-failed
     task.status = 'merge-failed';
     writeManifest(manifest);
-    run(`git add tasks/issue-${issueNumber}/manifest.json`);
-    run(`git commit -m "chore: mark task ${taskId} as merge-failed"`);
-    run(`git push origin ${featureBranch}`);
+    run('orchestrate', `git add tasks/issue-${issueNumber}/manifest.json`);
+    run('orchestrate', `git commit -m "chore: mark task ${taskId} as merge-failed"`);
+    runWithRetry('orchestrate', `git push origin ${featureBranch}`);
 
-    // Notifier : label + commentaire sur l'issue
     await ensureAndApplyLabel(issueNumber, repo, ghToken);
     await postMergeFailureComment(issueNumber, taskId, pushedBranch, featureBranch, repo, ghToken);
 
@@ -397,32 +272,20 @@ async function main() {
   }
 
   console.log(`[orchestrate] Tâche ${taskId} marquée done et mergée dans ${featureBranch}.`);
-  // Nettoyage au fil de l'eau — pas d'accumulation de branches temporaires
   await deleteRemoteBranch(pushedBranch, repo, ghToken);
 
-  // --- 6. [ROUTING DÉTERMINISTE] Décider de la suite -----------------------
   const allDone    = manifest.tasks.every(t => t.status === 'done');
   const readyTasks = getReadyTasks(manifest);
 
   if (allDone) {
-    // Toutes les tâches done → fin du workflow complet
     console.log('[orchestrate] Toutes les tâches sont done. Création de la PR finale.');
     await createFinalPR(manifest, repo, ghToken, config);
-
   } else if (readyTasks.length > 0) {
-    // [FAN-IN → FAN-OUT] Des tâches viennent d'être débloquées par cette complétion
-    console.log(
-      `[orchestrate] [FAN-IN → FAN-OUT] ${readyTasks.length} tâche(s) débloquée(s) : ` +
-      readyTasks.map(t => t.id).join(', ')
-    );
+    console.log(`[orchestrate] [FAN-IN → FAN-OUT] ${readyTasks.length} tâche(s) débloquée(s) : ${readyTasks.map(t => t.id).join(', ')}`);
     await launchReadyTasks(manifest, repo, ghToken);
-
   } else {
-    // Des tâches in_progress n'ont pas encore poussé leur signal de fin
     const inProgress = manifest.tasks.filter(t => t.status === 'in_progress');
-    console.log(
-      `[orchestrate] En attente des signaux de fin pour : ${inProgress.map(t => t.id).join(', ')}`
-    );
+    console.log(`[orchestrate] En attente des signaux de fin pour : ${inProgress.map(t => t.id).join(', ')}`);
   }
 
   console.log('[orchestrate] Orchestration terminée.');

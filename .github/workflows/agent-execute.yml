@@ -98,7 +98,12 @@ jobs:
 
       # [DÉTERMINISTE] Génère la config opencode depuis agents/config.yml
       # → injectée dans OPENCODE_CONFIG_CONTENT (override runtime officiel opencode)
-      # Aucun fichier écrit — config éphémère, jamais versionnée
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
       - name: Generate opencode config
         id: agent-config
         run: |
@@ -163,11 +168,11 @@ jobs:
           git push origin ${{ inputs.branch }}
 
       # [DÉTERMINISTE] FAN-OUT si l'agent a produit un manifest
-      # Détecte tasks/issue-N/manifest.json dans le working tree après le push.
-      # Si présent → lance init.mjs en mode MANIFEST_ALREADY_PRESENT (FAN-OUT direct).
-      # Si absent → no-op silencieux (cas invocation libre sans décomposition).
+      # Uniquement pour les invocations libres (branch_base vide = /po, /dev, etc.)
+      # Les tâches FAN-OUT (branch_base non vide) n'ont pas à re-déclencher le FAN-OUT
+      # car orchestrate.mjs s'en charge via Workflow Gather — évite le double launchReadyTasks (R2)
       - name: Launch FAN-OUT if manifest present
-        if: steps.run-agent.outcome == 'success'
+        if: steps.run-agent.outcome == 'success' && inputs.branch_base == ''
         env:
           GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
           ISSUE_NUMBER: ${{ inputs.issue_number }}
