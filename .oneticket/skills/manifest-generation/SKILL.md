@@ -9,7 +9,7 @@ nécessite une décomposition en tâches exécutables par des agents.
 
 ## Format obligatoire
 
-Le manifest doit être écrit dans le fichier `tasks/issue-{issue_number}/manifest.json`.
+Le manifest doit être écrit dans le fichier `.oneticket/tasks/issue-{issue_number}/manifest.json`.
 Le contenu doit être exactement ce JSON (pas de commentaires, pas de markdown autour) :
 
 ```json
@@ -120,5 +120,5 @@ Ce message est le signal technique qui déclenche le pipeline d'exécution autom
 
 - **Ne jamais pusher** — le push est géré par le pipeline déterministe
 - **Ne jamais créer de PR** — la PR est créée automatiquement en fin de pipeline
-- **Un seul fichier à produire** : `tasks/issue-{N}/manifest.json`
+- **Un seul fichier à produire** : `.oneticket/tasks/issue-{N}/manifest.json`
 - **JSON valide** : vérifier la syntaxe avant de commiter
