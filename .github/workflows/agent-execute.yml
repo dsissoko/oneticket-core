@@ -136,35 +136,24 @@ jobs:
           use_github_token: true
           prompt: ${{ inputs.prompt }}
 
-      # [RETRY] Echec anomalyco → re-dispatch avec délai croissant
-      # retry_max lu depuis agents/config.yml, passé en input par agent-launcher/dispatch
+      # [RETRY] Echec anomalyco → re-dispatch via retry-dispatch.mjs
+      # Utilise dispatchWorkflow() (API GitHub JSON) — même mécanisme que le premier dispatch
+      # → safe pour tout contenu (code, caractères spéciaux, guillemets, sauts de ligne)
+      # Contrairement au bash 'gh workflow run --field prompt="..."' qui interprète le shell
       - name: Retry on agent failure
         if: steps.run-agent.outcome == 'failure'
         env:
-          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
-        run: |
-          RETRY=${{ inputs.retry_count }}
-          RETRY_MAX=${{ inputs.retry_max }}
-          echo "[retry] Agent a échoué. retry_count=$RETRY / max=$RETRY_MAX"
-          if [ "$RETRY" -ge "$RETRY_MAX" ]; then
-            echo "[retry] Max retries atteint ($RETRY_MAX). Échec définitif."
-            exit 1
-          fi
-          NEXT_RETRY=$((RETRY + 1))
-          DELAY=$((NEXT_RETRY * 10))
-          echo "[retry] Attente ${DELAY}s avant re-dispatch (tentative $NEXT_RETRY/$RETRY_MAX)..."
-          sleep $DELAY
-          gh workflow run agent-execute.yml \
-            --repo ${{ github.repository }} \
-            --field issue_number=${{ inputs.issue_number }} \
-            --field branch=${{ inputs.branch }} \
-            --field branch_base=${{ inputs.branch_base }} \
-            --field prompt="${{ inputs.prompt }}" \
-            --field retry_count=$NEXT_RETRY \
-            --field retry_max=${{ inputs.retry_max }} \
-            --field model=${{ inputs.model }} \
-            --field role=${{ inputs.role }}
-          echo "[retry] Re-dispatch déclenché (tentative $NEXT_RETRY/$RETRY_MAX)."
+          GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          REPO: ${{ github.repository }}
+          RETRY_COUNT: ${{ inputs.retry_count }}
+          RETRY_MAX: ${{ inputs.retry_max }}
+          ISSUE_NUMBER: ${{ inputs.issue_number }}
+          BRANCH: ${{ inputs.branch }}
+          BRANCH_BASE: ${{ inputs.branch_base }}
+          ROLE: ${{ inputs.role }}
+          MODEL: ${{ inputs.model }}
+          PROMPT: ${{ inputs.prompt }}
+        run: node src/retry-dispatch.mjs
 
       # [DÉTERMINISTE] Push final
       # Skippé si l'agent a échoué (le retry prend le relais)
