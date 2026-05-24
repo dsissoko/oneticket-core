@@ -4,20 +4,12 @@
  * [DÉTERMINISTE] Re-dispatch de agent-execute.yml en cas d'échec anomalyco.
  * Appelé par agent-execute.yml step "Retry on agent failure".
  *
- * Utilise dispatchWorkflow() depuis utils.mjs — exactement le même mécanisme
- * que agent-launcher.mjs et agent-dispatch.mjs → API GitHub JSON → safe pour
- * tout contenu (code, caractères spéciaux, sauts de ligne, guillemets...).
- *
- * Raison d'existence : le re-dispatch bash via 'gh workflow run --field prompt="..."'
- * interprète les caractères spéciaux du prompt → exit 127 sur du contenu complexe.
- * Ce script résout définitivement ce problème.
- *
  * Variables d'environnement attendues (toutes passées depuis agent-execute.yml) :
  *   GITHUB_TOKEN, REPO, RETRY_COUNT, RETRY_MAX,
- *   ISSUE_NUMBER, BRANCH, BRANCH_BASE, ROLE, PROMPT
+ *   ISSUE_NUMBER, BRANCH, BRANCH_BASE, ROLE, MODEL, PROMPT
  *
- * Note : MODEL est absent — le modèle est piloté par OPENCODE_CONFIG_CONTENT
- * (agent_config.<cli>.model dans .oneticket/config.yml), pas par un input workflow.
+ * MODEL : obligatoire — requis par l'action anomalyco (required: true dans action.yml).
+ * Valeur issue de agent_config.<cli>.model dans .oneticket/config.yml.
  */
 
 import { dispatchWorkflow } from './utils.mjs';
@@ -27,9 +19,11 @@ async function main() {
   const token      = process.env.GITHUB_TOKEN;
   const retryCount = parseInt(process.env.RETRY_COUNT || '0', 10);
   const retryMax   = parseInt(process.env.RETRY_MAX   || '3', 10);
+  const model      = process.env.MODEL;
 
   if (!repo)  throw new Error('REPO manquant');
   if (!token) throw new Error('GITHUB_TOKEN manquant');
+  if (!model) throw new Error('MODEL manquant');
 
   if (retryCount >= retryMax) {
     console.error(`[retry-dispatch] Max retries atteint (${retryMax}). Échec définitif.`);
@@ -50,6 +44,7 @@ async function main() {
     branch_base:  process.env.BRANCH_BASE || '',
     prompt:       process.env.PROMPT,
     role:         process.env.ROLE        || '',
+    model,
     retry_count:  String(nextRetry),
     retry_max:    String(retryMax),
   }, repo, token);

@@ -185,6 +185,7 @@ async function main() {
     branch:       featureBranch,
     prompt,
     role,
+    model:        config.model,
     retry_max:    String(config.retry_max),
   }, repo, ghToken);
 

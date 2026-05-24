@@ -71,15 +71,26 @@ export function loadConfig() {
     throw new Error(`${CONFIG_PATH} est vide ou invalide`);
   }
 
+  const cli          = require(parsed, 'cli');
+  const agent_config = parsed.agent_config || {};
+  const cliConfig    = agent_config[cli]   || {};
+
+  if (!cliConfig.model) {
+    throw new Error(
+      `Clé obligatoire manquante dans ${CONFIG_PATH} : "agent_config.${cli}.model"`
+    );
+  }
+
   return {
     language:                 parsed.language        || null,  // optionnel
     autonomous_mode:          parsed.autonomous_mode !== false, // optionnel, défaut true
-    cli:                      require(parsed, 'cli'),
+    cli,
+    model:                    cliConfig.model,
     retry_max:                require(parsed, 'retry_max'),
     orchestrate_retry_max:    require(parsed, 'orchestrate_retry_max'),
     oneticket_git_user_name:  require(parsed, 'oneticket_git_user_name'),
     oneticket_git_user_email: require(parsed, 'oneticket_git_user_email'),
     pr_base:                  require(parsed, 'pr_base'),
-    agent_config:             parsed.agent_config    || {},    // optionnel
+    agent_config,
   };
 }

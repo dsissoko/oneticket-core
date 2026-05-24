@@ -89,6 +89,7 @@ export async function launchReadyTasks(manifest, repo, token) {
         branch:       task.branch,
         branch_base:  manifest.branch_base,
         prompt,
+        model:        config.model,
         retry_max:    String(config.retry_max),
       }, repo, token);
       console.log(`[agent-launcher] [FAN-OUT] Workflow déclenché pour tâche ${task.id}.`);
