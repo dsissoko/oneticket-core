@@ -8,7 +8,7 @@
       "file": "tasks/issue-198/subtask-A.txt",
       "content": "Crée un fichier nommé tasks/issue-198/subtask-A.txt avec exactement ce contenu : Subtask A completed",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
@@ -16,7 +16,7 @@
       "file": "tasks/issue-198/subtask-B.txt",
       "content": "Crée un fichier nommé tasks/issue-198/subtask-B.txt avec exactement ce contenu : Subtask B completed",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "C",
@@ -24,14 +24,17 @@
       "file": "tasks/issue-198/subtask-C.txt",
       "content": "Crée un fichier nommé tasks/issue-198/subtask-C.txt avec exactement ce contenu : Subtask C completed",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "D",
       "branch": "task/issue-198-D",
       "file": "tasks/issue-198/subtask-D.txt",
       "content": "Crée un fichier nommé tasks/issue-198/subtask-D.txt avec exactement ce contenu : Subtask D completed",
-      "depends_on": ["A", "B"],
+      "depends_on": [
+        "A",
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -39,7 +42,9 @@
       "branch": "task/issue-198-E",
       "file": "tasks/issue-198/subtask-E.txt",
       "content": "Crée un fichier nommé tasks/issue-198/subtask-E.txt avec exactement ce contenu : Subtask E completed",
-      "depends_on": ["D"],
+      "depends_on": [
+        "D"
+      ],
       "status": "pending"
     },
     {
@@ -47,7 +52,9 @@
       "branch": "task/issue-198-F",
       "file": "tasks/issue-198/subtask-F.txt",
       "content": "Crée un fichier nommé tasks/issue-198/subtask-F.txt avec exactement ce contenu : Subtask F completed",
-      "depends_on": ["C"],
+      "depends_on": [
+        "C"
+      ],
       "status": "pending"
     }
   ]
