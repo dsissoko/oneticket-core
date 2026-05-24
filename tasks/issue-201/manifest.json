@@ -8,7 +8,7 @@
       "file": "docs/epics/EPIC-1-Fondations-et-physique.md",
       "content": "Crée un fichier markdown décrivant l'EPIC-1 'Fondations et physique du jeu' avec ses 3 user stories : US-1.1 (structure HTML/canvas), US-1.2 (physique de base), US-1.3 (balle et rebonds). Inclus des critères d'acceptation pour chaque US.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
