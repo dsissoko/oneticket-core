@@ -8,7 +8,7 @@
       "file": "tasks/issue-198/subtask-A.txt",
       "content": "Crée un fichier nommé tasks/issue-198/subtask-A.txt avec exactement ce contenu : Subtask A completed",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
