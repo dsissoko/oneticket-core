@@ -5,7 +5,7 @@
  * Point d'entrée unique pour tout déclenchement agent.
  *
  * Contrat d'interface — variables d'environnement obligatoires :
- *   COMMENT_BODY   — texte du commentaire contenant /<role> + demande
+ *   COMMENT_BODY   — texte du commentaire contenant @<role> + demande
  *   ISSUE_NUMBER   — numéro d'issue GitHub (pour branche feature/issue-N)
  *   REPO           — owner/repo
  *   GITHUB_TOKEN   — PAT GitHub
@@ -26,6 +26,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { loadConfig } from './config.mjs';
 import { run, runCapture, runWithRetry, setupGit, dispatchWorkflow } from './utils.mjs';
+import { AGENTS_DIR, AGENT_EXT } from './constants.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -35,17 +36,17 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * Parse le commentaire pour extraire role et demande.
- * Premier /<role> trouvé → role. Reste du commentaire → demande.
+ * Premier @<role> trouvé → role. Reste du commentaire → demande.
  *
  * @returns {{ role: string, demande: string } | null}
  */
 function parseComment(commentBody) {
-  const match = commentBody.match(/\/([a-zA-Z][a-zA-Z0-9_-]*)/);
+  const match = commentBody.match(/@([a-zA-Z][a-zA-Z0-9_-]*)/);
   if (!match) {
-    console.log('[agent-dispatch] Aucun /role trouvé dans le commentaire — sortie sans action.');
+    console.log('[agent-dispatch] Aucun @role trouvé dans le commentaire — sortie sans action.');
     return null;
   }
-  const role   = match[1].toLowerCase();
+  const role    = match[1].toLowerCase();
   const demande = commentBody.replace(match[0], '').trim();
   console.log(`[agent-dispatch] role="${role}", demande="${demande.slice(0, 80)}..."`);
   return { role, demande };
@@ -56,14 +57,17 @@ function parseComment(commentBody) {
 // ---------------------------------------------------------------------------
 
 /**
- * Charge agents/<role>/profile.md.
+ * Charge .oneticket/agents/<role>.agent.md.
  * Retourne le contenu brut ou chaîne vide si introuvable.
  */
 function loadProfile(role) {
-  const profilePath = path.join(__dirname, '..', 'agents', role, 'profile.md');
+  const profilePath = path.join(__dirname, '..', AGENTS_DIR, `${role}${AGENT_EXT}`);
   if (!fs.existsSync(profilePath)) {
-    console.warn(`[agent-dispatch] Profil introuvable pour le role "${role}" : ${profilePath}`);
-    return '';
+    throw new Error(
+      `Aucun profil agent pour "@${role}" : ${profilePath}
+` +
+      `Créer ${AGENTS_DIR}/${role}${AGENT_EXT} pour activer cet agent.`
+    );
   }
   return fs.readFileSync(profilePath, 'utf8');
 }
@@ -114,7 +118,7 @@ function buildPrompt({ role, demande, branch, config, profile, contextBlock }) {
   lines.push('');
 
   lines.push(`## Demande`);
-  lines.push(demande || `/${role}`);
+  lines.push(demande || `@${role}`);
   lines.push('');
 
   // Contexte trigger — spécifique, construit par le workflow YAML
@@ -181,7 +185,6 @@ async function main() {
     branch:       featureBranch,
     prompt,
     role,
-    model:        config.model,
     retry_max:    String(config.retry_max),
   }, repo, ghToken);
 

@@ -5,7 +5,7 @@
  * Appelé dans agent-execute.yml avant le step anomalyco.
  *
  * Mécanisme :
- *   1. Lit agents/config.yml via loadConfig()
+ *   1. Lit .oneticket/config.yml via loadConfig()
  *   2. Extrait agent_config[cli] (ex: agent_config.opencode)
  *   3. Injecte default_agent si un role est fourni en argument
  *      → opencode charge directement le bon profil agent sans instruction dans le prompt
@@ -32,7 +32,7 @@ try {
 
   if (!agentConfig) {
     throw new Error(
-      `Aucune section agent_config.${cli} dans agents/config.yml. ` +
+      `Aucune section agent_config.${cli} dans .oneticket/config.yml. ` +
       `Sections disponibles : ${Object.keys(config.agent_config).join(', ') || '(aucune)'}`
     );
   }
@@ -41,7 +41,7 @@ try {
   // Quand opencode supportera un registre d'agents externe (ex: Microsoft APM),
   // ce champ permettra de charger dynamiquement le bon agent par son identifiant de rôle.
   // Actuellement désactivé : opencode ne reconnaît que ses agents natifs (build, plan).
-  // Le profil agent est injecté directement dans le prompt système via agents/<role>/profile.md.
+  // Le profil agent est injecté directement dans le prompt système via .oneticket/agents/<role>.agent.md.
   //
   // const output = role
   //   ? { ...agentConfig, default_agent: role }

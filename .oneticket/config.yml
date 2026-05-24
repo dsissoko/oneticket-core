@@ -20,9 +20,6 @@ autonomous_mode: true
 # CLI utilisé en sandbox CI — détermine quelle section agent_config utiliser
 cli: opencode
 
-# Modèle par défaut pour les agents CI
-model: opencode/claude-haiku-4-5
-
 # Nombre maximum de retries sur échec anomalyco (Agent Execute)
 retry_max: 3
 
@@ -30,9 +27,10 @@ retry_max: 3
 # Augmenté pour supporter des graphes larges avec beaucoup de tâches parallèles
 orchestrate_retry_max: 5
 
-# Identité git utilisée par le bot en sandbox CI
-git_user_name: oneticket-bot
-git_user_email: oneticket-bot@users.noreply.github.com
+# Identité git du bot oneticket en sandbox CI
+# Note : distinct des profils agents (APM) — propre au framework
+oneticket_git_user_name: oneticket-bot
+oneticket_git_user_email: oneticket-bot@users.noreply.github.com
 
 # Branche cible des PRs finales
 pr_base: main
@@ -40,6 +38,8 @@ pr_base: main
 # ---------------------------------------------------------------------------
 # Configuration des agents CI — générée à la volée via src/generate-config.mjs
 # La clé active est déterminée par le champ `cli` ci-dessus.
+# Le modèle utilisé par anomalyco est déclaré ici (section agent_config.<cli>.model)
+# et non dans les profils agents (.agent.md) qui sont réservés à APM.
 # ---------------------------------------------------------------------------
 
 agent_config:

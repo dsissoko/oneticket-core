@@ -10,7 +10,8 @@
  *   runCapture(prefix, cmd)             — execSync avec capture stdout
  *   runWithRetry(prefix, cmd, max)      — run avec backoff exponentiel + jitter
  *   setupGit(prefix, config, repo, token) — séquence git config + fetch
- *   writeManifest(manifest)             — écrit tasks/issue-N/manifest.json
+ *   writeManifest(manifest)             — écrit .oneticket/tasks/issue-N/manifest.json
+ *   readManifest(issueNumber)           — lit .oneticket/tasks/issue-N/manifest.json
  *   areDependenciesSatisfied(task, all) — vérifie les dépendances d'une tâche
  *   dispatchWorkflow(file, inputs, repo, token) — POST workflow_dispatch avec retry
  */
@@ -18,6 +19,7 @@
 import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
+import { TASKS_DIR, MANIFEST_FILE } from './constants.mjs';
 
 // ---------------------------------------------------------------------------
 // Helpers git de base
@@ -81,8 +83,8 @@ export function runWithRetry(prefix, cmd, maxAttempts = 3) {
  * @param {string} token   - GitHub PAT (peut être null/undefined)
  */
 export function setupGit(prefix, config, repo, token) {
-  run(prefix, `git config user.name "${config.git_user_name}"`);
-  run(prefix, `git config user.email "${config.git_user_email}"`);
+  run(prefix, `git config user.name "${config.oneticket_git_user_name}"`);
+  run(prefix, `git config user.email "${config.oneticket_git_user_email}"`);
   if (token) {
     run(prefix, `git remote set-url origin https://x-access-token:${token}@github.com/${repo}.git`);
   }
@@ -94,32 +96,30 @@ export function setupGit(prefix, config, repo, token) {
 // ---------------------------------------------------------------------------
 
 /**
- * Écrit le manifest dans tasks/issue-<N>/manifest.json.
- * Dupliqué auparavant dans orchestrate.mjs et agent-launcher.mjs.
+ * Écrit le manifest dans .oneticket/tasks/issue-<N>/manifest.json.
  */
 export function writeManifest(manifest) {
   const manifestPath = path.join(
-    process.cwd(), 'tasks', `issue-${manifest.issue}`, 'manifest.json'
+    process.cwd(), TASKS_DIR, `issue-${manifest.issue}`, MANIFEST_FILE
   );
   fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
 }
 
 /**
- * Lit le manifest depuis tasks/issue-<N>/manifest.json.
- * Dupliqué auparavant dans orchestrate.mjs et init.mjs.
+ * Lit le manifest depuis .oneticket/tasks/issue-<N>/manifest.json.
  */
 export function readManifest(issueNumber) {
   const manifestPath = path.join(
-    process.cwd(), 'tasks', `issue-${issueNumber}`, 'manifest.json'
+    process.cwd(), TASKS_DIR, `issue-${issueNumber}`, MANIFEST_FILE
   );
   if (!fs.existsSync(manifestPath)) {
-    throw new Error(`manifest.json introuvable : ${manifestPath}`);
+    throw new Error(`${MANIFEST_FILE} introuvable : ${manifestPath}`);
   }
   const raw = fs.readFileSync(manifestPath, 'utf8');
   try {
     return JSON.parse(raw);
   } catch (err) {
-    throw new Error(`manifest.json corrompu (JSON invalide) : ${manifestPath} — ${err.message}`);
+    throw new Error(`${MANIFEST_FILE} corrompu (JSON invalide) : ${manifestPath} — ${err.message}`);
   }
 }
 

@@ -5,12 +5,12 @@ name: Comment Dispatcher
 # Trigger : issue_comment (commentaire sur une issue, pas une PR)
 #
 # Responsabilités de ce workflow :
-#   1. Filtrer : commentaire /<role> sur une issue (pas PR)
+#   1. Filtrer : commentaire @<role> sur une issue (pas PR)
 #   2. Construire CONTEXT_BLOCK — contexte spécifique à ce trigger
 #   3. Déléguer à agent-dispatch.mjs avec le contrat d'interface minimal
 #
 # Contrat d'interface vers agent-dispatch.mjs :
-#   COMMENT_BODY   — texte du commentaire (contient /<role> + demande)
+#   COMMENT_BODY   — texte du commentaire (contient @<role> + demande)
 #   ISSUE_NUMBER   — numéro d'issue
 #   REPO           — owner/repo
 #   CONTEXT_BLOCK  — contexte construit par ce workflow (spécifique issue_comment)
@@ -32,8 +32,8 @@ concurrency:
 
 jobs:
   dispatch:
-    # Filtre : commentaire /<role> sur une issue (pas PR)
-    if: "github.event.issue.pull_request == null && startsWith(github.event.comment.body, '/')"
+    # Filtre : commentaire @<role> sur une issue (pas PR)
+    if: "github.event.issue.pull_request == null && contains(github.event.comment.body, '@')"
     runs-on: ubuntu-latest
     permissions:
       contents: write

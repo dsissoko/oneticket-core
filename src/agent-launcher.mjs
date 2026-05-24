@@ -11,8 +11,10 @@
  *   4. [FAN-OUT] Construire le prompt de chaque tâche + déclencher agent-execute.yml
  */
 
+import path from 'path';
 import { run, writeManifest, areDependenciesSatisfied, dispatchWorkflow } from './utils.mjs';
 import { loadConfig } from './config.mjs';
+import { TASKS_DIR, MANIFEST_FILE } from './constants.mjs';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -26,11 +28,12 @@ import { loadConfig } from './config.mjs';
  * son mécanisme automatique de push et de création de PR.
  */
 function buildTaskPrompt(task, manifest) {
+  const workflowLog = path.join(TASKS_DIR, `issue-${manifest.issue}`, 'workflow.md');
   return [
     `FIRST ACTION - no exception: run bash command: git checkout ${task.branch}.`,
     `Create the file ${task.file} with this exact content: ${task.content}`,
     `Run this exact bash command (do not modify it):`,
-    `echo "$(date -u '+%Y-%m-%d %H:%M') | ${task.id} | ${task.file}" >> tasks/issue-${manifest.issue}/workflow.md`,
+    `echo "$(date -u '+%Y-%m-%d %H:%M') | ${task.id} | ${task.file}" >> ${workflowLog}`,
     `Commit all changes with message: feat: complete task ${task.id}.`,
     `Do NOT push. Do NOT create a PR. Do nothing else.`,
   ].join(' ');
@@ -62,8 +65,9 @@ export async function launchReadyTasks(manifest, repo, token) {
     task.status = 'in_progress';
   }
 
+  const manifestGitPath = path.join(TASKS_DIR, `issue-${manifest.issue}`, MANIFEST_FILE);
   writeManifest(manifest);
-  run('agent-launcher', `git add tasks/issue-${manifest.issue}/manifest.json`);
+  run('agent-launcher', `git add ${manifestGitPath}`);
   run('agent-launcher', `git commit --allow-empty -m "chore: mark tasks ${readyTasks.map(t => t.id).join(', ')} as in_progress"`);
 
   // [DOUBLE-LANCEMENT] Push optimiste — si non fast-forward, l'autre runner s'en charge
@@ -85,7 +89,6 @@ export async function launchReadyTasks(manifest, repo, token) {
         branch:       task.branch,
         branch_base:  manifest.branch_base,
         prompt,
-        model:        config.model,
         retry_max:    String(config.retry_max),
       }, repo, token);
       console.log(`[agent-launcher] [FAN-OUT] Workflow déclenché pour tâche ${task.id}.`);

@@ -2,7 +2,7 @@
  * launch-fanout.mjs
  *
  * [DÉTERMINISTE] Démarre le FAN-OUT depuis un manifest présent dans le working tree.
- * Appelé par agent-execute.yml après qu'un agent a produit tasks/issue-N/manifest.json.
+ * Appelé par agent-execute.yml après qu'un agent a produit .oneticket/tasks/issue-N/manifest.json.
  *
  * Responsabilité unique :
  *   1. Vérifier que le manifest est présent (vérification défensive)
@@ -18,6 +18,7 @@
 import { launchReadyTasks } from './agent-launcher.mjs';
 import { loadConfig } from './config.mjs';
 import { setupGit, readManifest, run } from './utils.mjs';
+import { TASKS_DIR, MANIFEST_FILE } from './constants.mjs';
 import path from 'path';
 import fs from 'fs';
 
@@ -33,10 +34,10 @@ async function main() {
 
   // Vérification défensive — ce script doit être appelé uniquement
   // quand le manifest est présent dans le working tree
-  const manifestPath = path.join(process.cwd(), 'tasks', `issue-${issueNumber}`, 'manifest.json');
+  const manifestPath = path.join(process.cwd(), TASKS_DIR, `issue-${issueNumber}`, MANIFEST_FILE);
   if (!fs.existsSync(manifestPath)) {
     throw new Error(
-      `manifest.json introuvable : ${manifestPath}\n` +
+      `${MANIFEST_FILE} introuvable : ${manifestPath}\n` +
       `launch-fanout.mjs doit être appelé uniquement quand le manifest est présent dans le working tree.`
     );
   }

@@ -24,6 +24,7 @@
  *   GITHUB_TOKEN, PUSHED_BRANCH (ex: task/issue-42-B), REPO
  */
 
+import path from 'path';
 import { launchReadyTasks } from './agent-launcher.mjs';
 import { loadConfig } from './config.mjs';
 import {
@@ -34,6 +35,7 @@ import {
   readManifest,
   areDependenciesSatisfied,
 } from './utils.mjs';
+import { TASKS_DIR, MANIFEST_FILE } from './constants.mjs';
 
 // ---------------------------------------------------------------------------
 // Helpers locaux
@@ -93,8 +95,9 @@ async function markDoneAndPush(manifest, taskId, pushedBranch, featureBranch, ma
     }
 
     task.status = 'done';
+    const manifestGitPath = path.join(TASKS_DIR, `issue-${manifest.issue}`, MANIFEST_FILE);
     writeManifest(manifest);
-    run('orchestrate', `git add tasks/issue-${manifest.issue}/manifest.json`);
+    run('orchestrate', `git add ${manifestGitPath}`);
     run('orchestrate', `git commit -m "chore: mark task ${taskId} as done in manifest"`);
 
     try {
@@ -259,8 +262,9 @@ async function main() {
     console.error(`[orchestrate] MERGE FAILURE : ${mergeError.message}`);
 
     task.status = 'merge-failed';
+    const manifestGitPath = path.join(TASKS_DIR, `issue-${issueNumber}`, MANIFEST_FILE);
     writeManifest(manifest);
-    run('orchestrate', `git add tasks/issue-${issueNumber}/manifest.json`);
+    run('orchestrate', `git add ${manifestGitPath}`);
     run('orchestrate', `git commit -m "chore: mark task ${taskId} as merge-failed"`);
     runWithRetry('orchestrate', `git push origin ${featureBranch}`);
 

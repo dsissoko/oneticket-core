@@ -14,7 +14,10 @@
  *
  * Variables d'environnement attendues (toutes passées depuis agent-execute.yml) :
  *   GITHUB_TOKEN, REPO, RETRY_COUNT, RETRY_MAX,
- *   ISSUE_NUMBER, BRANCH, BRANCH_BASE, ROLE, MODEL, PROMPT
+ *   ISSUE_NUMBER, BRANCH, BRANCH_BASE, ROLE, PROMPT
+ *
+ * Note : MODEL est absent — le modèle est piloté par OPENCODE_CONFIG_CONTENT
+ * (agent_config.<cli>.model dans .oneticket/config.yml), pas par un input workflow.
  */
 
 import { dispatchWorkflow } from './utils.mjs';
@@ -47,7 +50,6 @@ async function main() {
     branch_base:  process.env.BRANCH_BASE || '',
     prompt:       process.env.PROMPT,
     role:         process.env.ROLE        || '',
-    model:        process.env.MODEL       || 'opencode/claude-haiku-4-5',
     retry_count:  String(nextRetry),
     retry_max:    String(retryMax),
   }, repo, token);

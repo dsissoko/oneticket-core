@@ -78,7 +78,7 @@ run_reply() {
     "[TEST-REPLY] Agent PO — réponse libre" \
     "Contexte : projet oneticket-core, orchestrateur GitHub-native multi-agents.")
   NUM=$(issue_number "$URL")
-  post_comment "$NUM" "/po bonjour, peux-tu te présenter et m'expliquer ce que tu sais faire ?"
+  post_comment "$NUM" "@po bonjour, peux-tu te présenter et m'expliquer ce que tu sais faire ?"
   echo "Issue #$NUM lancée ($URL)"
   echo ""
   echo "Attendu : l'agent répond sur l'issue, aucun manifest produit, aucun FAN-OUT."
@@ -103,12 +103,12 @@ run_manifest() {
   "issue": 0,
   "branch_base": "feature/issue-0",
   "tasks": [
-    {"id":"A","branch":"task/issue-0-A","file":"tasks/issue-0/subtask-A.txt","content":"Subtask A completed","depends_on":[],"status":"pending"},
-    {"id":"B","branch":"task/issue-0-B","file":"tasks/issue-0/subtask-B.txt","content":"Subtask B completed","depends_on":[],"status":"pending"},
-    {"id":"C","branch":"task/issue-0-C","file":"tasks/issue-0/subtask-C.txt","content":"Subtask C completed","depends_on":[],"status":"pending"},
-    {"id":"D","branch":"task/issue-0-D","file":"tasks/issue-0/subtask-D.txt","content":"Subtask D completed","depends_on":["A","B"],"status":"pending"},
-    {"id":"E","branch":"task/issue-0-E","file":"tasks/issue-0/subtask-E.txt","content":"Subtask E completed","depends_on":["D"],"status":"pending"},
-    {"id":"F","branch":"task/issue-0-F","file":"tasks/issue-0/subtask-F.txt","content":"Subtask F completed","depends_on":["C"],"status":"pending"}
+    {"id":"A","branch":"task/issue-0-A","file":".oneticket/tasks/issue-0/subtask-A.txt","content":"Subtask A completed","depends_on":[],"status":"pending"},
+    {"id":"B","branch":"task/issue-0-B","file":".oneticket/tasks/issue-0/subtask-B.txt","content":"Subtask B completed","depends_on":[],"status":"pending"},
+    {"id":"C","branch":"task/issue-0-C","file":".oneticket/tasks/issue-0/subtask-C.txt","content":"Subtask C completed","depends_on":[],"status":"pending"},
+    {"id":"D","branch":"task/issue-0-D","file":".oneticket/tasks/issue-0/subtask-D.txt","content":"Subtask D completed","depends_on":["A","B"],"status":"pending"},
+    {"id":"E","branch":"task/issue-0-E","file":".oneticket/tasks/issue-0/subtask-E.txt","content":"Subtask E completed","depends_on":["D"],"status":"pending"},
+    {"id":"F","branch":"task/issue-0-F","file":".oneticket/tasks/issue-0/subtask-F.txt","content":"Subtask F completed","depends_on":["C"],"status":"pending"}
   ]
 }
 ```
@@ -118,7 +118,7 @@ BODY
 
   # Le manifest dans le body contient issue=0 comme placeholder
   # L'agent doit remplacer 0 par le vrai numéro d'issue
-  post_comment "$NUM" "/po le body de cette issue contient un manifest au format exact attendu. Remplace toutes les occurrences de \"issue-0\" par \"issue-${NUM}\" et la valeur du champ \"issue\" par ${NUM}, puis écris le résultat dans tasks/issue-${NUM}/manifest.json. Commit avec le message exact : feat: decompose issue #${NUM}"
+  post_comment "$NUM" "@po le body de cette issue contient un manifest au format exact attendu. Remplace toutes les occurrences de \"issue-0\" par \"issue-${NUM}\" et la valeur du champ \"issue\" par ${NUM}, puis écris le résultat dans .oneticket/tasks/issue-${NUM}/manifest.json. Commit avec le message exact : feat: decompose issue #${NUM}"
   echo "Issue #$NUM lancée ($URL)"
   echo ""
   echo "Attendu : manifest écrit tel quel → FAN-OUT → 6 subtask-X.txt → PR."
@@ -141,9 +141,9 @@ run_decompose() {
 - D dépend de A et B
 - E dépend de D
 - F dépend de C
-Chaque tâche produit un fichier texte subtask-X.txt (où X est l'id de la tâche) avec le contenu 'Subtask X completed'. Les fichiers sont dans tasks/issue-N/ où N est le numéro de l'issue.")
+Chaque tâche produit un fichier texte subtask-X.txt (où X est l'id de la tâche) avec le contenu 'Subtask X completed'. Les fichiers sont dans .oneticket/tasks/issue-N/ où N est le numéro de l'issue.")
   NUM=$(issue_number "$URL")
-  post_comment "$NUM" "/po décompose cette demande en manifest et lance le pipeline"
+  post_comment "$NUM" "@po décompose cette demande en manifest et lance le pipeline"
   echo "Issue #$NUM lancée ($URL)"
   echo ""
   echo "Attendu : manifest A/B/C→D→E, C→F → FAN-OUT → 6 subtask-X.txt → PR."
@@ -165,7 +165,7 @@ Le jeu doit avoir : une raquette contrôlable, des briques destructibles,
 une balle avec physique simple, un système de score, un écran de game over
 et un écran de victoire.")
   NUM=$(issue_number "$URL")
-  post_comment "$NUM" "/po lis le body de cette issue et produis une epic et ses US (max 5 US par epic et max 5 epics). Chaque tâche du manifest génère un fichier .md décrivant une epic ou une US. Les US dépendent de leur epic parente. Concernant les epics : en fonction de tes choix de décomposition tu pourras paralléliser ou pas."
+  post_comment "$NUM" "@po lis le body de cette issue et produis une epic et ses US (max 5 US par epic et max 5 epics). Chaque tâche du manifest génère un fichier .md décrivant une epic ou une US. Les US dépendent de leur epic parente. Concernant les epics : en fonction de tes choix de décomposition tu pourras paralléliser ou pas."
   echo "Issue #$NUM lancée ($URL)"
   echo ""
   echo "Attendu : manifest épics + US → graphe de dépendances → FAN-OUT → fichiers .md → PR."
