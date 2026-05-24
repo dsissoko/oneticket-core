@@ -16,7 +16,7 @@
       "file": "world.txt",
       "content": "Crée un fichier nommé world.txt à la racine du repository avec exactement le contenu suivant : World",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "C",
