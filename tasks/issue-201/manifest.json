@@ -32,7 +32,7 @@
       "file": "docs/epics/EPIC-4-Etats-et-ecrans.md",
       "content": "Crée un fichier markdown décrivant l'EPIC-4 'États du jeu et écrans' avec ses 3 user stories : US-4.1 (accueil et pause), US-4.2 (écran victoire), US-4.3 (écran game over). Inclus des critères d'acceptation pour chaque US.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "E",
