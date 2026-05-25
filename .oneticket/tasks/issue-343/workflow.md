@@ -12,3 +12,4 @@
 2026-05-25 23:13 | K | .oneticket/docs/what/epics/epic-3-scoring-lives/user-stories/us-002-lives-system.md
 2026-05-25 23:13 | L | .oneticket/docs/what/epics/epic-3-scoring-lives/user-stories/us-003-game-over.md
 2026-05-25 23:13 | D | .oneticket/docs/what/epics/epic-1-core-game-mechanics/user-stories/us-003-collision-detection.md
+2026-05-25 23:13 | F | .oneticket/docs/what/epics/epic-2-brick-system/user-stories/us-001-brick-layout.md
