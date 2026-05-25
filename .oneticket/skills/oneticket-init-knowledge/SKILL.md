@@ -31,11 +31,57 @@ This skill is the **guardian of the mandatory sequence**. No slice, no C4 diagra
 Each gate ends with a HARD STOP — the agent posts a comment and waits for explicit human validation before proceeding to the next gate.
 
 ```
-Gate 1 → product-spec.md valid ?   → HARD STOP → human validates
-Gate 2 → architecture.md valid ?   → HARD STOP → human validates
-Gate 3 → epic-0-mvp valid ?        → HARD STOP → human validates
+Gate 0 → framework or applicatif ?  → HARD STOP if applicatif (human sets current_project)
+Gate 1 → product-spec.md valid ?    → HARD STOP → human validates
+Gate 2 → architecture.md valid ?    → HARD STOP → human validates
+Gate 3 → epic-0-mvp valid ?         → HARD STOP → human validates
 Gate 4 → confirmation + handoff
 ```
+
+---
+
+## Gate 0 — Framework or Application Project ?
+
+### Analysis
+
+Read the request and issue context carefully.
+
+**Framework context** — the request explicitly concerns OneTicket itself:
+- Mentions oneticket, the framework, its components
+- References agents, skills, workflows, orchestration, FAN-OUT, GATHER, manifest
+- Asks to improve, document, or extend the framework
+
+**Application context** — the request concerns an external project built with OneTicket:
+- Describes a product, an app, a game, a feature
+- Does not mention the framework internals
+- Asks to build, document, or design something that is not OneTicket itself
+
+**If in doubt** — ask the human explicitly, do not guess.
+
+### If framework context
+
+`docs_path` already points to `.oneticket/docs/` — continue to Gate 1 without stopping.
+
+### If application context
+
+Post this exact comment:
+
+```
+This request concerns an application project, not the OneTicket framework.
+
+To proceed, please set `current_project` in `.oneticket/config.yml`:
+
+current_project: <your-project-name>   # e.g. breakout, my-app, ecommerce
+
+Once done, reply to this comment to continue.
+```
+
+**HARD STOP** — do not proceed until the human explicitly confirms that `current_project` has been set.
+
+**Important rules:**
+- Never modify `config.yml` yourself — this is the human's responsibility
+- Once the human confirms → continue to Gate 1
+- `docs_path` will have been updated by the framework before the next agent invocation
 
 ---
 
@@ -195,5 +241,6 @@ Next steps:
 - Never invent product or technical content — only what the human explicitly provided
 - Never skip a gate — the sequence is mandatory
 - Never proceed after a HARD STOP without explicit human validation
+- Never modify `config.yml` — only the human can set `current_project`
 - `docs_path` is always provided in the prompt — never resolve it yourself
 - Mark open questions explicitly rather than leaving them blank
