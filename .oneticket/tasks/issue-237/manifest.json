@@ -16,7 +16,7 @@
       "file": ".oneticket/tasks/issue-237/subtask-B.txt",
       "content": "Créer le fichier .oneticket/tasks/issue-237/subtask-B.txt avec le contenu: 'Subtask B completed'",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "C",
