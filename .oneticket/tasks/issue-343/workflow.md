@@ -14,3 +14,4 @@
 2026-05-25 23:13 | D | .oneticket/docs/what/epics/epic-1-core-game-mechanics/user-stories/us-003-collision-detection.md
 2026-05-25 23:13 | F | .oneticket/docs/what/epics/epic-2-brick-system/user-stories/us-001-brick-layout.md
 2026-05-25 23:13 | C | .oneticket/docs/what/epics/epic-1-core-game-mechanics/user-stories/us-002-ball-physics.md
+2026-05-25 23:13 | J | .oneticket/docs/what/epics/epic-3-scoring-lives/user-stories/us-001-score-tracking.md
