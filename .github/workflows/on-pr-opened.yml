@@ -1,37 +1,54 @@
 name: Workflow Gather
 
 # [DETERMINISTIC] Collects task completion signals and orchestrates next steps.
-# Triggered by the deterministic final push from agent-execute.yml (step "Push branch").
+# Triggered when agent-execute.yml opens a PR from task/* into feature/issue-N.
 #
-# Every push on task/** is a legitimate task completion signal — no filter
-# on commit message. The pipeline must not depend on an agent decision.
-# chore: pushes (manifest in_progress) happen on feature/issue-N, never on task/**.
+# The PR is the unambiguous completion signal — it is opened AFTER the agent
+# has committed its files, never before. This eliminates the race condition
+# where a branch creation push would trigger the GATHER before the agent worked.
+#
+# Security: validate-task-branch.mjs ensures task/issue-N-X only merges
+# into feature/issue-N — never into another issue or main.
 #
 # Pattern: Scatter/Gather — this workflow is the Gather + FAN-IN + optional re-Scatter
 #
 # [CONCURRENCY] No GitHub concurrency here — manifest access conflicts
 # are handled in orchestrate.mjs with push retry (optimistic git lock).
-# Reason: GitHub job-level concurrency only offers one queue slot —
-# if two runs arrive near-simultaneously, one is cancelled even with cancel-in-progress: false.
-# Git retry is more reliable as it loses no signal.
 
 on:
-  push:
+  pull_request:
+    types: [opened]
     branches:
-      - 'task/**'
+      - 'feature/issue-*'
 
 jobs:
-  # [PARSE] Extracts the issue number from the pushed branch name
-  # e.g. task/issue-42-A → 42
+  # [VALIDATE + PARSE] Validates branch coherence and extracts issue number
+  # Rejects any PR that is not a task/* → feature/issue-N completion signal
   extract:
+    if: "startsWith(github.head_ref, 'task/')"
     runs-on: ubuntu-latest
     outputs:
-      issue_number: ${{ steps.parse.outputs.issue_number }}
+      issue_number: ${{ steps.validate.outputs.issue_number }}
     steps:
-      - id: parse
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ONETICKET_GH_PAT }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --silent
+
+      - name: Validate branch coherence
+        id: validate
         run: |
-          BRANCH="${{ github.ref_name }}"
-          ISSUE=$(echo "$BRANCH" | sed 's/task\/issue-\([0-9]*\)-.*/\1/')
+          node src/validate-task-branch.mjs "${{ github.head_ref }}" "${{ github.base_ref }}"
+          ISSUE=$(echo "${{ github.head_ref }}" | sed 's/task\/issue-\([0-9]*\)-.*/\1/')
           echo "issue_number=$ISSUE" >> $GITHUB_OUTPUT
 
   orchestrate:
@@ -63,12 +80,12 @@ jobs:
       - name: Run orchestrator — merge, update manifest, route or create PR
         env:
           GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
-          PUSHED_BRANCH: ${{ github.ref_name }}
+          TASK_BRANCH: ${{ github.head_ref }}
           REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: node src/orchestrate.mjs
 
   # [FAILURE NOTIFICATION] Posted on the issue if the orchestrate job fails.
-  # Issue number is extracted from the branch name (same logic as the extract job).
   notify-failure:
     needs: [extract, orchestrate]
     if: failure() && needs.extract.result == 'success'
@@ -80,7 +97,7 @@ jobs:
         run: |
           gh issue comment ${{ needs.extract.outputs.issue_number }} \
             --repo ${{ github.repository }} \
-            --body "## Orchestration failure — branch \`${{ github.ref_name }}\`
+            --body "## Orchestration failure — branch \`${{ github.head_ref }}\`
 
           The orchestration workflow failed while processing the GATHER signal.
 

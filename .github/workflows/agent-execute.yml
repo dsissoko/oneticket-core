@@ -164,6 +164,21 @@ jobs:
         run: |
           git push origin ${{ inputs.branch }}
 
+      # [DETERMINISTIC] Open PR task/* → feature/issue-N as completion signal
+      # Only for FAN-OUT tasks (branch_base non-empty) — not for free invocations
+      # This PR is the GATHER trigger — not a human PR
+      - name: Open task PR as completion signal
+        if: steps.run-agent.outcome == 'success' && inputs.branch_base != ''
+        env:
+          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+        run: |
+          gh pr create \
+            --repo ${{ github.repository }} \
+            --head ${{ inputs.branch }} \
+            --base ${{ inputs.branch_base }} \
+            --title "chore: task ${{ inputs.branch }} complete" \
+            --body "Automated task completion signal — do not merge manually." 
+
       # [DETERMINISTIC] FAN-OUT if the agent produced a manifest
       # Only for free invocations (branch_base empty = @po, @dev, etc.)
       # FAN-OUT tasks (branch_base non-empty) must not re-trigger FAN-OUT

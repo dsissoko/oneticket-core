@@ -21,7 +21,7 @@
  * are handled here with push retry (exponential backoff + jitter).
  *
  * Expected environment variables:
- *   GITHUB_TOKEN, PUSHED_BRANCH (e.g. task/issue-42-B), REPO
+ *   GITHUB_TOKEN, TASK_BRANCH (e.g. task/issue-42-B), REPO, PR_NUMBER
  */
 
 import path from 'path';
@@ -204,6 +204,26 @@ async function postMergeFailureComment(issueNumber, taskId, branch, featureBranc
   }
 }
 
+async function closePR(prNumber, repo, token) {
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${repo}/pulls/${prNumber}`,
+      {
+        method: 'PATCH',
+        headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json', 'X-GitHub-Api-Version': '2022-11-28' },
+        body: JSON.stringify({ state: 'closed' }),
+      }
+    );
+    if (res.ok) {
+      console.log(`[orchestrate] Task PR #${prNumber} closed.`);
+    } else {
+      console.warn(`[orchestrate] Could not close PR #${prNumber}: HTTP ${res.status}`);
+    }
+  } catch (err) {
+    console.warn(`[orchestrate] Network error while closing PR #${prNumber}: ${err.message}`);
+  }
+}
+
 async function deleteRemoteBranch(branch, repo, token) {
   try {
     const res = await fetch(
@@ -225,14 +245,15 @@ async function deleteRemoteBranch(branch, repo, token) {
 // ---------------------------------------------------------------------------
 
 async function main() {
-  const pushedBranch = process.env.PUSHED_BRANCH;
-  const repo         = process.env.REPO;
-  const ghToken      = process.env.GITHUB_TOKEN;
+  const taskBranch = process.env.TASK_BRANCH;
+  const repo       = process.env.REPO;
+  const ghToken    = process.env.GITHUB_TOKEN;
+  const prNumber   = process.env.PR_NUMBER;
 
-  if (!pushedBranch) throw new Error('PUSHED_BRANCH missing');
-  if (!repo)         throw new Error('REPO missing');
+  if (!taskBranch) throw new Error('TASK_BRANCH missing');
+  if (!repo)       throw new Error('REPO missing');
 
-  const { issueNumber, taskId } = parseBranchName(pushedBranch);
+  const { issueNumber, taskId } = parseBranchName(taskBranch);
   const featureBranch = `feature/issue-${issueNumber}`;
 
   console.log(`[orchestrate] Completion signal received: task ${taskId} (issue #${issueNumber})`);
@@ -254,7 +275,7 @@ async function main() {
   }
 
   const { manifest: updatedManifest, mergeError } = await markDoneAndPush(
-    manifest, taskId, pushedBranch, featureBranch, config.orchestrate_retry_max
+    manifest, taskId, taskBranch, featureBranch, config.orchestrate_retry_max
   );
   manifest = updatedManifest;
 
@@ -269,14 +290,18 @@ async function main() {
     runWithRetry('orchestrate', `git push origin ${featureBranch}`);
 
     await ensureAndApplyLabel(issueNumber, repo, ghToken);
-    await postMergeFailureComment(issueNumber, taskId, pushedBranch, featureBranch, repo, ghToken);
+    await postMergeFailureComment(issueNumber, taskId, taskBranch, featureBranch, repo, ghToken);
 
     console.error(`[orchestrate] Workflow stopped — human intervention required.`);
     process.exit(1);
   }
 
   console.log(`[orchestrate] Task ${taskId} marked done and merged into ${featureBranch}.`);
-  await deleteRemoteBranch(pushedBranch, repo, ghToken);
+  // Close the task PR and delete the branch
+  if (prNumber) {
+    await closePR(prNumber, repo, ghToken);
+  }
+  await deleteRemoteBranch(taskBranch, repo, ghToken);
 
   const allDone    = manifest.tasks.every(t => t.status === 'done');
   const readyTasks = getReadyTasks(manifest);
