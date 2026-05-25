@@ -84,7 +84,7 @@
       "file": ".oneticket/docs/what/epics/epic-3-scoring-lives/epic.md",
       "content": "Create epic-3-scoring-lives/epic.md using template .oneticket/templates/epic.md:\n\n## Goal\nSuivre et afficher le score du joueur, gérer les vies et les conditions de fin de partie.\n\n## Business Value\nCrée un objectif et une progression mesurable pour le joueur.\n\n## Scope\n- Système de score (points par brique)\n- Compteur de vies (3 vies)\n- Affichage score et vies\n- Condition game over\n- Condition victoire\n\n## Related User Stories\n- us-001-score-tracking.md\n- us-002-lives-system.md\n- us-003-game-over.md\n- us-004-victory.md",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "J",
