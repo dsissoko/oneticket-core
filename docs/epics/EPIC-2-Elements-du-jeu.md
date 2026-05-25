@@ -1,1 +1,0 @@
-Crée un fichier markdown décrivant l'EPIC-2 'Éléments du jeu (raquette & briques)' avec ses 3 user stories : US-2.1 (créer et contrôler raquette), US-2.2 (grille de briques), US-2.3 (destruction briques). Inclus des critères d'acceptation pour chaque US.

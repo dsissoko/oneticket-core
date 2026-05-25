@@ -1,3 +1,4 @@
-node_modules/
+**/node_modules/
 opencode.json
-.opencode/config.json
+.opencode/
+tasks/
