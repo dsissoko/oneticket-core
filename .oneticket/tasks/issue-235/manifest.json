@@ -1,0 +1,12 @@
+{
+  "issue": 235,
+  "branch_base": "feature/issue-235",
+  "tasks": [
+    {"id":"A","branch":"task/issue-235-A","file":".oneticket/tasks/issue-235/subtask-A.txt","content":"Subtask A completed","depends_on":[],"status":"pending"},
+    {"id":"B","branch":"task/issue-235-B","file":".oneticket/tasks/issue-235/subtask-B.txt","content":"Subtask B completed","depends_on":[],"status":"pending"},
+    {"id":"C","branch":"task/issue-235-C","file":".oneticket/tasks/issue-235/subtask-C.txt","content":"Subtask C completed","depends_on":[],"status":"pending"},
+    {"id":"D","branch":"task/issue-235-D","file":".oneticket/tasks/issue-235/subtask-D.txt","content":"Subtask D completed","depends_on":["A","B"],"status":"pending"},
+    {"id":"E","branch":"task/issue-235-E","file":".oneticket/tasks/issue-235/subtask-E.txt","content":"Subtask E completed","depends_on":["D"],"status":"pending"},
+    {"id":"F","branch":"task/issue-235-F","file":".oneticket/tasks/issue-235/subtask-F.txt","content":"Subtask F completed","depends_on":["C"],"status":"pending"}
+  ]
+}
