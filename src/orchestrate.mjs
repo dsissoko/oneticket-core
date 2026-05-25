@@ -204,6 +204,25 @@ async function postMergeFailureComment(issueNumber, taskId, branch, featureBranc
   }
 }
 
+async function findTaskPR(taskBranch, featureBranch, repo, token) {
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${repo}/pulls?head=${repo.split('/')[0]}:${taskBranch}&base=${featureBranch}&state=open`,
+      { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' } }
+    );
+    const prs = await res.json();
+    if (prs.length > 0) {
+      console.log(`[orchestrate] Found task PR #${prs[0].number} for ${taskBranch}`);
+      return String(prs[0].number);
+    }
+    console.log(`[orchestrate] No open task PR found for ${taskBranch} — skipping PR close`);
+    return null;
+  } catch (err) {
+    console.warn(`[orchestrate] Could not find task PR for ${taskBranch}: ${err.message}`);
+    return null;
+  }
+}
+
 async function closePR(prNumber, repo, token) {
   try {
     const res = await fetch(
@@ -248,7 +267,8 @@ async function main() {
   const taskBranch = process.env.TASK_BRANCH;
   const repo       = process.env.REPO;
   const ghToken    = process.env.GITHUB_TOKEN;
-  const prNumber   = process.env.PR_NUMBER;
+  // PR_NUMBER is optional — if not provided, orchestrate finds the task PR by branch name
+  const prNumber   = process.env.PR_NUMBER || null;
 
   if (!taskBranch) throw new Error('TASK_BRANCH missing');
   if (!repo)       throw new Error('REPO missing');
@@ -297,9 +317,10 @@ async function main() {
   }
 
   console.log(`[orchestrate] Task ${taskId} marked done and merged into ${featureBranch}.`);
-  // Close the task PR and delete the branch
-  if (prNumber) {
-    await closePR(prNumber, repo, ghToken);
+  // Find and close the task PR (by number if provided, otherwise search by branch)
+  const resolvedPrNumber = prNumber || await findTaskPR(taskBranch, featureBranch, repo, ghToken);
+  if (resolvedPrNumber) {
+    await closePR(resolvedPrNumber, repo, ghToken);
   }
   await deleteRemoteBranch(taskBranch, repo, ghToken);
 

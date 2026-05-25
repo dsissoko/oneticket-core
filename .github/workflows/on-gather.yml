@@ -1,11 +1,16 @@
 name: Workflow Gather
 
 # [DETERMINISTIC] Collects task completion signals and orchestrates next steps.
-# Triggered when agent-execute.yml opens a PR from task/* into feature/issue-N.
+# Triggered by dispatch-gather.mjs via workflow_dispatch after a task branch is pushed.
 #
-# The PR is the unambiguous completion signal — it is opened AFTER the agent
-# has committed its files, never before. This eliminates the race condition
-# where a branch creation push would trigger the GATHER before the agent worked.
+# This approach is reliable regardless of GitHub PR mergeability checks —
+# workflow_dispatch is not blocked by merge conflicts.
+#
+# The task PR (task/* → feature/issue-N) is still created for visibility,
+# but the real GATHER signal is this workflow_dispatch.
+# orchestrate.mjs merges the task branch directly (git merge --no-ff),
+# resolves workflow.md conflicts via .gitattributes merge=union,
+# and closes the PR after merge.
 #
 # Security: validate-task-branch.mjs ensures task/issue-N-X only merges
 # into feature/issue-N — never into another issue or main.
@@ -16,16 +21,20 @@ name: Workflow Gather
 # are handled in orchestrate.mjs with push retry (optimistic git lock).
 
 on:
-  pull_request:
-    types: [opened]
-    branches:
-      - 'feature/issue-*'
+  workflow_dispatch:
+    inputs:
+      task_branch:
+        required: true
+        type: string
+        description: "Task branch to merge (e.g. task/issue-42-A)"
+      branch_base:
+        required: true
+        type: string
+        description: "Feature branch to merge into (e.g. feature/issue-42)"
 
 jobs:
   # [VALIDATE + PARSE] Validates branch coherence and extracts issue number
-  # Rejects any PR that is not a task/* → feature/issue-N completion signal
   extract:
-    if: "startsWith(github.head_ref, 'task/')"
     runs-on: ubuntu-latest
     outputs:
       issue_number: ${{ steps.validate.outputs.issue_number }}
@@ -47,8 +56,8 @@ jobs:
       - name: Validate branch coherence
         id: validate
         run: |
-          node src/validate-task-branch.mjs "${{ github.head_ref }}" "${{ github.base_ref }}"
-          ISSUE=$(echo "${{ github.head_ref }}" | sed 's/task\/issue-\([0-9]*\)-.*/\1/')
+          node src/validate-task-branch.mjs "${{ inputs.task_branch }}" "${{ inputs.branch_base }}"
+          ISSUE=$(echo "${{ inputs.task_branch }}" | sed 's/task\/issue-\([0-9]*\)-.*/\1/')
           echo "issue_number=$ISSUE" >> $GITHUB_OUTPUT
 
   orchestrate:
@@ -76,13 +85,13 @@ jobs:
         run: npm ci
 
       # [DETERMINISTIC ROUTING] orchestrate.mjs decides next steps — never the LLM
-      # Git conflicts (non-fast-forward push) are handled with retry in JS code
+      # Merges task branch, resolves workflow.md via merge=union, closes task PR,
+      # routes to next FAN-OUT or creates final PR when all tasks are done
       - name: Run orchestrator — merge, update manifest, route or create PR
         env:
           GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
-          TASK_BRANCH: ${{ github.head_ref }}
+          TASK_BRANCH: ${{ inputs.task_branch }}
           REPO: ${{ github.repository }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: node src/orchestrate.mjs
 
   # [FAILURE NOTIFICATION] Posted on the issue if the orchestrate job fails.
@@ -97,7 +106,7 @@ jobs:
         run: |
           gh issue comment ${{ needs.extract.outputs.issue_number }} \
             --repo ${{ github.repository }} \
-            --body "## Orchestration failure — branch \`${{ github.head_ref }}\`
+            --body "## Orchestration failure — branch \`${{ inputs.task_branch }}\`
 
           The orchestration workflow failed while processing the GATHER signal.
 
