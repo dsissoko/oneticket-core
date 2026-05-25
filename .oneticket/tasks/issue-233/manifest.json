@@ -8,7 +8,7 @@
       "file": ".oneticket/tasks/issue-233/subtask-A.txt",
       "content": "Create file .oneticket/tasks/issue-233/subtask-A.txt with content: 'Subtask A completed'",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
@@ -16,7 +16,7 @@
       "file": ".oneticket/tasks/issue-233/subtask-B.txt",
       "content": "Create file .oneticket/tasks/issue-233/subtask-B.txt with content: 'Subtask B completed'",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "C",
@@ -24,14 +24,17 @@
       "file": ".oneticket/tasks/issue-233/subtask-C.txt",
       "content": "Create file .oneticket/tasks/issue-233/subtask-C.txt with content: 'Subtask C completed'",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "D",
       "branch": "task/issue-233-D",
       "file": ".oneticket/tasks/issue-233/subtask-D.txt",
       "content": "Create file .oneticket/tasks/issue-233/subtask-D.txt with content: 'Subtask D completed'",
-      "depends_on": ["A", "B"],
+      "depends_on": [
+        "A",
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -39,7 +42,9 @@
       "branch": "task/issue-233-E",
       "file": ".oneticket/tasks/issue-233/subtask-E.txt",
       "content": "Create file .oneticket/tasks/issue-233/subtask-E.txt with content: 'Subtask E completed'",
-      "depends_on": ["D"],
+      "depends_on": [
+        "D"
+      ],
       "status": "pending"
     },
     {
@@ -47,7 +52,9 @@
       "branch": "task/issue-233-F",
       "file": ".oneticket/tasks/issue-233/subtask-F.txt",
       "content": "Create file .oneticket/tasks/issue-233/subtask-F.txt with content: 'Subtask F completed'",
-      "depends_on": ["C"],
+      "depends_on": [
+        "C"
+      ],
       "status": "pending"
     }
   ]
