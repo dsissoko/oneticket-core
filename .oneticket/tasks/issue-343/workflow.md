@@ -9,3 +9,4 @@
 2026-05-25 23:13 | M | .oneticket/docs/what/epics/epic-3-scoring-lives/user-stories/us-004-victory.md
 2026-05-25 23:13 | B | .oneticket/docs/what/epics/epic-1-core-game-mechanics/user-stories/us-001-paddle-movement.md
 2026-05-25 23:13 | G | .oneticket/docs/what/epics/epic-2-brick-system/user-stories/us-002-brick-types.md
+2026-05-25 23:13 | K | .oneticket/docs/what/epics/epic-3-scoring-lives/user-stories/us-002-lives-system.md
