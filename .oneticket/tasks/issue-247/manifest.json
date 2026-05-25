@@ -1,0 +1,54 @@
+{
+  "issue": 247,
+  "branch_base": "feature/issue-247",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-247-A",
+      "file": ".oneticket/tasks/issue-247/subtask-A.txt",
+      "content": "Créer le fichier .oneticket/tasks/issue-247/subtask-A.txt avec le contenu 'Subtask A completed'",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-247-B",
+      "file": ".oneticket/tasks/issue-247/subtask-B.txt",
+      "content": "Créer le fichier .oneticket/tasks/issue-247/subtask-B.txt avec le contenu 'Subtask B completed'",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-247-C",
+      "file": ".oneticket/tasks/issue-247/subtask-C.txt",
+      "content": "Créer le fichier .oneticket/tasks/issue-247/subtask-C.txt avec le contenu 'Subtask C completed'",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-247-D",
+      "file": ".oneticket/tasks/issue-247/subtask-D.txt",
+      "content": "Créer le fichier .oneticket/tasks/issue-247/subtask-D.txt avec le contenu 'Subtask D completed'",
+      "depends_on": ["A", "B"],
+      "status": "pending"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-247-E",
+      "file": ".oneticket/tasks/issue-247/subtask-E.txt",
+      "content": "Créer le fichier .oneticket/tasks/issue-247/subtask-E.txt avec le contenu 'Subtask E completed'",
+      "depends_on": ["D"],
+      "status": "pending"
+    },
+    {
+      "id": "F",
+      "branch": "task/issue-247-F",
+      "file": ".oneticket/tasks/issue-247/subtask-F.txt",
+      "content": "Créer le fichier .oneticket/tasks/issue-247/subtask-F.txt avec le contenu 'Subtask F completed'",
+      "depends_on": ["C"],
+      "status": "pending"
+    }
+  ]
+}
