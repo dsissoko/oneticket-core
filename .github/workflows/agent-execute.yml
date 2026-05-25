@@ -167,8 +167,10 @@ jobs:
       # [DETERMINISTIC] Open PR task/* → feature/issue-N as completion signal
       # Only for FAN-OUT tasks (branch_base non-empty) — not for free invocations
       # This PR is the GATHER trigger — not a human PR
+      # continue-on-error: true — if the agent produced no commits, no diff exists and pr create fails gracefully
       - name: Open task PR as completion signal
         if: steps.run-agent.outcome == 'success' && inputs.branch_base != ''
+        continue-on-error: true
         env:
           GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
         run: |
