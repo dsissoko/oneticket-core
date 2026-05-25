@@ -2,3 +2,7 @@
 opencode.json
 .opencode/
 /tasks/
+
+# OneTicket framework skills — installed at CI runtime by src/oneticket-install.mjs
+# Not committed — do not pollute app developer repos
+.agents/skills/oneticket-*

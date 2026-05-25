@@ -76,6 +76,22 @@ function loadProfile(role) {
 // ---------------------------------------------------------------------------
 
 /**
+ * Resolves docs_path deterministically from config.
+ *
+ * Resolution logic:
+ *   - current_project present → docs_path = apps/<current_project>/docs
+ *   - current_project absent  → docs_path = .oneticket/docs  (oneticket framework itself)
+ *
+ * The agent never resolves docs_path — it receives it as a resolved value in the prompt.
+ */
+function resolveDocsPath(config) {
+  if (config.current_project) {
+    return `apps/${config.current_project}/docs`;
+  }
+  return `.oneticket/docs`;
+}
+
+/**
  * Builds the system prompt injected into Agent Execute.
  *
  * Structure:
@@ -83,6 +99,7 @@ function loadProfile(role) {
  *     - git checkout (anomalyco switched=true mechanism)
  *     - Agent profile
  *     - Language + autonomous_mode
+ *     - docs_path (resolved deterministically — never by the agent)
  *     - Request
  *   [Trigger context]
  *     - CONTEXT_BLOCK as-is (built by the trigger YAML workflow)
@@ -90,7 +107,7 @@ function loadProfile(role) {
  * NOTE: git checkout at the top → anomalyco detects switched=true →
  * disables automatic push and PR creation.
  */
-function buildPrompt({ role, demande, branch, config, profile, contextBlock }) {
+function buildPrompt({ role, demande, branch, config, profile, contextBlock, docsPath }) {
   const lines = [];
 
   // Common trunk — required regardless of trigger
@@ -114,6 +131,11 @@ function buildPrompt({ role, demande, branch, config, profile, contextBlock }) {
 
   lines.push(`## Working branch`);
   lines.push(branch);
+  lines.push('');
+
+  // docs_path — resolved by deterministic code, injected as-is
+  lines.push(`## docs_path`);
+  lines.push(docsPath);
   lines.push('');
 
   lines.push(`## Request`);
@@ -167,6 +189,9 @@ async function main() {
   }
 
   // --- 4. Build system prompt ------------------------------------------
+  const docsPath = resolveDocsPath(config);
+  console.log(`[agent-dispatch] docs_path resolved: ${docsPath}`);
+
   const prompt = buildPrompt({
     role,
     demande,
@@ -174,6 +199,7 @@ async function main() {
     config,
     profile,
     contextBlock,
+    docsPath,
   });
   console.log(`[agent-dispatch] Prompt built (${prompt.length} chars).`);
 

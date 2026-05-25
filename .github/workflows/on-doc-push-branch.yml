@@ -1,0 +1,43 @@
+# on-doc-push-branch.yml
+#
+# Triggered when doc files are pushed to any branch except main.
+# Logs the resolved project context.
+# Preview deployment placeholder — to implement when preview strategy is defined.
+#
+# Preview strategy (to evaluate):
+#   - Deploy PR Preview (rossjrw/pr-preview-action) — deploys preview per PR to gh-pages/pr-preview/<pr-number>/
+#   - peaceiris/actions-gh-pages@v4 with destination_dir: preview/<branch>/<project>/docs/
+#
+# Preview steps (placeholder — to implement):
+#   1. Detect project from modified path
+#   2. Deploy preview to gh-pages/preview/<branch>/<destination_dir>
+#   3. Post preview URL as PR comment
+
+name: Doc Push (Branch)
+
+on:
+  push:
+    branches-ignore:
+      - main
+    paths:
+      - 'apps/*/docs/**'
+      - '.oneticket/docs/**'
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Detect project
+        run: |
+          MODIFIED="${{ github.event.head_commit.modified[0] }}"
+          BRANCH="${{ github.ref_name }}"
+          if [[ "$MODIFIED" == .oneticket/docs/* ]]; then
+            PROJECT="oneticket"
+            echo "doc push detected — project: oneticket (framework)"
+          else
+            PROJECT=$(echo "$MODIFIED" | cut -d'/' -f2)
+            echo "doc push detected — project: $PROJECT"
+          fi
+          echo "preview URL (placeholder): https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/preview/$BRANCH/$PROJECT/docs/"
+
+      # TODO: deploy preview to gh-pages/preview/<branch>/<destination_dir>

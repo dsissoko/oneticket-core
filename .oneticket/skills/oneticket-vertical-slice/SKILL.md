@@ -1,0 +1,147 @@
+---
+name: oneticket-vertical-slice
+description: Derive and document vertical implementation slices from epics, user stories and architecture. Writes to how/slices/ in the project docs_path.
+compatibility: opencode
+---
+
+# Vertical Slice
+
+Derive and document vertical implementation slices from the product and architecture knowledge available in `docs_path`.
+
+## What is a Slice
+
+A vertical slice is a small, testable, end-to-end implementation unit that:
+- Crosses all technical layers (frontend, backend, API, data, etc.)
+- Delivers observable value independently
+- Maps to one or more user stories
+- Is sized to be close to a PR in scope
+
+A slice is NOT:
+- A horizontal technical layer ("build the API", "build the UI")
+- A task decomposition
+- A copy of a user story
+
+## When to Use This Skill
+
+Use this skill when:
+- Epics and user stories are defined in `what/epics/`
+- Architecture is defined in `how/architecture.md`
+- You need to plan the implementation incrementally
+- You need to update `## Related Slices` in epics or user stories
+
+## Output Location
+
+Write slices to `<docs_path>/how/slices/slice-N-<name>/slice.md`.
+
+Use the template at `.oneticket/templates/slice.md`.
+
+`docs_path` is always provided in the prompt — never resolve it yourself.
+
+## Naming Convention
+
+- Directory: `slice-N-<kebab-name>` — zero-padded number + kebab-case name
+- Examples: `slice-1-user-login`, `slice-2-dashboard`, `slice-3-export`
+
+## Mandatory Sequence
+
+Slices can only be derived after the following artifacts exist and are complete.
+**This sequence is strict — do not skip or reorder steps.**
+
+```
+1. Epics        what/epics/epic-N-<name>/epic.md          ← functional scope
+2. User Stories what/epics/epic-N-<name>/user-stories/    ← expected behaviors
+3. Architecture how/architecture.md                        ← technical boundaries
+4. C4 diagrams  how/c4/                                    ← component map (if available)
+        ↓
+5. Slices       how/slices/slice-N-<name>/slice.md         ← implementation units
+```
+
+If epics or user stories are missing → stop, create them first using `oneticket-user-story`.
+If architecture is missing → stop, create it first using `oneticket-c4`.
+Only once all prerequisites are present → proceed to derive slices.
+
+## Process
+
+### Step 1 — Read epics and user stories
+
+Read ALL files under `<docs_path>/what/epics/` :
+- Each `epic.md` — business scope and goals
+- Each `user-stories/us-NNN-<name>.md` — expected behaviors and acceptance criteria
+
+Do not proceed until every epic and user story has been read.
+
+### Step 2 — Read architecture
+
+Read `<docs_path>/how/architecture.md` — technical components, boundaries, interfaces.
+Read `<docs_path>/how/c4/` — C4 diagrams if available.
+
+Do not derive slices before understanding the technical boundaries.
+
+### Step 3 — Identify slice boundaries
+
+For each user story or group of related user stories:
+1. Identify which technical components are involved (from architecture)
+2. Determine the end-to-end flow (from API to data to UI)
+3. Define the smallest deliverable increment that is testable
+
+### Step 3 — Write the slice
+
+Create `<docs_path>/how/slices/slice-N-<name>/slice.md` using the template:
+
+```markdown
+# Slice
+
+## Goal
+<What this slice delivers end-to-end>
+
+## Related Epics
+<Links to epics in what/epics/>
+
+## Related User Stories
+<Links to US files in what/epics/>
+
+## Impacted Components
+<Components from architecture.md involved in this slice>
+
+## Interfaces
+<API contracts, events, data formats exchanged>
+
+## Data Changes
+<Schema changes, migrations, new entities>
+
+## Sequence Flow
+<Step-by-step flow across layers>
+
+## Observability Impact
+<Logs, metrics, traces added or modified>
+```
+
+### Step 4 — Update cross-references
+
+After writing a slice:
+- Add the slice reference to `## Related Slices` in each related epic
+- Add the slice reference to `## Related Slices` in each related user story
+
+Use relative paths from the epic/US file to the slice:
+```markdown
+## Related Slices
+- [slice-1-user-login](../../../how/slices/slice-1-user-login/slice.md)
+```
+
+## Sizing Guidelines
+
+A well-sized slice:
+- Can be implemented in 1-5 days
+- Has clear acceptance criteria derived from its user stories
+- Can be tested end-to-end independently
+- Corresponds roughly to a PR
+
+If a slice feels too large — split it using the `oneticket-user-story-splitting` skill logic applied at the implementation level.
+
+## Rules
+
+- Never overwrite an existing slice — check before writing
+- Always update cross-references in epics and user stories after writing a slice
+- Never create a slice without reading the architecture first
+- `docs_path` is always provided in the prompt — never resolve it yourself
+- Slices derive from what/epics/ — never invent content not backed by a user story

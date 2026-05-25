@@ -35,6 +35,25 @@ oneticket_git_user_email: oneticket-bot@users.noreply.github.com
 # Target branch for final PRs
 pr_base: main
 
+# Active user project — determines docs_path = apps/<current_project>/docs/
+# Required when doc workflows are triggered for a user project.
+# Do NOT set this for oneticket framework doc (.oneticket/docs/ is hardcoded separately).
+# current_project: my-app   # ← uncomment and set to your project name
+
+# ---------------------------------------------------------------------------
+# Documentation path resolution
+# ---------------------------------------------------------------------------
+#
+# docs_path is resolved deterministically by src/agent-dispatch.mjs
+# before being injected into the agent prompt — the agent never resolves it.
+#
+# Resolution logic (src/agent-dispatch.mjs → resolveDocsPath):
+#   - current_project present → docs_path = apps/<current_project>/docs
+#   - current_project absent  → docs_path = .oneticket/docs  (oneticket framework itself)
+#
+# To document a user project  : uncomment current_project and set your project name
+# To document oneticket itself: leave current_project commented out
+
 # ---------------------------------------------------------------------------
 # CI agent configuration — generated at runtime via src/generate-config.mjs
 # The active key is determined by the `cli` field above.

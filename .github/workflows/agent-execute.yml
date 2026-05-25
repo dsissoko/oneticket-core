@@ -103,6 +103,12 @@ jobs:
       - name: Install dependencies
         run: npm ci --silent
 
+      # [DETERMINISTIC] Install OneTicket skills into .agents/skills/
+      # so they are natively discovered by opencode before the agent runs.
+      # TODO: apm install will replace or complement this step in a future version.
+      - name: Install OneTicket skills
+        run: node src/oneticket-install.mjs
+
       # [DETERMINISTIC] Configure git from .oneticket/config.yml
       # Single source of truth — no hardcoded values in this workflow
       - name: Configure git
