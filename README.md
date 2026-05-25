@@ -197,3 +197,30 @@ Full list: `https://opencode.ai/zen/v1/models`
 - GitHub repository with Actions enabled
 - [opencode.ai](https://opencode.ai) account (free tier available)
 - GitHub PAT with repo + actions write permissions
+
+---
+
+## Roadmap
+
+### V1 — GitHub-native runtime (current)
+
+oneticket-core runs entirely inside GitHub Actions. Every agent invocation, task execution, and merge is a GitHub Actions workflow run. The infrastructure is free, transparent, and requires zero setup beyond a repository.
+
+**Constraints of V1:**
+- Execution time limited by GitHub Actions runner timeouts
+- No persistent context between agent runs
+- Parallel tasks limited by Actions concurrency
+- Cold start on every invocation (~30s)
+
+### V2 — Cloud runtime (planned)
+
+V2 will run agent sessions in dedicated cloud sandboxes (E2B or equivalent).
+
+**What V2 unlocks:**
+- Long-running agent sessions without timeout constraints
+- Persistent context and file system across steps
+- Richer execution environments (databases, services, browsers)
+- Faster cold starts and lower latency
+- More autonomous multi-agent workflows
+
+The oneticket-core concepts remain identical across runtimes — agents, profiles, skills, manifests, FAN-OUT/GATHER. Only the execution layer changes.
