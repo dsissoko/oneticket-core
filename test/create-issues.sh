@@ -20,7 +20,8 @@
 #   breakout   — demande riche : jeu Breakout en épics + US
 #                Teste la décomposition d'une demande complexe
 #
-#   all        — enchaîne reply + manifest + decompose + breakout
+#   parallel   — 2 décompositions simultanées (séquentiel vs parallèle)
+#   all        — enchaîne reply + manifest + decompose + parallel + breakout
 #
 # Prérequis :
 #   - gh CLI installé et authentifié
@@ -31,6 +32,7 @@
 #   ./test/create-issues.sh manifest
 #   ./test/create-issues.sh decompose
 #   ./test/create-issues.sh breakout
+#   ./test/create-issues.sh parallel
 #   ./test/create-issues.sh all
 #
 # Par défaut : MODE=reply, REPO=dsissoko/oneticket-core
@@ -177,6 +179,45 @@ et un écran de victoire.")
 }
 
 # ---------------------------------------------------------------------------
+# Mode : parallel
+# 2 issues lancées simultanément avec des graphes différents
+# Issue 1 : A → B → C (séquence pure)
+# Issue 2 : A, B (parallèles) → C (dépend de A et B)
+# Valide que le pipeline ne mélange pas les branches et manifests entre issues
+# ---------------------------------------------------------------------------
+
+run_parallel() {
+  echo "=== MODE PARALLEL — 2 décompositions simultanées ==="
+  echo ""
+
+  # Issue 1 : graphe séquentiel A → B → C
+  URL1=$(create_issue \
+    "[TEST-PARALLEL-1] Pipeline séquentiel A→B→C" \
+    "Créer 3 fichiers texte en séquence :
+- Tâche A : crée le fichier output/step-A.txt avec le contenu 'Step A done'
+- Tâche B : crée le fichier output/step-B.txt avec le contenu 'Step B done' (dépend de A)
+- Tâche C : crée le fichier output/step-C.txt avec le contenu 'Step C done' (dépend de B)
+Les 3 tâches doivent être exécutées dans cet ordre strict.")
+  NUM1=$(issue_number "$URL1")
+  post_comment "$NUM1" "@po décompose cette demande en manifest avec les 3 tâches dans l'ordre séquentiel A→B→C et lance le pipeline"
+  echo "Issue #$NUM1 lancée ($URL1)"
+
+  # Issue 2 : graphe avec parallélisme — lancée immédiatement, sans attendre
+  URL2=$(create_issue \
+    "[TEST-PARALLEL-2] Pipeline parallèle A+B→C" \
+    "Créer 3 fichiers texte avec du parallélisme :
+- Tâche A : crée le fichier output/result-A.txt avec le contenu 'Result A done' (indépendante)
+- Tâche B : crée le fichier output/result-B.txt avec le contenu 'Result B done' (indépendante)
+- Tâche C : crée le fichier output/result-C.txt avec le contenu 'Result C done' (dépend de A ET de B)
+A et B peuvent s'exécuter en parallèle. C attend que A et B soient terminées.")
+  NUM2=$(issue_number "$URL2")
+  post_comment "$NUM2" "@po décompose cette demande en manifest avec A et B en parallèle et C dépendant de A et B, puis lance le pipeline"
+  echo "Issue #$NUM2 lancée ($URL2)"
+  echo ""
+  echo "Attendu : 2 pipelines indépendants → 2 PRs distinctes, aucun croisement de branches."
+}
+
+# ---------------------------------------------------------------------------
 # Dispatch
 # ---------------------------------------------------------------------------
 
@@ -193,6 +234,9 @@ case "$MODE" in
   breakout)
     run_breakout
     ;;
+  parallel)
+    run_parallel
+    ;;
   all)
     run_reply
     echo ""
@@ -200,11 +244,13 @@ case "$MODE" in
     echo ""
     run_decompose
     echo ""
+    run_parallel
+    echo ""
     run_breakout
     ;;
   *)
     echo "Mode inconnu : $MODE"
-    echo "Usage : $0 [reply|manifest|decompose|breakout|all] [REPO]"
+    echo "Usage : $0 [reply|manifest|decompose|breakout|parallel|all] [REPO]"
     exit 1
     ;;
 esac
