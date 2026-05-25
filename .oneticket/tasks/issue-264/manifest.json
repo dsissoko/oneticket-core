@@ -24,7 +24,7 @@
       "file": ".oneticket/tasks/issue-264/subtask-C.txt",
       "content": "Subtask C completed",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "D",
