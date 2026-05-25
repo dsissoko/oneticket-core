@@ -1,10 +1,11 @@
 name: Workflow Gather
 
 # [DÉTERMINISTE] Collecte les signaux de fin de tâche et orchestre la suite.
-# Déclenché par le push final de agent-execute.yml (step "Push branch").
+# Déclenché par le push final déterministe de agent-execute.yml (step "Push branch").
 #
-# Filtre : seuls les commits dont le message commence par "feat:" déclenchent
-# l'orchestration — les pushs de création de branche (message "chore:") sont ignorés.
+# Tout push sur task/** est un signal de fin de tâche légitime — aucun filtre
+# sur le message de commit. Le pipeline ne doit pas dépendre d'une décision agent.
+# Les pushs chore: (manifest in_progress) se font sur feature/issue-N, jamais sur task/**.
 #
 # Pattern : Scatter/Gather — ce workflow est le Gather + FAN-IN + re-Scatter éventuel
 #
@@ -23,9 +24,6 @@ jobs:
   # [PARSE] Extrait le numéro d'issue depuis le nom de la branche poussée
   # ex: task/issue-42-A → 42
   extract:
-    # [FILTRE GATHER] Ne s'exécute que sur le commit final de l'agent (feat:)
-    # Ignore les commits déterministes de setup (chore:) poussés par agent-run.yml
-    if: startsWith(github.event.head_commit.message, 'feat:')
     runs-on: ubuntu-latest
     outputs:
       issue_number: ${{ steps.parse.outputs.issue_number }}
