@@ -24,7 +24,7 @@
       "file": ".oneticket/tasks/issue-218/subtask-C.txt",
       "content": "Crée le fichier .oneticket/tasks/issue-218/subtask-C.txt avec le contenu exact : Subtask C completed",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "D",
