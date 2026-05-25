@@ -1,0 +1,54 @@
+{
+  "issue": 218,
+  "branch_base": "feature/issue-218",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-218-A",
+      "file": ".oneticket/tasks/issue-218/subtask-A.txt",
+      "content": "Crée le fichier .oneticket/tasks/issue-218/subtask-A.txt avec le contenu exact : Subtask A completed",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-218-B",
+      "file": ".oneticket/tasks/issue-218/subtask-B.txt",
+      "content": "Crée le fichier .oneticket/tasks/issue-218/subtask-B.txt avec le contenu exact : Subtask B completed",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-218-C",
+      "file": ".oneticket/tasks/issue-218/subtask-C.txt",
+      "content": "Crée le fichier .oneticket/tasks/issue-218/subtask-C.txt avec le contenu exact : Subtask C completed",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-218-D",
+      "file": ".oneticket/tasks/issue-218/subtask-D.txt",
+      "content": "Crée le fichier .oneticket/tasks/issue-218/subtask-D.txt avec le contenu exact : Subtask D completed",
+      "depends_on": ["A", "B"],
+      "status": "pending"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-218-E",
+      "file": ".oneticket/tasks/issue-218/subtask-E.txt",
+      "content": "Crée le fichier .oneticket/tasks/issue-218/subtask-E.txt avec le contenu exact : Subtask E completed",
+      "depends_on": ["D"],
+      "status": "pending"
+    },
+    {
+      "id": "F",
+      "branch": "task/issue-218-F",
+      "file": ".oneticket/tasks/issue-218/subtask-F.txt",
+      "content": "Crée le fichier .oneticket/tasks/issue-218/subtask-F.txt avec le contenu exact : Subtask F completed",
+      "depends_on": ["C"],
+      "status": "pending"
+    }
+  ]
+}
