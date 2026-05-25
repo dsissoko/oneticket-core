@@ -8,7 +8,7 @@
       "file": ".oneticket/docs/what/epics/epic-1-core-game-mechanics/epic.md",
       "content": "Create epic-1-core-game-mechanics/epic.md using template .oneticket/templates/epic.md with these values:\n\n## Goal\nPermettre au joueur de contrôler une raquette pour rediriger une balle et détruire des briques.\n\n## Business Value\nOffre l'expérience de jeu arcade classique avec contrôle précis et satisfaction immédiate.\n\n## Scope\n- Contrôle raquette (clavier/souris)\n- Mouvement de la balle avec physique simple\n- Détection collision balle-raquette\n- Détection collision balle-briques\n- Rebonds sur les murs\n\n## Related User Stories\n- us-001-movement.md\n- us-002-collision.md\n- us-003-paddle-control.md\n\n## Related Slices\nÀ définir après décomposition",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
