@@ -47,7 +47,7 @@ agent_config:
   # Format : opencode.json schema (https://opencode.ai/config.json)
   opencode:
     $schema: "https://opencode.ai/config.json"
-    model: opencode/claude-haiku-4-5
+    model: opencode/minimax-text-01
     share: "disabled"
     autoupdate: false
     disabled_providers:

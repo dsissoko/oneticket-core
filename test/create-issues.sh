@@ -5,16 +5,16 @@
 #
 # Modes :
 #
-#   reply      — agent /po répond sans produire de manifest
+#   reply      — agent @po répond sans produire de manifest
 #                Valide : Comment Dispatcher → agent-dispatch → Agent Execute → réponse
 #
-#   manifest   — body de l'issue = manifest JSON complet
-#                L'agent /po l'écrit tel quel → FAN-OUT → GATHER → PR
-#                Valide le pipeline avec un graphe connu et prédictible
+#   manifest   — crée l'issue, édite le body avec le manifest exact (bon numéro),
+#                poste "@po traite ce manifest"
+#                Valide le pipeline FAN-OUT/GATHER de façon déterministe
 #                Graphe de référence : A,B,C (parallèles) → D(A+B) → E / C → F
 #
 #   decompose  — body de l'issue = description langage naturel du même graphe
-#                L'agent /po décompose et doit produire le même graphe que manifest
+#                L'agent @po décompose et doit produire le même graphe que manifest
 #                Valide le flow complet bout-en-bout avec agent
 #
 #   breakout   — demande riche : jeu Breakout en épics + US
@@ -67,11 +67,11 @@ issue_number() {
 
 # ---------------------------------------------------------------------------
 # Mode : reply
-# Agent /po reçoit une question → répond directement, pas de manifest
+# Agent @po reçoit une question → répond directement, pas de manifest
 # ---------------------------------------------------------------------------
 
 run_reply() {
-  echo "=== MODE REPLY — agent /po sans manifest ==="
+  echo "=== MODE REPLY — agent @po sans manifest ==="
   echo ""
 
   URL=$(create_issue \
@@ -86,8 +86,10 @@ run_reply() {
 
 # ---------------------------------------------------------------------------
 # Mode : manifest
-# Body de l'issue = manifest JSON complet avec graphe de référence
-# L'agent /po l'écrit tel quel → FAN-OUT déterministe
+# 1. Créer l'issue
+# 2. Éditer le body avec le manifest exact contenant le bon numéro d'issue
+# 3. Poster "@po traite ce manifest"
+# Valide le pipeline FAN-OUT/GATHER de façon déterministe — sans variabilité LLM
 # Graphe : A,B,C (parallèles) → D(dépend A+B) → E(dépend D) / C → F(dépend C)
 # ---------------------------------------------------------------------------
 
@@ -95,30 +97,33 @@ run_manifest() {
   echo "=== MODE MANIFEST — graphe de référence injecté directement ==="
   echo ""
 
+  # 1. Créer l'issue avec body placeholder
   URL=$(create_issue \
     "[TEST-MANIFEST] Pipeline FAN-OUT — graphe A/B/C/D/E/F" \
-    "$(cat <<'BODY'
-```json
-{
-  "issue": 0,
-  "branch_base": "feature/issue-0",
-  "tasks": [
-    {"id":"A","branch":"task/issue-0-A","file":".oneticket/tasks/issue-0/subtask-A.txt","content":"Subtask A completed","depends_on":[],"status":"pending"},
-    {"id":"B","branch":"task/issue-0-B","file":".oneticket/tasks/issue-0/subtask-B.txt","content":"Subtask B completed","depends_on":[],"status":"pending"},
-    {"id":"C","branch":"task/issue-0-C","file":".oneticket/tasks/issue-0/subtask-C.txt","content":"Subtask C completed","depends_on":[],"status":"pending"},
-    {"id":"D","branch":"task/issue-0-D","file":".oneticket/tasks/issue-0/subtask-D.txt","content":"Subtask D completed","depends_on":["A","B"],"status":"pending"},
-    {"id":"E","branch":"task/issue-0-E","file":".oneticket/tasks/issue-0/subtask-E.txt","content":"Subtask E completed","depends_on":["D"],"status":"pending"},
-    {"id":"F","branch":"task/issue-0-F","file":".oneticket/tasks/issue-0/subtask-F.txt","content":"Subtask F completed","depends_on":["C"],"status":"pending"}
-  ]
-}
-```
-BODY
-)")
+    "Manifest de test — sera mis à jour avec le bon numéro d'issue.")
   NUM=$(issue_number "$URL")
 
-  # Le manifest dans le body contient issue=0 comme placeholder
-  # L'agent doit remplacer 0 par le vrai numéro d'issue
-  post_comment "$NUM" "@po le body de cette issue contient un manifest au format exact attendu. Remplace toutes les occurrences de \"issue-0\" par \"issue-${NUM}\" et la valeur du champ \"issue\" par ${NUM}, puis écris le résultat dans .oneticket/tasks/issue-${NUM}/manifest.json. Commit avec le message exact : feat: decompose issue #${NUM}"
+  # 2. Éditer le body avec le manifest contenant le bon numéro
+  gh issue edit "$NUM" --repo "$REPO" --body "$(cat <<BODY
+\`\`\`json
+{
+  "issue": ${NUM},
+  "branch_base": "feature/issue-${NUM}",
+  "tasks": [
+    {"id":"A","branch":"task/issue-${NUM}-A","file":".oneticket/tasks/issue-${NUM}/subtask-A.txt","content":"Subtask A completed","depends_on":[],"status":"pending"},
+    {"id":"B","branch":"task/issue-${NUM}-B","file":".oneticket/tasks/issue-${NUM}/subtask-B.txt","content":"Subtask B completed","depends_on":[],"status":"pending"},
+    {"id":"C","branch":"task/issue-${NUM}-C","file":".oneticket/tasks/issue-${NUM}/subtask-C.txt","content":"Subtask C completed","depends_on":[],"status":"pending"},
+    {"id":"D","branch":"task/issue-${NUM}-D","file":".oneticket/tasks/issue-${NUM}/subtask-D.txt","content":"Subtask D completed","depends_on":["A","B"],"status":"pending"},
+    {"id":"E","branch":"task/issue-${NUM}-E","file":".oneticket/tasks/issue-${NUM}/subtask-E.txt","content":"Subtask E completed","depends_on":["D"],"status":"pending"},
+    {"id":"F","branch":"task/issue-${NUM}-F","file":".oneticket/tasks/issue-${NUM}/subtask-F.txt","content":"Subtask F completed","depends_on":["C"],"status":"pending"}
+  ]
+}
+\`\`\`
+BODY
+)"
+
+  # 3. Poster le commentaire
+  post_comment "$NUM" "@po traite ce manifest"
   echo "Issue #$NUM lancée ($URL)"
   echo ""
   echo "Attendu : manifest écrit tel quel → FAN-OUT → 6 subtask-X.txt → PR."
@@ -127,11 +132,11 @@ BODY
 # ---------------------------------------------------------------------------
 # Mode : decompose
 # Body = description langage naturel du même graphe que manifest
-# L'agent /po décompose — doit aboutir au même graphe A/B/C→D→E, C→F
+# L'agent @po décompose — doit aboutir au même graphe A/B/C→D→E, C→F
 # ---------------------------------------------------------------------------
 
 run_decompose() {
-  echo "=== MODE DECOMPOSE — agent /po décompose une demande ==="
+  echo "=== MODE DECOMPOSE — agent @po décompose une demande ==="
   echo ""
 
   URL=$(create_issue \
@@ -155,7 +160,7 @@ Chaque tâche produit un fichier texte subtask-X.txt (où X est l'id de la tâch
 # ---------------------------------------------------------------------------
 
 run_breakout() {
-  echo "=== MODE BREAKOUT — agent /po décomposition épics + US ==="
+  echo "=== MODE BREAKOUT — agent @po décomposition épics + US ==="
   echo ""
 
   URL=$(create_issue \
