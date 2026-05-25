@@ -2,11 +2,60 @@
   "issue": 288,
   "branch_base": "feature/issue-288",
   "tasks": [
-    {"id":"A","branch":"task/issue-288-A","file":".oneticket/tasks/issue-288/subtask-A.txt","content":"Subtask A completed","depends_on":[],"status":"pending"},
-    {"id":"B","branch":"task/issue-288-B","file":".oneticket/tasks/issue-288/subtask-B.txt","content":"Subtask B completed","depends_on":[],"status":"pending"},
-    {"id":"C","branch":"task/issue-288-C","file":".oneticket/tasks/issue-288/subtask-C.txt","content":"Subtask C completed","depends_on":[],"status":"pending"},
-    {"id":"D","branch":"task/issue-288-D","file":".oneticket/tasks/issue-288/subtask-D.txt","content":"Subtask D completed","depends_on":["A","B"],"status":"pending"},
-    {"id":"E","branch":"task/issue-288-E","file":".oneticket/tasks/issue-288/subtask-E.txt","content":"Subtask E completed","depends_on":["D"],"status":"pending"},
-    {"id":"F","branch":"task/issue-288-F","file":".oneticket/tasks/issue-288/subtask-F.txt","content":"Subtask F completed","depends_on":["C"],"status":"pending"}
+    {
+      "id": "A",
+      "branch": "task/issue-288-A",
+      "file": ".oneticket/tasks/issue-288/subtask-A.txt",
+      "content": "Subtask A completed",
+      "depends_on": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-288-B",
+      "file": ".oneticket/tasks/issue-288/subtask-B.txt",
+      "content": "Subtask B completed",
+      "depends_on": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-288-C",
+      "file": ".oneticket/tasks/issue-288/subtask-C.txt",
+      "content": "Subtask C completed",
+      "depends_on": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-288-D",
+      "file": ".oneticket/tasks/issue-288/subtask-D.txt",
+      "content": "Subtask D completed",
+      "depends_on": [
+        "A",
+        "B"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-288-E",
+      "file": ".oneticket/tasks/issue-288/subtask-E.txt",
+      "content": "Subtask E completed",
+      "depends_on": [
+        "D"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "F",
+      "branch": "task/issue-288-F",
+      "file": ".oneticket/tasks/issue-288/subtask-F.txt",
+      "content": "Subtask F completed",
+      "depends_on": [
+        "C"
+      ],
+      "status": "pending"
+    }
   ]
 }
