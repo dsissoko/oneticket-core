@@ -8,14 +8,16 @@
       "file": "output/step-A.txt",
       "content": "Créer le fichier output/step-A.txt avec le contenu 'Step A done'",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
       "branch": "task/issue-248-B",
       "file": "output/step-B.txt",
       "content": "Créer le fichier output/step-B.txt avec le contenu 'Step B done'",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending"
     },
     {
@@ -23,7 +25,9 @@
       "branch": "task/issue-248-C",
       "file": "output/step-C.txt",
       "content": "Créer le fichier output/step-C.txt avec le contenu 'Step C done'",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     }
   ]
