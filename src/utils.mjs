@@ -1,19 +1,19 @@
 /**
  * utils.mjs
  *
- * [MODULE PARTAGÉ] Utilitaires communs à tous les scripts JS du projet.
- * Élimine les duplications entre orchestrate.mjs, agent-launcher.mjs,
- * agent-dispatch.mjs et init.mjs.
+ * [SHARED MODULE] Common utilities for all JS scripts in the project.
+ * Eliminates duplication across orchestrate.mjs, agent-launcher.mjs,
+ * agent-dispatch.mjs.
  *
- * Exports :
- *   run(prefix, cmd)                    — execSync avec log, throw si erreur
- *   runCapture(prefix, cmd)             — execSync avec capture stdout
- *   runWithRetry(prefix, cmd, max)      — run avec backoff exponentiel + jitter
- *   setupGit(prefix, config, repo, token) — séquence git config + fetch
- *   writeManifest(manifest)             — écrit .oneticket/tasks/issue-N/manifest.json
- *   readManifest(issueNumber)           — lit .oneticket/tasks/issue-N/manifest.json
- *   areDependenciesSatisfied(task, all) — vérifie les dépendances d'une tâche
- *   dispatchWorkflow(file, inputs, repo, token) — POST workflow_dispatch avec retry
+ * Exports:
+ *   run(prefix, cmd)                      — execSync with log, throws on error
+ *   runCapture(prefix, cmd)               — execSync with stdout capture
+ *   runWithRetry(prefix, cmd, max)        — run with exponential backoff + jitter
+ *   setupGit(prefix, config, repo, token) — git config + fetch sequence
+ *   writeManifest(manifest)               — writes .oneticket/tasks/issue-N/manifest.json
+ *   readManifest(issueNumber)             — reads .oneticket/tasks/issue-N/manifest.json
+ *   areDependenciesSatisfied(task, all)   — checks task dependencies
+ *   dispatchWorkflow(file, inputs, repo, token) — POST workflow_dispatch with retry
  */
 
 import { execSync } from 'child_process';
@@ -22,12 +22,12 @@ import path from 'path';
 import { TASKS_DIR, MANIFEST_FILE } from './constants.mjs';
 
 // ---------------------------------------------------------------------------
-// Helpers git de base
+// Base git helpers
 // ---------------------------------------------------------------------------
 
 /**
- * Exécute une commande shell avec log.
- * Throw si exit code non-zéro.
+ * Runs a shell command with logging.
+ * Throws if exit code is non-zero.
  */
 export function run(prefix, cmd, opts = {}) {
   console.log(`[${prefix}] $ ${cmd}`);
@@ -35,7 +35,7 @@ export function run(prefix, cmd, opts = {}) {
 }
 
 /**
- * Exécute une commande shell et capture la sortie stdout.
+ * Runs a shell command and captures stdout.
  */
 export function runCapture(prefix, cmd) {
   console.log(`[${prefix}] $ ${cmd}`);
@@ -43,14 +43,14 @@ export function runCapture(prefix, cmd) {
 }
 
 /**
- * Exécute une commande shell avec backoff exponentiel + jitter sur échec.
+ * Runs a shell command with exponential backoff + jitter on failure.
  *
- * Stratégie : délai = 2^attempt * 1000ms + [0, 500ms] aléatoire
- * Utilise Atomics.wait pour un délai synchrone (compatible execSync).
+ * Strategy: delay = 2^attempt * 1000ms + [0, 500ms] random
+ * Uses Atomics.wait for synchronous delay (compatible with execSync).
  *
- * @param {string} prefix      - Préfixe de log (ex: 'orchestrate')
- * @param {string} cmd         - Commande shell à exécuter
- * @param {number} maxAttempts - Nombre maximum de tentatives (défaut: 3)
+ * @param {string} prefix      - Log prefix (e.g. 'orchestrate')
+ * @param {string} cmd         - Shell command to execute
+ * @param {number} maxAttempts - Maximum number of attempts (default: 3)
  */
 export function runWithRetry(prefix, cmd, maxAttempts = 3) {
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
@@ -60,7 +60,7 @@ export function runWithRetry(prefix, cmd, maxAttempts = 3) {
       if (attempt === maxAttempts) throw err;
       const backoff = Math.pow(2, attempt) * 1000 + Math.floor(Math.random() * 500);
       console.warn(
-        `[${prefix}] Échec "${cmd}" (tentative ${attempt}/${maxAttempts}) — ` +
+        `[${prefix}] Failed "${cmd}" (attempt ${attempt}/${maxAttempts}) — ` +
         `backoff ${backoff}ms...`
       );
       Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, backoff);
@@ -69,18 +69,17 @@ export function runWithRetry(prefix, cmd, maxAttempts = 3) {
 }
 
 // ---------------------------------------------------------------------------
-// Setup git
+// Git setup
 // ---------------------------------------------------------------------------
 
 /**
- * Séquence git standard : user.name + user.email + remote url + fetch.
- * Dupliquée auparavant dans orchestrate.mjs, agent-dispatch.mjs, init.mjs.
- * Le git fetch utilise runWithRetry pour résister aux erreurs réseau transitoires.
+ * Standard git sequence: user.name + user.email + remote url + fetch.
+ * git fetch uses runWithRetry to resist transient network errors.
  *
- * @param {string} prefix  - Préfixe de log
- * @param {object} config  - Config chargée depuis loadConfig()
+ * @param {string} prefix  - Log prefix
+ * @param {object} config  - Config loaded from loadConfig()
  * @param {string} repo    - "owner/repo"
- * @param {string} token   - GitHub PAT (peut être null/undefined)
+ * @param {string} token   - GitHub PAT (can be null/undefined)
  */
 export function setupGit(prefix, config, repo, token) {
   run(prefix, `git config user.name "${config.oneticket_git_user_name}"`);
@@ -96,7 +95,7 @@ export function setupGit(prefix, config, repo, token) {
 // ---------------------------------------------------------------------------
 
 /**
- * Écrit le manifest dans .oneticket/tasks/issue-<N>/manifest.json.
+ * Writes the manifest to .oneticket/tasks/issue-<N>/manifest.json.
  */
 export function writeManifest(manifest) {
   const manifestPath = path.join(
@@ -106,30 +105,29 @@ export function writeManifest(manifest) {
 }
 
 /**
- * Lit le manifest depuis .oneticket/tasks/issue-<N>/manifest.json.
+ * Reads the manifest from .oneticket/tasks/issue-<N>/manifest.json.
  */
 export function readManifest(issueNumber) {
   const manifestPath = path.join(
     process.cwd(), TASKS_DIR, `issue-${issueNumber}`, MANIFEST_FILE
   );
   if (!fs.existsSync(manifestPath)) {
-    throw new Error(`${MANIFEST_FILE} introuvable : ${manifestPath}`);
+    throw new Error(`${MANIFEST_FILE} not found: ${manifestPath}`);
   }
   const raw = fs.readFileSync(manifestPath, 'utf8');
   try {
     return JSON.parse(raw);
   } catch (err) {
-    throw new Error(`${MANIFEST_FILE} corrompu (JSON invalide) : ${manifestPath} — ${err.message}`);
+    throw new Error(`${MANIFEST_FILE} corrupted (invalid JSON): ${manifestPath} — ${err.message}`);
   }
 }
 
 // ---------------------------------------------------------------------------
-// Dépendances
+// Dependencies
 // ---------------------------------------------------------------------------
 
 /**
- * Détermine si toutes les dépendances d'une tâche sont satisfaites (status done).
- * Dupliqué auparavant dans orchestrate.mjs et agent-launcher.mjs.
+ * Determines if all dependencies of a task are satisfied (status done).
  */
 export function areDependenciesSatisfied(task, allTasks) {
   if (!task.depends_on || task.depends_on.length === 0) return true;
@@ -138,19 +136,19 @@ export function areDependenciesSatisfied(task, allTasks) {
 }
 
 // ---------------------------------------------------------------------------
-// Dispatch workflow GitHub
+// GitHub workflow dispatch
 // ---------------------------------------------------------------------------
 
 /**
- * Déclenche un workflow GitHub Actions via workflow_dispatch.
- * Retry automatique avec backoff exponentiel + jitter sur erreur réseau.
+ * Triggers a GitHub Actions workflow via workflow_dispatch.
+ * Automatic retry with exponential backoff + jitter on network error.
  *
- * @param {string} workflowFile - Nom du fichier workflow (ex: 'agent-execute.yml')
- * @param {object} inputs       - Inputs du workflow_dispatch
+ * @param {string} workflowFile - Workflow filename (e.g. 'agent-execute.yml')
+ * @param {object} inputs       - workflow_dispatch inputs
  * @param {string} repo         - "owner/repo"
  * @param {string} token        - GitHub PAT
- * @param {string} ref          - Branche de référence (défaut: 'main')
- * @param {number} maxAttempts  - Nombre maximum de tentatives (défaut: 3)
+ * @param {string} ref          - Reference branch (default: 'main')
+ * @param {number} maxAttempts  - Maximum number of attempts (default: 3)
  */
 export async function dispatchWorkflow(workflowFile, inputs, repo, token, ref = 'main', maxAttempts = 3) {
   const url = `https://api.github.com/repos/${repo}/actions/workflows/${workflowFile}/dispatches`;
@@ -171,18 +169,18 @@ export async function dispatchWorkflow(workflowFile, inputs, repo, token, ref = 
 
     const body = await res.text();
 
-    // 4xx client errors — pas la peine de retry
+    // 4xx client errors — no point retrying
     if (res.status >= 400 && res.status < 500) {
-      throw new Error(`Échec dispatch ${workflowFile} : ${res.status} ${body}`);
+      throw new Error(`Failed to dispatch ${workflowFile}: ${res.status} ${body}`);
     }
 
-    // 5xx server errors — retry avec backoff
+    // 5xx server errors — retry with backoff
     if (attempt === maxAttempts) {
-      throw new Error(`Échec dispatch ${workflowFile} après ${maxAttempts} tentatives : ${res.status} ${body}`);
+      throw new Error(`Failed to dispatch ${workflowFile} after ${maxAttempts} attempts: ${res.status} ${body}`);
     }
 
     const backoff = Math.pow(2, attempt) * 1000 + Math.floor(Math.random() * 500);
-    console.warn(`[dispatch] Erreur ${res.status} sur ${workflowFile} (tentative ${attempt}/${maxAttempts}) — backoff ${backoff}ms...`);
+    console.warn(`[dispatch] Error ${res.status} on ${workflowFile} (attempt ${attempt}/${maxAttempts}) — backoff ${backoff}ms...`);
     await new Promise(r => setTimeout(r, backoff));
   }
 }

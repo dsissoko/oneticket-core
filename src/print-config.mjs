@@ -1,19 +1,19 @@
 /**
  * print-config.mjs
  *
- * [UTILITAIRE CI] Lit une clé depuis .oneticket/config.yml et l'écrit sur stdout.
- * Utilisé dans les workflows GitHub Actions pour lire les valeurs de config
- * sans inline scripts ni valeurs hardcodées dans le YAML.
+ * [CI UTILITY] Reads a key from .oneticket/config.yml and writes it to stdout.
+ * Used in GitHub Actions workflows to read config values
+ * without inline scripts or hardcoded values in YAML.
  *
- * Usage :
+ * Usage:
  *   node src/print-config.mjs <key>
  *   node src/print-config.mjs oneticket_git_user_name
  *   node src/print-config.mjs oneticket_git_user_email
  *
- * Exemple dans un workflow :
+ * Example in a workflow:
  *   git config user.name "$(node src/print-config.mjs oneticket_git_user_name)"
  *
- * Erreur explicite si la clé est absente ou si le fichier est introuvable.
+ * Explicit error if the key is missing or the file is not found.
  */
 
 import { loadConfig } from './config.mjs';
@@ -21,7 +21,7 @@ import { loadConfig } from './config.mjs';
 const key = process.argv[2];
 
 if (!key) {
-  process.stderr.write('[print-config] Usage : node src/print-config.mjs <key>\n');
+  process.stderr.write('[print-config] Usage: node src/print-config.mjs <key>\n');
   process.exit(1);
 }
 
@@ -29,19 +29,19 @@ try {
   const config = loadConfig();
 
   if (!(key in config)) {
-    process.stderr.write(`[print-config] Clé inconnue : "${key}"\n`);
-    process.stderr.write(`[print-config] Clés disponibles : ${Object.keys(config).join(', ')}\n`);
+    process.stderr.write(`[print-config] Unknown key: "${key}"\n`);
+    process.stderr.write(`[print-config] Available keys: ${Object.keys(config).join(', ')}\n`);
     process.exit(1);
   }
 
   const val = config[key];
   if (val === null || val === undefined) {
-    process.stderr.write(`[print-config] La clé "${key}" est présente mais nulle.\n`);
+    process.stderr.write(`[print-config] Key "${key}" is present but null.\n`);
     process.exit(1);
   }
 
   process.stdout.write(String(val));
 } catch (err) {
-  process.stderr.write(`[print-config] ERREUR : ${err.message}\n`);
+  process.stderr.write(`[print-config] ERROR: ${err.message}\n`);
   process.exit(1);
 }

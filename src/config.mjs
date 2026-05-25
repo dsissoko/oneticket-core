@@ -1,27 +1,28 @@
 /**
  * config.mjs
  *
- * [MODULE PARTAGÉ] Unique point de lecture de .oneticket/config.yml.
- * Utilisé par tous les scripts JS du projet.
+ * [SHARED MODULE] Single read point for .oneticket/config.yml.
+ * Used by all JS scripts in the project.
  *
- * Exporte :
- *   loadConfig() → objet config complet
+ * Exports:
+ *   loadConfig() → full config object
  *
- * Structure retournée :
+ * Returned structure:
  *   {
- *     language,                  // 'fr' | null (optionnel)
- *     autonomous_mode,           // boolean (optionnel, défaut true)
+ *     language,                  // 'fr' | null (optional)
+ *     autonomous_mode,           // boolean (optional, defaults to true)
  *     cli,                       // 'opencode' | 'claude' | ...
+ *     model,                     // extracted from agent_config.<cli>.model
  *     retry_max,                 // 3
  *     orchestrate_retry_max,     // 5
  *     oneticket_git_user_name,   // 'oneticket-bot'
  *     oneticket_git_user_email,  // 'oneticket-bot@users.noreply.github.com'
  *     pr_base,                   // 'main'
- *     agent_config,              // objet brut de la section agent_config
+ *     agent_config,              // raw agent_config section object
  *   }
  *
- * Note : le modèle LLM n'est PAS dans cet objet — il est déclaré dans
- * agent_config.<cli>.model et injecté via OPENCODE_CONFIG_CONTENT.
+ * Note: the LLM model is NOT a top-level key — it is declared in
+ * agent_config.<cli>.model and injected via OPENCODE_CONFIG_CONTENT.
  */
 
 import fs from 'fs';
@@ -33,30 +34,30 @@ import { CONFIG_PATH } from './constants.mjs';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
- * Vérifie qu'une clé obligatoire est présente et non-vide dans l'objet parsé.
- * Throw avec un message explicite si absente.
+ * Checks that a required key is present and non-empty in the parsed object.
+ * Throws with an explicit message if absent.
  */
 function require(parsed, key) {
   const val = parsed[key];
   if (val === undefined || val === null || val === '') {
-    throw new Error(`Clé obligatoire manquante dans ${CONFIG_PATH} : "${key}"`);
+    throw new Error(`Required key missing in ${CONFIG_PATH}: "${key}"`);
   }
   return val;
 }
 
 /**
- * Charge et parse .oneticket/config.yml.
- * Aucun fallback — toutes les clés obligatoires doivent être présentes.
- * Throw avec un message explicite si une clé est absente ou si le fichier est corrompu.
+ * Loads and parses .oneticket/config.yml.
+ * No fallbacks — all required keys must be present.
+ * Throws with an explicit message if a key is missing or the file is corrupted.
  *
- * @returns {object} Config complète
- * @throws {Error} Si le fichier est absent, corrompu ou incomplet
+ * @returns {object} Full config object
+ * @throws {Error} If the file is missing, corrupted, or incomplete
  */
 export function loadConfig() {
   const configPath = path.join(__dirname, '..', CONFIG_PATH);
 
   if (!fs.existsSync(configPath)) {
-    throw new Error(`${CONFIG_PATH} introuvable : ${configPath}`);
+    throw new Error(`${CONFIG_PATH} not found: ${configPath}`);
   }
 
   const raw = fs.readFileSync(configPath, 'utf8');
@@ -64,11 +65,11 @@ export function loadConfig() {
   try {
     parsed = yaml.load(raw);
   } catch (err) {
-    throw new Error(`${CONFIG_PATH} corrompu (YAML invalide) : ${err.message}`);
+    throw new Error(`${CONFIG_PATH} corrupted (invalid YAML): ${err.message}`);
   }
 
   if (!parsed || typeof parsed !== 'object') {
-    throw new Error(`${CONFIG_PATH} est vide ou invalide`);
+    throw new Error(`${CONFIG_PATH} is empty or invalid`);
   }
 
   const cli          = require(parsed, 'cli');
@@ -77,13 +78,13 @@ export function loadConfig() {
 
   if (!cliConfig.model) {
     throw new Error(
-      `Clé obligatoire manquante dans ${CONFIG_PATH} : "agent_config.${cli}.model"`
+      `Required key missing in ${CONFIG_PATH}: "agent_config.${cli}.model"`
     );
   }
 
   return {
-    language:                 parsed.language        || null,  // optionnel
-    autonomous_mode:          parsed.autonomous_mode !== false, // optionnel, défaut true
+    language:                 parsed.language        || null,  // optional
+    autonomous_mode:          parsed.autonomous_mode !== false, // optional, defaults to true
     cli,
     model:                    cliConfig.model,
     retry_max:                require(parsed, 'retry_max'),

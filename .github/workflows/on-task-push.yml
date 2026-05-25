@@ -1,19 +1,19 @@
 name: Workflow Gather
 
-# [DÉTERMINISTE] Collecte les signaux de fin de tâche et orchestre la suite.
-# Déclenché par le push final déterministe de agent-execute.yml (step "Push branch").
+# [DETERMINISTIC] Collects task completion signals and orchestrates next steps.
+# Triggered by the deterministic final push from agent-execute.yml (step "Push branch").
 #
-# Tout push sur task/** est un signal de fin de tâche légitime — aucun filtre
-# sur le message de commit. Le pipeline ne doit pas dépendre d'une décision agent.
-# Les pushs chore: (manifest in_progress) se font sur feature/issue-N, jamais sur task/**.
+# Every push on task/** is a legitimate task completion signal — no filter
+# on commit message. The pipeline must not depend on an agent decision.
+# chore: pushes (manifest in_progress) happen on feature/issue-N, never on task/**.
 #
-# Pattern : Scatter/Gather — ce workflow est le Gather + FAN-IN + re-Scatter éventuel
+# Pattern: Scatter/Gather — this workflow is the Gather + FAN-IN + optional re-Scatter
 #
-# [CONCURRENCY] Aucun concurrency GitHub ici — les conflits d'accès au manifest
-# sont gérés dans orchestrate.mjs avec retry sur push (lock optimiste git).
-# Raison : le concurrency job-level GitHub n'offre qu'une seule place en queue —
-# si deux runs arrivent quasi-simultanément, l'un est annulé même avec cancel-in-progress: false.
-# Le retry git est plus fiable car il ne perd aucun signal.
+# [CONCURRENCY] No GitHub concurrency here — manifest access conflicts
+# are handled in orchestrate.mjs with push retry (optimistic git lock).
+# Reason: GitHub job-level concurrency only offers one queue slot —
+# if two runs arrive near-simultaneously, one is cancelled even with cancel-in-progress: false.
+# Git retry is more reliable as it loses no signal.
 
 on:
   push:
@@ -21,8 +21,8 @@ on:
       - 'task/**'
 
 jobs:
-  # [PARSE] Extrait le numéro d'issue depuis le nom de la branche poussée
-  # ex: task/issue-42-A → 42
+  # [PARSE] Extracts the issue number from the pushed branch name
+  # e.g. task/issue-42-A → 42
   extract:
     runs-on: ubuntu-latest
     outputs:
@@ -58,8 +58,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # [ROUTING DÉTERMINISTE] orchestrate.mjs décide de la suite — jamais le LLM
-      # Les conflits git (push non fast-forward) sont gérés avec retry dans le code JS
+      # [DETERMINISTIC ROUTING] orchestrate.mjs decides next steps — never the LLM
+      # Git conflicts (non-fast-forward push) are handled with retry in JS code
       - name: Run orchestrator — merge, update manifest, route or create PR
         env:
           GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
@@ -67,8 +67,8 @@ jobs:
           REPO: ${{ github.repository }}
         run: node src/orchestrate.mjs
 
-  # [FAILURE NOTIFICATION] Posté sur l'issue si le job orchestrate échoue.
-  # Le numéro d'issue est extrait du nom de branche (même logique que le job extract).
+  # [FAILURE NOTIFICATION] Posted on the issue if the orchestrate job fails.
+  # Issue number is extracted from the branch name (same logic as the extract job).
   notify-failure:
     needs: [extract, orchestrate]
     if: failure() && needs.extract.result == 'success'
@@ -80,10 +80,10 @@ jobs:
         run: |
           gh issue comment ${{ needs.extract.outputs.issue_number }} \
             --repo ${{ github.repository }} \
-            --body "## Orchestration failure — branche \`${{ github.ref_name }}\`
+            --body "## Orchestration failure — branch \`${{ github.ref_name }}\`
 
-          Le workflow d'orchestration a échoué lors du traitement du signal GATHER.
+          The orchestration workflow failed while processing the GATHER signal.
 
-          **Run Actions :** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          **Actions run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
-          > Vérifier les logs du run pour identifier la cause (merge conflict, manifest corrompu, erreur réseau)."
+          > Check the run logs to identify the cause (merge conflict, corrupted manifest, network error)."

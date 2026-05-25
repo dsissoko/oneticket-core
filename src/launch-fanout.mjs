@@ -1,17 +1,17 @@
 /**
  * launch-fanout.mjs
  *
- * [DÉTERMINISTE] Démarre le FAN-OUT depuis un manifest présent dans le working tree.
- * Appelé par agent-execute.yml après qu'un agent a produit .oneticket/tasks/issue-N/manifest.json.
+ * [DETERMINISTIC] Starts FAN-OUT from a manifest present in the working tree.
+ * Called by agent-execute.yml after an agent has produced .oneticket/tasks/issue-N/manifest.json.
  *
- * Responsabilité unique :
- *   1. Vérifier que le manifest est présent (vérification défensive)
- *   2. Setup git
+ * Single responsibility:
+ *   1. Verify manifest is present (defensive check)
+ *   2. Git setup
  *   3. Checkout feature/issue-N
- *   4. Lire le manifest
- *   5. Lancer launchReadyTasks() → FAN-OUT
+ *   4. Read manifest
+ *   5. Launch launchReadyTasks() → FAN-OUT
  *
- * Variables d'environnement attendues :
+ * Expected environment variables:
  *   GITHUB_TOKEN, ISSUE_NUMBER, REPO
  */
 
@@ -27,43 +27,43 @@ async function main() {
   const repo        = process.env.REPO;
   const ghToken     = process.env.GITHUB_TOKEN;
 
-  if (!issueNumber) throw new Error('ISSUE_NUMBER manquant');
-  if (!repo)        throw new Error('REPO manquant');
+  if (!issueNumber) throw new Error('ISSUE_NUMBER missing');
+  if (!repo)        throw new Error('REPO missing');
 
   const featureBranch = `feature/issue-${issueNumber}`;
 
-  // Vérification défensive — ce script doit être appelé uniquement
-  // quand le manifest est présent dans le working tree
+  // Defensive check — this script must only be called
+  // when the manifest is present in the working tree
   const manifestPath = path.join(process.cwd(), TASKS_DIR, `issue-${issueNumber}`, MANIFEST_FILE);
   if (!fs.existsSync(manifestPath)) {
     throw new Error(
-      `${MANIFEST_FILE} introuvable : ${manifestPath}\n` +
-      `launch-fanout.mjs doit être appelé uniquement quand le manifest est présent dans le working tree.`
+      `${MANIFEST_FILE} not found: ${manifestPath}\n` +
+      `launch-fanout.mjs must only be called when the manifest is present in the working tree.`
     );
   }
 
   const config = loadConfig();
 
-  // Setup git + fetch avec retry réseau
+  // Git setup + fetch with network retry
   setupGit('launch-fanout', config, repo, ghToken);
   run('launch-fanout', `git checkout -B ${featureBranch} origin/${featureBranch}`);
 
-  // Lecture du manifest
+  // Read manifest
   const manifest = readManifest(issueNumber);
 
-  // Vérifier qu'il y a des tâches pending avant de lancer le FAN-OUT
+  // Check there are pending tasks before launching FAN-OUT
   const pendingTasks = manifest.tasks.filter(t => t.status === 'pending');
   if (pendingTasks.length === 0) {
-    console.log('[launch-fanout] Aucune tâche pending — FAN-OUT non nécessaire.');
+    console.log('[launch-fanout] No pending tasks — FAN-OUT not needed.');
     return;
   }
 
-  console.log(`[launch-fanout] ${pendingTasks.length} tâche(s) pending — lancement FAN-OUT.`);
+  console.log(`[launch-fanout] ${pendingTasks.length} pending task(s) — launching FAN-OUT.`);
   await launchReadyTasks(manifest, repo, ghToken);
-  console.log('[launch-fanout] FAN-OUT lancé.');
+  console.log('[launch-fanout] FAN-OUT launched.');
 }
 
 main().catch(err => {
-  console.error('[launch-fanout] ERREUR :', err.message);
+  console.error('[launch-fanout] ERROR:', err.message);
   process.exit(1);
 });

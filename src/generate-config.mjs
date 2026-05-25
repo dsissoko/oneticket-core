@@ -1,24 +1,22 @@
 /**
  * generate-config.mjs
  *
- * [SCRIPT CI] Génère la config opencode pour la sandbox GitHub Actions.
- * Appelé dans agent-execute.yml avant le step anomalyco.
+ * [CI SCRIPT] Generates the opencode config for the GitHub Actions sandbox.
+ * Called in agent-execute.yml before the anomalyco step.
  *
- * Mécanisme :
- *   1. Lit .oneticket/config.yml via loadConfig()
- *   2. Extrait agent_config[cli] (ex: agent_config.opencode)
- *   3. Injecte default_agent si un role est fourni en argument
- *      → opencode charge directement le bon profil agent sans instruction dans le prompt
- *   4. Sérialise en JSON sur stdout
+ * Mechanism:
+ *   1. Reads .oneticket/config.yml via loadConfig()
+ *   2. Extracts agent_config[cli] (e.g. agent_config.opencode)
+ *   3. Serializes to JSON on stdout
  *
- * Le JSON est capturé par le step CI et injecté dans OPENCODE_CONFIG_CONTENT
- * — mécanisme officiel opencode pour les overrides runtime.
- * Aucun fichier n'est écrit sur le disque.
+ * The JSON is captured by the CI step and injected into OPENCODE_CONFIG_CONTENT
+ * — the official opencode mechanism for runtime overrides.
+ * No file is written to disk.
  *
- * Usage :
+ * Usage:
  *   node src/generate-config.mjs [role]
  *   node src/generate-config.mjs po
- *   node src/generate-config.mjs        ← sans role, pas de default_agent
+ *   node src/generate-config.mjs        ← no role, no default_agent
  */
 
 import { loadConfig } from './config.mjs';
@@ -32,16 +30,16 @@ try {
 
   if (!agentConfig) {
     throw new Error(
-      `Aucune section agent_config.${cli} dans .oneticket/config.yml. ` +
-      `Sections disponibles : ${Object.keys(config.agent_config).join(', ') || '(aucune)'}`
+      `No agent_config.${cli} section in .oneticket/config.yml. ` +
+      `Available sections: ${Object.keys(config.agent_config).join(', ') || '(none)'}`
     );
   }
 
-  // TODO: default_agent — réservé pour intégration future avec APM (Agent Protocol Manager)
-  // Quand opencode supportera un registre d'agents externe (ex: Microsoft APM),
-  // ce champ permettra de charger dynamiquement le bon agent par son identifiant de rôle.
-  // Actuellement désactivé : opencode ne reconnaît que ses agents natifs (build, plan).
-  // Le profil agent est injecté directement dans le prompt système via .oneticket/agents/<role>.agent.md.
+  // TODO: default_agent — reserved for future APM integration (Agent Package Manager)
+  // When opencode supports an external agent registry (e.g. Microsoft APM),
+  // this field will allow dynamic loading of the right agent by role identifier.
+  // Currently disabled: opencode only recognizes its native agents (build, plan).
+  // The agent profile is injected directly into the system prompt via .oneticket/agents/<role>.agent.md.
   //
   // const output = role
   //   ? { ...agentConfig, default_agent: role }
@@ -55,6 +53,6 @@ try {
 
   process.stdout.write(JSON.stringify(output));
 } catch (err) {
-  process.stderr.write(`[generate-config] ERREUR : ${err.message}\n`);
+  process.stderr.write(`[generate-config] ERROR: ${err.message}\n`);
   process.exit(1);
 }

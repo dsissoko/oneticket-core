@@ -1,28 +1,28 @@
 name: Agent Execute
 
-# [AGENTIQUE] Seul workflow impliquant un LLM (anomalyco/opencode).
+# [AGENTIC] Only workflow involving an LLM (anomalyco/opencode).
 #
-# Invoqué dans deux contextes :
-#   - Invocation libre  : déclenché par Comment Dispatcher via agent-dispatch.mjs
-#                         prompt = "tu es @role, <demande> + contexte issue"
-#   - Exécution tâche   : déclenché par agent-launcher.mjs (FAN-OUT)
-#                         prompt = instructions bornées pour produire un fichier
+# Invoked in two contexts:
+#   - Free invocation : triggered by Comment Dispatcher via agent-dispatch.mjs
+#                       prompt = "you are @role, <request> + issue context"
+#   - Task execution  : triggered by agent-launcher.mjs (FAN-OUT)
+#                       prompt = bounded instructions to produce a file
 #
-# Dans les deux cas le mécanisme est identique :
-#   1. Génération config opencode depuis .oneticket/config.yml → OPENCODE_CONFIG_CONTENT
-#      → le modèle est extrait de agent_config.<cli>.model et passé en input model
-#   2. Checkout déterministe de la branche
-#   3. anomalyco reçoit le prompt complet — output libre
-#   4. Push déterministe
+# In both cases the mechanism is identical:
+#   1. Generate opencode config from .oneticket/config.yml → OPENCODE_CONFIG_CONTENT
+#      → model is extracted from agent_config.<cli>.model and passed as input model
+#   2. Deterministic branch checkout
+#   3. anomalyco receives the full prompt — free output
+#   4. Deterministic push
 #
-# Config agent CI : générée à la volée par src/generate-config.mjs
-# → injectée via OPENCODE_CONFIG_CONTENT (mécanisme officiel opencode)
-# → aucun fichier de config écrit sur le disque
+# CI agent config: generated on-the-fly by src/generate-config.mjs
+# → injected via OPENCODE_CONFIG_CONTENT (official opencode runtime override mechanism)
+# → no config file written to disk
 #
-# Retry sur échec anomalyco (rate-limit GitHub API) :
-#   - continue-on-error: true sur le step agentique
-#   - re-dispatch avec retry_count+1 et délai croissant
-#   - max défini par retry_max dans .oneticket/config.yml
+# Retry on anomalyco failure (GitHub API rate-limit):
+#   - continue-on-error: true on the agentic step
+#   - re-dispatch with retry_count+1 and increasing delay
+#   - max defined by retry_max in .oneticket/config.yml
 
 on:
   workflow_dispatch:
@@ -64,7 +64,11 @@ jobs:
       id-token: write
 
     steps:
-      # [DÉTERMINISTE] Checkout de la branche de travail
+      # [DETERMINISTIC] Checkout the working branch
+      # - FAN-OUT case (branch_base provided): checkout branch_base (always exists)
+      #   the task/* branch will be created from it in the next step
+      # - Free invocation (branch_base empty): checkout branch directly
+      #   (feature/issue-N already created by agent-dispatch.mjs)
       - name: Checkout branch
         uses: actions/checkout@v4
         with:
@@ -72,19 +76,20 @@ jobs:
           token: ${{ secrets.ONETICKET_GH_PAT }}
           fetch-depth: 0
 
-      # [DÉTERMINISTE] Crée la branche task/* depuis branch_base (cas FAN-OUT uniquement)
+      # [DETERMINISTIC] Create task/* branch from branch_base (FAN-OUT case only)
+      # If branch_base is empty (free invocation), we are already on the right branch
       - name: Ensure task branch exists
         run: |
           if [ -z "${{ inputs.branch_base }}" ]; then
-            echo "Pas de branch_base — branche ${{ inputs.branch }} déjà checkoutée."
+            echo "No branch_base — branch ${{ inputs.branch }} already checked out."
             exit 0
           fi
           if git ls-remote --heads origin ${{ inputs.branch }} | grep -q ${{ inputs.branch }}; then
-            echo "Branche ${{ inputs.branch }} existe déjà, checkout."
+            echo "Branch ${{ inputs.branch }} already exists, checking out."
             git fetch origin ${{ inputs.branch }}
             git checkout -B ${{ inputs.branch }} origin/${{ inputs.branch }}
           else
-            echo "Création de la branche ${{ inputs.branch }} depuis ${{ inputs.branch_base }}."
+            echo "Creating branch ${{ inputs.branch }} from ${{ inputs.branch_base }}."
             git checkout -b ${{ inputs.branch }}
             git push origin ${{ inputs.branch }}
           fi
@@ -98,25 +103,26 @@ jobs:
       - name: Install dependencies
         run: npm ci --silent
 
-      # [DÉTERMINISTE] Configure git depuis .oneticket/config.yml
-      # Source de vérité unique — aucune valeur hardcodée dans ce workflow
+      # [DETERMINISTIC] Configure git from .oneticket/config.yml
+      # Single source of truth — no hardcoded values in this workflow
       - name: Configure git
         run: |
           git config user.name "$(node src/print-config.mjs oneticket_git_user_name)"
           git config user.email "$(node src/print-config.mjs oneticket_git_user_email)"
 
-      # [DÉTERMINISTE] Génère la config opencode depuis .oneticket/config.yml
-      # → injectée dans OPENCODE_CONFIG_CONTENT (override runtime officiel opencode)
+      # [DETERMINISTIC] Generate opencode config from .oneticket/config.yml
+      # → injected into OPENCODE_CONFIG_CONTENT (official opencode runtime override)
       - name: Generate opencode config
         id: agent-config
         run: |
           CONFIG=$(node src/generate-config.mjs "${{ inputs.role }}")
           echo "config=$CONFIG" >> $GITHUB_OUTPUT
 
-      # [AGENTIQUE] Invocation anomalyco avec le prompt complet
-      # with: model: est obligatoire pour l'action anomalyco (required: true dans action.yml)
-      # La valeur vient de agent_config.<cli>.model dans .oneticket/config.yml
-      # OPENCODE_CONFIG_CONTENT surcharge ensuite la config runtime avec les mêmes valeurs
+      # [AGENTIC] Invoke anomalyco with the full prompt
+      # The prompt is built upstream by deterministic code (.mjs)
+      # The agent does not push, does not create PRs — deterministic steps handle that
+      # with: model: is required by the anomalyco action (required: true in action.yml)
+      # OPENCODE_CONFIG_CONTENT overrides the runtime config with the same values
       - name: Run agent
         id: run-agent
         continue-on-error: true
@@ -133,7 +139,9 @@ jobs:
           use_github_token: true
           prompt: ${{ inputs.prompt }}
 
-      # [RETRY] Echec anomalyco → re-dispatch via retry-dispatch.mjs
+      # [RETRY] anomalyco failure → re-dispatch via retry-dispatch.mjs
+      # Uses dispatchWorkflow() (GitHub JSON API) — same mechanism as first dispatch
+      # → safe for any content (code, special chars, quotes, newlines)
       - name: Retry on agent failure
         if: steps.run-agent.outcome == 'failure'
         env:
@@ -149,13 +157,17 @@ jobs:
           PROMPT: ${{ inputs.prompt }}
         run: node src/retry-dispatch.mjs
 
-      # [DÉTERMINISTE] Push final
+      # [DETERMINISTIC] Final push
+      # Skipped if the agent failed (retry takes over)
       - name: Push branch
         if: steps.run-agent.outcome == 'success'
         run: |
           git push origin ${{ inputs.branch }}
 
-      # [DÉTERMINISTE] FAN-OUT si l'agent a produit un manifest
+      # [DETERMINISTIC] FAN-OUT if the agent produced a manifest
+      # Only for free invocations (branch_base empty = @po, @dev, etc.)
+      # FAN-OUT tasks (branch_base non-empty) must not re-trigger FAN-OUT
+      # as orchestrate.mjs handles it via Workflow Gather — avoids double launchReadyTasks
       - name: Launch FAN-OUT if manifest present
         if: steps.run-agent.outcome == 'success' && inputs.branch_base == ''
         env:
@@ -164,13 +176,13 @@ jobs:
           REPO: ${{ github.repository }}
         run: |
           if [ -f ".oneticket/tasks/issue-${{ inputs.issue_number }}/manifest.json" ]; then
-            echo "Manifest détecté — lancement FAN-OUT"
+            echo "Manifest detected — launching FAN-OUT"
             node src/launch-fanout.mjs
           else
-            echo "Pas de manifest — rien à faire"
+            echo "No manifest — nothing to do"
           fi
 
-  # [FAILURE NOTIFICATION] Posté sur l'issue si échec définitif
+  # [FAILURE NOTIFICATION] Posted on the issue on definitive failure
   notify-failure:
     needs: execute
     if: failure()
@@ -184,7 +196,7 @@ jobs:
             --repo ${{ github.repository }} \
             --body "## Agent Execute failure
 
-          Le workflow d'exécution a échoué (retry_count=${{ inputs.retry_count }}/${{ inputs.retry_max }}).
+          The execution workflow failed (retry_count=${{ inputs.retry_count }}/${{ inputs.retry_max }}).
 
-          **Branche :** \`${{ inputs.branch }}\`
-          **Run Actions :** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          **Branch:** \`${{ inputs.branch }}\`
+          **Actions run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

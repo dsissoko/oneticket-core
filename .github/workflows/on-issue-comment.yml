@@ -1,26 +1,26 @@
 name: Comment Dispatcher
 
-# [DÉTERMINISTE] Point d'entrée des invocations agents via commentaires GitHub.
+# [DETERMINISTIC] Entry point for agent invocations via GitHub comments.
 #
-# Trigger : issue_comment (commentaire sur une issue, pas une PR)
+# Trigger: issue_comment (comment on an issue, not a PR)
 #
-# Responsabilités de ce workflow :
-#   1. Filtrer : commentaire @<role> sur une issue (pas PR)
-#   2. Construire CONTEXT_BLOCK — contexte spécifique à ce trigger
-#   3. Déléguer à agent-dispatch.mjs avec le contrat d'interface minimal
+# Workflow responsibilities:
+#   1. Filter: @<role> comment on an issue (not a PR)
+#   2. Build CONTEXT_BLOCK — context specific to this trigger
+#   3. Delegate to agent-dispatch.mjs with the minimal interface contract
 #
-# Contrat d'interface vers agent-dispatch.mjs :
-#   COMMENT_BODY   — texte du commentaire (contient @<role> + demande)
-#   ISSUE_NUMBER   — numéro d'issue
+# Interface contract toward agent-dispatch.mjs:
+#   COMMENT_BODY   — comment text (contains @<role> + request)
+#   ISSUE_NUMBER   — issue number
 #   REPO           — owner/repo
-#   CONTEXT_BLOCK  — contexte construit par ce workflow (spécifique issue_comment)
+#   CONTEXT_BLOCK  — context built by this workflow (specific to issue_comment)
 #
-# Extensibilité : pour un nouveau trigger (PR comment, label, etc.),
-# créer un nouveau workflow qui expose le même contrat + son propre CONTEXT_BLOCK.
-# agent-dispatch.mjs ne change pas.
+# Extensibility: to add a new trigger (PR comment, label, etc.),
+# create a new workflow that exposes the same contract + its own CONTEXT_BLOCK.
+# agent-dispatch.mjs does not change.
 #
-# [IDEMPOTENCE] Sérialise les déclenchements sur la même issue
-# Les issues différentes restent parallèles entre elles
+# [IDEMPOTENCE] Serializes dispatches on the same issue
+# Different issues remain parallel
 
 on:
   issue_comment:
@@ -32,7 +32,7 @@ concurrency:
 
 jobs:
   dispatch:
-    # Filtre : commentaire @<role> sur une issue (pas PR)
+    # Filter: @<role> comment on an issue (not a PR)
     if: "github.event.issue.pull_request == null && startsWith(github.event.comment.body, '@')"
     runs-on: ubuntu-latest
     permissions:
@@ -55,20 +55,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Construit le CONTEXT_BLOCK spécifique au trigger issue_comment.
-      # Ce bloc sera inséré tel quel dans le prompt système par agent-dispatch.mjs.
-      # Chaque trigger est libre de construire son propre format.
+      # Builds the CONTEXT_BLOCK specific to the issue_comment trigger.
+      # This block will be inserted as-is into the system prompt by agent-dispatch.mjs.
+      # Each trigger is free to build its own format.
       - name: Build context block
         id: context
         run: |
           CONTEXT=$(cat <<'CONTEXT_EOF'
-          ## Contexte de l'issue #${{ github.event.issue.number }}
-          **Titre :** ${{ github.event.issue.title }}
+          ## Context for issue #${{ github.event.issue.number }}
+          **Title:** ${{ github.event.issue.title }}
 
           ${{ github.event.issue.body }}
           CONTEXT_EOF
           )
-          # Encode en base64 pour éviter les problèmes de caractères spéciaux
+          # Base64-encode to avoid special character issues
           echo "block=$(echo "$CONTEXT" | base64 -w 0)" >> $GITHUB_OUTPUT
 
       - name: Dispatch agent
@@ -79,11 +79,11 @@ jobs:
           REPO: ${{ github.repository }}
           CONTEXT_BLOCK: ${{ steps.context.outputs.block }}
         run: |
-          # Décoder le CONTEXT_BLOCK avant de passer à agent-dispatch.mjs
+          # Decode CONTEXT_BLOCK before passing to agent-dispatch.mjs
           export CONTEXT_BLOCK=$(echo "$CONTEXT_BLOCK" | base64 -d)
           node src/agent-dispatch.mjs
 
-  # [FAILURE NOTIFICATION] Posté sur l'issue si le dispatch échoue
+  # [FAILURE NOTIFICATION] Posted on the issue if dispatch fails
   notify-failure:
     needs: dispatch
     if: failure()
@@ -97,8 +97,8 @@ jobs:
             --repo ${{ github.repository }} \
             --body "## Dispatch failure
 
-          Le workflow de dispatch a échoué lors du traitement de votre commande.
+          The dispatch workflow failed while processing your command.
 
-          **Run Actions :** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          **Actions run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
-          > Vérifier les logs du run pour identifier la cause."
+          > Check the run logs to identify the cause."

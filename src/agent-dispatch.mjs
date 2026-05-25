@@ -1,24 +1,24 @@
 /**
  * agent-dispatch.mjs
  *
- * [DÉTERMINISTE] Traite les invocations agents depuis les triggers GitHub.
- * Point d'entrée unique pour tout déclenchement agent.
+ * [DETERMINISTIC] Processes agent invocations from GitHub triggers.
+ * Single entry point for all agent dispatches.
  *
- * Contrat d'interface — variables d'environnement obligatoires :
- *   COMMENT_BODY   — texte du commentaire contenant @<role> + demande
- *   ISSUE_NUMBER   — numéro d'issue GitHub (pour branche feature/issue-N)
+ * Interface contract — required environment variables:
+ *   COMMENT_BODY   — comment text containing @<role> + request
+ *   ISSUE_NUMBER   — GitHub issue number (for feature/issue-N branch)
  *   REPO           — owner/repo
- *   GITHUB_TOKEN   — PAT GitHub
+ *   GITHUB_TOKEN   — GitHub PAT
  *
- * Variable optionnelle fournie par chaque trigger :
- *   CONTEXT_BLOCK  — bloc texte libre construit par le workflow YAML du trigger
- *                    (contexte issue, PR diff, historique, etc.)
- *                    Inséré tel quel dans le prompt système.
- *                    Chaque trigger est autonome pour construire ce bloc.
+ * Optional variable provided by each trigger:
+ *   CONTEXT_BLOCK  — free-form text block built by the trigger YAML workflow
+ *                    (issue context, PR diff, history, etc.)
+ *                    Inserted as-is into the system prompt.
+ *                    Each trigger is autonomous in building this block.
  *
- * Extensibilité : pour ajouter un nouveau trigger, créer un nouveau workflow
- * YAML qui expose ces variables + construit son propre CONTEXT_BLOCK.
- * Ce fichier ne change pas.
+ * Extensibility: to add a new trigger, create a new YAML workflow
+ * that exposes these variables + builds its own CONTEXT_BLOCK.
+ * This file does not change.
  */
 
 import fs from 'fs';
@@ -31,70 +31,69 @@ import { AGENTS_DIR, AGENT_EXT } from './constants.mjs';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // ---------------------------------------------------------------------------
-// Parsing commentaire — zone commune
+// Comment parsing — shared zone
 // ---------------------------------------------------------------------------
 
 /**
- * Parse le commentaire pour extraire role et demande.
- * Premier @<role> trouvé → role. Reste du commentaire → demande.
+ * Parses the comment to extract role and request.
+ * First @<role> found → role. Rest of comment → request.
  *
  * @returns {{ role: string, demande: string } | null}
  */
 function parseComment(commentBody) {
   const match = commentBody.match(/@([a-zA-Z][a-zA-Z0-9_-]*)/);
   if (!match) {
-    console.log('[agent-dispatch] Aucun @role trouvé dans le commentaire — sortie sans action.');
+    console.log('[agent-dispatch] No @role found in comment — exiting without action.');
     return null;
   }
   const role    = match[1].toLowerCase();
   const demande = commentBody.replace(match[0], '').trim();
-  console.log(`[agent-dispatch] role="${role}", demande="${demande.slice(0, 80)}..."`);
+  console.log(`[agent-dispatch] role="${role}", request="${demande.slice(0, 80)}..."`);
   return { role, demande };
 }
 
 // ---------------------------------------------------------------------------
-// Chargement profil
+// Profile loading
 // ---------------------------------------------------------------------------
 
 /**
- * Charge .oneticket/agents/<role>.agent.md.
- * Retourne le contenu brut ou chaîne vide si introuvable.
+ * Loads .oneticket/agents/<role>.agent.md.
+ * Throws with an explicit message if not found.
  */
 function loadProfile(role) {
   const profilePath = path.join(__dirname, '..', AGENTS_DIR, `${role}${AGENT_EXT}`);
   if (!fs.existsSync(profilePath)) {
     throw new Error(
-      `Aucun profil agent pour "@${role}" : ${profilePath}
-` +
-      `Créer ${AGENTS_DIR}/${role}${AGENT_EXT} pour activer cet agent.`
+      `No agent profile for "@${role}": ${profilePath}\n` +
+      `Create ${AGENTS_DIR}/${role}${AGENT_EXT} to enable this agent.`
     );
   }
   return fs.readFileSync(profilePath, 'utf8');
 }
 
 // ---------------------------------------------------------------------------
-// Construction du prompt système
+// System prompt construction
 // ---------------------------------------------------------------------------
 
 /**
- * Construit le prompt système injecté dans Agent Execute.
+ * Builds the system prompt injected into Agent Execute.
  *
- * Structure :
- *   [Tronc commun]
- *     - git checkout (mécanisme switched=true anomalyco)
- *     - Profil agent
+ * Structure:
+ *   [Common trunk]
+ *     - git checkout (anomalyco switched=true mechanism)
+ *     - Agent profile
  *     - Language + autonomous_mode
- *     - Demande
- *   [Contexte trigger]
- *     - CONTEXT_BLOCK tel quel (construit par le workflow YAML du trigger)
+ *     - Request
+ *   [Trigger context]
+ *     - CONTEXT_BLOCK as-is (built by the trigger YAML workflow)
  *
- * NOTE : git checkout en tête → anomalyco détecte switched=true →
- * désactive push automatique et création PR.
+ * NOTE: git checkout at the top → anomalyco detects switched=true →
+ * disables automatic push and PR creation.
  */
 function buildPrompt({ role, demande, branch, config, profile, contextBlock }) {
   const lines = [];
 
-  // Tronc commun — obligatoire quel que soit le trigger
+  // Common trunk — required regardless of trigger
   lines.push(`FIRST ACTION - no exception: run bash command: git checkout ${branch}.`);
   lines.push('');
 
@@ -113,15 +112,15 @@ function buildPrompt({ role, demande, branch, config, profile, contextBlock }) {
   lines.push(`autonomous_mode: ${config.autonomous_mode}`);
   lines.push('');
 
-  lines.push(`## Branche de travail`);
+  lines.push(`## Working branch`);
   lines.push(branch);
   lines.push('');
 
-  lines.push(`## Demande`);
+  lines.push(`## Request`);
   lines.push(demande || `@${role}`);
   lines.push('');
 
-  // Contexte trigger — spécifique, construit par le workflow YAML
+  // Trigger context — specific, built by the YAML workflow
   if (contextBlock) {
     lines.push(contextBlock);
   }
@@ -140,34 +139,34 @@ async function main() {
   const ghToken      = process.env.GITHUB_TOKEN;
   const contextBlock = process.env.CONTEXT_BLOCK || '';
 
-  if (!issueNumber) throw new Error('ISSUE_NUMBER manquant');
-  if (!repo)        throw new Error('REPO manquant');
+  if (!issueNumber) throw new Error('ISSUE_NUMBER missing');
+  if (!repo)        throw new Error('REPO missing');
 
-  // --- 1. Parser le commentaire — zone commune -------------------------
+  // --- 1. Parse comment — shared zone ----------------------------------
   const parsed = parseComment(commentBody);
   if (!parsed) return;
 
   const { role, demande } = parsed;
   const featureBranch = `feature/issue-${issueNumber}`;
 
-  // --- 2. Charger config + profil --------------------------------------
+  // --- 2. Load config + profile ----------------------------------------
   const config  = loadConfig();
   const profile = loadProfile(role);
 
-  // --- 3. Setup git + créer la branche feature si elle n'existe pas ----
+  // --- 3. Git setup + create feature branch if it doesn't exist --------
   setupGit('agent-dispatch', config, repo, ghToken);
 
   const remoteBranches = runCapture('agent-dispatch', 'git branch -r');
   if (remoteBranches.includes(`origin/${featureBranch}`)) {
-    console.log(`[agent-dispatch] Branche ${featureBranch} existe déjà.`);
+    console.log(`[agent-dispatch] Branch ${featureBranch} already exists.`);
   } else {
-    console.log(`[agent-dispatch] Création de la branche ${featureBranch}...`);
+    console.log(`[agent-dispatch] Creating branch ${featureBranch}...`);
     run('agent-dispatch', `git checkout -b ${featureBranch}`);
     runWithRetry('agent-dispatch', `git push origin ${featureBranch}`);
     run('agent-dispatch', `git checkout -`);
   }
 
-  // --- 4. Construire le prompt système ---------------------------------
+  // --- 4. Build system prompt ------------------------------------------
   const prompt = buildPrompt({
     role,
     demande,
@@ -176,10 +175,10 @@ async function main() {
     profile,
     contextBlock,
   });
-  console.log(`[agent-dispatch] Prompt construit (${prompt.length} caractères).`);
+  console.log(`[agent-dispatch] Prompt built (${prompt.length} chars).`);
 
-  // --- 5. Dispatcher Agent Execute -------------------------------------
-  console.log(`[agent-dispatch] Dispatch Agent Execute — role=${role}, issue #${issueNumber}, branche ${featureBranch}`);
+  // --- 5. Dispatch Agent Execute ---------------------------------------
+  console.log(`[agent-dispatch] Dispatching Agent Execute — role=${role}, issue #${issueNumber}, branch ${featureBranch}`);
   await dispatchWorkflow('agent-execute.yml', {
     issue_number: String(issueNumber),
     branch:       featureBranch,
@@ -189,10 +188,10 @@ async function main() {
     retry_max:    String(config.retry_max),
   }, repo, ghToken);
 
-  console.log('[agent-dispatch] Dispatch terminé.');
+  console.log('[agent-dispatch] Dispatch complete.');
 }
 
 main().catch(err => {
-  console.error('[agent-dispatch] ERREUR :', err.message);
+  console.error('[agent-dispatch] ERROR:', err.message);
   process.exit(1);
 });

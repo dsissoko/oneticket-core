@@ -1,27 +1,27 @@
 /**
  * orchestrate.mjs
  *
- * [GATHER] Collecte les signaux de fin de tâche et décide de la suite.
- * Déclenché par chaque push sur une branche task/*.
- * 100% déterministe — aucun LLM impliqué.
+ * [GATHER] Collects task completion signals and decides what to do next.
+ * Triggered by each push on a task/* branch.
+ * 100% deterministic — no LLM involved.
  *
- * Responsabilités :
- *   1. Identifier l'issue et la tâche depuis le nom de la branche poussée
- *   2. Checkout de feature/issue-<N> et lecture du manifest.json
- *   3. [IDEMPOTENCE] Si tâche déjà done → sortie propre
- *   4. Merger la branche task/* dans feature/issue-<N>
- *      → En cas d'échec : log manifest, label "merge error", commentaire issue, exit 1
- *   5. Marquer la tâche comme "done" dans le manifest
- *   6. [ROUTING DÉTERMINISTE] Décider de la suite :
- *      → tâches prêtes  : [FAN-OUT] via agent-launcher
- *      → toutes done    : créer la PR finale
- *      → en attente     : rien, un prochain push déclenchera ce workflow
+ * Responsibilities:
+ *   1. Identify the issue and task from the pushed branch name
+ *   2. Checkout feature/issue-<N> and read manifest.json
+ *   3. [IDEMPOTENCE] If task already done → clean exit
+ *   4. Merge task/* branch into feature/issue-<N>
+ *      → On failure: log manifest, label "merge error", comment on issue, exit 1
+ *   5. Mark the task as "done" in the manifest
+ *   6. [DETERMINISTIC ROUTING] Decide what comes next:
+ *      → ready tasks   : [FAN-OUT] via agent-launcher
+ *      → all done      : create final PR
+ *      → waiting       : nothing, a future push will trigger this workflow
  *
- * [LOCK OPTIMISTE] Pas de concurrency GitHub Actions — les conflits d'accès au manifest
- * sont gérés ici avec retry sur push (backoff exponentiel + jitter).
+ * [OPTIMISTIC LOCK] No GitHub Actions concurrency — manifest access conflicts
+ * are handled here with push retry (exponential backoff + jitter).
  *
- * Variables d'environnement attendues :
- *   GITHUB_TOKEN, PUSHED_BRANCH (ex: task/issue-42-B), REPO
+ * Expected environment variables:
+ *   GITHUB_TOKEN, PUSHED_BRANCH (e.g. task/issue-42-B), REPO
  */
 
 import path from 'path';
@@ -38,26 +38,26 @@ import {
 import { TASKS_DIR, MANIFEST_FILE } from './constants.mjs';
 
 // ---------------------------------------------------------------------------
-// Helpers locaux
+// Local helpers
 // ---------------------------------------------------------------------------
 
 /**
- * Parse le nom de la branche task/issue-<N>-<ID>.
- * Retourne { issueNumber, taskId } ou throw si format invalide.
+ * Parses the task/issue-<N>-<ID> branch name.
+ * Returns { issueNumber, taskId } or throws if format is invalid.
  */
 function parseBranchName(branch) {
   const match = branch.match(/^task\/issue-(\d+)-([A-Za-z0-9]+)$/);
   if (!match) {
     throw new Error(
-      `Nom de branche non reconnu : "${branch}". ` +
-      'Format attendu : task/issue-<N>-<ID>'
+      `Unrecognized branch name: "${branch}". ` +
+      'Expected format: task/issue-<N>-<ID>'
     );
   }
   return { issueNumber: match[1], taskId: match[2] };
 }
 
 /**
- * Retourne les tâches prêtes à être lancées (pending + toutes dépendances done).
+ * Returns tasks ready to be launched (pending + all dependencies done).
  */
 function getReadyTasks(manifest) {
   return manifest.tasks.filter(
@@ -66,27 +66,27 @@ function getReadyTasks(manifest) {
 }
 
 /**
- * [LOCK OPTIMISTE] Merge la branche task/*, marque la tâche done, push.
- * Le merge EST dans la boucle de retry — en cas de push non fast-forward,
- * on repart de l'état origin et on re-merge pour ne jamais perdre les fichiers.
+ * [OPTIMISTIC LOCK] Merges the task/* branch, marks the task done, pushes.
+ * The merge IS inside the retry loop — on non-fast-forward push,
+ * we reset to origin state and re-merge to never lose files.
  *
- * Stratégie de retry : backoff exponentiel avec jitter
- *   délai = 2^attempt * 1000ms + jitter aléatoire [0, 500ms]
- *   → réduit la contention quand beaucoup de runners retentent simultanément
+ * Retry strategy: exponential backoff with jitter
+ *   delay = 2^attempt * 1000ms + random jitter [0, 500ms]
+ *   → reduces contention when many runners retry simultaneously
  *
- * Retourne { manifest, mergeError } — mergeError non-null si merge conflict.
+ * Returns { manifest, mergeError } — mergeError non-null on merge conflict.
  */
 async function markDoneAndPush(manifest, taskId, pushedBranch, featureBranch, maxAttempts = 5) {
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     const task = manifest.tasks.find(t => t.id === taskId);
-    if (!task) throw new Error(`Tâche "${taskId}" introuvable dans le manifest.`);
+    if (!task) throw new Error(`Task "${taskId}" not found in manifest.`);
 
     if (task.status === 'done') {
-      console.log(`[orchestrate] IDEMPOTENCE (retry ${attempt}) : tâche ${taskId} déjà done.`);
+      console.log(`[orchestrate] IDEMPOTENCE (retry ${attempt}): task ${taskId} already done.`);
       return { manifest, mergeError: null };
     }
 
-    console.log(`[orchestrate] Merge de ${pushedBranch} dans ${featureBranch} (tentative ${attempt})`);
+    console.log(`[orchestrate] Merging ${pushedBranch} into ${featureBranch} (attempt ${attempt})`);
     try {
       run('orchestrate', `git merge --no-ff origin/${pushedBranch} -m "chore: merge task ${taskId} into ${featureBranch}"`);
     } catch (mergeError) {
@@ -108,8 +108,8 @@ async function markDoneAndPush(manifest, taskId, pushedBranch, featureBranch, ma
 
       const backoff = Math.pow(2, attempt) * 1000 + Math.floor(Math.random() * 500);
       console.log(
-        `[orchestrate] Push non fast-forward (tentative ${attempt}/${maxAttempts}) — ` +
-        `backoff ${backoff}ms avant re-tentative...`
+        `[orchestrate] Non-fast-forward push (attempt ${attempt}/${maxAttempts}) — ` +
+        `backoff ${backoff}ms before retry...`
       );
       await new Promise(r => setTimeout(r, backoff));
 
@@ -123,7 +123,7 @@ async function markDoneAndPush(manifest, taskId, pushedBranch, featureBranch, ma
 }
 
 // ---------------------------------------------------------------------------
-// Helpers GitHub API
+// GitHub API helpers
 // ---------------------------------------------------------------------------
 
 async function createFinalPR(manifest, repo, token, config) {
@@ -132,7 +132,7 @@ async function createFinalPR(manifest, repo, token, config) {
   const body  = [
     `Closes #${issue}`,
     '',
-    '## Tâches complétées',
+    '## Completed tasks',
     ...manifest.tasks.map(t => `- [x] ${t.id} — \`${t.file}\``),
   ].join('\n');
 
@@ -149,8 +149,8 @@ async function createFinalPR(manifest, repo, token, config) {
   });
 
   const data = await res.json();
-  if (!res.ok) throw new Error(`Échec création PR : ${JSON.stringify(data)}`);
-  console.log(`[orchestrate] PR finale créée : ${data.html_url}`);
+  if (!res.ok) throw new Error(`Failed to create PR: ${JSON.stringify(data)}`);
+  console.log(`[orchestrate] Final PR created: ${data.html_url}`);
   return data;
 }
 
@@ -178,20 +178,20 @@ async function ensureAndApplyLabel(issueNumber, repo, token) {
       body: JSON.stringify({ labels: [labelName] }),
     });
   } catch (err) {
-    console.warn(`[orchestrate] Impossible d'appliquer le label sur #${issueNumber} : ${err.message}`);
+    console.warn(`[orchestrate] Could not apply label on #${issueNumber}: ${err.message}`);
   }
 }
 
 async function postMergeFailureComment(issueNumber, taskId, branch, featureBranch, repo, token) {
   try {
     const body = [
-      `## Merge failure — intervention requise`,
+      `## Merge failure — manual intervention required`,
       '',
-      `La branche \`${branch}\` (tâche **${taskId}**) n'a pas pu être mergée dans \`${featureBranch}\`.`,
+      `Branch \`${branch}\` (task **${taskId}**) could not be merged into \`${featureBranch}\`.`,
       '',
-      '**Action requise :** résoudre le conflit manuellement et relancer la tâche.',
+      '**Required action:** resolve the conflict manually and re-trigger the task.',
       '',
-      `> Statut mis à jour dans \`manifest.json\` : \`merge-failed\``,
+      `> Status updated in \`manifest.json\`: \`merge-failed\``,
     ].join('\n');
 
     await fetch(`https://api.github.com/repos/${repo}/issues/${issueNumber}/comments`, {
@@ -200,7 +200,7 @@ async function postMergeFailureComment(issueNumber, taskId, branch, featureBranc
       body: JSON.stringify({ body }),
     });
   } catch (err) {
-    console.warn(`[orchestrate] Impossible de poster le commentaire merge-failure sur #${issueNumber} : ${err.message}`);
+    console.warn(`[orchestrate] Could not post merge-failure comment on #${issueNumber}: ${err.message}`);
   }
 }
 
@@ -211,12 +211,12 @@ async function deleteRemoteBranch(branch, repo, token) {
       { method: 'DELETE', headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' } }
     );
     if (res.ok || res.status === 422) {
-      console.log(`[orchestrate] Branche ${branch} supprimée.`);
+      console.log(`[orchestrate] Branch ${branch} deleted.`);
     } else {
-      console.warn(`[orchestrate] Impossible de supprimer ${branch} : HTTP ${res.status}`);
+      console.warn(`[orchestrate] Could not delete ${branch}: HTTP ${res.status}`);
     }
   } catch (err) {
-    console.warn(`[orchestrate] Erreur réseau lors de la suppression de ${branch} : ${err.message}`);
+    console.warn(`[orchestrate] Network error while deleting ${branch}: ${err.message}`);
   }
 }
 
@@ -229,27 +229,27 @@ async function main() {
   const repo         = process.env.REPO;
   const ghToken      = process.env.GITHUB_TOKEN;
 
-  if (!pushedBranch) throw new Error('PUSHED_BRANCH manquant');
-  if (!repo)         throw new Error('REPO manquant');
+  if (!pushedBranch) throw new Error('PUSHED_BRANCH missing');
+  if (!repo)         throw new Error('REPO missing');
 
   const { issueNumber, taskId } = parseBranchName(pushedBranch);
   const featureBranch = `feature/issue-${issueNumber}`;
 
-  console.log(`[orchestrate] Signal de fin reçu : tâche ${taskId} (issue #${issueNumber})`);
+  console.log(`[orchestrate] Completion signal received: task ${taskId} (issue #${issueNumber})`);
 
   const config = loadConfig();
 
-  // Setup git + fetch avec retry réseau
+  // Git setup + fetch with network retry
   setupGit('orchestrate', config, repo, ghToken);
   run('orchestrate', `git checkout -B ${featureBranch} origin/${featureBranch}`);
 
   let manifest = readManifest(issueNumber);
 
   const task = manifest.tasks.find(t => t.id === taskId);
-  if (!task) throw new Error(`Tâche "${taskId}" introuvable dans le manifest.`);
+  if (!task) throw new Error(`Task "${taskId}" not found in manifest.`);
 
   if (task.status === 'done' || task.status === 'merge-failed') {
-    console.log(`[orchestrate] IDEMPOTENCE : tâche ${taskId} déjà en état "${task.status}" — sortie sans modification.`);
+    console.log(`[orchestrate] IDEMPOTENCE: task ${taskId} already in state "${task.status}" — exiting without changes.`);
     return;
   }
 
@@ -259,7 +259,7 @@ async function main() {
   manifest = updatedManifest;
 
   if (mergeError) {
-    console.error(`[orchestrate] MERGE FAILURE : ${mergeError.message}`);
+    console.error(`[orchestrate] MERGE FAILURE: ${mergeError.message}`);
 
     task.status = 'merge-failed';
     const manifestGitPath = path.join(TASKS_DIR, `issue-${issueNumber}`, MANIFEST_FILE);
@@ -271,31 +271,31 @@ async function main() {
     await ensureAndApplyLabel(issueNumber, repo, ghToken);
     await postMergeFailureComment(issueNumber, taskId, pushedBranch, featureBranch, repo, ghToken);
 
-    console.error(`[orchestrate] Workflow arrêté — intervention humaine requise.`);
+    console.error(`[orchestrate] Workflow stopped — human intervention required.`);
     process.exit(1);
   }
 
-  console.log(`[orchestrate] Tâche ${taskId} marquée done et mergée dans ${featureBranch}.`);
+  console.log(`[orchestrate] Task ${taskId} marked done and merged into ${featureBranch}.`);
   await deleteRemoteBranch(pushedBranch, repo, ghToken);
 
   const allDone    = manifest.tasks.every(t => t.status === 'done');
   const readyTasks = getReadyTasks(manifest);
 
   if (allDone) {
-    console.log('[orchestrate] Toutes les tâches sont done. Création de la PR finale.');
+    console.log('[orchestrate] All tasks done. Creating final PR.');
     await createFinalPR(manifest, repo, ghToken, config);
   } else if (readyTasks.length > 0) {
-    console.log(`[orchestrate] [FAN-IN → FAN-OUT] ${readyTasks.length} tâche(s) débloquée(s) : ${readyTasks.map(t => t.id).join(', ')}`);
+    console.log(`[orchestrate] [FAN-IN → FAN-OUT] ${readyTasks.length} unblocked task(s): ${readyTasks.map(t => t.id).join(', ')}`);
     await launchReadyTasks(manifest, repo, ghToken);
   } else {
     const inProgress = manifest.tasks.filter(t => t.status === 'in_progress');
-    console.log(`[orchestrate] En attente des signaux de fin pour : ${inProgress.map(t => t.id).join(', ')}`);
+    console.log(`[orchestrate] Waiting for completion signals from: ${inProgress.map(t => t.id).join(', ')}`);
   }
 
-  console.log('[orchestrate] Orchestration terminée.');
+  console.log('[orchestrate] Orchestration complete.');
 }
 
 main().catch(err => {
-  console.error('[orchestrate] ERREUR :', err.message);
+  console.error('[orchestrate] ERROR:', err.message);
   process.exit(1);
 });

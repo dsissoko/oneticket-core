@@ -1,50 +1,50 @@
-# OneTicket Core — Configuration centrale
+# OneTicket Core — Central configuration
 #
-# Source de vérité unique pour tous les paramètres du framework.
+# Single source of truth for all framework parameters.
 #
-# Deux usages :
-#   1. Lue par les scripts JS (src/config.mjs) pour les workflows déterministes
-#   2. Section agent_config.<cli> générée à la volée en sandbox CI via
-#      src/generate-config.mjs → injectée dans OPENCODE_CONFIG_CONTENT
+# Two usages:
+#   1. Read by JS scripts (src/config.mjs) for deterministic workflows
+#   2. agent_config.<cli> section generated at runtime in CI sandbox via
+#      src/generate-config.mjs → injected into OPENCODE_CONFIG_CONTENT
 #
-# La config locale du développeur (opencode.json) n'est PAS gérée ici —
-# chaque développeur maintient sa propre config locale non commitée.
+# The developer's local config (opencode.json) is NOT managed here —
+# each developer maintains their own uncommitted local config.
 
 # ---------------------------------------------------------------------------
-# Paramètres framework
+# Framework parameters
 # ---------------------------------------------------------------------------
 
 language: fr
 autonomous_mode: true
 
-# CLI utilisé en sandbox CI — détermine quelle section agent_config utiliser
+# CLI used in CI sandbox — determines which agent_config section to use
 cli: opencode
 
-# Nombre maximum de retries sur échec anomalyco (Agent Execute)
+# Maximum number of retries on anomalyco failure (Agent Execute)
 retry_max: 3
 
-# Nombre maximum de retries sur push non fast-forward (orchestrate — lock optimiste git)
-# Augmenté pour supporter des graphes larges avec beaucoup de tâches parallèles
+# Maximum number of retries on non-fast-forward push (orchestrate — optimistic git lock)
+# Increased to support large graphs with many parallel tasks
 orchestrate_retry_max: 5
 
-# Identité git du bot oneticket en sandbox CI
-# Note : distinct des profils agents (APM) — propre au framework
+# Git identity for the oneticket bot in CI sandbox
+# Note: distinct from agent profiles (APM) — specific to the framework
 oneticket_git_user_name: oneticket-bot
 oneticket_git_user_email: oneticket-bot@users.noreply.github.com
 
-# Branche cible des PRs finales
+# Target branch for final PRs
 pr_base: main
 
 # ---------------------------------------------------------------------------
-# Configuration des agents CI — générée à la volée via src/generate-config.mjs
-# La clé active est déterminée par le champ `cli` ci-dessus.
-# Le modèle utilisé par anomalyco est déclaré ici (section agent_config.<cli>.model)
-# et non dans les profils agents (.agent.md) qui sont réservés à APM.
+# CI agent configuration — generated at runtime via src/generate-config.mjs
+# The active key is determined by the `cli` field above.
+# The model used by anomalyco is declared here (agent_config.<cli>.model)
+# and not in agent profiles (.agent.md) which are reserved for APM.
 # ---------------------------------------------------------------------------
 
 agent_config:
-  # Config injectée via OPENCODE_CONFIG_CONTENT quand cli: opencode
-  # Format : opencode.json schema (https://opencode.ai/config.json)
+  # Config injected via OPENCODE_CONFIG_CONTENT when cli: opencode
+  # Format: opencode.json schema (https://opencode.ai/config.json)
   opencode:
     $schema: "https://opencode.ai/config.json"
     model: opencode/minimax-m2.5
@@ -60,7 +60,7 @@ agent_config:
           timeout: 900000
           chunkTimeout: 30000
 
-  # Prévu pour le futur :
+  # Planned for future use:
   # claude:
   #   $schema: "https://opencode.ai/config.json"
   #   model: anthropic/claude-sonnet-4-5

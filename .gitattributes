@@ -1,2 +1,2 @@
-# workflow.md est append-only — merge=union évite les conflits sur ajouts parallèles
+# workflow.md is append-only — merge=union prevents conflicts on parallel appends
 .oneticket/tasks/issue-*/workflow.md merge=union

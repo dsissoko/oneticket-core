@@ -1,14 +1,14 @@
 /**
  * agent-launcher.mjs
  *
- * [FAN-OUT] Déclenche en parallèle toutes les tâches prêtes.
- * 100% déterministe — aucun LLM impliqué.
+ * [FAN-OUT] Triggers all ready tasks in parallel.
+ * 100% deterministic — no LLM involved.
  *
- * Responsabilités :
- *   1. Identifier les tâches prêtes (pending + toutes dépendances done)
- *   2. [IDEMPOTENCE] Marquer toutes les tâches prêtes "in_progress" AVANT de déclencher
- *   3. Commiter + pusher le manifest mis à jour
- *   4. [FAN-OUT] Construire le prompt de chaque tâche + déclencher agent-execute.yml
+ * Responsibilities:
+ *   1. Identify ready tasks (pending + all dependencies done)
+ *   2. [IDEMPOTENCE] Mark all ready tasks "in_progress" BEFORE dispatching
+ *   3. Commit + push the updated manifest
+ *   4. [FAN-OUT] Build each task prompt + trigger agent-execute.yml
  */
 
 import path from 'path';
@@ -21,11 +21,11 @@ import { TASKS_DIR, MANIFEST_FILE } from './constants.mjs';
 // ---------------------------------------------------------------------------
 
 /**
- * Construit le prompt complet pour une tâche bornée.
+ * Builds the full prompt for a bounded task.
  *
- * NOTE : le "git checkout <branch>" en première action est intentionnel —
- * anomalyco détecte le changement de branche (switched=true) et désactive
- * son mécanisme automatique de push et de création de PR.
+ * NOTE: "git checkout <branch>" as the first action is intentional —
+ * anomalyco detects the branch change (switched=true) and disables
+ * its automatic push and PR creation mechanism.
  */
 function buildTaskPrompt(task, manifest) {
   const workflowLog = path.join(TASKS_DIR, `issue-${manifest.issue}`, 'workflow.md');
@@ -40,12 +40,12 @@ function buildTaskPrompt(task, manifest) {
 }
 
 // ---------------------------------------------------------------------------
-// Export principal
+// Main export
 // ---------------------------------------------------------------------------
 
 /**
- * [FAN-OUT] Identifie toutes les tâches prêtes, les marque in_progress,
- * met à jour manifest.json en git, et déclenche un workflow par tâche.
+ * [FAN-OUT] Identifies all ready tasks, marks them in_progress,
+ * updates manifest.json in git, and triggers one workflow per task.
  */
 export async function launchReadyTasks(manifest, repo, token) {
   const readyTasks = manifest.tasks.filter(
@@ -53,12 +53,12 @@ export async function launchReadyTasks(manifest, repo, token) {
   );
 
   if (readyTasks.length === 0) {
-    console.log('[agent-launcher] Aucune tâche prête à lancer.');
+    console.log('[agent-launcher] No ready tasks to launch.');
     return;
   }
 
   console.log(
-    `[agent-launcher] [FAN-OUT] ${readyTasks.length} tâche(s) prête(s) : ${readyTasks.map(t => t.id).join(', ')}`
+    `[agent-launcher] [FAN-OUT] ${readyTasks.length} ready task(s): ${readyTasks.map(t => t.id).join(', ')}`
   );
 
   for (const task of readyTasks) {
@@ -70,17 +70,17 @@ export async function launchReadyTasks(manifest, repo, token) {
   run('agent-launcher', `git add ${manifestGitPath}`);
   run('agent-launcher', `git commit --allow-empty -m "chore: mark tasks ${readyTasks.map(t => t.id).join(', ')} as in_progress"`);
 
-  // [DOUBLE-LANCEMENT] Push optimiste — si non fast-forward, l'autre runner s'en charge
+  // [DOUBLE-LAUNCH] Optimistic push — if non-fast-forward, another runner handles it
   try {
     run('agent-launcher', `git push origin ${manifest.branch_base}`);
   } catch (e) {
-    console.log('[agent-launcher] Push non fast-forward — un autre runner a déjà lancé ces tâches. Abandon.');
+    console.log('[agent-launcher] Non-fast-forward push — another runner already launched these tasks. Aborting.');
     return;
   }
 
   const config = loadConfig();
 
-  // [FAN-OUT] Déclencher un workflow par tâche — continuer si une tâche échoue
+  // [FAN-OUT] Trigger one workflow per task — continue if one task fails
   for (const task of readyTasks) {
     try {
       const prompt = buildTaskPrompt(task, manifest);
@@ -92,9 +92,9 @@ export async function launchReadyTasks(manifest, repo, token) {
         model:        config.model,
         retry_max:    String(config.retry_max),
       }, repo, token);
-      console.log(`[agent-launcher] [FAN-OUT] Workflow déclenché pour tâche ${task.id}.`);
+      console.log(`[agent-launcher] [FAN-OUT] Workflow triggered for task ${task.id}.`);
     } catch (err) {
-      console.error(`[agent-launcher] Échec déclenchement workflow pour tâche ${task.id} : ${err.message}`);
+      console.error(`[agent-launcher] Failed to trigger workflow for task ${task.id}: ${err.message}`);
     }
   }
 }
