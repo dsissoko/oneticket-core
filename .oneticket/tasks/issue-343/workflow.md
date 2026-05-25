@@ -5,3 +5,4 @@
 2026-05-25 23:13 | P | .oneticket/docs/what/epics/epic-4-start-screen/user-stories/us-002-controls-display.md
 2026-05-25 23:13 | H | .oneticket/docs/what/epics/epic-2-brick-system/user-stories/us-003-destruction-effects.md
 2026-05-25 23:13 | O | .oneticket/docs/what/epics/epic-4-start-screen/user-stories/us-001-title-screen.md
+2026-05-25 23:13 | Q | .oneticket/docs/what/epics/epic-4-start-screen/user-stories/us-003-start-game.md
