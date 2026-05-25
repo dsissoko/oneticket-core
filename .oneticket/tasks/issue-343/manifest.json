@@ -132,7 +132,7 @@
       "file": ".oneticket/docs/what/epics/epic-4-start-screen/epic.md",
       "content": "Create epic-4-start-screen/epic.md using template .oneticket/templates/epic.md:\n\n## Goal\nProposer un écran d'accueil engageant et des contrôles intuitifs pour démarrer le jeu.\n\n## Business Value\nCrée la première impression et donne envie de jouer.\n\n## Scope\n- Écran titre avec \"Breakout\"\n- Instructions de contrôle\n- Bouton/démarrage pour lancer\n- Sons et musique d'ambiance (optionnel)\n\n## Related User Stories\n- us-001-title-screen.md\n- us-002-controls-display.md\n- us-003-start-game.md",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "O",
