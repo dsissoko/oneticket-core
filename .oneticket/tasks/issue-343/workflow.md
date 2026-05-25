@@ -3,3 +3,4 @@
 2026-05-25 23:12 | I | .oneticket/docs/what/epics/epic-3-scoring-lives/epic.md
 2026-05-25 23:12 | A | .oneticket/docs/what/epics/epic-1-core-game-mechanics/epic.md
 2026-05-25 23:13 | P | .oneticket/docs/what/epics/epic-4-start-screen/user-stories/us-002-controls-display.md
+2026-05-25 23:13 | H | .oneticket/docs/what/epics/epic-2-brick-system/user-stories/us-003-destruction-effects.md
