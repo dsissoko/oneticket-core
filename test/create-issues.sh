@@ -123,7 +123,7 @@ BODY
 )"
 
   # 3. Poster le commentaire
-  post_comment "$NUM" "@po traite ce manifest"
+  post_comment "$NUM" "@po le body de cette issue contient un manifest JSON. Écris-le tel quel dans .oneticket/tasks/issue-${NUM}/manifest.json et commite avec le message exact : feat: decompose issue #${NUM}"
   echo "Issue #$NUM lancée ($URL)"
   echo ""
   echo "Attendu : manifest écrit tel quel → FAN-OUT → 6 subtask-X.txt → PR."
