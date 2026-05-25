@@ -1,0 +1,54 @@
+{
+  "issue": 289,
+  "branch_base": "feature/issue-289",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-289-A",
+      "file": ".oneticket/tasks/issue-289/subtask-A.txt",
+      "content": "Créer le fichier .oneticket/tasks/issue-289/subtask-A.txt avec le contenu exact : 'Subtask A completed'",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-289-B",
+      "file": ".oneticket/tasks/issue-289/subtask-B.txt",
+      "content": "Créer le fichier .oneticket/tasks/issue-289/subtask-B.txt avec le contenu exact : 'Subtask B completed'",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-289-C",
+      "file": ".oneticket/tasks/issue-289/subtask-C.txt",
+      "content": "Créer le fichier .oneticket/tasks/issue-289/subtask-C.txt avec le contenu exact : 'Subtask C completed'",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-289-D",
+      "file": ".oneticket/tasks/issue-289/subtask-D.txt",
+      "content": "Créer le fichier .oneticket/tasks/issue-289/subtask-D.txt avec le contenu exact : 'Subtask D completed'",
+      "depends_on": ["A", "B"],
+      "status": "pending"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-289-E",
+      "file": ".oneticket/tasks/issue-289/subtask-E.txt",
+      "content": "Créer le fichier .oneticket/tasks/issue-289/subtask-E.txt avec le contenu exact : 'Subtask E completed'",
+      "depends_on": ["D"],
+      "status": "pending"
+    },
+    {
+      "id": "F",
+      "branch": "task/issue-289-F",
+      "file": ".oneticket/tasks/issue-289/subtask-F.txt",
+      "content": "Créer le fichier .oneticket/tasks/issue-289/subtask-F.txt avec le contenu exact : 'Subtask F completed'",
+      "depends_on": ["C"],
+      "status": "pending"
+    }
+  ]
+}
