@@ -46,7 +46,7 @@
       "file": ".oneticket/docs/what/epics/epic-2-brick-system/epic.md",
       "content": "Create epic-2-brick-system/epic.md using template .oneticket/templates/epic.md:\n\n## Goal\nGérer la création, l'organisation et la destruction des briques.\n\n## Business Value\nOffre la progression et la satisfaction de détruire des cibles.\n\n## Scope\n- Grille de briques avec différentes lignes/couleurs\n- Différents types de briques (résistance)\n- Destruction et disparition visuelle\n- Pattern de disposition des briques\n\n## Related User Stories\n- us-001-brick-layout.md\n- us-002-brick-types.md\n- us-003-destruction.md",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "F",
