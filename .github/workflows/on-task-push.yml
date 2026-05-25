@@ -24,6 +24,9 @@ jobs:
   # [PARSE] Extracts the issue number from the pushed branch name
   # e.g. task/issue-42-A → 42
   extract:
+    # Ignore branch creation pushes — only process pushes with new commits from the agent
+    # github.event.created == true means this is a branch creation push (no agent work yet)
+    if: "github.event.created == false"
     runs-on: ubuntu-latest
     outputs:
       issue_number: ${{ steps.parse.outputs.issue_number }}
