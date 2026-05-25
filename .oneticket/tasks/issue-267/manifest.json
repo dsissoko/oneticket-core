@@ -16,7 +16,7 @@
       "file": "output/result-B.txt",
       "content": "Créer le fichier output/result-B.txt avec le contenu exact 'Result B done'",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "C",
