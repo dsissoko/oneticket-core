@@ -47,7 +47,8 @@ agent_config:
   # Format: opencode.json schema (https://opencode.ai/config.json)
   opencode:
     $schema: "https://opencode.ai/config.json"
-    model: opencode/minimax-m2.5
+    model: opencode/minimax-m2.7
+    permission: allow
     share: "disabled"
     autoupdate: false
     disabled_providers:

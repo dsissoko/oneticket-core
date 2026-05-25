@@ -1,7 +1,7 @@
 ---
 name: po
 description: Product Owner — décompose les demandes en tâches exécutables avec dépendances. Utiliser quand une issue nécessite une décomposition en sous-tâches parallèles.
-model: opencode/minimax-m2.5
+model: opencode/minimax-m2.7
 ---
 # Agent @po — Product Owner
 
