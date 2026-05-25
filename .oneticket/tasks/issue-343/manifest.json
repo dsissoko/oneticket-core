@@ -1,0 +1,142 @@
+{
+  "issue": 343,
+  "branch_base": "feature/issue-343",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-343-A",
+      "file": ".oneticket/docs/what/epics/epic-1-core-game-mechanics/epic.md",
+      "content": "Create epic-1-core-game-mechanics/epic.md using template .oneticket/templates/epic.md with these values:\n\n## Goal\nPermettre au joueur de contrôler une raquette pour rediriger une balle et détruire des briques.\n\n## Business Value\nOffre l'expérience de jeu arcade classique avec contrôle précis et satisfaction immédiate.\n\n## Scope\n- Contrôle raquette (clavier/souris)\n- Mouvement de la balle avec physique simple\n- Détection collision balle-raquette\n- Détection collision balle-briques\n- Rebonds sur les murs\n\n## Related User Stories\n- us-001-movement.md\n- us-002-collision.md\n- us-003-paddle-control.md\n\n## Related Slices\nÀ définir après décomposition",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-343-B",
+      "file": ".oneticket/docs/what/epics/epic-1-core-game-mechanics/user-stories/us-001-paddle-movement.md",
+      "content": "Create us-001-paddle-movement.md using template .oneticket/templates/us.md:\n\n## Story\nEn tant que joueur, je veux contrôler la raquette avec le clavier ou la souris, afin de rediriger la balle.\n\n## Expected Behavior\n- La raquette se déplace horizontalement\n- Mouvement fluide et réactif\n- Limité aux bords de l'écran\n\n## Acceptance Criteria\n- Given: Le jeu est en cours\n- When: Le joueur appuie sur gauche/droite ou bouge la souris\n- Then: La raquette se déplace dans la direction correspondante\n- Given: La raquette est au bord de l'écran\n- When: Le joueur tente de dépasser le bord\n- Then: La raquette s'arrête au bord",
+      "depends_on": ["A"],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-343-C",
+      "file": ".oneticket/docs/what/epics/epic-1-core-game-mechanics/user-stories/us-002-ball-physics.md",
+      "content": "Create us-002-ball-physics.md using template .oneticket/templates/us.md:\n\n## Story\nEn tant que joueur, je veux que la balle se déplace de manière prévisible, afin de pouvoir anticiper mes actions.\n\n## Expected Behavior\n- La balle se déplace en ligne droite\n- Vitesse constante\n- Change de direction au rebond\n\n## Acceptance Criteria\n- Given: La balle est en mouvement\n- When: Elle touche un mur\n- Then: Elle rebondit dans la direction opposée\n- Given: Elle touche la raquette\n- Then: Elle rebondit selon l'angle d'impact\n- Given: Elle touche une brique\n- Then: Elle rebondit et la brique est détruite",
+      "depends_on": ["A"],
+      "status": "pending"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-343-D",
+      "file": ".oneticket/docs/what/epics/epic-1-core-game-mechanics/user-stories/us-003-collision-detection.md",
+      "content": "Create us-003-collision-detection.md using template .oneticket/templates/us.md:\n\n## Story\nEn tant que joueur, je veux que les collisions soient détectées précisément, afin que le jeu soit équitable et prévisible.\n\n## Expected Behavior\n- Collision avec les murs, raquette et briques\n- Pas de comportement inattendu (glitch de collision)\n\n## Acceptance Criteria\n- Given: La balle en mouvement\n- When: Elle entre en contact avec un élément\n- Then: Le système détecte la collision\n- Given: Plusieurs collisions simultanées\n- Then: Chaque collision est traitée correctement",
+      "depends_on": ["A"],
+      "status": "pending"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-343-E",
+      "file": ".oneticket/docs/what/epics/epic-2-brick-system/epic.md",
+      "content": "Create epic-2-brick-system/epic.md using template .oneticket/templates/epic.md:\n\n## Goal\nGérer la création, l'organisation et la destruction des briques.\n\n## Business Value\nOffre la progression et la satisfaction de détruire des cibles.\n\n## Scope\n- Grille de briques avec différentes lignes/couleurs\n- Différents types de briques (résistance)\n- Destruction et disparition visuelle\n- Pattern de disposition des briques\n\n## Related User Stories\n- us-001-brick-layout.md\n- us-002-brick-types.md\n- us-003-destruction.md",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "F",
+      "branch": "task/issue-343-F",
+      "file": ".oneticket/docs/what/epics/epic-2-brick-system/user-stories/us-001-brick-layout.md",
+      "content": "Create us-001-brick-layout.md using template .oneticket/templates/us.md:\n\n## Story\nEn tant que joueur, je veux voir une grille de briques au début du niveau, afin de savoir combien je dois détruire.\n\n## Expected Behavior\n- Grille de 8-10 colonnes et 4-6 rangées\n- Briques positionnées uniformément\n- Prévisible et cohérent\n\n## Acceptance Criteria\n- Given: Le jeu démarre\n- When: Le joueur commence une partie\n- Then: La grille de briques est affichée\n- Given: Le joueur détruit une brique\n- Then: La brique disparaît de la grille",
+      "depends_on": ["E"],
+      "status": "pending"
+    },
+    {
+      "id": "G",
+      "branch": "task/issue-343-G",
+      "file": ".oneticket/docs/what/epics/epic-2-brick-system/user-stories/us-002-brick-types.md",
+      "content": "Create us-002-brick-types.md using template .oneticket/templates/us.md:\n\n## Story\nEn tant que joueur, je veux que certaines briques soient plus difficiles à détruire, pour créer de la variété et des choix stratégiques.\n\n## Expected Behavior\n- Briques standard (1 coup)\n- Briques renforcées (2-3 coups)\n- Briques colorés selon résistance\n\n## Acceptance Criteria\n- Given: Le joueur touche une brique standard\n- When: La balle la frappe\n- Then: Elle est détruite\n- Given: Le joueur touche une brique renforcée\n- When: Premier impact\n- Then: Elle change d'apparence mais reste\n- When: Second impact\n- Then: Elle est détruite",
+      "depends_on": ["E"],
+      "status": "pending"
+    },
+    {
+      "id": "H",
+      "branch": "task/issue-343-H",
+      "file": ".oneticket/docs/what/epics/epic-2-brick-system/user-stories/us-003-destruction-effects.md",
+      "content": "Create us-003-destruction-effects.md using template .oneticket/templates/us.md:\n\n## Story\nEn tant que joueur, je veux un retour visuel quand je détruis une brique, pour ressentir la satisfaction.\n\n## Expected Behavior\n- Animation de destruction (flash, particules)\n- Disparition progressive ou instantanée\n- Feedback immédiat\n\n## Acceptance Criteria\n- Given: La balle frappe une brique\n- When: Collision détectée\n- Then: Animation de destruction jouée\n- Then: Brique retirée du jeu",
+      "depends_on": ["E"],
+      "status": "pending"
+    },
+    {
+      "id": "I",
+      "branch": "task/issue-343-I",
+      "file": ".oneticket/docs/what/epics/epic-3-scoring-lives/epic.md",
+      "content": "Create epic-3-scoring-lives/epic.md using template .oneticket/templates/epic.md:\n\n## Goal\nSuivre et afficher le score du joueur, gérer les vies et les conditions de fin de partie.\n\n## Business Value\nCrée un objectif et une progression mesurable pour le joueur.\n\n## Scope\n- Système de score (points par brique)\n- Compteur de vies (3 vies)\n- Affichage score et vies\n- Condition game over\n- Condition victoire\n\n## Related User Stories\n- us-001-score-tracking.md\n- us-002-lives-system.md\n- us-003-game-over.md\n- us-004-victory.md",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "J",
+      "branch": "task/issue-343-J",
+      "file": ".oneticket/docs/what/epics/epic-3-scoring-lives/user-stories/us-001-score-tracking.md",
+      "content": "Create us-001-score-tracking.md using template .oneticket/templates/us.md:\n\n## Story\nEn tant que joueur, je veux voir mon score augmenter quand je détruis des briques, pour mesurer ma progression.\n\n## Expected Behavior\n- Score initial à 0\n- Points awarded selon type de brique\n- Score affiché en temps réel\n\n## Acceptance Criteria\n- Given: Le joueur détruit une brique standard\n- When: Collision\n- Then: +10 points ajoutés au score\n- Given: Le joueur détruit une brique renforcée\n- When: Collision\n- Then: +20 points ajoutés au score\n- Score visible en permanence à l'écran",
+      "depends_on": ["I"],
+      "status": "pending"
+    },
+    {
+      "id": "K",
+      "branch": "task/issue-343-K",
+      "file": ".oneticket/docs/what/epics/epic-3-scoring-lives/user-stories/us-002-lives-system.md",
+      "content": "Create us-002-lives-system.md using template .oneticket/templates/us.md:\n\n## Story\nEn tant que joueur, je veux avoir plusieurs vies, pour avoir une seconde chance avant de perdre.\n\n## Expected Behavior\n- 3 vies au démarrage\n- Une vie perdue quand la balle sort par le bas\n- Vie affichée visuellement\n\n## Acceptance Criteria\n- Given: La partie commence\n- Then: 3 vies affichées\n- Given: La balle sort par le bas\n- Then: Une vie est perdue\n- Given: Plus de vies restantes\n- Then: Game over déclenché",
+      "depends_on": ["I"],
+      "status": "pending"
+    },
+    {
+      "id": "L",
+      "branch": "task/issue-343-L",
+      "file": ".oneticket/docs/what/epics/epic-3-scoring-lives/user-stories/us-003-game-over.md",
+      "content": "Create us-003-game-over.md using template .oneticket/templates/us.md:\n\n## Story\nEn tant que joueur, je veux voir un écran de game over quand je perds toutes mes vies, pour savoir que la partie est terminée.\n\n## Expected Behavior\n- Écran avec message \"Game Over\"\n- Score final affiché\n- Option de recommencer\n\n## Acceptance Criteria\n- Given: Le joueur perd sa dernière vie\n- When: La balle sort\n- Then: Écran Game Over affiché\n- Then: Score final montré\n- Then: Option \"Rejouer\" présentée",
+      "depends_on": ["I"],
+      "status": "pending"
+    },
+    {
+      "id": "M",
+      "branch": "task/issue-343-M",
+      "file": ".oneticket/docs/what/epics/epic-3-scoring-lives/user-stories/us-004-victory.md",
+      "content": "Create us-004-victory.md using template .oneticket/templates/us.md:\n\n## Story\nEn tant que joueur, je veux voir un écran de victoire quand je détruis toutes les briques, pour célébrer ma réussite.\n\n## Expected Behavior\n- Écran avec message \"Victoire\"\n- Score final affiché\n- Option de recommencer\n\n## Acceptance Criteria\n- Given: Le joueur détruit la dernière brique\n- Then: Écran Victoire affiché\n- Then: \"Toutes les briques détruites!\"\n- Then: Score final montré\n- Then: Option \"Rejouer\" présentée",
+      "depends_on": ["I"],
+      "status": "pending"
+    },
+    {
+      "id": "N",
+      "branch": "task/issue-343-N",
+      "file": ".oneticket/docs/what/epics/epic-4-start-screen/epic.md",
+      "content": "Create epic-4-start-screen/epic.md using template .oneticket/templates/epic.md:\n\n## Goal\nProposer un écran d'accueil engageant et des contrôles intuitifs pour démarrer le jeu.\n\n## Business Value\nCrée la première impression et donne envie de jouer.\n\n## Scope\n- Écran titre avec \"Breakout\"\n- Instructions de contrôle\n- Bouton/démarrage pour lancer\n- Sons et musique d'ambiance (optionnel)\n\n## Related User Stories\n- us-001-title-screen.md\n- us-002-controls-display.md\n- us-003-start-game.md",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "O",
+      "branch": "task/issue-343-O",
+      "file": ".oneticket/docs/what/epics/epic-4-start-screen/user-stories/us-001-title-screen.md",
+      "content": "Create us-001-title-screen.md using template .oneticket/templates/us.md:\n\n## Story\nEn tant que joueur, je veux voir un écran titre attractif avec le nom du jeu, pour comprendre que c'est un jeu Breakout.\n\n## Expected Behavior\n- Titre \"BREAKOUT\" affiché\n- Design retro/arcade\n- Animations subtiles (clignotement, glow)\n\n## Acceptance Criteria\n- Given: Le jeu charge\n- Then: Écran titre affiché\n- Then: Titre \"BREAKOUT\" visible\n- Animation de fond présente",
+      "depends_on": ["N"],
+      "status": "pending"
+    },
+    {
+      "id": "P",
+      "branch": "task/issue-343-P",
+      "file": ".oneticket/docs/what/epics/epic-4-start-screen/user-stories/us-002-controls-display.md",
+      "content": "Create us-002-controls-display.md using template .oneticket/templates/us.md:\n\n## Story\nEn tant que joueur, je veux savoir comment contrôler le jeu, pour pouvoir jouer immédiatement.\n\n## Expected Behavior\n- Instructions clavier: ← → pour bouger\n- Instructions souris: mouvement horizontal\n- Instructions tactiles (si applicable)\n\n## Acceptance Criteria\n- Given: Écran titre affiché\n- Then: Instructions de contrôle visibles\n- \"Flèches ou Souris pour bouger\"\n- \"Espace ou Clic pour lancer\"",
+      "depends_on": ["N"],
+      "status": "pending"
+    },
+    {
+      "id": "Q",
+      "branch": "task/issue-343-Q",
+      "file": ".oneticket/docs/what/epics/epic-4-start-screen/user-stories/us-003-start-game.md",
+      "content": "Create us-003-start-game.md using template .oneticket/templates/us.md:\n\n## Story\nEn tant que joueur, je veux pouvoir démarrer le jeu facilement, pour commencer à jouer sans délai.\n\n## Expected Behavior\n- Appui sur Espace ou Clic commence le jeu\n- Délai court avant le début\n- Balle lancé automatiquement\n\n## Acceptance Criteria\n- Given: Écran titre affiché\n- When: Joueur appuie sur Espace ou Clic\n- Then: Compte à rebours 3-2-1\n- Then: Balle launched\n- Then: Jeu commence",
+      "depends_on": ["N"],
+      "status": "pending"
+    }
+  ]
+}
