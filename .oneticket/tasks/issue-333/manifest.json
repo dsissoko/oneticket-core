@@ -8,7 +8,7 @@
       "file": "output/result-A.txt",
       "content": "Créer le fichier output/result-A.txt avec le contenu 'Result A done'",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
@@ -16,14 +16,17 @@
       "file": "output/result-B.txt",
       "content": "Créer le fichier output/result-B.txt avec le contenu 'Result B done'",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "C",
       "branch": "task/issue-333-C",
       "file": "output/result-C.txt",
       "content": "Créer le fichier output/result-C.txt avec le contenu 'Result C done'",
-      "depends_on": ["A", "B"],
+      "depends_on": [
+        "A",
+        "B"
+      ],
       "status": "pending"
     }
   ]
