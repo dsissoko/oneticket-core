@@ -227,6 +227,22 @@ deploy-prod       (if push main or tag v*)
 - **Branch**: `gh-pages`
 - **Folder**: `/ (root)`
 
+### Jekyll and `_astro/` assets
+
+GitHub Pages activates Jekyll by default on any branch it serves. Jekyll silently ignores all directories and files starting with `_` — which includes `_astro/`, where Astro outputs all CSS and JS bundles. Without disabling Jekyll, the deployed site loads with no styles and no scripts.
+
+**Fix:** a `.nojekyll` file at the root of `gh-pages` disables Jekyll entirely. GitHub Pages then serves all files as plain static assets, including `_astro/`.
+
+The `.nojekyll` file is committed directly on the `gh-pages` branch and is preserved across deployments via `clean-exclude` in `JamesIves/github-pages-deploy-action`:
+
+```yaml
+clean-exclude: |
+  .nojekyll
+  pr
+```
+
+If `gh-pages` is ever deleted and recreated, `.nojekyll` must be re-committed on that branch manually before the next deployment triggers.
+
 ### App deploy workflow
 
 A separate workflow `app-deploy-github-pages.yml` (to be created) handles frontend app deployment:
