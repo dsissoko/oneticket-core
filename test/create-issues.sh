@@ -172,7 +172,7 @@ Le jeu doit avoir : une raquette contrôlable, des briques destructibles,
 une balle avec physique simple, un système de score, un écran de game over
 et un écran de victoire.")
   NUM=$(issue_number "$URL")
-  post_comment "$NUM" "@po lis le body de cette issue et produis une epic et ses US (max 5 US par epic et max 5 epics). Chaque tâche du manifest génère un fichier .md décrivant une epic ou une US. Les US dépendent de leur epic parente. Concernant les epics : en fonction de tes choix de décomposition tu pourras paralléliser ou pas."
+  post_comment "$NUM" "@po aides moi à initialiser la connaissance produit de ce projet"
   echo "Issue #$NUM lancée ($URL)"
   echo ""
   echo "Attendu : manifest épics + US → graphe de dépendances → FAN-OUT → fichiers .md → PR."
