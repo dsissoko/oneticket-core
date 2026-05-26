@@ -16,7 +16,7 @@
       "file": "output/result-B.txt",
       "content": "Crée le fichier output/result-B.txt avec le contenu exact 'Result B done' (sans guillemets). Le répertoire output doit être créé si nécessaire.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "C",
