@@ -8,7 +8,7 @@
       "file": "apps/breakout/docs/what/product-spec.md",
       "content": "Créer le fichier product-spec.md pour le jeu Breakout. Le produit s'appelle 'Breakout'. C'est un jeu de casse-briques classique pour divertir les joueurs casual de tous âges. Les principales capacités sont : (1) raquette contrôlable au clavier/souris, (2) balle avec physique simple et rebonds, (3) briques destructibles, (4) système de score persistant, (5) écran de game over et écran de victoire. L'utilisateur principal est un joueur casual (single user, pas de multijoueur). Les règles métier : la balle rebondit sur la raquette et les briques, la raquette se déplace horizontalement, la destruction d'une brique ajoute des points, la victoire se déclenche quand toutes les briques sont détruites, le game over quand la balle sort du bas de l'écran.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
@@ -16,7 +16,7 @@
       "file": "apps/breakout/docs/how/architecture.md",
       "content": "Créer le fichier architecture.md pour le jeu Breakout. Stack technique : JavaScript frontend pur (HTML/CSS/JS vanilla), pas de framework, pas de backend, pas de build tools. Les principaux composants du système : (1) Game Engine - gestion de la boucle de jeu et des mises à jour, (2) Paddle - contrôle de la raquette (input clavier/souris), (3) Ball - physique et collisions, (4) Bricks - grille de briques et détection de collision, (5) Score - système de points, (6) GameState - états (playing, game-over, victory), (7) Renderer - affichage graphique en canvas. Contraintes techniques : performance en canvas 2D, détection de collision simple mais efficace, pas de librairies externes.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "C",
@@ -24,14 +24,18 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/epic.md",
       "content": "Créer le fichier epic.md pour l'MVP du jeu Breakout. L'epic MVP couvre le périmètre complet du jeu : une raquette contrôlable au clavier/souris, une balle avec physique simple (rebonds), des briques destructibles organisées en grille, un système de score qui augmente à chaque brique détruite, un écran de game over quand la balle sort du bas, un écran de victoire quand toutes les briques sont détruites. Le MVP ne contient pas : niveaux multiples, sons, animations avancées, high scores persistants en storage, powerups, ou styles de briques différentes.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "D",
       "branch": "task/issue-481-D",
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-basic-setup.md",
       "content": "Créer la user story us-001 pour la configuration de base du jeu. Story : 'En tant que joueur casual, je veux voir un écran de jeu avec une raquette, une balle et des briques, afin de commencer à jouer au Breakout.' Critères d'acceptation (Gherkin) : Étant donné que je lance le jeu, Quand la page se charge, Alors je vois un canvas avec une raquette en bas au centre, une balle au centre de l'écran, et une grille de briques en haut (5 colonnes x 4 lignes). Et le jeu affiche le score initial à 0 en haut à droite.",
-      "depends_on": ["A", "B", "C"],
+      "depends_on": [
+        "A",
+        "B",
+        "C"
+      ],
       "status": "pending"
     },
     {
@@ -39,7 +43,11 @@
       "branch": "task/issue-481-E",
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-002-paddle-control.md",
       "content": "Créer la user story us-002 pour le contrôle de la raquette. Story : 'En tant que joueur casual, je veux contrôler la raquette avec les flèches du clavier ou la souris, afin de positionner correctement la balle pour détruire les briques.' Critères d'acceptation (Gherkin) : Quand j'appuie sur Flèche Gauche, la raquette se déplace vers la gauche sans sortir du canvas. Quand j'appuie sur Flèche Droite, la raquette se déplace vers la droite sans sortir du canvas. Quand je bouge la souris horizontalement, la raquette suit la position X de la souris. La raquette ne peut pas sortir des limites gauche et droite du canvas.",
-      "depends_on": ["A", "B", "C"],
+      "depends_on": [
+        "A",
+        "B",
+        "C"
+      ],
       "status": "pending"
     },
     {
@@ -47,7 +55,11 @@
       "branch": "task/issue-481-F",
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-003-ball-physics.md",
       "content": "Créer la user story us-003 pour la physique de la balle. Story : 'En tant que joueur casual, je veux que la balle rebondisse sur la raquette et les briques, afin d'explorer le gameplay stratégique du Breakout.' Critères d'acceptation (Gherkin) : Quand le jeu démarre, la balle se déplace en diagonale. Quand la balle touche la raquette, elle rebondit avec un angle basé sur la position d'impact. Quand la balle touche une brique, elle rebondit et la brique est détruite. Quand la balle touche les murs (gauche/droite/haut), elle rebondit. Quand la balle sort du bas du canvas sans être touchée par la raquette, c'est un game over.",
-      "depends_on": ["A", "B", "C"],
+      "depends_on": [
+        "A",
+        "B",
+        "C"
+      ],
       "status": "pending"
     },
     {
@@ -55,7 +67,11 @@
       "branch": "task/issue-481-G",
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-004-scoring.md",
       "content": "Créer la user story us-004 pour le système de score. Story : 'En tant que joueur casual, je veux que chaque brique détruite ajoute des points à mon score, afin de suivre ma progression.' Critères d'acceptation (Gherkin) : Quand la balle détruit une brique, le score augmente de 10 points. Le score est affiché en temps réel en haut à droite du canvas. Le score ne peut pas devenir négatif. À chaque nouvelle partie, le score réinitialise à 0. Le score doit être clairement visible pendant la partie.",
-      "depends_on": ["A", "B", "C"],
+      "depends_on": [
+        "A",
+        "B",
+        "C"
+      ],
       "status": "pending"
     },
     {
@@ -63,7 +79,11 @@
       "branch": "task/issue-481-H",
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-005-game-over.md",
       "content": "Créer la user story us-005 pour l'écran de game over. Story : 'En tant que joueur casual, je veux voir un écran de game over clair quand je perds, avec mon score final et l'option de recommencer, afin de savoir si je veux essayer à nouveau.' Critères d'acceptation (Gherkin) : Quand la balle sort du bas du canvas, l'écran de game over s'affiche. L'écran affiche 'Game Over', le score final en gros caractères, et un bouton 'Rejouer'. Quand je clique sur 'Rejouer', une nouvelle partie commence avec un score à 0 et toutes les briques restaurées.",
-      "depends_on": ["A", "B", "C"],
+      "depends_on": [
+        "A",
+        "B",
+        "C"
+      ],
       "status": "pending"
     },
     {
@@ -71,7 +91,11 @@
       "branch": "task/issue-481-I",
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-006-victory.md",
       "content": "Créer la user story us-006 pour l'écran de victoire. Story : 'En tant que joueur casual, je veux voir un écran de victoire exaltant quand j'ai détruit toutes les briques, avec mon score final et l'option de rejouer, afin de célébrer ma victoire.' Critères d'acceptation (Gherkin) : Quand toutes les briques sont détruites, l'écran de victoire s'affiche. L'écran affiche 'Victory!', le score final en gros caractères, et un bouton 'Rejouer'. Quand je clique sur 'Rejouer', une nouvelle partie commence avec un score à 0 et toutes les briques restaurées.",
-      "depends_on": ["A", "B", "C"],
+      "depends_on": [
+        "A",
+        "B",
+        "C"
+      ],
       "status": "pending"
     },
     {
@@ -79,7 +103,14 @@
       "branch": "task/issue-481-J",
       "file": "apps/breakout/app/index.html",
       "content": "Implémenter le fichier index.html pour le jeu Breakout. Le fichier doit contenir : un doctype HTML5, un canvas avec id='gameCanvas' et dimensions 800x600, un lien vers style.css, un script vers app.js. L'HTML doit être minimal et sémantique. Pas de framework, pur HTML. L'en-tête doit contenir le titre 'Breakout Game'. Aucune dépendance externe ne doit être chargée.",
-      "depends_on": ["D", "E", "F", "G", "H", "I"],
+      "depends_on": [
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I"
+      ],
       "status": "pending"
     },
     {
@@ -87,7 +118,9 @@
       "branch": "task/issue-481-K",
       "file": "apps/breakout/app/style.css",
       "content": "Implémenter le fichier style.css pour le jeu Breakout. Le CSS doit : centrer le canvas à l'écran, définir un background sombre (noir ou gris), mettre en place une police lisible pour le score et les écrans game-over/victory, styliser les boutons 'Rejouer' pour qu'ils soient visibles et cliquables. Pas de framework CSS (pas de Bootstrap), pur CSS vanilla. Le corps de la page doit avoir height: 100vh pour occuper tout l'écran.",
-      "depends_on": ["J"],
+      "depends_on": [
+        "J"
+      ],
       "status": "pending"
     },
     {
@@ -95,7 +128,9 @@
       "branch": "task/issue-481-L",
       "file": "apps/breakout/app/app.js",
       "content": "Implémenter le fichier app.js pour le jeu Breakout. Ce fichier doit contenir tout le code de jeu complet en JavaScript vanilla : (1) Game Engine - boucle principale avec requestAnimationFrame, update et render, (2) Paddle - classe avec contrôle clavier/souris, (3) Ball - classe avec physique et détection de collision, (4) Bricks - classe pour la grille et gestion des briques, (5) Score - classe pour le système de points, (6) GameState - gestion des états (playing, game-over, victory), (7) Renderer - fonction pour dessiner sur canvas. Toutes les règles métier du product-spec et de l'architecture.md doivent être implémentées. Pas de dépendances externes, pur JavaScript.",
-      "depends_on": ["K"],
+      "depends_on": [
+        "K"
+      ],
       "status": "pending"
     },
     {
@@ -103,7 +138,9 @@
       "branch": "task/issue-481-M",
       "file": "apps/breakout/docs/how/slices/slice-001-foundation.md",
       "content": "Créer la documentation de la slice d'implémentation Fondations du Jeu. Cette slice couvre les tâches A (product-spec), B (architecture), C (epic MVP), D-I (user stories), et est complétée par J-L (implémentation). Documente la structure du projet, comment le jeu démarre, comment les composants du Game Engine interagissent, et comment tester le jeu en le lançant dans un navigateur.",
-      "depends_on": ["L"],
+      "depends_on": [
+        "L"
+      ],
       "status": "pending"
     }
   ]
