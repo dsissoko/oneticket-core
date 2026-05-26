@@ -123,7 +123,7 @@ function resolveProjectContext(config) {
  *     - git checkout (anomalyco switched=true mechanism)
  *     - Agent profile
  *     - Language + autonomous_mode
- *     - Project context (docs_path + current_project — resolved deterministically)
+ *     - Project context (all resolved deterministically — never by the agent)
  *     - Request
  *   [Trigger context]
  *     - CONTEXT_BLOCK as-is (built by the trigger YAML workflow)
@@ -131,7 +131,7 @@ function resolveProjectContext(config) {
  * NOTE: git checkout at the top → anomalyco detects switched=true →
  * disables automatic push and PR creation.
  */
-function buildPrompt({ role, demande, branch, config, profile, contextBlock, docsPath, currentProject }) {
+function buildPrompt({ role, demande, branch, config, profile, contextBlock, docsPath, currentProject, issueNumber, repo }) {
   const lines = [];
 
   // Common trunk — required regardless of trigger
@@ -153,10 +153,11 @@ function buildPrompt({ role, demande, branch, config, profile, contextBlock, doc
   lines.push(`autonomous_mode: ${config.autonomous_mode}`);
   lines.push('');
 
-  // Project context — resolved deterministically, injected as-is
-  // docs_path: where to read/write documentation files
-  // current_project: raw value from .oneticket/config.yml (empty = framework, set = app project)
+  // Project context — all values resolved deterministically, injected as-is
+  // Use these values in gh commands and file paths — never resolve them yourself
   lines.push(`## Project context`);
+  lines.push(`issue_number: ${issueNumber}`);
+  lines.push(`repo: ${repo}`);
   lines.push(`docs_path: ${docsPath}`);
   lines.push(`current_project: ${currentProject}`);
   lines.push('');
@@ -239,6 +240,8 @@ async function main() {
     contextBlock,
     docsPath,
     currentProject,
+    issueNumber,
+    repo,
   });
   console.log(`[agent-dispatch] Prompt built (${prompt.length} chars).`);
 
