@@ -4,6 +4,8 @@ The `how/` section describes the technical solution implementing the product nee
 
 <!-- pr-preview-test -->
 
+> **🚧 PR PREVIEW — this is a test build from PR #478, not the production site.**
+
 It defines:
 - the global architecture,
 - the system structure,
