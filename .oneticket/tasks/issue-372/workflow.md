@@ -5,3 +5,4 @@
 2026-05-26 10:05 | B | src/game/renderer.js
 2026-05-26 10:07 | E | src/game/collisions.js
 2026-05-26 10:08 | F | src/game/score.js
+2026-05-26 10:10 | H | src/game/game.js
