@@ -16,7 +16,7 @@
       "file": "apps/breakout/app/style.css",
       "content": "Lis apps/breakout/docs/how/architecture.md et us-001-game-canvas-setup.md. Implémente apps/breakout/app/style.css qui stylise la page HTML : centrer le canvas, ajouter une bordure visible au canvas, styliser le bouton 'Start Game', définir des polices lisibles pour le score, et assurer que la page est responsive. Couleurs et design doivent être simples et classiques (fond noir, texte blanc, briques colorées).",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "C",
