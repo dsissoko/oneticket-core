@@ -178,13 +178,7 @@ Commented in the workflow — activate by adding `closed` to `pull_request` type
 
 ## Local Development
 
-```bash
-cd doc-site
-npm install
-npm run dev      # → http://localhost:4321 — hot reload on docs/ changes
-npm run build    # → validates static build
-npm run preview  # → serves doc-site-static/ locally
-```
+See the local runbook: [run/doc-site-local.md](../run/doc-site-local.md)
 
 No environment variables needed locally — `astro.config.mjs` defaults to `../.oneticket/docs`.
 
