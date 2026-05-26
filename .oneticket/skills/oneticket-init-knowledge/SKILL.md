@@ -31,64 +31,13 @@ This skill is the **guardian of the mandatory sequence**. No slice, no C4 diagra
 Each gate ends with a HARD STOP — the agent posts a comment and waits for explicit human validation before proceeding to the next gate.
 
 ```
-Gate 0 → framework or applicatif ?  → HARD STOP if applicatif (human sets current_project)
 Gate 1 → product-spec.md valid ?    → HARD STOP → human validates
 Gate 2 → architecture.md valid ?    → HARD STOP → human validates
 Gate 3 → epic-0-mvp valid ?         → HARD STOP → human validates
 Gate 4 → confirmation + handoff
 ```
 
----
-
-## Gate 0 — Framework or Application Project ?
-
-### Analysis
-
-Read `## Project context` from the prompt — it is always present and deterministically resolved.
-
-```
-## Project context
-docs_path: <resolved path>
-current_project: <raw value from config.yml>
-```
-
-Two possible states for `current_project`:
-
-| Value | Meaning | Action |
-|---|---|---|
-| empty | `current_project` is empty in config — context unknown | Ask user to confirm |
-| set (e.g. `breakout`) | Application project | Continue to Gate 1 |
-
-### If `current_project` is empty
-
-Post this comment using this exact bash command:
-
-```bash
-gh issue comment {issue_number} --repo {repository} --body "**[Agent: \`@po\`]**
-
-I see this request with \`current_project\` empty in \`.oneticket/config.yml\`.
-
-Please confirm one of the following:
-
-**A)** This is a OneTicket framework request (documentation, agents, skills, workflows)
-   → Reply \"framework\" to continue
-
-**B)** This is an application project request (e.g. Breakout game, my-app, etc.)
-   → Set \`current_project\` in \`.oneticket/config.yml\` and reply with the project name"
-```
-
-**HARD STOP** — do not proceed until the human explicitly responds.
-
-- If human confirms "framework" → continue to Gate 1
-- If human provides a project name → acknowledge, remind them to set `current_project` in `config.yml`, then re-trigger the request
-
-### If `current_project` is set
-
-Application context confirmed — continue to Gate 1 without stopping.
-
-**Important rules:**
-- Never modify `config.yml` yourself — this is the human's responsibility
-- `docs_path` is always provided in the prompt — never resolve it yourself
+`current_project` is always set when this skill is invoked — Gate 0 is handled deterministically upstream by the dispatcher.
 
 ---
 
@@ -108,18 +57,16 @@ Read `<docs_path>/what/product-spec.md`.
 
 ### If invalid — Bootstrap Questions
 
-Post this exact question set using this bash command:
+Post a comment asking the user these questions:
 
-```bash
-gh issue comment {issue_number} --repo {repository} --body "**[Agent: \`@po\`]**
-
+```
 Before proceeding, I need to understand the product.
 
 1. What is the product name?
 2. What problem does it solve, and for whom? (2-3 sentences)
 3. What are the 2-3 main capabilities for V1?
 4. Who are the main users or actors?
-5. Any business rules or constraints to note from the start?"
+5. Any business rules or constraints to note from the start?
 ```
 
 Wait for human answer. Do not proceed to Gate 2 until this gate is explicitly validated.
@@ -130,15 +77,7 @@ Create or complete `<docs_path>/what/product-spec.md` using template `.oneticket
 Never copy placeholder text — only real content from human answers.
 Never overwrite existing valid content.
 
-Post a summary using this bash command:
-
-```bash
-gh issue comment {issue_number} --repo {repository} --body "**[Agent: \`@po\`]**
-
-Gate 1 complete — \`product-spec.md\` is valid.
-
-Reply to proceed to architecture."
-```
+Post a summary of what was created/updated and ask the user to reply to proceed to architecture.
 
 **HARD STOP.**
 
@@ -160,17 +99,15 @@ Read `<docs_path>/how/architecture.md`.
 
 ### If invalid — Bootstrap Questions
 
-Post this exact question set using this bash command:
+Post a comment asking the user these questions:
 
-```bash
-gh issue comment {issue_number} --repo {repository} --body "**[Agent: \`@po\`]**
-
+```
 Before proceeding, I need to understand the technical architecture.
 
 1. What is the technical stack? (languages, frameworks, persistence layer)
 2. What are the main system components?
 3. What are the key interfaces or integration points?
-4. Any technical constraints or non-functional requirements?"
+4. Any technical constraints or non-functional requirements?
 ```
 
 Wait for human answer. Do not proceed to Gate 3 until this gate is explicitly validated.
@@ -181,15 +118,7 @@ Create or complete `<docs_path>/how/architecture.md` using template `.oneticket/
 Never copy placeholder text — only real content from human answers.
 Never overwrite existing valid content.
 
-Post a summary using this bash command:
-
-```bash
-gh issue comment {issue_number} --repo {repository} --body "**[Agent: \`@po\`]**
-
-Gate 2 complete — \`architecture.md\` is valid.
-
-Reply to proceed to epic MVP."
-```
+Post a summary of what was created/updated and ask the user to reply to proceed to epic MVP.
 
 **HARD STOP.**
 
@@ -212,11 +141,9 @@ Verify:
 
 Read `<docs_path>/what/product-spec.md` first to extract MVP scope.
 
-Post this question set using this bash command:
+Post a comment with the proposed MVP scope and ask:
 
-```bash
-gh issue comment {issue_number} --repo {repository} --body "**[Agent: \`@po\`]**
-
+```
 Before proceeding, I need to define the MVP epic.
 
 Based on product-spec.md, here is my proposed MVP scope:
@@ -224,7 +151,7 @@ Based on product-spec.md, here is my proposed MVP scope:
 
 1. Does this MVP scope look correct?
 2. What are the 2-3 most important user stories for this MVP?
-   (Format: \"As a <user>, I want to <action>, so that <outcome>\")"
+   (Format: "As a <user>, I want to <action>, so that <outcome>")
 ```
 
 Wait for human answer. Do not proceed to Gate 4 until this gate is explicitly validated.
@@ -236,15 +163,7 @@ Create user stories using template `.oneticket/templates/us.md` and skill `oneti
 File naming: `us-001-<kebab-name>.md`, `us-002-<kebab-name>.md`, etc.
 Never overwrite existing valid content.
 
-Post a summary using this bash command:
-
-```bash
-gh issue comment {issue_number} --repo {repository} --body "**[Agent: \`@po\`]**
-
-Gate 3 complete — \`epic-0-mvp\` is valid.
-
-Reply to proceed."
-```
+Post a summary of what was created and ask the user to reply to proceed.
 
 **HARD STOP.**
 
@@ -252,22 +171,15 @@ Reply to proceed."
 
 ## Gate 4 — Confirmation and Handoff
 
-Post a final summary using this bash command:
+Post a final summary comment indicating:
+- `what/product-spec.md` is valid
+- `how/architecture.md` is valid
+- `what/epics/epic-0-mvp/` is valid with the number of user stories created
 
-```bash
-gh issue comment {issue_number} --repo {repository} --body "**[Agent: \`@po\`]**
-
-Knowledge base is complete and valid.
-
-✅ \`what/product-spec.md\`
-✅ \`how/architecture.md\`
-✅ \`what/epics/epic-0-mvp/\` (<N> user stories)
-
-Next steps:
-- To break down more epics → \`oneticket-epic-breakdown\`
-- To document architecture → \`oneticket-c4\`
-- To derive implementation slices → \`oneticket-vertical-slice\`"
-```
+Suggest next steps:
+- To break down more epics → `oneticket-epic-breakdown`
+- To document architecture → `oneticket-c4`
+- To derive implementation slices → `oneticket-vertical-slice`
 
 ---
 

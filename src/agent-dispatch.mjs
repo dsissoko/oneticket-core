@@ -199,20 +199,8 @@ async function main() {
   const config  = loadConfig();
   const profile = loadProfile(role);
 
-  // --- 3. Git setup + create feature branch if it doesn't exist --------
-  setupGit('agent-dispatch', config, repo, ghToken);
-
-  const remoteBranches = runCapture('agent-dispatch', 'git branch -r');
-  if (remoteBranches.includes(`origin/${featureBranch}`)) {
-    console.log(`[agent-dispatch] Branch ${featureBranch} already exists.`);
-  } else {
-    console.log(`[agent-dispatch] Creating branch ${featureBranch}...`);
-    run('agent-dispatch', `git checkout -b ${featureBranch}`);
-    runWithRetry('agent-dispatch', `git push origin ${featureBranch}`);
-    run('agent-dispatch', `git checkout -`);
-  }
-
-  // --- 4. Build system prompt ------------------------------------------
+  // --- 3. Gate 0 — deterministic, before any branch creation or agent dispatch ---
+  // current_project empty → post comment and stop — no branch, no agent, no PR possible
   const { docsPath, currentProject, error } = resolveProjectContext(config);
 
   if (error) {
@@ -229,8 +217,39 @@ async function main() {
     process.exit(1);
   }
 
+  if (currentProject === '') {
+    // [GATE 0 — DETERMINISTIC] current_project is empty — stop before any agent or branch
+    console.log('[agent-dispatch] Gate 0: current_project is empty — posting comment and stopping.');
+    try {
+      const { execSync } = await import('child_process');
+      execSync(
+        `gh issue comment ${issueNumber} --repo ${repo} --body "**[Agent: \`@po\`]**\n\n\`current_project\` is not set in \`.oneticket/config.yml\`.\n\nPlease set it to your project name before triggering an agent:\n\n\`\`\`yaml\ncurrent_project: <your-project-name>\n\`\`\`\n\nLeave it empty only if this is a OneTicket framework request."`,
+        { env: { ...process.env, GH_TOKEN: ghToken } }
+      );
+      console.log('[agent-dispatch] Gate 0 comment posted — waiting for human response.');
+    } catch (e) {
+      console.error('[agent-dispatch] Could not post Gate 0 comment:', e.message);
+    }
+    process.exit(0);
+  }
+
   console.log(`[agent-dispatch] project context resolved: current_project="${currentProject}", docs_path="${docsPath}"`);
 
+  // --- 4. Git setup + create feature branch if it doesn't exist --------
+  // Only reached if Gate 0 passed (current_project is set)
+  setupGit('agent-dispatch', config, repo, ghToken);
+
+  const remoteBranches = runCapture('agent-dispatch', 'git branch -r');
+  if (remoteBranches.includes(`origin/${featureBranch}`)) {
+    console.log(`[agent-dispatch] Branch ${featureBranch} already exists.`);
+  } else {
+    console.log(`[agent-dispatch] Creating branch ${featureBranch}...`);
+    run('agent-dispatch', `git checkout -b ${featureBranch}`);
+    runWithRetry('agent-dispatch', `git push origin ${featureBranch}`);
+    run('agent-dispatch', `git checkout -`);
+  }
+
+  // --- 5. Build system prompt ------------------------------------------
   const prompt = buildPrompt({
     role,
     demande,
@@ -245,7 +264,7 @@ async function main() {
   });
   console.log(`[agent-dispatch] Prompt built (${prompt.length} chars).`);
 
-  // --- 5. Dispatch Agent Execute ---------------------------------------
+  // --- 6. Dispatch Agent Execute ---------------------------------------
   console.log(`[agent-dispatch] Dispatching Agent Execute — role=${role}, issue #${issueNumber}, branch ${featureBranch}`);
   await dispatchWorkflow('agent-execute.yml', {
     issue_number: String(issueNumber),
