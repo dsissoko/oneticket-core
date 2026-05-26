@@ -78,25 +78,43 @@ function loadProfile(role) {
 /**
  * Resolves docs_path and project context deterministically from config.
  *
- * Resolution logic:
- *   - current_project present → project = <name> (application project)
- *                               docs_path = apps/<current_project>/docs
- *   - current_project absent  → project = oneticket (framework)
- *                               docs_path = .oneticket/docs
+ * Three states for current_project:
+ *   - absent (undefined) → config error — caller must notify user and stop
+ *   - empty ("")         → oneticket framework context
+ *                          docs_path = .oneticket/docs
+ *   - set ("myapp")      → application project context
+ *                          docs_path = apps/myapp/docs
  *
  * The agent never resolves docs_path or project context — both are injected
  * as resolved values in the prompt via ## Project context.
+ *
+ * @returns {{ docsPath: string, project: string, error: string|null }}
  */
 function resolveProjectContext(config) {
-  if (config.current_project) {
+  // current_project key absent entirely — config error
+  if (config.current_project === undefined) {
     return {
-      docsPath: `apps/${config.current_project}/docs`,
-      project:  `${config.current_project} (application project)`,
+      docsPath: null,
+      project:  null,
+      error:    'current_project key is missing from .oneticket/config.yml. ' +
+                'Add it with your project name or leave it empty for framework context.',
     };
   }
+
+  // current_project present but empty — framework context
+  if (config.current_project === '' || config.current_project === null) {
+    return {
+      docsPath: `.oneticket/docs`,
+      project:  `oneticket (framework)`,
+      error:    null,
+    };
+  }
+
+  // current_project set — application project context
   return {
-    docsPath: `.oneticket/docs`,
-    project:  `oneticket (framework)`,
+    docsPath: `apps/${config.current_project}/docs`,
+    project:  `${config.current_project} (application project)`,
+    error:    null,
   };
 }
 
@@ -198,7 +216,24 @@ async function main() {
   }
 
   // --- 4. Build system prompt ------------------------------------------
-  const { docsPath, project } = resolveProjectContext(config);
+  const { docsPath, project, error } = resolveProjectContext(config);
+
+  if (error) {
+    console.error(`[agent-dispatch] Project context error: ${error}`);
+    // Post error comment on issue and stop — do not dispatch agent
+    const { run: runCmd } = await import('./utils.mjs');
+    try {
+      const { execSync } = await import('child_process');
+      execSync(
+        `gh issue comment ${issueNumber} --repo ${repo} --body "## Configuration error\n\n${error}"`,
+        { env: { ...process.env, GH_TOKEN: ghToken } }
+      );
+    } catch (e) {
+      console.error('[agent-dispatch] Could not post error comment:', e.message);
+    }
+    process.exit(1);
+  }
+
   console.log(`[agent-dispatch] project context resolved: project="${project}", docs_path="${docsPath}"`);
 
   const prompt = buildPrompt({

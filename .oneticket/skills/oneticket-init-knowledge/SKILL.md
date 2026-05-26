@@ -49,38 +49,45 @@ Read `## Project context` from the prompt — it is always present and determini
 ```
 ## Project context
 docs_path: <resolved path>
-project: <oneticket (framework)> or <name (application project)>
+project: <value>
 ```
 
-- If `project` contains `(framework)` → framework context — continue to Gate 1 without stopping
-- If `project` contains `(application project)` → application context — see below
+Three possible values for `project`:
 
-**No inference needed — the answer is in the prompt.**
+| Value | Meaning | Action |
+|---|---|---|
+| `MISSING` | `current_project` key absent from config | Config error — already handled by dispatcher, should not reach here |
+| `oneticket (framework)` | `current_project` empty — framework context | Ask user to confirm or set project name |
+| `<name> (application project)` | `current_project` set | Application context — continue to Gate 1 |
 
-### If framework context
-
-`docs_path` already points to `.oneticket/docs/` — continue to Gate 1 without stopping.
-
-### If application context
+### If `project: oneticket (framework)`
 
 Post this exact comment:
 
 ```
-This request concerns an application project, not the OneTicket framework.
+I see this request in framework context (current_project is empty in .oneticket/config.yml).
 
-To proceed, please set `current_project` in `.oneticket/config.yml`:
+Please confirm one of the following:
 
-current_project: <your-project-name>   # e.g. breakout, my-app, ecommerce
+A) This is a OneTicket framework request (documentation, agents, skills, workflows)
+   → Reply "framework" to continue
 
-Once done, reply to this comment to continue.
+B) This is an application project request (e.g. Breakout game, my-app, etc.)
+   → Set current_project in .oneticket/config.yml and reply with the project name
 ```
 
-**HARD STOP** — do not proceed until the human explicitly confirms that `current_project` has been set.
+**HARD STOP** — do not proceed until the human explicitly responds.
+
+- If human confirms "framework" → continue to Gate 1
+- If human sets a project name → acknowledge, explain that `current_project` must be set in `config.yml` first, then the request can be re-triggered
+
+### If `project: <name> (application project)`
+
+Application context confirmed — continue to Gate 1 without stopping.
 
 **Important rules:**
 - Never modify `config.yml` yourself — this is the human's responsibility
-- Once the human confirms → continue to Gate 1
-- `docs_path` will have been updated by the framework before the next agent invocation
+- `docs_path` is always provided in the prompt — never resolve it yourself
 
 ---
 

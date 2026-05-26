@@ -36,9 +36,15 @@ oneticket_git_user_email: oneticket-bot@users.noreply.github.com
 pr_base: main
 
 # Active user project — determines docs_path = apps/<current_project>/docs/
-# Required when doc workflows are triggered for a user project.
-# Do NOT set this for oneticket framework doc (.oneticket/docs/ is hardcoded separately).
-# current_project: my-app   # ← uncomment and set to your project name
+#
+# Three states:
+#   - key absent entirely   → config error — agent will stop and notify user
+#   - key present but empty → oneticket framework context
+#   - key present and set   → application project context
+#
+# Set to your project name to work on an application project.
+# Leave empty to work on the oneticket framework itself.
+current_project:   # ← set to your project name (e.g. breakout), or leave empty for framework
 
 # ---------------------------------------------------------------------------
 # Documentation path resolution
@@ -47,12 +53,15 @@ pr_base: main
 # docs_path is resolved deterministically by src/agent-dispatch.mjs
 # before being injected into the agent prompt — the agent never resolves it.
 #
-# Resolution logic (src/agent-dispatch.mjs → resolveDocsPath):
-#   - current_project present → docs_path = apps/<current_project>/docs
-#   - current_project absent  → docs_path = .oneticket/docs  (oneticket framework itself)
+# Resolution logic (src/agent-dispatch.mjs → resolveProjectContext):
+#   - current_project absent        → config error — agent notifies user, stops
+#   - current_project empty ("")    → project = "oneticket (framework)"
+#                                      docs_path = .oneticket/docs
+#   - current_project set ("myapp") → project = "myapp (application project)"
+#                                      docs_path = apps/myapp/docs
 #
-# To document a user project  : uncomment current_project and set your project name
-# To document oneticket itself: leave current_project commented out
+# To document a user project  : set current_project to your project name
+# To document oneticket itself: leave current_project empty
 
 # ---------------------------------------------------------------------------
 # CI agent configuration — generated at runtime via src/generate-config.mjs
