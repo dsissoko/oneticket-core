@@ -1,0 +1,353 @@
+/* ============================================================================
+   Breakout Game - Style Sheet
+   Classic brick-breaker game styling with responsive design
+   ========================================================================== */
+
+/* ============================================================================
+   Reset and Base Styles
+   ========================================================================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  font-family: 'Arial', 'Helvetica', sans-serif;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+/* ============================================================================
+   Main Container and Layout
+   ========================================================================== */
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+}
+
+.game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 900px;
+}
+
+/* ============================================================================
+   Title and Header
+   ========================================================================== */
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-align: center;
+  color: #ffffff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+/* ============================================================================
+   Canvas Styling
+   ========================================================================== */
+
+canvas {
+  display: block;
+  border: 3px solid #4a9eff;
+  background-color: #000000;
+  box-shadow: 0 0 20px rgba(74, 158, 255, 0.6),
+              inset 0 0 10px rgba(0, 0, 0, 0.8);
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+}
+
+/* Responsive canvas sizing */
+@media (max-width: 900px) {
+  canvas {
+    width: 100%;
+    max-width: 800px;
+  }
+}
+
+@media (max-width: 640px) {
+  canvas {
+    width: 100%;
+    max-width: 600px;
+    border-width: 2px;
+  }
+}
+
+/* ============================================================================
+   Score Display
+   ========================================================================== */
+
+#score-display {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  color: #4a9eff;
+  text-shadow: 0 0 10px rgba(74, 158, 255, 0.5);
+  letter-spacing: 0.5px;
+  min-height: 30px;
+  font-family: 'Courier New', monospace;
+}
+
+/* ============================================================================
+   Game Status and Messages
+   ========================================================================== */
+
+#game-status {
+  font-size: 1.2rem;
+  text-align: center;
+  color: #ffffff;
+  min-height: 25px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+#game-status.victory {
+  color: #00ff00;
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+#game-status.game-over {
+  color: #ff4444;
+  text-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+}
+
+/* ============================================================================
+   Button Styling
+   ========================================================================== */
+
+button {
+  padding: 12px 40px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border: 2px solid #4a9eff;
+  border-radius: 4px;
+  background-color: #1a1a1a;
+  color: #4a9eff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  box-shadow: 0 0 10px rgba(74, 158, 255, 0.3);
+}
+
+button:hover {
+  background-color: #4a9eff;
+  color: #1a1a1a;
+  box-shadow: 0 0 20px rgba(74, 158, 255, 0.8);
+  transform: scale(1.05);
+}
+
+button:active {
+  transform: scale(0.98);
+  box-shadow: inset 0 0 10px rgba(74, 158, 255, 0.5);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+  border-color: #666666;
+  color: #666666;
+}
+
+button:disabled:hover {
+  background-color: #1a1a1a;
+  color: #666666;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ============================================================================
+   Button Variants
+   ========================================================================== */
+
+#start-btn {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#restart-btn {
+  margin-top: 15px;
+  background-color: #ff6b6b;
+  border-color: #ff6b6b;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(255, 107, 107, 0.3);
+}
+
+#restart-btn:hover {
+  background-color: #ffffff;
+  color: #ff6b6b;
+  box-shadow: 0 0 20px rgba(255, 107, 107, 0.8);
+}
+
+/* ============================================================================
+   Controls Information
+   ========================================================================== */
+
+.controls-info {
+  text-align: center;
+  font-size: 0.95rem;
+  color: #cccccc;
+  line-height: 1.6;
+  margin-top: 15px;
+}
+
+.controls-info p {
+  margin: 5px 0;
+}
+
+.controls-info kbd {
+  display: inline-block;
+  padding: 4px 8px;
+  background-color: #333333;
+  border: 1px solid #555555;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  color: #4a9eff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  margin: 0 2px;
+}
+
+/* ============================================================================
+   Responsive Design - Tablets
+   ========================================================================== */
+
+@media (max-width: 800px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  button {
+    padding: 10px 30px;
+    font-size: 1rem;
+  }
+
+  #score-display {
+    font-size: 1.25rem;
+  }
+
+  .controls-info {
+    font-size: 0.85rem;
+  }
+}
+
+/* ============================================================================
+   Responsive Design - Mobile
+   ========================================================================== */
+
+@media (max-width: 480px) {
+  body {
+    padding: 10px;
+  }
+
+  .game-container {
+    gap: 15px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+  }
+
+  canvas {
+    aspect-ratio: 4 / 3;
+  }
+
+  button {
+    padding: 8px 25px;
+    font-size: 0.95rem;
+  }
+
+  #score-display {
+    font-size: 1.1rem;
+  }
+
+  #game-status {
+    font-size: 1rem;
+  }
+
+  .controls-info {
+    font-size: 0.8rem;
+  }
+
+  .controls-info kbd {
+    padding: 3px 6px;
+    font-size: 0.8rem;
+  }
+}
+
+/* ============================================================================
+   Brick Appearance (Referenced by Game Logic)
+   ========================================================================== */
+
+/* Note: Brick styling is handled by game.js canvas drawing
+   This section documents the color scheme used in the game:
+   - Row 1-2: #ff6b6b (Red)
+   - Row 3-4: #ffd93d (Yellow/Orange)
+   - Row 5-6: #6bcf7f (Green)
+   - Row 7-8: #4a9eff (Blue)
+*/
+
+/* ============================================================================
+   Utility Classes
+   ========================================================================== */
+
+.hidden {
+  display: none !important;
+}
+
+.visible {
+  display: block !important;
+}
+
+/* ============================================================================
+   Focus and Accessibility
+   ========================================================================== */
+
+button:focus {
+  outline: 2px solid #4a9eff;
+  outline-offset: 2px;
+}
+
+canvas:focus {
+  outline: 2px solid #4a9eff;
+  outline-offset: 2px;
+}
+
+/* ============================================================================
+   Print Styles
+   ========================================================================== */
+
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+
+  canvas {
+    border: 1px solid black;
+    box-shadow: none;
+  }
+
+  button {
+    display: none;
+  }
+}
