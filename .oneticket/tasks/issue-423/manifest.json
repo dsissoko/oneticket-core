@@ -8,7 +8,7 @@
       "file": "output/result-A.txt",
       "content": "Crée le fichier output/result-A.txt avec le contenu exact 'Result A done' (sans guillemets). Le répertoire output doit être créé si nécessaire.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
@@ -16,14 +16,17 @@
       "file": "output/result-B.txt",
       "content": "Crée le fichier output/result-B.txt avec le contenu exact 'Result B done' (sans guillemets). Le répertoire output doit être créé si nécessaire.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "C",
       "branch": "task/issue-423-C",
       "file": "output/result-C.txt",
       "content": "Crée le fichier output/result-C.txt avec le contenu exact 'Result C done' (sans guillemets). Ce fichier ne doit être créé qu'après que les tâches A et B sont terminées. Le répertoire output doit être créé si nécessaire.",
-      "depends_on": ["A", "B"],
+      "depends_on": [
+        "A",
+        "B"
+      ],
       "status": "pending"
     }
   ]
