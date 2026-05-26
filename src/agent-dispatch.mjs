@@ -171,7 +171,7 @@ function buildPrompt({ role, demande, branch, config, profile, contextBlock, doc
   if (originType === 'pull_request_review_comment') {
     lines.push(`- The exact command to respond (inline reply in the review thread):`);
     lines.push('  ```bash');
-    lines.push(`  gh api repos/${repo}/pulls/comments/${replyToCommentId}/replies --method POST -f body="**[Agent: @${role}]** {your message here}"`);
+    lines.push(`  gh api repos/${repo}/pulls/${prNumber}/comments --method POST --field body="**[Agent: @${role}]** {your message here}" --field in_reply_to=${replyToCommentId}`);
     lines.push('  ```');
   } else if (originType === 'pull_request_comment') {
     lines.push(`- The exact command to respond (PR comment):`);
