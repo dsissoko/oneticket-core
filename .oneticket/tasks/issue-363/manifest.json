@@ -8,7 +8,7 @@
       "file": "games/breakout/index.html",
       "content": "Créer le fichier games/breakout/index.html avec la structure HTML du jeu : canvas#gameCanvas (800x600), div#score, button#restartBtn, et importation des fichiers CSS et JS. Ajouter aussi games/breakout/style.css avec les styles de base du jeu (fond noir, canvas centré, styles du score).",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
