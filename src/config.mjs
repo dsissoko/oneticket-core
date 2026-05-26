@@ -85,6 +85,7 @@ export function loadConfig() {
   return {
     language:                 parsed.language        || null,  // optional
     autonomous_mode:          parsed.autonomous_mode !== false, // optional, defaults to true
+    current_project:          parsed.current_project !== undefined ? (parsed.current_project || '') : undefined,
     cli,
     model:                    cliConfig.model,
     retry_max:                require(parsed, 'retry_max'),
