@@ -8,7 +8,7 @@
       "file": "output/step-A.txt",
       "content": "Crée le fichier output/step-A.txt avec le contenu exact 'Step A done' (sans quotes). Le répertoire output/ doit être créé s'il n'existe pas.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
