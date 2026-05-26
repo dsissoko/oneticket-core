@@ -11,6 +11,8 @@
  *   {
  *     language,                  // 'fr' | null (optional)
  *     autonomous_mode,           // boolean (optional, defaults to true)
+ *     current_project,           // string | undefined (optional)
+ *     clear_session_cache,       // boolean (optional, defaults to true)
  *     cli,                       // 'opencode' | 'claude' | ...
  *     model,                     // extracted from agent_config.<cli>.model
  *     retry_max,                 // 3

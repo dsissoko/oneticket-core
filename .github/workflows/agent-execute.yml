@@ -104,12 +104,12 @@ jobs:
         run: npm ci --silent
 
       # [DETERMINISTIC] Clear opencode session cache — conditioned on clear_session_cache in config.yml
-      # Reads directly from config.yml via grep — no node dependency.
+      # Runs after npm ci — uses print-config.mjs to read config (single source of truth)
       # true (default) — fresh session, prevents stale skills/context resumption
       # false — session persistence enabled for performance (set when oneticket is stable)
       - name: Clear opencode session cache
         run: |
-          CLEAR=$(grep '^clear_session_cache:' .oneticket/config.yml | awk '{print $2}' | tr -d ' ')
+          CLEAR=$(node src/print-config.mjs clear_session_cache)
           if [ "$CLEAR" != "false" ]; then
             rm -rf ~/.local/share/opencode/sessions 2>/dev/null || true
             echo "[session-cache] cleared"
