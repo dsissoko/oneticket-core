@@ -1,43 +1,40 @@
-name: Comment Dispatcher
+name: PR Comment Dispatcher
 
-# [DETERMINISTIC] Entry point for agent invocations via GitHub comments.
+# [DETERMINISTIC] Entry point for agent invocations via PR comments.
 #
-# Trigger: issue_comment (comment on an issue, not a PR)
+# Trigger: issue_comment on a pull_request (GitHub routes PR comments through issue_comment)
 #
 # Workflow responsibilities:
-#   1. Filter: @<role> comment on an issue (not a PR)
-#   2. Build CONTEXT_BLOCK — context specific to this trigger
-#   3. Delegate to agent-dispatch.mjs with the minimal interface contract
+#   1. Filter: @<role> comment on a PR
+#   2. Build CONTEXT_BLOCK with origin_type=pull_request_comment + pr context
+#   3. Delegate to agent-dispatch.mjs with the standard interface contract
 #
 # Interface contract toward agent-dispatch.mjs:
 #   COMMENT_BODY   — comment text (contains @<role> + request)
-#   ISSUE_NUMBER   — issue number
+#   ISSUE_NUMBER   — PR number (used as issue_number for branch naming)
 #   REPO           — owner/repo
-#   CONTEXT_BLOCK  — context built by this workflow (specific to issue_comment)
+#   CONTEXT_BLOCK  — context built by this workflow, includes origin_type + pr_number
 #
-# Extensibility: to add a new trigger (PR comment, label, etc.),
-# create a new workflow that exposes the same contract + its own CONTEXT_BLOCK.
-# agent-dispatch.mjs does not change.
-#
-# [IDEMPOTENCE] Serializes dispatches on the same issue
-# Different issues remain parallel
+# agent-dispatch.mjs reads origin_type from CONTEXT_BLOCK to inject the correct
+# gh pr comment command in ## Agent contract.
 
 on:
   issue_comment:
     types: [created]
 
 concurrency:
-  group: dispatch-${{ github.repository }}-${{ github.event.issue.number }}
+  group: dispatch-pr-${{ github.repository }}-${{ github.event.issue.number }}
   cancel-in-progress: false
 
 jobs:
   dispatch:
-    # Filter: @<role> comment on an issue (not a PR)
-    if: "github.event.issue.pull_request == null && startsWith(github.event.comment.body, '@')"
+    # Filter: @<role> comment on a PR only
+    if: "github.event.issue.pull_request != null && startsWith(github.event.comment.body, '@')"
     runs-on: ubuntu-latest
     permissions:
       contents: write
       issues: write
+      pull-requests: write
 
     steps:
       - name: Checkout
@@ -55,20 +52,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Builds the CONTEXT_BLOCK specific to the issue_comment trigger.
-      # This block will be inserted as-is into the system prompt by agent-dispatch.mjs.
-      # Each trigger is free to build its own format.
       - name: Build context block
         id: context
         run: |
           CONTEXT=$(cat <<'CONTEXT_EOF'
-          ## Context for issue #${{ github.event.issue.number }}
+          ## Context for PR #${{ github.event.issue.number }}
           **Title:** ${{ github.event.issue.title }}
 
           ${{ github.event.issue.body }}
           CONTEXT_EOF
           )
-          # Base64-encode to avoid special character issues
           echo "block=$(echo "$CONTEXT" | base64 -w 0)" >> $GITHUB_OUTPUT
 
       - name: Dispatch agent
@@ -78,27 +71,25 @@ jobs:
           COMMENT_BODY: ${{ github.event.comment.body }}
           REPO: ${{ github.repository }}
           CONTEXT_BLOCK: ${{ steps.context.outputs.block }}
-          ORIGIN_TYPE: issue_comment
+          ORIGIN_TYPE: pull_request_comment
+          PR_NUMBER: ${{ github.event.issue.number }}
         run: |
           export CONTEXT_BLOCK=$(echo "$CONTEXT_BLOCK" | base64 -d)
           node src/agent-dispatch.mjs
 
-  # [FAILURE NOTIFICATION] Posted on the issue if dispatch fails
   notify-failure:
     needs: dispatch
     if: failure()
     runs-on: ubuntu-latest
     steps:
-      - name: Post failure comment on issue
+      - name: Post failure comment on PR
         env:
           GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
         run: |
-          gh issue comment ${{ github.event.issue.number }} \
+          gh pr comment ${{ github.event.issue.number }} \
             --repo ${{ github.repository }} \
             --body "## Dispatch failure
 
           The dispatch workflow failed while processing your command.
 
-          **Actions run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-
-          > Check the run logs to identify the cause."
+          **Actions run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

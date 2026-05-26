@@ -131,7 +131,7 @@ function resolveProjectContext(config) {
  * NOTE: git checkout at the top → anomalyco detects switched=true →
  * disables automatic push and PR creation.
  */
-function buildPrompt({ role, demande, branch, config, profile, contextBlock, docsPath, currentProject, issueNumber, repo }) {
+function buildPrompt({ role, demande, branch, config, profile, contextBlock, docsPath, currentProject, issueNumber, repo, originType, prNumber, replyToCommentId }) {
   const lines = [];
 
   // Common trunk — required regardless of trigger
@@ -167,10 +167,26 @@ function buildPrompt({ role, demande, branch, config, profile, contextBlock, doc
   lines.push(`## Agent contract`);
   lines.push(`- Prefix every response with: **[Agent: \`@${role}\`]**`);
   lines.push(`- ALWAYS respond at the end of every job — no exception.`);
-  lines.push(`- The exact command to respond:`);
-  lines.push('  ```bash');
-  lines.push(`  gh issue comment ${issueNumber} --repo ${repo} --body "**[Agent: \\`@${role}\\`]**\\n\\n{your message here}"`);
-  lines.push('  ```');
+
+  if (originType === 'pull_request_review_comment') {
+    lines.push(`- The exact command to respond (inline reply in the review thread):`);
+    lines.push('  ```bash');
+    lines.push(`  gh api repos/${repo}/pulls/comments/${replyToCommentId}/replies --method POST -f body="**[Agent: @${role}]** {your message here}"`);
+    lines.push('  ```');
+  } else if (originType === 'pull_request_comment') {
+    lines.push(`- The exact command to respond (PR comment):`);
+    lines.push('  ```bash');
+    const prBody = `**[Agent: @${role}]** {your message here}`;
+    lines.push(`  gh pr comment ${prNumber} --repo ${repo} --body "${prBody}"`);
+    lines.push('  ```');
+  } else {
+    // Default: issue_comment
+    lines.push(`- The exact command to respond (issue comment):`);
+    lines.push('  ```bash');
+    const issueBody = `**[Agent: @${role}]** {your message here}`;
+    lines.push(`  gh issue comment ${issueNumber} --repo ${repo} --body "${issueBody}"`);
+    lines.push('  ```');
+  }
   lines.push('');
 
   lines.push(`## Request`);
@@ -190,11 +206,14 @@ function buildPrompt({ role, demande, branch, config, profile, contextBlock, doc
 // ---------------------------------------------------------------------------
 
 async function main() {
-  const commentBody  = process.env.COMMENT_BODY  || '';
-  const issueNumber  = process.env.ISSUE_NUMBER;
-  const repo         = process.env.REPO;
-  const ghToken      = process.env.GITHUB_TOKEN;
-  const contextBlock = process.env.CONTEXT_BLOCK || '';
+  const commentBody       = process.env.COMMENT_BODY        || '';
+  const issueNumber       = process.env.ISSUE_NUMBER;
+  const repo              = process.env.REPO;
+  const ghToken           = process.env.GITHUB_TOKEN;
+  const contextBlock      = process.env.CONTEXT_BLOCK       || '';
+  const originType        = process.env.ORIGIN_TYPE         || 'issue_comment';
+  const prNumber          = process.env.PR_NUMBER           || '';
+  const replyToCommentId  = process.env.REPLY_TO_COMMENT_ID || '';
 
   if (!issueNumber) throw new Error('ISSUE_NUMBER missing');
   if (!repo)        throw new Error('REPO missing');
@@ -275,7 +294,7 @@ async function main() {
   const prompt = buildPrompt({
     role,
     demande,
-    branch:         featureBranch,
+    branch:            featureBranch,
     config,
     profile,
     contextBlock,
@@ -283,6 +302,9 @@ async function main() {
     currentProject,
     issueNumber,
     repo,
+    originType,
+    prNumber,
+    replyToCommentId,
   });
   console.log(`[agent-dispatch] Prompt built (${prompt.length} chars).`);
 
