@@ -3,10 +3,6 @@ name: Deploy Doc Site
 on:
   workflow_dispatch:
   push:
-    tags:
-      - 'v*'
-    branches:
-      - '**'
     paths:
       - '.oneticket/docs/**'
       - 'apps/**/docs/**'
