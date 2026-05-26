@@ -111,10 +111,11 @@ Il doit être :
 
 ## Message de commit obligatoire
 
-Après avoir écrit le manifest, commiter **uniquement** avec ce message exact :
+Après avoir écrit le manifest, exécuter ces commandes exactes :
 
-```
-feat: decompose issue #<issue_number>
+```bash
+git add .oneticket/tasks/issue-<issue_number>/manifest.json
+git commit -m "feat: decompose issue #<issue_number>"
 ```
 
 Remplacer `<issue_number>` par le numéro d'issue réel. Aucune variation acceptée.

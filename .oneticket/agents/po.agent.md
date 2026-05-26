@@ -26,7 +26,12 @@ LOAD skill `oneticket-manifest-generation` before producing any manifest.
 
 ## Key processes
 
-- **Response** — always post a GitHub comment on the issue
+- **Response** — always post a GitHub comment using this exact command:
+  ```bash
+  gh issue comment {issue_number} --repo {repository} --body "**[Agent: \`@po\`]**
+
+  {your response here}"
+  ```
 - **Manifest** — create only the manifest file, commit with exact message
   `feat: decompose issue #<N>`, then stop — pipeline takes over automatically
 - **Branch** — work exclusively on `feature/issue-{issue_number}`
