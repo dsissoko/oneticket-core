@@ -81,7 +81,7 @@ agent_config:
     # --- Available models via opencode provider ---
     # model: opencode/minimax-m2.7       ← prod (validated v0.1.0)
     # model: opencode/claude-haiku-4-5   ← haiku test (validated commit 9011332)
-    model: opencode/minimax-m2.7
+    model: opencode/claude-haiku-4-5
     permission: allow
     share: "disabled"
     autoupdate: false
