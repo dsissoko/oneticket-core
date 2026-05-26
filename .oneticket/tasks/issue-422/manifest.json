@@ -1,0 +1,30 @@
+{
+  "issue": 422,
+  "branch_base": "feature/issue-422",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-422-A",
+      "file": "output/step-A.txt",
+      "content": "Crée le fichier output/step-A.txt avec le contenu exact 'Step A done'.",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-422-B",
+      "file": "output/step-B.txt",
+      "content": "Crée le fichier output/step-B.txt avec le contenu exact 'Step B done'.",
+      "depends_on": ["A"],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-422-C",
+      "file": "output/step-C.txt",
+      "content": "Crée le fichier output/step-C.txt avec le contenu exact 'Step C done'.",
+      "depends_on": ["B"],
+      "status": "pending"
+    }
+  ]
+}
