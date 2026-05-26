@@ -1,13 +1,11 @@
 name: Deploy Doc Site
 
 on:
-  workflow_dispatch:
   push:
     paths:
       - '.oneticket/docs/**'
       - 'apps/**/docs/**'
       - 'doc-site/**'
-      - '.github/workflows/docs-site-github-pages.yml'
   pull_request:
     types: [opened, reopened, synchronize]
     branches: [main]
