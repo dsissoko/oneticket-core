@@ -36,7 +36,7 @@
         "B",
         "C"
       ],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "E",
@@ -48,7 +48,7 @@
         "B",
         "C"
       ],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "F",
@@ -60,7 +60,7 @@
         "B",
         "C"
       ],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "G",
@@ -72,7 +72,7 @@
         "B",
         "C"
       ],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "H",
@@ -84,7 +84,7 @@
         "B",
         "C"
       ],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "I",
@@ -96,7 +96,7 @@
         "B",
         "C"
       ],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "J",
