@@ -2,6 +2,8 @@
 
 The `how/` section describes the technical solution implementing the product needs defined in `what/`.
 
+<!-- pr-preview-test -->
+
 It defines:
 - the global architecture,
 - the system structure,
