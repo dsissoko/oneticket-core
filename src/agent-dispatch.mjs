@@ -206,9 +206,8 @@ async function main() {
   if (error) {
     console.error(`[agent-dispatch] Project context error: ${error}`);
     try {
-      const { execSync } = await import('child_process');
-      execSync(
-        `gh issue comment ${issueNumber} --repo ${repo} --body "## Configuration error\n\n${error}"`,
+      const { execFileSync } = await import('child_process');
+      execFileSync('gh', ['issue', 'comment', String(issueNumber), '--repo', repo, '--body', `## Configuration error\n\n${error}`],
         { env: { ...process.env, GH_TOKEN: ghToken } }
       );
     } catch (e) {
@@ -220,10 +219,22 @@ async function main() {
   if (currentProject === '') {
     // [GATE 0 — DETERMINISTIC] current_project is empty — stop before any agent or branch
     console.log('[agent-dispatch] Gate 0: current_project is empty — posting comment and stopping.');
+    const gate0Body = [
+      '**[Agent: `@po`]**',
+      '',
+      '`current_project` is not set in `.oneticket/config.yml`.',
+      '',
+      'Please set it to your project name before triggering an agent:',
+      '',
+      '```yaml',
+      'current_project: <your-project-name>',
+      '```',
+      '',
+      'Leave it empty only if this is a OneTicket framework request.',
+    ].join('\n');
     try {
-      const { execSync } = await import('child_process');
-      execSync(
-        `gh issue comment ${issueNumber} --repo ${repo} --body "**[Agent: \`@po\`]**\n\n\`current_project\` is not set in \`.oneticket/config.yml\`.\n\nPlease set it to your project name before triggering an agent:\n\n\`\`\`yaml\ncurrent_project: <your-project-name>\n\`\`\`\n\nLeave it empty only if this is a OneTicket framework request."`,
+      const { execFileSync } = await import('child_process');
+      execFileSync('gh', ['issue', 'comment', String(issueNumber), '--repo', repo, '--body', gate0Body],
         { env: { ...process.env, GH_TOKEN: ghToken } }
       );
       console.log('[agent-dispatch] Gate 0 comment posted — waiting for human response.');
