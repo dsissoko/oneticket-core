@@ -32,7 +32,7 @@
       "file": "games/breakout/ball.js",
       "content": "Créer games/breakout/ball.js avec : classe Ball (x, y, radius=8, dx=4, dy=-4, speed=5), méthode update(canvasWidth, canvasHeight) qui déplace la balle et détecte les collisions murs (rebond) et paddle (rebond + angle), méthode reset(canvasWidth, canvasHeight) qui replace la balle au centre avec direction aléatoire vers le haut, méthode draw(ctx) qui dessine un cercle blanc. Exporter la classe Ball.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "E",
