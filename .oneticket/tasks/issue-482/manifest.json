@@ -8,7 +8,7 @@
       "file": "apps/breakout/app/index.html",
       "content": "Lis apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-game-canvas-setup.md. Implémente une page HTML5 (apps/breakout/app/index.html) qui crée un canvas 800x600px avec une bordure visible, initialise une boucle de jeu basique avec requestAnimationFrame, et affiche un bouton 'Start Game' pour démarrer le jeu. La page doit charger un fichier CSS et un fichier JavaScript (game.js).",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
@@ -16,7 +16,7 @@
       "file": "apps/breakout/app/style.css",
       "content": "Lis apps/breakout/docs/how/architecture.md et us-001-game-canvas-setup.md. Implémente apps/breakout/app/style.css qui stylise la page HTML : centrer le canvas, ajouter une bordure visible au canvas, styliser le bouton 'Start Game', définir des polices lisibles pour le score, et assurer que la page est responsive. Couleurs et design doivent être simples et classiques (fond noir, texte blanc, briques colorées).",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "C",
@@ -24,7 +24,7 @@
       "file": "apps/breakout/app/game.js",
       "content": "Lis apps/breakout/docs/what/epics/epic-0-mvp/user-stories/ (toutes les US 001-006) et apps/breakout/docs/how/architecture.md. Implémente apps/breakout/app/game.js avec la structure complète du jeu Breakout en vanilla JS :\n\n1. [Tâche A1] Game Engine & State Machine : Crée un objet Game global avec states (menu, playing, gameOver, victory), une boucle de jeu via requestAnimationFrame, et gestion du temps delta pour un mouvement frame-rate-independent.\n\n2. [Tâche A2] Game Objects (Paddle) : Implémente la classe Paddle avec position (x, y), dimensions, et render(ctx) pour dessiner au canvas. Stocke l'instance dans game.paddle.\n\n3. [Tâche A3] Game Objects (Ball) : Implémente la classe Ball avec position (x, y), rayon, et velocity (vx, vy). Ajoute une méthode update(deltaTime, canvas) pour le mouvement, et render(ctx) pour dessiner.\n\n4. [Tâche A4] Game Objects (Brick) : Implémente la classe Brick pour les briques. Crée un tableau game.bricks[] et une méthode initializeBricks() qui crée 5 rangées de 8 briques (40 au total) espacées régulièrement en haut du canvas.\n\n5. [Tâche A5] Input Handler : Écoute les événements clavier (ArrowLeft, ArrowRight, KeyA, KeyD) et les événements souris (mousemove) pour contrôler la position du paddle. Met à jour game.paddle.x continuellement.\n\n6. [Tâche A6] Physics & Collision Detection :\n   - Ball update() gère les rebonds sur les murs (haut, gauche, droite).\n   - Détecte les collisions ball-paddle (AABB ou cercle-rectangle) et inverse vy.\n   - Détecte les collisions ball-brick (AABB) : détruit la brique et inverse la velocity du ball.\n   - Détecte si ball sort par le bas → transition à gameOver.\n\n7. [Tâche A7] Scoring System : Ajoute game.score (initialisé à 0). À chaque destruction de brick, incrémenter game.score += 10. Afficher le score en temps réel sur le canvas (top-left ou top-right).\n\n8. [Tâche A8] Game Over & Victory Logic :\n   - Détecte la condition de victoire : si game.bricks.length === 0 → state = 'victory'.\n   - Gère la condition de game over : si ball.y > canvas.height → state = 'gameOver'.\n   - Affiche les écrans de fin (texte centré, boutons pour Restart ou Return to Menu).\n\n9. [Tâche A9] Rendering & Canvas Drawing :\n   - Fonction render(ctx) qui clear le canvas (fillRect noir).\n   - Appelle paddle.render(ctx), ball.render(ctx), et bricks.forEach(b => b.render(ctx)).\n   - Affiche le score et les textes d'état (menu, game over, victory).\n\n10. [Tâche A10] Menu & Start/Restart Logic : Ajoute des boutons 'Start Game', 'Restart', 'Return to Menu' qui mettent à jour game.state et reinitializent les variables de jeu.\n\nRéférences de user stories :\n- US-001 : Canvas initialization, game loop setup\n- US-002 : Paddle mechanics, input handling\n- US-003 : Ball physics, wall/paddle/brick collisions\n- US-004 : Brick destruction & collision\n- US-005 : Score system\n- US-006 : Game over/victory screens, state transitions\n\nLe fichier doit être autosuffisant et complet. Pas de dépendances externes (vanilla JS uniquement).",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "D",
@@ -32,7 +32,7 @@
       "file": "apps/breakout/app/README.md",
       "content": "Lis apps/breakout/docs/what/product-spec.md et apps/breakout/docs/how/architecture.md. Implémente apps/breakout/app/README.md avec :\n1. Titre : 'Breakout — A Classic Brick-Breaker Game'\n2. Section 'How to Play' : Explique comment contrôler la raquette (clavier/souris) et l'objectif du jeu.\n3. Section 'Features' : Liste les 6 capacités principales du MVP.\n4. Section 'Getting Started' : Indique comment lancer le jeu (ouvrir index.html dans un navigateur).\n5. Section 'Technical Details' : Précise que le jeu est écrit en vanilla JS sans frameworks.\n6. Section 'Project Structure' : Décrit les fichiers (index.html, style.css, game.js).",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     }
   ]
 }
