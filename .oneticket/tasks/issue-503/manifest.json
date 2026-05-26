@@ -8,7 +8,7 @@
       "file": "apps/breakout/app/index.html",
       "content": "Crée le fichier HTML principal du jeu Breakout. Inclut: balise canvas pour le rendu du jeu (largeur 800px, hauteur 600px), structure de base HTML5, lien vers style.css et game.js. Le canvas doit avoir un ID 'gameCanvas'. Ajoute un conteneur pour les écrans de jeu (start, game over, victory).",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
