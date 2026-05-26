@@ -6,3 +6,4 @@
 2026-05-26 20:40 | G | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-004-scoring.md
 2026-05-26 20:40 | F | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-003-ball-physics.md
 2026-05-26 20:40 | I | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-006-victory.md
+2026-05-26 20:41 | H | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-005-game-over.md
