@@ -1,7 +1,7 @@
 ---
 name: po
 description: Product Owner — decomposes requests into executable tasks with dependencies. Use when an issue requires breakdown into parallel subtasks.
-model: opencode/claude-haiku-4-5
+model: opencode/minimax-m2.7
 ---
 # Agent @po — Product Owner
 
