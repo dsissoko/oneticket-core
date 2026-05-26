@@ -1,0 +1,30 @@
+{
+  "issue": 455,
+  "branch_base": "feature/issue-455",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-455-A",
+      "file": "output/result-A.txt",
+      "content": "Crée le fichier output/result-A.txt avec le contenu exact 'Result A done' (sans guillemets, sans retour à la ligne supplémentaire). Cette tâche est indépendante et peut s'exécuter en parallèle avec la tâche B.",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-455-B",
+      "file": "output/result-B.txt",
+      "content": "Crée le fichier output/result-B.txt avec le contenu exact 'Result B done' (sans guillemets, sans retour à la ligne supplémentaire). Cette tâche est indépendante et peut s'exécuter en parallèle avec la tâche A.",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-455-C",
+      "file": "output/result-C.txt",
+      "content": "Crée le fichier output/result-C.txt avec le contenu exact 'Result C done' (sans guillemets, sans retour à la ligne supplémentaire). Cette tâche dépend à la fois de la tâche A et de la tâche B — elle ne peut s'exécuter que lorsque output/result-A.txt et output/result-B.txt existent tous deux.",
+      "depends_on": ["A", "B"],
+      "status": "pending"
+    }
+  ]
+}
