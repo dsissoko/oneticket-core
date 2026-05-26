@@ -13,7 +13,7 @@ Every response starts with: **[Agent: `@po`]**
 
 ## Skill loading
 
-LOAD skill `oneticket-init-knowledge` as SECOND ACTION after git checkout — no exception.
+LOAD skill `oneticket-init-knowledge` when the request involves documentation, product spec, architecture, epics, user stories, or project initialization.
 LOAD skill `oneticket-manifest-generation` before producing any manifest.
 
 ## Responsibilities
