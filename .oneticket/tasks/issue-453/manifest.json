@@ -8,7 +8,7 @@
       "file": ".oneticket/tasks/issue-453/subtask-A.txt",
       "content": "Crée le fichier .oneticket/tasks/issue-453/subtask-A.txt avec le contenu exacte: 'Subtask A completed'",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
@@ -16,7 +16,7 @@
       "file": ".oneticket/tasks/issue-453/subtask-B.txt",
       "content": "Crée le fichier .oneticket/tasks/issue-453/subtask-B.txt avec le contenu exacte: 'Subtask B completed'",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "C",
@@ -24,14 +24,17 @@
       "file": ".oneticket/tasks/issue-453/subtask-C.txt",
       "content": "Crée le fichier .oneticket/tasks/issue-453/subtask-C.txt avec le contenu exacte: 'Subtask C completed'",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "D",
       "branch": "task/issue-453-D",
       "file": ".oneticket/tasks/issue-453/subtask-D.txt",
       "content": "Crée le fichier .oneticket/tasks/issue-453/subtask-D.txt avec le contenu exacte: 'Subtask D completed'",
-      "depends_on": ["A", "B"],
+      "depends_on": [
+        "A",
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -39,7 +42,9 @@
       "branch": "task/issue-453-E",
       "file": ".oneticket/tasks/issue-453/subtask-E.txt",
       "content": "Crée le fichier .oneticket/tasks/issue-453/subtask-E.txt avec le contenu exacte: 'Subtask E completed'",
-      "depends_on": ["D"],
+      "depends_on": [
+        "D"
+      ],
       "status": "pending"
     },
     {
@@ -47,7 +52,9 @@
       "branch": "task/issue-453-F",
       "file": ".oneticket/tasks/issue-453/subtask-F.txt",
       "content": "Crée le fichier .oneticket/tasks/issue-453/subtask-F.txt avec le contenu exacte: 'Subtask F completed'",
-      "depends_on": ["C"],
+      "depends_on": [
+        "C"
+      ],
       "status": "pending"
     }
   ]
