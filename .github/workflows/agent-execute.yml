@@ -132,7 +132,7 @@ jobs:
       - name: Run agent
         id: run-agent
         continue-on-error: true
-        uses: anomalyco/opencode/github@latest
+        uses: anomalyco/opencode/github@v1.15.10
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
