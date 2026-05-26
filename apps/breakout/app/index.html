@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breakout</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <div id="start-screen" class="screen">
+            <h1>Breakout</h1>
+            <p>Appuyez sur Espace pour commencer</p>
+        </div>
+        <div id="gameover-screen" class="screen hidden">
+            <h1>Game Over</h1>
+            <p>Appuyez sur Espace pour rejouer</p>
+        </div>
+        <div id="victory-screen" class="screen hidden">
+            <h1>Victoire!</h1>
+            <p>Appuyez sur Espace pour rejouer</p>
+        </div>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>
