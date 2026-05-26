@@ -162,6 +162,17 @@ function buildPrompt({ role, demande, branch, config, profile, contextBlock, doc
   lines.push(`current_project: ${currentProject}`);
   lines.push('');
 
+  // Agent contract — universal, injected deterministically for every agent and every trigger
+  // Variables are resolved here — the agent must never resolve them itself
+  lines.push(`## Agent contract`);
+  lines.push(`- Prefix every response with: **[Agent: \`@${role}\`]**`);
+  lines.push(`- ALWAYS respond at the end of every job — no exception.`);
+  lines.push(`- The exact command to respond:`);
+  lines.push('  ```bash');
+  lines.push(`  gh issue comment ${issueNumber} --repo ${repo} --body "**[Agent: \\`@${role}\\`]**\\n\\n{your message here}"`);
+  lines.push('  ```');
+  lines.push('');
+
   lines.push(`## Request`);
   lines.push(demande || `@${role}`);
   lines.push('');
