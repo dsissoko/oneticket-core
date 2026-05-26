@@ -13,8 +13,9 @@ The documentation source remains independent from the rendering engine — switc
 - **Build once, deploy many** — the static site is generated once and reused for all deployments
 - **Source independence** — `doc-site/` consumes `docs_path` but never modifies it
 - **Engine replaceability** — replacing Astro/Starlight requires only changes in `doc-site/` and the deploy workflow
-- **`doc-site-static/` is a CI artifact** — never committed to the repository
+- **`doc-site/dist/` is a CI artifact** — never committed to the repository
 - **DOC_SOURCE driven by `current_project`** — resolved deterministically from `config.yml`, same logic as `docs_path`
+- **Multi-purpose GitHub Pages** — the same `gh-pages` branch hosts doc and app for the framework and all app projects
 
 ---
 
@@ -52,7 +53,58 @@ oneticket-core/
 
 ---
 
-## DOC_SOURCE Resolution
+## GitHub Pages — Multi-Purpose Structure
+
+GitHub Pages is configured to serve from the `gh-pages` branch at `/` (root).
+It hosts three types of content, all coexisting under the same domain:
+
+| Usage | Path | URL |
+|---|---|---|
+| Framework doc | `framework/docs/` | `https://dsissoko.github.io/oneticket-core/framework/docs/` |
+| App doc | `<project>/docs/` | `https://dsissoko.github.io/oneticket-core/<project>/docs/` |
+| App frontend | `<project>/app/` | `https://dsissoko.github.io/oneticket-core/<project>/app/` |
+
+PR previews are nested under `pr/<N>/` for both doc and app:
+
+| Usage | Path | URL |
+|---|---|---|
+| Framework doc preview | `framework/pr/<N>/docs/` | `https://dsissoko.github.io/oneticket-core/framework/pr/<N>/docs/` |
+| App doc preview | `<project>/pr/<N>/docs/` | `https://dsissoko.github.io/oneticket-core/<project>/pr/<N>/docs/` |
+| App frontend preview | `<project>/pr/<N>/app/` | `https://dsissoko.github.io/oneticket-core/<project>/pr/<N>/app/` |
+
+The doc footer includes a link to the corresponding app URL when `current_project` is set.
+
+### `gh-pages` branch structure
+
+```
+gh-pages/
+├── framework/
+│   ├── docs/              ← framework doc (prod)
+│   └── pr/<N>/docs/       ← framework doc (PR preview)
+├── <project>/
+│   ├── docs/              ← app doc (prod)
+│   ├── app/               ← app frontend (prod)
+│   └── pr/<N>/
+│       ├── docs/          ← app doc (PR preview)
+│       └── app/           ← app frontend (PR preview)
+```
+
+---
+
+## BASE_URL Calculation
+
+Astro requires `base` and `site` to generate correct internal links and assets when served under a sub-path.
+
+Both are computed in the `resolve-context` job and injected as env vars at build time:
+
+| Variable | Local | Prod | PR Preview |
+|---|---|---|---|
+| `ASTRO_SITE` | `http://localhost:4321` | `https://dsissoko.github.io/oneticket-core` | `https://dsissoko.github.io/oneticket-core` |
+| `ASTRO_BASE` | `` (empty) | `/<slug>/docs` | `/<slug>/pr/<N>/docs` |
+
+Where `<slug>` = `current_project` if set, otherwise `framework`.
+
+---
 
 The `DOC_SOURCE` environment variable points Astro to the correct documentation source.
 
@@ -73,7 +125,7 @@ const docSource = process.env.DOC_SOURCE || '../.oneticket/docs'
 
 ## Build Footer
 
-Every page includes a footer with build metadata injected at CI build time via `PUBLIC_*` environment variables:
+Every page includes a footer with build metadata. Variables injected at CI build time via `PUBLIC_*` env vars:
 
 | Variable | Source | Displayed as |
 |---|---|---|
@@ -82,6 +134,7 @@ Every page includes a footer with build metadata injected at CI build time via `
 | `PUBLIC_TAG` | tag name or empty | `Tag: v0.1.0` (omitted if empty) |
 | `PUBLIC_COMMIT_SHA` | `${{ github.sha }}` (first 7 chars) | `Commit: 3ecf683` |
 | `PUBLIC_BUILD_DATE` | ISO date at build time | `2026-05-26` |
+| `PUBLIC_APP_URL` | computed from slug + context | `App: https://...` (omitted if framework or empty) |
 
 In local development, these variables are absent — the footer reads git metadata directly via `execSync` (`branch`, `commit sha`, `tag` if on an exact tag match, `build date`). No environment variables needed locally.
 
@@ -108,71 +161,77 @@ In local development, these variables are absent — the footer reads git metada
 ```yaml
 on:
   push:
-    branches-ignore: [gh-pages]
     paths: ['.oneticket/docs/**', 'apps/**/docs/**', 'doc-site/**']
   pull_request:
     types: [opened, reopened, synchronize]
     branches: [main]
     paths: ['.oneticket/docs/**', 'apps/**/docs/**', 'doc-site/**']
-  push:
-    tags: ['v*']
 ```
+
+Tags `v*` are covered by the `push` trigger (no path filter needed — a tag push triggers on any path match from previous commits).
 
 ### Jobs
 
 ```
-resolve-doc-source
+resolve-context
   → node src/print-config.mjs current_project
-  → output: DOC_SOURCE, PROJECT_NAME
+  → slug = current_project or 'framework'
+  → DOC_SOURCE, ASTRO_BASE, target_folder, app_url
+  → outputs: doc_source, slug, astro_base, target_folder, app_url
         ↓
 build-doc-site
   → npm ci in doc-site/
-  → astro build
-  → inject PUBLIC_BUILD_NUMBER, PUBLIC_BRANCH, PUBLIC_TAG, PUBLIC_COMMIT_SHA, PUBLIC_BUILD_DATE
-  → baseURL: production or preview
-  → upload-artifact: doc-site-static/
+  → npx playwright install chromium --with-deps
+  → astro build with:
+      DOC_SOURCE, ASTRO_SITE, ASTRO_BASE
+      PUBLIC_BRANCH, PUBLIC_TAG, PUBLIC_COMMIT_SHA,
+      PUBLIC_BUILD_NUMBER, PUBLIC_BUILD_DATE, PUBLIC_APP_URL
+  → upload-artifact: doc-site/dist/
         ↓
-deploy-doc-preview    (if pull_request)
+deploy-preview    (if pull_request)
   → download-artifact
   → JamesIves/github-pages-deploy-action@v4
-      target-folder: <project>/pr/<N>/docs
+      token: ONETICKET_GH_PAT
+      target-folder: <slug>/pr/<N>/docs
+      clean: false
   → marocchino/sticky-pull-request-comment@v2
       posts preview URL on the PR
         ↓
-deploy-doc-prod       (if push main or tag v*)
+deploy-prod       (if push main or tag v*)
   → download-artifact
   → JamesIves/github-pages-deploy-action@v4
-      target-folder: <project>/docs
+      token: ONETICKET_GH_PAT
+      target-folder: <slug>/docs
       clean: true
-      clean-exclude: [pr]
+      clean-exclude: ["pr"]
 ```
 
 ### URL Conventions
 
 | Context | URL |
 |---|---|
-| Production | `https://<owner>.github.io/<repo>/<project>/docs/` |
-| PR Preview | `https://<owner>.github.io/<repo>/<project>/pr/<N>/docs/` |
+| Framework doc prod | `https://dsissoko.github.io/oneticket-core/framework/docs/` |
+| App doc prod | `https://dsissoko.github.io/oneticket-core/<project>/docs/` |
+| Framework doc PR preview | `https://dsissoko.github.io/oneticket-core/framework/pr/<N>/docs/` |
+| App doc PR preview | `https://dsissoko.github.io/oneticket-core/<project>/pr/<N>/docs/` |
 
-### baseURL at build time
+### GitHub Pages configuration
 
-```
-Production : https://<owner>.github.io/<repo>/<project>/docs/
-Preview    : /<repo>/<project>/pr/<N>/docs/
-```
+- **Source**: `Deploy from a branch`
+- **Branch**: `gh-pages`
+- **Folder**: `/ (root)`
 
-### Preview cleanup (optional)
+### App deploy workflow
 
-Commented in the workflow — activate by adding `closed` to `pull_request` types:
+A separate workflow `app-deploy-github-pages.yml` (to be created) handles frontend app deployment:
+- triggers on `apps/<project>/app/**`
+- deploys to `<slug>/app/` (prod) or `<slug>/pr/<N>/app/` (preview)
+- symmetric structure to this workflow
 
-```yaml
-# - name: Cleanup PR Preview
-#   uses: JamesIves/github-pages-deploy-action@v4
-#   with:
-#     folder: /tmp/empty
-#     target-folder: <project>/pr/<N>
-#     clean: true
-```
+### Preview cleanup
+
+Not activated — PR preview directories are preserved after PR close/merge.
+To activate, add `closed` to `pull_request` types and add a cleanup job using `JamesIves` with an empty folder targeting `<slug>/pr/<N>/`.
 
 ---
 
@@ -260,7 +319,11 @@ Use `build + preview` to validate:
 ## `.gitignore` additions
 
 ```
-doc-site-static/
+doc-site/dist/
+doc-site/.astro/
+doc-site/.docs-generated/
+doc-site/src/content/docs/
+doc-site/src/content/docs-generated/
 doc-site/node_modules/
 ```
 
