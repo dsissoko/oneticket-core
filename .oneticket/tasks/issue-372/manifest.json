@@ -26,7 +26,7 @@
       "file": "src/game/physics.js",
       "content": "Lis apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-004-ball-physics.md et apps/breakout/docs/how/architecture.md section 5.2. Implémente un module PhysicsEngine (src/game/physics.js) qui : 1) Expose une méthode update(gameState, dt) qui met à jour ball.x, ball.y selon vx, vy, 2) Détecte les collisions avec les murs (haut, bas, gauche, droite) et inverse vx ou vy, 3) Maintient la balle dans les bounds du canvas (0 à width, 0 à height), 4) Gère les rebonds élastiques simples. Frame-rate independent via dt. Testable indépendamment.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "D",
