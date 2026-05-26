@@ -39,10 +39,11 @@ jobs:
           PROJECT=$(node src/print-config.mjs current_project)
           SLUG=${PROJECT:-framework}
 
-          if [ -n "$PROJECT" ]; then
-            DOC_SOURCE="apps/$PROJECT/docs"
-          else
+          # Special convention: oneticket-core uses .oneticket/docs, not apps/oneticket-core/docs
+          if [ "$PROJECT" = "oneticket-core" ] || [ -z "$PROJECT" ]; then
             DOC_SOURCE=".oneticket/docs"
+          else
+            DOC_SOURCE="apps/$PROJECT/docs"
           fi
 
           if [ "${{ github.event_name }}" = "pull_request" ]; then

@@ -78,40 +78,43 @@ function loadProfile(role) {
 /**
  * Resolves docs_path and app_path deterministically from config.current_project.
  *
- * Three states for current_project:
- *   - absent (undefined) → config error — caller must notify user and stop
- *   - empty ("")         → docs_path = .oneticket/docs (framework context)
- *                          app_path  = null (no app in framework context)
- *   - set ("myapp")      → docs_path = apps/myapp/docs (application context)
- *                          app_path  = apps/myapp/app  (application source root)
+ * States for current_project:
+ *   - absent (undefined) or empty → config error — caller must notify user and stop
+ *   - 'oneticket-core'            → special convention: framework repo
+ *                                    docs_path = .oneticket/docs
+ *                                    app_path  = null (no app for the framework itself)
+ *   - any other value             → application project context
+ *                                    docs_path = apps/<project>/docs
+ *                                    app_path  = apps/<project>/app
  *
  * current_project is passed as-is into the prompt — the agent reads it directly.
  *
  * @returns {{ docsPath: string, appPath: string|null, currentProject: string, error: string|null }}
  */
 function resolveProjectContext(config) {
-  // current_project key absent entirely — config error
-  if (config.current_project === undefined) {
+  // current_project absent or empty — config error
+  if (!config.current_project) {
     return {
       docsPath:       null,
       appPath:        null,
       currentProject: null,
-      error:          'current_project key is missing from .oneticket/config.yml. ' +
-                      'Add it with your project name or leave it empty for framework context.',
+      error:          'current_project key is missing or empty in .oneticket/config.yml. ' +
+                      'Set it to your project name (e.g. oneticket-core, breakout).',
     };
   }
 
-  // current_project present but empty — framework context
-  if (config.current_project === '' || config.current_project === null) {
+  // Special convention: oneticket-core = framework repo
+  // docs live in .oneticket/docs, no app
+  if (config.current_project === 'oneticket-core') {
     return {
-      docsPath:       `.oneticket/docs`,
+      docsPath:       '.oneticket/docs',
       appPath:        null,
-      currentProject: ``,
+      currentProject: 'oneticket-core',
       error:          null,
     };
   }
 
-  // current_project set — application project context
+  // Application project — standard convention
   return {
     docsPath:       `apps/${config.current_project}/docs`,
     appPath:        `apps/${config.current_project}/app`,
@@ -252,9 +255,9 @@ async function main() {
     process.exit(1);
   }
 
-  if (currentProject === '') {
-    // [GATE 0 — DETERMINISTIC] current_project is empty — stop before any agent or branch
-    console.log('[agent-dispatch] Gate 0: current_project is empty — posting comment and stopping.');
+  if (currentProject === null) {
+    // [GATE 0 — DETERMINISTIC] current_project missing or empty — stop before any agent or branch
+    console.log('[agent-dispatch] Gate 0: current_project not set — posting comment and stopping.');
     const gate0Body = [
       '**[Agent: `@po`]**',
       '',
@@ -265,8 +268,6 @@ async function main() {
       '```yaml',
       'current_project: <your-project-name>',
       '```',
-      '',
-      'Leave it empty only if this is a OneTicket framework request.',
     ].join('\n');
     try {
       const { execFileSync } = await import('child_process');

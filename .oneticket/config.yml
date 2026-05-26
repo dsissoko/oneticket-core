@@ -40,16 +40,17 @@ pr_base: main
 # false — session persistence enabled, better performance (use when oneticket is stable)
 clear_session_cache: true
 
-# Active user project — determines docs_path = apps/<current_project>/docs/
+# Active user project — determines docs_path and app_path
 #
-# Three states:
-#   - key absent entirely   → config error — agent will stop and notify user
-#   - key present but empty → oneticket framework context
-#   - key present and set   → application project context
+# States:
+#   - key absent or empty           → config error — agent stops and notifies user
+#   - 'oneticket-core' (special)    → docs_path = .oneticket/docs, app_path = null
+#   - any other value (e.g. breakout) → docs_path = apps/<project>/docs
+#                                        app_path  = apps/<project>/app
 #
-# Set to your project name to work on an application project.
-# Leave empty to work on the oneticket framework itself.
-current_project:   # ← set to your project name (e.g. breakout), or leave empty for framework
+# Set to 'oneticket-core' to work on the framework itself.
+# Set to your project name (e.g. breakout) to work on an application project.
+current_project: oneticket-core
 
 # ---------------------------------------------------------------------------
 # Documentation path resolution
@@ -59,14 +60,11 @@ current_project:   # ← set to your project name (e.g. breakout), or leave empt
 # before being injected into the agent prompt — the agent never resolves it.
 #
 # Resolution logic (src/agent-dispatch.mjs → resolveProjectContext):
-#   - current_project absent        → config error — agent notifies user, stops
-#   - current_project empty ("")    → project = "oneticket (framework)"
-#                                      docs_path = .oneticket/docs
-#   - current_project set ("myapp") → project = "myapp (application project)"
-#                                      docs_path = apps/myapp/docs
-#
-# To document a user project  : set current_project to your project name
-# To document oneticket itself: leave current_project empty
+#   - current_project absent or empty   → config error — agent notifies user, stops
+#   - current_project = 'oneticket-core' → docs_path = .oneticket/docs (framework special case)
+#                                           app_path  = null (no app for the framework)
+#   - current_project = 'myapp'          → docs_path = apps/myapp/docs
+#                                           app_path  = apps/myapp/app
 
 # ---------------------------------------------------------------------------
 # CI agent configuration — generated at runtime via src/generate-config.mjs
