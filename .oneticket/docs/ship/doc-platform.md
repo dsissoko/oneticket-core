@@ -83,7 +83,7 @@ Every page includes a footer with build metadata injected at CI build time via `
 | `PUBLIC_COMMIT_SHA` | `${{ github.sha }}` (first 7 chars) | `Commit: 3ecf683` |
 | `PUBLIC_BUILD_DATE` | ISO date at build time | `2026-05-26` |
 
-In local development, these variables are absent — the footer displays nothing or a `local` placeholder.
+In local development, these variables are absent — the footer reads git metadata directly via `execSync` (`branch`, `commit sha`, `tag` if on an exact tag match, `build date`). No environment variables needed locally.
 
 ---
 
@@ -241,17 +241,17 @@ title: 'Your Page Title'
 
 ---
 
-### `link-docs.mjs` — symlink mechanism
+### `link-docs.mjs` — copy and transform mechanism
 
-Starlight expects its content in `src/content/docs/`. Rather than copying files, `link-docs.mjs` creates a symlink:
+Starlight expects its content in `src/content/docs/`. `link-docs.mjs` performs a clean copy of `DOC_SOURCE` into `src/content/docs/` with the following transformations:
 
-```
-doc-site/src/content/docs → <DOC_SOURCE>
-```
+- `README.md` → `index.md` (Starlight uses `index.md` as directory root page)
+- Frontmatter `title:` injected from first H1 — H1 removed from body to avoid duplication
+- `index.md` auto-generated for directories without one (TOC of files and subdirs)
 
-This runs automatically before every `dev` and `build` via the npm scripts. The symlink is not committed — it is recreated on every run.
+`src/content/docs/` is gitignored — always regenerated before `dev` and `build` via the npm scripts.
 
-**In CI:** `DOC_SOURCE` is set from `current_project` before calling `npm run build` — the correct project docs are linked automatically.
+**In CI:** `DOC_SOURCE` is set from `current_project` before calling `npm run build` — the correct project docs are copied and transformed automatically.
 
 ---
 
