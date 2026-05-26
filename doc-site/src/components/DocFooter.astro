@@ -1,0 +1,49 @@
+---
+// DocFooter.astro — Build metadata footer
+// In CI: variables injected via PUBLIC_* env vars (branch, sha, tag, build number, date)
+// In local: falls back to git commands via execSync
+
+import { execSync } from 'child_process';
+
+function git(cmd) {
+  try { return execSync(cmd, { encoding: 'utf8' }).trim(); }
+  catch { return null; }
+}
+
+const branch     = import.meta.env.PUBLIC_BRANCH      || git('git rev-parse --abbrev-ref HEAD');
+const commitSha  = (import.meta.env.PUBLIC_COMMIT_SHA  || git('git rev-parse HEAD'))?.slice(0, 7);
+const tag        = import.meta.env.PUBLIC_TAG          || git('git describe --exact-match --tags HEAD 2>/dev/null') || null;
+const buildDate  = import.meta.env.PUBLIC_BUILD_DATE   || new Date().toISOString().slice(0, 10);
+const buildNumber = import.meta.env.PUBLIC_BUILD_NUMBER || null;
+---
+
+<footer class="doc-footer">
+  <div class="doc-footer-content">
+    {branch     && <span>Branch: <code>{branch}</code></span>}
+    {tag        && <span>Tag: <code>{tag}</code></span>}
+    {buildNumber && <span>Build: <code>#{buildNumber}</code></span>}
+    {commitSha  && <span>Commit: <code>{commitSha}</code></span>}
+    {buildDate  && <span>{buildDate}</span>}
+  </div>
+</footer>
+
+<style>
+  .doc-footer {
+    border-top: 1px solid var(--sl-color-hairline);
+    padding: 1rem var(--sl-content-pad-x);
+    margin-top: 2rem;
+  }
+  .doc-footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: var(--sl-text-xs);
+    color: var(--sl-color-gray-3);
+  }
+  code {
+    font-family: var(--sl-font-mono);
+    background: var(--sl-color-bg-inline-code);
+    padding: 0.1em 0.3em;
+    border-radius: 0.2em;
+  }
+</style>

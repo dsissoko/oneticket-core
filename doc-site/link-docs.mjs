@@ -1,0 +1,87 @@
+#!/usr/bin/env node
+// link-docs.mjs — copies DOC_SOURCE into src/content/docs/ with minimal transformations
+//
+// 1. Cleans and recreates src/content/docs/ from docSource (clean copy each run)
+// 2. Renames README.md → index.md (Starlight uses index.md as directory root page)
+// 3. Injects minimal frontmatter { title } extracted from first H1 — required by Starlight
+// 4. Removes the H1 from body to avoid duplicate with Starlight's auto title rendering
+// 5. Generates index.md for directories without one (TOC of files and subdirs)
+//
+// src/content/docs/ is gitignored — always regenerated before dev/build.
+// Sources in .oneticket/docs/ are NEVER modified.
+
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const repoRoot  = path.resolve(__dirname, '..');
+
+// Resolve DOC_SOURCE
+const docSource = process.env.DOC_SOURCE
+  ? path.resolve(repoRoot, process.env.DOC_SOURCE)
+  : path.resolve(repoRoot, '.oneticket/docs');
+
+const destDir = path.resolve(__dirname, 'src/content/docs');
+
+// Transform a single markdown file — inject title from H1, remove H1 from body
+function transformMarkdown(content) {
+  const h1Match = content.match(/^#\s+(.+)$/m);
+  const title   = h1Match ? h1Match[1].trim() : 'Untitled';
+  const body    = h1Match
+    ? content.replace(/^#\s+.+\n?/m, '').replace(/^\n+/, '\n')
+    : content;
+  return `---\ntitle: '${title.replace(/'/g, "\\'")}'\n---\n${body}`;
+}
+
+// Copy docSource → destDir, renaming README.md → index.md
+function copyDir(src, dest) {
+  if (!fs.existsSync(dest)) fs.mkdirSync(dest, { recursive: true });
+  for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
+    const srcPath  = path.join(src, entry.name);
+    const destName = entry.name === 'README.md' ? 'index.md' : entry.name;
+    const destPath = path.join(dest, destName);
+    if (entry.isDirectory()) {
+      copyDir(srcPath, destPath);
+    } else if (entry.name.endsWith('.md')) {
+      fs.writeFileSync(destPath, transformMarkdown(fs.readFileSync(srcPath, 'utf8')));
+    } else {
+      fs.copyFileSync(srcPath, destPath);
+    }
+  }
+}
+
+// Generate index.md with TOC for directories without one
+function toTitle(name) {
+  return name.replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+}
+
+function generateIndex(dir) {
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  const title   = toTitle(path.basename(dir));
+  const links   = [];
+
+  for (const e of entries.filter(e => e.isDirectory()))
+    links.push(`- [${toTitle(e.name)}](./${e.name}/)`);
+
+  for (const e of entries.filter(e => e.isFile() && e.name.endsWith('.md') && e.name !== 'index.md'))
+    links.push(`- [${toTitle(e.name.replace(/\.md$/, ''))}](./${e.name.replace(/\.md$/, '')})`);
+
+  fs.writeFileSync(
+    path.join(dir, 'index.md'),
+    `---\ntitle: '${title}'\n---\n\n${links.join('\n')}\n`
+  );
+}
+
+function processDirectory(dir) {
+  if (!fs.existsSync(dir)) return;
+  if (!fs.existsSync(path.join(dir, 'index.md'))) generateIndex(dir);
+  for (const e of fs.readdirSync(dir, { withFileTypes: true }).filter(e => e.isDirectory()))
+    processDirectory(path.join(dir, e.name));
+}
+
+// Clean previous copy and rebuild
+if (fs.existsSync(destDir)) fs.rmSync(destDir, { recursive: true, force: true });
+copyDir(docSource, destDir);
+processDirectory(destDir);
+console.log(`[link-docs] ${docSource} → ${destDir}`);

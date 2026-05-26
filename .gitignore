@@ -6,3 +6,10 @@ opencode.json
 # OneTicket framework skills — installed at CI runtime by src/oneticket-install.mjs
 # Not committed — do not pollute app developer repos
 .agents/skills/oneticket-*
+
+# doc-site build artifacts — generated at CI runtime, never committed
+doc-site/dist/
+doc-site/.astro/
+doc-site/.docs-generated/
+doc-site/src/content/docs/
+doc-site/src/content/docs-generated/

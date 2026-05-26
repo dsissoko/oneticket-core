@@ -145,3 +145,10 @@ If the structure already exists at `<docs_path>`:
 - Always place documents in their canonical location.
 - Never invent content — only what the user explicitly provided.
 - `docs_path` is always provided in the prompt — never resolve it yourself.
+- **Every documentation file must include a `title:` frontmatter field** — required by the Starlight rendering engine:
+  ```markdown
+  ---
+  title: 'Your Page Title'
+  ---
+  ```
+  Without it, the doc site build will fail. This applies to every new file created in `<docs_path>/`.
