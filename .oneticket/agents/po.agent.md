@@ -41,11 +41,8 @@ LOAD skill `oneticket-manifest-generation` before producing any manifest.
 
 ## Routing
 
-- Technical questions → @architect
-- Functional validation → @qa
-- (other roles to be defined)
+<!-- TODO: define routing rules to other agents (@architect, @qa, etc.) -->
 
 ## Handoff
 
-- After producing a manifest → pipeline takes over automatically — stop
-- After a direct answer → stop — human resumes
+<!-- TODO: define handoff and end-of-job response rules -->
