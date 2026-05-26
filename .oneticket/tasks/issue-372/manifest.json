@@ -63,7 +63,7 @@
       "file": "src/game/gamestate.js",
       "content": "Lis apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-007-game-over-restart.md et apps/breakout/docs/how/architecture.md section 5.1. Implémente GameState (src/game/gamestate.js) avec : 1) Structure : paddle, ball, bricks[], score, status ('init'|'playing'|'gameover'), 2) Méthode init() qui crée la grille de briques (3 rows x 6 cols), place paddle en bas center, place balle en center, 3) Méthode resetGame() qui remet tous les éléments aux valeurs initiales et status = 'playing', 4) Méthode endGame() qui met status = 'gameover', 5) Détection game over : si ball.y > canvas.height, appeler endGame(). Testable indépendamment.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "H",
