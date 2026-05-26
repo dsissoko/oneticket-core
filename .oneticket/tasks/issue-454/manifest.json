@@ -8,7 +8,7 @@
       "file": "output/step-A.txt",
       "content": "Crée le fichier output/step-A.txt avec le contenu exact suivant : 'Step A done'. Valide que le fichier a été créé correctement.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
