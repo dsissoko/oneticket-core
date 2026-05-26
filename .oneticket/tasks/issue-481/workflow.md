@@ -10,3 +10,4 @@
 2026-05-26 20:42 | J | apps/breakout/app/index.html
 2026-05-26 20:44 | K | apps/breakout/app/style.css
 2026-05-26 20:45 | L | apps/breakout/app/app.js
+2026-05-26 20:47 | M | apps/breakout/docs/how/slices/slice-001-foundation.md
