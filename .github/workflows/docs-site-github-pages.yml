@@ -1,0 +1,143 @@
+name: Deploy Doc Site
+
+on:
+  push:
+    paths:
+      - '.oneticket/docs/**'
+      - 'apps/**/docs/**'
+      - 'doc-site/**'
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches: [main]
+    paths:
+      - '.oneticket/docs/**'
+      - 'apps/**/docs/**'
+      - 'doc-site/**'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+
+  resolve-context:
+    runs-on: ubuntu-latest
+    outputs:
+      doc_source:    ${{ steps.ctx.outputs.doc_source }}
+      slug:          ${{ steps.ctx.outputs.slug }}
+      astro_base:    ${{ steps.ctx.outputs.astro_base }}
+      target_folder: ${{ steps.ctx.outputs.target_folder }}
+      app_url:       ${{ steps.ctx.outputs.app_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Resolve context
+        id: ctx
+        run: |
+          PROJECT=$(node src/print-config.mjs current_project)
+          SLUG=${PROJECT:-framework}
+
+          if [ -n "$PROJECT" ]; then
+            DOC_SOURCE="apps/$PROJECT/docs"
+          else
+            DOC_SOURCE=".oneticket/docs"
+          fi
+
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            PR=${{ github.event.pull_request.number }}
+            ASTRO_BASE="/oneticket-core/$SLUG/pr/$PR/docs"
+            TARGET="$SLUG/pr/$PR/docs"
+            if [ "$SLUG" != "framework" ]; then
+              APP_URL="https://dsissoko.github.io/oneticket-core/$SLUG/pr/$PR/app"
+            else
+              APP_URL=""
+            fi
+          else
+            ASTRO_BASE="/oneticket-core/$SLUG/docs"
+            TARGET="$SLUG/docs"
+            if [ "$SLUG" != "framework" ]; then
+              APP_URL="https://dsissoko.github.io/oneticket-core/$SLUG/app"
+            else
+              APP_URL=""
+            fi
+          fi
+
+          echo "doc_source=$DOC_SOURCE"     >> $GITHUB_OUTPUT
+          echo "slug=$SLUG"                 >> $GITHUB_OUTPUT
+          echo "astro_base=$ASTRO_BASE"     >> $GITHUB_OUTPUT
+          echo "target_folder=$TARGET"      >> $GITHUB_OUTPUT
+          echo "app_url=$APP_URL"           >> $GITHUB_OUTPUT
+
+  build-doc-site:
+    needs: resolve-context
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        working-directory: doc-site
+        run: npm ci
+      - name: Install Playwright Chromium
+        working-directory: doc-site
+        run: npx playwright install chromium --with-deps
+      - name: Set build date
+        run: echo "BUILD_DATE=$(date -u +%Y-%m-%d)" >> $GITHUB_ENV
+      - name: Build
+        working-directory: doc-site
+        env:
+          DOC_SOURCE:          ${{ needs.resolve-context.outputs.doc_source }}
+          ASTRO_SITE:          https://dsissoko.github.io/oneticket-core
+          ASTRO_BASE:          ${{ needs.resolve-context.outputs.astro_base }}
+          PUBLIC_BRANCH:       ${{ github.ref_name }}
+          PUBLIC_COMMIT_SHA:   ${{ github.sha }}
+          PUBLIC_TAG:          ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
+          PUBLIC_BUILD_NUMBER: ${{ github.run_number }}
+          PUBLIC_BUILD_DATE:   ${{ env.BUILD_DATE }}
+          PUBLIC_APP_URL:      ${{ needs.resolve-context.outputs.app_url }}
+        run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: doc-site-static
+          path: doc-site/dist/
+
+  deploy-preview:
+    needs: [resolve-context, build-doc-site]
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: doc-site-static
+          path: dist/
+      - uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          token:         ${{ secrets.ONETICKET_GH_PAT }}
+          folder:        dist
+          target-folder: ${{ needs.resolve-context.outputs.target_folder }}
+          clean:         false
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: doc-preview
+          message: |
+            📖 **Doc preview:** https://dsissoko.github.io/oneticket-core/${{ needs.resolve-context.outputs.target_folder }}/
+
+  deploy-prod:
+    needs: [resolve-context, build-doc-site]
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: doc-site-static
+          path: dist/
+      - uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          token:         ${{ secrets.ONETICKET_GH_PAT }}
+          folder:        dist
+          target-folder: ${{ needs.resolve-context.outputs.target_folder }}
+          clean:         true
+          clean-exclude: '["pr"]'

@@ -37,7 +37,14 @@ function buildSidebar(docsDir) {
 
 const sidebar = buildSidebar(docSource);
 
+// ASTRO_SITE and ASTRO_BASE injected by CI workflow
+// Local dev: no base, localhost site
+const site = process.env.ASTRO_SITE || 'http://localhost:4321';
+const base = process.env.ASTRO_BASE || '';
+
 export default defineConfig({
+  site,
+  base,
   integrations: [
     starlight({
       title: 'OneTicket',

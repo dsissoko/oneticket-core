@@ -15,6 +15,7 @@ const commitSha  = (import.meta.env.PUBLIC_COMMIT_SHA  || git('git rev-parse HEA
 const tag        = import.meta.env.PUBLIC_TAG          || git('git describe --exact-match --tags HEAD 2>/dev/null') || null;
 const buildDate  = import.meta.env.PUBLIC_BUILD_DATE   || new Date().toISOString().slice(0, 10);
 const buildNumber = import.meta.env.PUBLIC_BUILD_NUMBER || null;
+const appUrl     = import.meta.env.PUBLIC_APP_URL || null;
 ---
 
 <footer class="doc-footer">
@@ -24,6 +25,7 @@ const buildNumber = import.meta.env.PUBLIC_BUILD_NUMBER || null;
     {buildNumber && <span>Build: <code>#{buildNumber}</code></span>}
     {commitSha  && <span>Commit: <code>{commitSha}</code></span>}
     {buildDate  && <span>{buildDate}</span>}
+    {appUrl     && <span>App: <a href={appUrl}>{appUrl}</a></span>}
   </div>
 </footer>
 
