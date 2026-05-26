@@ -8,14 +8,16 @@
       "file": "src/game/index.html",
       "content": "Lis apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-setup-game-canvas.md. Crée un fichier HTML complet (src/game/index.html) avec : 1) Une page HTML5 minimale, 2) Un canvas 800x600 centré, 3) CSS basique pour centrer le canvas et définir des couleurs (background foncé, canvas clair), 4) Un point d'entrée JS (soit inline soit src=\"game.js\"), 5) Structure prête à recevoir le code JS. Le canvas doit avoir un background blanc/clair et être visible au chargement.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
       "branch": "task/issue-372-B",
       "file": "src/game/renderer.js",
       "content": "Lis apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-002-render-game-elements.md et apps/breakout/docs/how/architecture.md section 5.4. Implémente un module Renderer (src/game/renderer.js) qui : 1) Initialise le canvas et son contexte 2D, 2) Expose une méthode render(gameState) qui clear et redessine tous les éléments, 3) Implémente drawPaddle(paddle), drawBall(ball), drawBricks(bricks), drawScore(score), 4) Utilise fillRect pour rectangles et arc pour la balle. Pas d'effet ou animation. Le renderer doit être testable indépendamment.",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending"
     },
     {
@@ -24,7 +26,7 @@
       "file": "src/game/physics.js",
       "content": "Lis apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-004-ball-physics.md et apps/breakout/docs/how/architecture.md section 5.2. Implémente un module PhysicsEngine (src/game/physics.js) qui : 1) Expose une méthode update(gameState, dt) qui met à jour ball.x, ball.y selon vx, vy, 2) Détecte les collisions avec les murs (haut, bas, gauche, droite) et inverse vx ou vy, 3) Maintient la balle dans les bounds du canvas (0 à width, 0 à height), 4) Gère les rebonds élastiques simples. Frame-rate independent via dt. Testable indépendamment.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "D",
@@ -32,14 +34,17 @@
       "file": "src/game/input.js",
       "content": "Lis apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-003-paddle-control.md et apps/breakout/docs/how/architecture.md section 5.3. Implémente un module InputHandler (src/game/input.js) qui : 1) Expose une méthode init(gameState, window) qui attache les listeners keydown/keyup, 2) Maintient un état de touches actives (Set ou object), 3) Expose une méthode update(gameState) qui applique le mouvement paddle selon les touches actives (flèches L/R ou A/D), 4) Clamp paddle.x aux limites (0 à canvas.width - paddle.width). Clavier = suffisant pour MVP. Testable.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "E",
       "branch": "task/issue-372-E",
       "file": "src/game/collisions.js",
       "content": "Lis apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-005-brick-collision.md et apps/breakout/docs/how/architecture.md section 5.2. Implémente un module CollisionDetector (src/game/collisions.js) qui : 1) Expose checkBallBrickCollisions(gameState) qui teste intersection AABB ball vs bricks actives, 2) Pour chaque collision : inverse la vélocité appropriée (vx ou vy selon côté), marque brick.active = false, retourne liste des collisions, 3) checkBallPaddleCollisions(gameState) qui teste ball vs paddle et inverse vy si collision, 4) Utilise simple AABB rectangles. Retourne événements de collision pour intégration score.",
-      "depends_on": ["B", "C"],
+      "depends_on": [
+        "B",
+        "C"
+      ],
       "status": "pending"
     },
     {
@@ -47,7 +52,9 @@
       "branch": "task/issue-372-F",
       "file": "src/game/score.js",
       "content": "Lis apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-006-score-system.md. Implémente un module ScoreManager (src/game/score.js) ou intègre à GameState qui : 1) Initialise gameState.score = 0, 2) Expose une méthode addScore(points) qui incrémente score, 3) Expose resetScore() qui remet à 0. Dans la game loop, appeler addScore(1) pour chaque collision brick détectée. Le score s'affiche via Renderer dans drawScore(score). Intégration simple via event callback à la collision detection.",
-      "depends_on": ["E"],
+      "depends_on": [
+        "E"
+      ],
       "status": "pending"
     },
     {
@@ -56,14 +63,22 @@
       "file": "src/game/gamestate.js",
       "content": "Lis apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-007-game-over-restart.md et apps/breakout/docs/how/architecture.md section 5.1. Implémente GameState (src/game/gamestate.js) avec : 1) Structure : paddle, ball, bricks[], score, status ('init'|'playing'|'gameover'), 2) Méthode init() qui crée la grille de briques (3 rows x 6 cols), place paddle en bas center, place balle en center, 3) Méthode resetGame() qui remet tous les éléments aux valeurs initiales et status = 'playing', 4) Méthode endGame() qui met status = 'gameover', 5) Détection game over : si ball.y > canvas.height, appeler endGame(). Testable indépendamment.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "H",
       "branch": "task/issue-372-H",
       "file": "src/game/game.js",
       "content": "Lis apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-setup-game-canvas.md à us-007-game-over-restart.md et apps/breakout/docs/how/architecture.md entièrement. Implémente la GameLoop (src/game/game.js) qui : 1) Initialise GameState, Renderer, PhysicsEngine, InputHandler, CollisionDetector, 2) Lance requestAnimationFrame loop : input.update(gameState) → physics.update(gameState, dt) → collisions.check(gameState) → score.update(gameState) → renderer.render(gameState), 3) Gère les états (playing vs gameover), 4) Détecte game over (ball.y > height) et affiche 'GAME OVER' via Renderer.drawGameOver(), 5) Gère restart : clavier SPACE pour reset complet, 6) Performance target 60 FPS. Affiche \"Game Over\" et \"Press SPACE to restart\" au game over.",
-      "depends_on": ["A", "B", "C", "D", "E", "F", "G"],
+      "depends_on": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G"
+      ],
       "status": "pending"
     }
   ]
