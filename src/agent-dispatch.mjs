@@ -76,45 +76,42 @@ function loadProfile(role) {
 // ---------------------------------------------------------------------------
 
 /**
- * Resolves docs_path and project context deterministically from config.
+ * Resolves docs_path deterministically from config.current_project.
  *
  * Three states for current_project:
  *   - absent (undefined) → config error — caller must notify user and stop
- *   - empty ("")         → oneticket framework context
- *                          docs_path = .oneticket/docs
- *   - set ("myapp")      → application project context
- *                          docs_path = apps/myapp/docs
+ *   - empty ("")         → docs_path = .oneticket/docs (framework context)
+ *   - set ("myapp")      → docs_path = apps/myapp/docs (application context)
  *
- * The agent never resolves docs_path or project context — both are injected
- * as resolved values in the prompt via ## Project context.
+ * current_project is passed as-is into the prompt — the agent reads it directly.
  *
- * @returns {{ docsPath: string, project: string, error: string|null }}
+ * @returns {{ docsPath: string, currentProject: string, error: string|null }}
  */
 function resolveProjectContext(config) {
   // current_project key absent entirely — config error
   if (config.current_project === undefined) {
     return {
-      docsPath: null,
-      project:  null,
-      error:    'current_project key is missing from .oneticket/config.yml. ' +
-                'Add it with your project name or leave it empty for framework context.',
+      docsPath:       null,
+      currentProject: null,
+      error:          'current_project key is missing from .oneticket/config.yml. ' +
+                      'Add it with your project name or leave it empty for framework context.',
     };
   }
 
   // current_project present but empty — framework context
   if (config.current_project === '' || config.current_project === null) {
     return {
-      docsPath: `.oneticket/docs`,
-      project:  `oneticket (framework)`,
-      error:    null,
+      docsPath:       `.oneticket/docs`,
+      currentProject: ``,
+      error:          null,
     };
   }
 
   // current_project set — application project context
   return {
-    docsPath: `apps/${config.current_project}/docs`,
-    project:  `${config.current_project} (application project)`,
-    error:    null,
+    docsPath:       `apps/${config.current_project}/docs`,
+    currentProject: config.current_project,
+    error:          null,
   };
 }
 
@@ -126,7 +123,7 @@ function resolveProjectContext(config) {
  *     - git checkout (anomalyco switched=true mechanism)
  *     - Agent profile
  *     - Language + autonomous_mode
- *     - Project context (docs_path + project — resolved deterministically)
+ *     - Project context (docs_path + current_project — resolved deterministically)
  *     - Request
  *   [Trigger context]
  *     - CONTEXT_BLOCK as-is (built by the trigger YAML workflow)
@@ -134,7 +131,7 @@ function resolveProjectContext(config) {
  * NOTE: git checkout at the top → anomalyco detects switched=true →
  * disables automatic push and PR creation.
  */
-function buildPrompt({ role, demande, branch, config, profile, contextBlock, docsPath, project }) {
+function buildPrompt({ role, demande, branch, config, profile, contextBlock, docsPath, currentProject }) {
   const lines = [];
 
   // Common trunk — required regardless of trigger
@@ -158,11 +155,10 @@ function buildPrompt({ role, demande, branch, config, profile, contextBlock, doc
 
   // Project context — resolved deterministically, injected as-is
   // docs_path: where to read/write documentation files
-  // project: framework (oneticket) or application project name
-  // Used by oneticket-init-knowledge Gate 0 to determine context without LLM inference
+  // current_project: raw value from .oneticket/config.yml (empty = framework, set = app project)
   lines.push(`## Project context`);
   lines.push(`docs_path: ${docsPath}`);
-  lines.push(`project: ${project}`);
+  lines.push(`current_project: ${currentProject}`);
   lines.push('');
 
   lines.push(`## Request`);
@@ -216,12 +212,10 @@ async function main() {
   }
 
   // --- 4. Build system prompt ------------------------------------------
-  const { docsPath, project, error } = resolveProjectContext(config);
+  const { docsPath, currentProject, error } = resolveProjectContext(config);
 
   if (error) {
     console.error(`[agent-dispatch] Project context error: ${error}`);
-    // Post error comment on issue and stop — do not dispatch agent
-    const { run: runCmd } = await import('./utils.mjs');
     try {
       const { execSync } = await import('child_process');
       execSync(
@@ -234,17 +228,17 @@ async function main() {
     process.exit(1);
   }
 
-  console.log(`[agent-dispatch] project context resolved: project="${project}", docs_path="${docsPath}"`);
+  console.log(`[agent-dispatch] project context resolved: current_project="${currentProject}", docs_path="${docsPath}"`);
 
   const prompt = buildPrompt({
     role,
     demande,
-    branch:       featureBranch,
+    branch:         featureBranch,
     config,
     profile,
     contextBlock,
     docsPath,
-    project,
+    currentProject,
   });
   console.log(`[agent-dispatch] Prompt built (${prompt.length} chars).`);
 

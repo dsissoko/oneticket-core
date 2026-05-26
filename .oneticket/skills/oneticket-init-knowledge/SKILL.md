@@ -49,23 +49,22 @@ Read `## Project context` from the prompt — it is always present and determini
 ```
 ## Project context
 docs_path: <resolved path>
-project: <value>
+current_project: <raw value from config.yml>
 ```
 
-Three possible values for `project`:
+Two possible states for `current_project`:
 
 | Value | Meaning | Action |
 |---|---|---|
-| `MISSING` | `current_project` key absent from config | Config error — already handled by dispatcher, should not reach here |
-| `oneticket (framework)` | `current_project` empty — framework context | Ask user to confirm or set project name |
-| `<name> (application project)` | `current_project` set | Application context — continue to Gate 1 |
+| empty | `current_project` is empty in config — context unknown | Ask user to confirm |
+| set (e.g. `breakout`) | Application project | Continue to Gate 1 |
 
-### If `project: oneticket (framework)`
+### If `current_project` is empty
 
 Post this exact comment:
 
 ```
-I see this request in framework context (current_project is empty in .oneticket/config.yml).
+I see this request with current_project empty in .oneticket/config.yml.
 
 Please confirm one of the following:
 
@@ -79,9 +78,9 @@ B) This is an application project request (e.g. Breakout game, my-app, etc.)
 **HARD STOP** — do not proceed until the human explicitly responds.
 
 - If human confirms "framework" → continue to Gate 1
-- If human sets a project name → acknowledge, explain that `current_project` must be set in `config.yml` first, then the request can be re-triggered
+- If human provides a project name → acknowledge, remind them to set `current_project` in `config.yml`, then re-trigger the request
 
-### If `project: <name> (application project)`
+### If `current_project` is set
 
 Application context confirmed — continue to Gate 1 without stopping.
 
