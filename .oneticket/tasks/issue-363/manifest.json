@@ -24,7 +24,7 @@
       "file": "games/breakout/paddle.js",
       "content": "Créer games/breakout/paddle.js avec : classe Paddle (x, y, width=100, height=10, speed=8), méthode moveLeft() qui décrémente x si >0, méthode moveRight(canvasWidth) qui incrémente x si <canvasWidth-width, méthode draw(ctx) qui dessine un rectangle rouge, méthode reset(canvasWidth) qui replace le paddle au centre. Exporter la classe Paddle.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "D",
