@@ -1,0 +1,46 @@
+{
+  "issue": 363,
+  "branch_base": "feature/issue-363",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-363-A",
+      "file": "games/breakout/index.html",
+      "content": "Créer le fichier games/breakout/index.html avec la structure HTML du jeu : canvas#gameCanvas (800x600), div#score, button#restartBtn, et importation des fichiers CSS et JS. Ajouter aussi games/breakout/style.css avec les styles de base du jeu (fond noir, canvas centré, styles du score).",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-363-B",
+      "file": "games/breakout/game.js",
+      "content": "Créer games/breakout/game.js avec : classe Game avec constructeur (init canvas, score=0, gameOver=false, bound keyboard events), méthode init() qui démarre la boucle de jeu, méthode update() qui appelle paddle.update() et ball.update(), méthode render() qui clear canvas et redessine, méthode gameOver() qui arrête le jeu et affiche l'écran. Exporter la classe Game.",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-363-C",
+      "file": "games/breakout/paddle.js",
+      "content": "Créer games/breakout/paddle.js avec : classe Paddle (x, y, width=100, height=10, speed=8), méthode moveLeft() qui décrémente x si >0, méthode moveRight(canvasWidth) qui incrémente x si <canvasWidth-width, méthode draw(ctx) qui dessine un rectangle rouge, méthode reset(canvasWidth) qui replace le paddle au centre. Exporter la classe Paddle.",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-363-D",
+      "file": "games/breakout/ball.js",
+      "content": "Créer games/breakout/ball.js avec : classe Ball (x, y, radius=8, dx=4, dy=-4, speed=5), méthode update(canvasWidth, canvasHeight) qui déplace la balle et détecte les collisions murs (rebond) et paddle (rebond + angle), méthode reset(canvasWidth, canvasHeight) qui replace la balle au centre avec direction aléatoire vers le haut, méthode draw(ctx) qui dessine un cercle blanc. Exporter la classe Ball.",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-363-E",
+      "file": "games/breakout/bricks.js",
+      "content": "Créer games/breakout/bricks.js avec : classe Bricks avec constructeur (rows=5, cols=9, padding=10, offsetTop=60, offsetSide=35, width=75, height=20), propriété grid[][] qui stocke l'état des briques (alive:true/false), méthode init() qui crée la grille, méthode draw(ctx) qui dessine toutes les briques vivantes en vert (rectangle), méthode checkCollision(ball) qui retourne true si collision ball-brique et marque la brique comme morte, méthode allDestroyed() qui retourne true si toutes les briques détruites. Exporter la classe Bricks.",
+      "depends_on": [],
+      "status": "pending"
+    }
+  ]
+}
