@@ -34,7 +34,7 @@
       "file": "src/game/input.js",
       "content": "Lis apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-003-paddle-control.md et apps/breakout/docs/how/architecture.md section 5.3. Implémente un module InputHandler (src/game/input.js) qui : 1) Expose une méthode init(gameState, window) qui attache les listeners keydown/keyup, 2) Maintient un état de touches actives (Set ou object), 3) Expose une méthode update(gameState) qui applique le mouvement paddle selon les touches actives (flèches L/R ou A/D), 4) Clamp paddle.x aux limites (0 à canvas.width - paddle.width). Clavier = suffisant pour MVP. Testable.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "E",
