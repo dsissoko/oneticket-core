@@ -105,3 +105,9 @@ Prochaines étapes suggérées :
 - Use templates in `.oneticket/templates/` when creating files
 - `docs_path` is always provided in the prompt — never resolve it yourself
 - One question set per run — do not chain multiple question sets in one run
+- After creating any documentation file, immediately commit and push it:
+  ```bash
+  git add <file_path>
+  git commit -m "docs: add <filename> for <current_project>"
+  git push origin <current_branch>
+  ```
