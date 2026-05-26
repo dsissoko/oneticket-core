@@ -8,7 +8,7 @@
       "file": "apps/breakout/app/index.html",
       "content": "Lis apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-game-canvas-setup.md. Implémente une page HTML5 (apps/breakout/app/index.html) qui crée un canvas 800x600px avec une bordure visible, initialise une boucle de jeu basique avec requestAnimationFrame, et affiche un bouton 'Start Game' pour démarrer le jeu. La page doit charger un fichier CSS et un fichier JavaScript (game.js).",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
