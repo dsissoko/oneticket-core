@@ -1,0 +1,105 @@
+name: PR Review Comment Dispatcher
+
+# [DETERMINISTIC] Entry point for agent invocations via inline PR review comments.
+#
+# Trigger: pull_request_review_comment (comment on a specific line of code in a PR diff)
+#
+# Workflow responsibilities:
+#   1. Filter: @<role> inline review comment on a PR
+#   2. Build CONTEXT_BLOCK with diff hunk context
+#   3. Delegate to agent-dispatch.mjs with the standard interface contract
+#
+# Interface contract toward agent-dispatch.mjs:
+#   COMMENT_BODY         — comment text (contains @<role> + request)
+#   ISSUE_NUMBER         — PR number
+#   REPO                 — owner/repo
+#   CONTEXT_BLOCK        — diff hunk + file + line context
+#   ORIGIN_TYPE          — pull_request_review_comment
+#   PR_NUMBER            — PR number
+#   REPLY_TO_COMMENT_ID  — comment id to reply to inline
+
+on:
+  pull_request_review_comment:
+    types: [created]
+
+concurrency:
+  group: dispatch-review-${{ github.repository }}-${{ github.event.pull_request.number }}-${{ github.event.comment.id }}
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    if: "startsWith(github.event.comment.body, '@')"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.ONETICKET_GH_PAT }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build context block
+        id: context
+        run: |
+          CONTEXT=$(cat <<'CONTEXT_EOF'
+          ## Context for PR #${{ github.event.pull_request.number }}
+          **Title:** ${{ github.event.pull_request.title }}
+
+          **File:** ${{ github.event.comment.path }}
+          **Line:** ${{ github.event.comment.line }}
+
+          **Diff hunk:**
+          ```
+          ${{ github.event.comment.diff_hunk }}
+          ```
+
+          **Original comment:**
+          ${{ github.event.comment.body }}
+          CONTEXT_EOF
+          )
+          echo "block=$(echo "$CONTEXT" | base64 -w 0)" >> $GITHUB_OUTPUT
+
+      - name: Dispatch agent
+        env:
+          GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          ISSUE_NUMBER: ${{ github.event.pull_request.number }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          REPO: ${{ github.repository }}
+          CONTEXT_BLOCK: ${{ steps.context.outputs.block }}
+          ORIGIN_TYPE: pull_request_review_comment
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPLY_TO_COMMENT_ID: ${{ github.event.comment.id }}
+        run: |
+          export CONTEXT_BLOCK=$(echo "$CONTEXT_BLOCK" | base64 -d)
+          node src/agent-dispatch.mjs
+
+  notify-failure:
+    needs: dispatch
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post failure comment on PR
+        env:
+          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+        run: |
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --repo ${{ github.repository }} \
+            --body "## Dispatch failure
+
+          The dispatch workflow failed while processing your inline review command.
+
+          **Actions run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
