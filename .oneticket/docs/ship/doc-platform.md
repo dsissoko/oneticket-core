@@ -216,9 +216,9 @@ deploy-prod       (if push main or tag v*)
 
 | Context | URL |
 |---|---|
-| Framework doc prod | `https://dsissoko.github.io/oneticket-core/oneticket-core/docs/` |
+| Framework doc prod | `https://dsissoko.github.io/oneticket-core/framework/docs/` |
 | App doc prod | `https://dsissoko.github.io/oneticket-core/<project>/docs/` |
-| Framework doc PR preview | `https://dsissoko.github.io/oneticket-core/oneticket-core/pr/<N>/docs/` |
+| Framework doc PR preview | `https://dsissoko.github.io/oneticket-core/framework/pr/<N>/docs/` |
 | App doc PR preview | `https://dsissoko.github.io/oneticket-core/<project>/pr/<N>/docs/` |
 
 ### GitHub Pages configuration
