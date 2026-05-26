@@ -10,3 +10,4 @@ Trigger test for docs-site-github-pages.yml workflow.
 - slug `framework` for `oneticket-core`
 - GitHub Pages source fixed: Deploy from branch gh-pages / (root)
 - `.nojekyll` added to `doc-site/public/` — fixes `_astro/` CSS/JS 404 under Jekyll
+- `.nojekyll` ensured at gh-pages root via deploy-prod step
