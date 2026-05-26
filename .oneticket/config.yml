@@ -35,6 +35,11 @@ oneticket_git_user_email: oneticket-bot@users.noreply.github.com
 # Target branch for final PRs
 pr_base: main
 
+# Clear opencode session cache before each agent run.
+# true  (default) — fresh session guaranteed, prevents stale context/skills
+# false — session persistence enabled, better performance (use when oneticket is stable)
+clear_session_cache: true
+
 # Active user project — determines docs_path = apps/<current_project>/docs/
 #
 # Three states:
