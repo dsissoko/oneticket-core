@@ -6,189 +6,102 @@ compatibility: opencode
 
 # oneticket-init-knowledge
 
-Initialize and validate the complete product knowledge base before any documentation, architecture, or development work can begin.
-
-This skill is the **guardian of the mandatory sequence**. No slice, no C4 diagram, no epic breakdown can happen without these artifacts being valid.
+Gather the context needed to generate the mandatory project knowledge files.
+One run = one question set posted as a GitHub comment. The human's reply triggers the next run.
 
 `docs_path` is always provided in the prompt — never resolve it yourself.
 
 ---
 
-## Mandatory Artifacts
+## Files to generate
 
-| Artifact | Path | Required before |
-|---|---|---|
-| Product specification | `<docs_path>/what/product-spec.md` | Everything |
-| Architecture | `<docs_path>/how/architecture.md` | Slices, C4, implementation |
-| Epic MVP | `<docs_path>/what/epics/epic-0-mvp/epic.md` | Any development cycle |
-| MVP User Stories | `<docs_path>/what/epics/epic-0-mvp/user-stories/` | Any development cycle |
+| File | Purpose |
+|---|---|
+| `<docs_path>/what/product-spec.md` | Product vision, users, capabilities, business rules |
+| `<docs_path>/how/architecture.md` | Technical stack, components, interfaces, constraints |
+| `<docs_path>/what/epics/epic-0-mvp/epic.md` | MVP scope and goal |
+| `<docs_path>/what/epics/epic-0-mvp/user-stories/us-001-*.md` | MVP user stories |
 
----
-
-## Gate Sequence
-
-**This sequence is strict and cannot be skipped or reordered.**
-Each gate ends with a HARD STOP — the agent posts a comment and waits for explicit human validation before proceeding to the next gate.
-
-```
-Gate 1 → product-spec.md valid ?    → HARD STOP → human validates
-Gate 2 → architecture.md valid ?    → HARD STOP → human validates
-Gate 3 → epic-0-mvp valid ?         → HARD STOP → human validates
-Gate 4 → confirmation + handoff
-```
-
-`current_project` is always set when this skill is invoked — Gate 0 is handled deterministically upstream by the dispatcher.
+These files are generated from human answers — never invented, never copied from placeholders.
+Use templates in `.oneticket/templates/` when creating files.
 
 ---
 
-## Gate 1 — Product Specification
+## Sequence
 
-### Check
-
-Read `<docs_path>/what/product-spec.md`.
-
-**Valid if ALL of these sections are present and non-empty:**
-- `## 1. Vision` — concrete problem statement, real users
-- `## 7. Product Capabilities` — at least one capability defined
-
-**Invalid if:**
-- File does not exist
-- File exists but sections are empty or contain only placeholder text
-
-### If invalid — Bootstrap Questions
-
-Post a comment asking the user these questions:
-
-```
-Before proceeding, I need to understand the product.
-
-1. What is the product name?
-2. What problem does it solve, and for whom? (2-3 sentences)
-3. What are the 2-3 main capabilities for V1?
-4. Who are the main users or actors?
-5. Any business rules or constraints to note from the start?
-```
-
-Wait for human answer. Do not proceed to Gate 2 until this gate is explicitly validated.
-
-### If valid or once answers received
-
-Create or complete `<docs_path>/what/product-spec.md` using template `.oneticket/templates/product-spec.md`.
-Never copy placeholder text — only real content from human answers.
-Never overwrite existing valid content.
-
-Post a summary of what was created/updated and ask the user to reply to proceed to architecture.
-
-**HARD STOP.**
+1. Check which files are missing or empty (read before acting)
+2. Post ONE question set for the first missing file using the exact bash command below
+3. Done — the human's reply triggers the next run
 
 ---
 
-## Gate 2 — Architecture
+## Question sets
 
-### Check
+### For `product-spec.md`
 
-Read `<docs_path>/how/architecture.md`.
+```bash
+gh issue comment {issue_number} --repo {repository} --body "**[Agent: \`@po\`]**
 
-**Valid if ALL of these sections are present and non-empty:**
-- `## 1. Architecture Principles` — at least one principle defined
-- `## 5. Key Components` — at least one component defined
+Pour générer la spécification produit, j'ai besoin de :
 
-**Invalid if:**
-- File does not exist
-- File exists but sections are empty or contain only placeholder text
-
-### If invalid — Bootstrap Questions
-
-Post a comment asking the user these questions:
-
-```
-Before proceeding, I need to understand the technical architecture.
-
-1. What is the technical stack? (languages, frameworks, persistence layer)
-2. What are the main system components?
-3. What are the key interfaces or integration points?
-4. Any technical constraints or non-functional requirements?
+1. Quel est le nom du produit ?
+2. Quel problème résout-il, et pour qui ? (2-3 phrases)
+3. Quelles sont les 2-3 principales capacités pour la V1 ?
+4. Qui sont les principaux utilisateurs ou acteurs ?
+5. Y a-t-il des règles métier ou des contraintes à noter dès le départ ?"
 ```
 
-Wait for human answer. Do not proceed to Gate 3 until this gate is explicitly validated.
+### For `architecture.md`
 
-### If valid or once answers received
+```bash
+gh issue comment {issue_number} --repo {repository} --body "**[Agent: \`@po\`]**
 
-Create or complete `<docs_path>/how/architecture.md` using template `.oneticket/templates/architecture.md`.
-Never copy placeholder text — only real content from human answers.
-Never overwrite existing valid content.
+Pour générer le document d'architecture, j'ai besoin de :
 
-Post a summary of what was created/updated and ask the user to reply to proceed to epic MVP.
+1. Quel est le stack technique ? (langages, frameworks, persistence)
+2. Quels sont les principaux composants du système ?
+3. Quelles sont les interfaces ou points d'intégration clés ?
+4. Y a-t-il des contraintes techniques ou exigences non-fonctionnelles ?"
+```
 
-**HARD STOP.**
+### For `epic-0-mvp/epic.md` and user stories
+
+```bash
+gh issue comment {issue_number} --repo {repository} --body "**[Agent: \`@po\`]**
+
+Pour générer l'epic MVP et les user stories, j'ai besoin de :
+
+1. Ce périmètre MVP vous semble-t-il correct ?
+   <proposer 2-3 phrases issues de ## Product Capabilities dans product-spec.md>
+2. Quelles sont les 2-3 user stories les plus importantes ?
+   (Format : En tant que <utilisateur>, je veux <action>, afin de <résultat>)"
+```
 
 ---
 
-## Gate 3 — Epic MVP
+## When all files exist and are valid
 
-### Check
+```bash
+gh issue comment {issue_number} --repo {repository} --body "**[Agent: \`@po\`]**
 
-Verify:
-- `<docs_path>/what/epics/epic-0-mvp/epic.md` exists and `## Goal` is non-empty
-- `<docs_path>/what/epics/epic-0-mvp/user-stories/` contains at least one `us-001-*.md`
+Base de connaissance complète ✅
 
-**Invalid if:**
-- Directory does not exist
-- `epic.md` is missing or empty
-- No user stories exist
+- \`what/product-spec.md\`
+- \`how/architecture.md\`
+- \`what/epics/epic-0-mvp/\` avec les user stories
 
-### If invalid — Bootstrap Questions
-
-Read `<docs_path>/what/product-spec.md` first to extract MVP scope.
-
-Post a comment with the proposed MVP scope and ask:
-
+Prochaines étapes suggérées :
+- Décomposer d'autres épics → \`oneticket-epic-breakdown\`
+- Documenter l'architecture → \`oneticket-c4\`
+- Dériver les slices d'implémentation → \`oneticket-vertical-slice\`"
 ```
-Before proceeding, I need to define the MVP epic.
-
-Based on product-spec.md, here is my proposed MVP scope:
-<propose 2-3 sentences from product-spec.md ## 7. Product Capabilities>
-
-1. Does this MVP scope look correct?
-2. What are the 2-3 most important user stories for this MVP?
-   (Format: "As a <user>, I want to <action>, so that <outcome>")
-```
-
-Wait for human answer. Do not proceed to Gate 4 until this gate is explicitly validated.
-
-### If valid or once answers received
-
-Create `<docs_path>/what/epics/epic-0-mvp/epic.md` using template `.oneticket/templates/epic.md`.
-Create user stories using template `.oneticket/templates/us.md` and skill `oneticket-user-story`.
-File naming: `us-001-<kebab-name>.md`, `us-002-<kebab-name>.md`, etc.
-Never overwrite existing valid content.
-
-Post a summary of what was created and ask the user to reply to proceed.
-
-**HARD STOP.**
-
----
-
-## Gate 4 — Confirmation and Handoff
-
-Post a final summary comment indicating:
-- `what/product-spec.md` is valid
-- `how/architecture.md` is valid
-- `what/epics/epic-0-mvp/` is valid with the number of user stories created
-
-Suggest next steps:
-- To break down more epics → `oneticket-epic-breakdown`
-- To document architecture → `oneticket-c4`
-- To derive implementation slices → `oneticket-vertical-slice`
 
 ---
 
 ## Rules
 
-- Never overwrite a valid file — always check before writing
-- Never invent product or technical content — only what the human explicitly provided
-- Never skip a gate — the sequence is mandatory
-- Never proceed after a HARD STOP without explicit human validation
-- Never modify `config.yml` — only the human can set `current_project`
+- Read before writing — never overwrite a valid file
+- Never invent content — only use what the human explicitly provided
+- Use templates in `.oneticket/templates/` when creating files
 - `docs_path` is always provided in the prompt — never resolve it yourself
-- Mark open questions explicitly rather than leaving them blank
+- One question set per run — do not chain multiple question sets in one run

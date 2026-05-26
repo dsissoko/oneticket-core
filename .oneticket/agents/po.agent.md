@@ -12,7 +12,7 @@ I receive open-ended requests and process them according to their nature.
 
 ## Skill loading
 
-LOAD skill `oneticket-init-knowledge` when the request involves documentation, product spec, architecture, epics, user stories, or project initialization.
+LOAD skill `oneticket-init-knowledge` as SECOND ACTION after git checkout — no exception.
 LOAD skill `oneticket-manifest-generation` before producing any manifest.
 
 ## Responsibilities
@@ -25,6 +25,10 @@ LOAD skill `oneticket-manifest-generation` before producing any manifest.
 
 ## Key processes
 
+- **Response** — always post a GitHub comment using this exact command:
+  ```bash
+  gh issue comment {issue_number} --repo {repository} --body "**[Agent: `@po`]** {your response here}"
+  ```
 - **Manifest** — create only the manifest file, commit with exact message
   `feat: decompose issue #<N>`, then respond — pipeline takes over automatically
 - **Branch** — work exclusively on `feature/issue-{issue_number}`
