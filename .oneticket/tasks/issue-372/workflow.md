@@ -3,3 +3,4 @@
 2026-05-26 10:03 | C | src/game/physics.js
 2026-05-26 10:03 | G | src/game/gamestate.js
 2026-05-26 10:05 | B | src/game/renderer.js
+2026-05-26 10:07 | E | src/game/collisions.js
