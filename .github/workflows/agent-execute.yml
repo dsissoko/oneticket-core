@@ -103,6 +103,13 @@ jobs:
       - name: Install dependencies
         run: npm ci --silent
 
+      # [DETERMINISTIC] Clear opencode session cache — ensures a fresh session at each run.
+      # opencode persists sessions server-side (~/.local/share/opencode/sessions).
+      # Without this, the agent may resume a stale session with outdated skills or context.
+      # TODO: revisit when oneticket is stable — session persistence could improve performance.
+      - name: Clear opencode session cache
+        run: rm -rf ~/.local/share/opencode/sessions 2>/dev/null || true
+
       # [DETERMINISTIC] Install OneTicket skills into .agents/skills/
       # so they are natively discovered by opencode before the agent runs.
       # TODO: apm install will replace or complement this step in a future version.
