@@ -43,7 +43,13 @@ jobs:
         id: ctx
         run: |
           PROJECT=$(node src/print-config.mjs current_project)
-          SLUG=${PROJECT:-framework}
+
+          # oneticket-core → slug 'framework' to avoid /oneticket-core/oneticket-core/ in URL
+          if [ "$PROJECT" = "oneticket-core" ] || [ -z "$PROJECT" ]; then
+            SLUG="framework"
+          else
+            SLUG="$PROJECT"
+          fi
 
           # Special convention: oneticket-core uses .oneticket/docs, not apps/oneticket-core/docs
           if [ "$PROJECT" = "oneticket-core" ] || [ -z "$PROJECT" ]; then
