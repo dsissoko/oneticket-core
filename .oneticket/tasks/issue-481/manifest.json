@@ -24,7 +24,7 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/epic.md",
       "content": "Créer le fichier epic.md pour l'MVP du jeu Breakout. L'epic MVP couvre le périmètre complet du jeu : une raquette contrôlable au clavier/souris, une balle avec physique simple (rebonds), des briques destructibles organisées en grille, un système de score qui augmente à chaque brique détruite, un écran de game over quand la balle sort du bas, un écran de victoire quand toutes les briques sont détruites. Le MVP ne contient pas : niveaux multiples, sons, animations avancées, high scores persistants en storage, powerups, ou styles de briques différentes.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "D",
