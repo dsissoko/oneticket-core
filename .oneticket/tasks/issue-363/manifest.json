@@ -40,7 +40,7 @@
       "file": "games/breakout/bricks.js",
       "content": "Créer games/breakout/bricks.js avec : classe Bricks avec constructeur (rows=5, cols=9, padding=10, offsetTop=60, offsetSide=35, width=75, height=20), propriété grid[][] qui stocke l'état des briques (alive:true/false), méthode init() qui crée la grille, méthode draw(ctx) qui dessine toutes les briques vivantes en vert (rectangle), méthode checkCollision(ball) qui retourne true si collision ball-brique et marque la brique comme morte, méthode allDestroyed() qui retourne true si toutes les briques détruites. Exporter la classe Bricks.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     }
   ]
 }
