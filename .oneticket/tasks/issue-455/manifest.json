@@ -8,7 +8,7 @@
       "file": "output/result-A.txt",
       "content": "Crée le fichier output/result-A.txt avec le contenu exact 'Result A done' (sans guillemets, sans retour à la ligne supplémentaire). Cette tâche est indépendante et peut s'exécuter en parallèle avec la tâche B.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
