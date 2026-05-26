@@ -8,7 +8,7 @@
       "file": "src/game/index.html",
       "content": "Lis apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-setup-game-canvas.md. Crée un fichier HTML complet (src/game/index.html) avec : 1) Une page HTML5 minimale, 2) Un canvas 800x600 centré, 3) CSS basique pour centrer le canvas et définir des couleurs (background foncé, canvas clair), 4) Un point d'entrée JS (soit inline soit src=\"game.js\"), 5) Structure prête à recevoir le code JS. Le canvas doit avoir un background blanc/clair et être visible au chargement.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
