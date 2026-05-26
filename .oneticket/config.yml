@@ -49,7 +49,7 @@ clear_session_cache: true
 #
 # Set to your project name to work on an application project.
 # Leave empty to work on the oneticket framework itself.
-current_project: breakout  # ← set to your project name (e.g. breakout), or leave empty for framework
+current_project:   # ← set to your project name (e.g. breakout), or leave empty for framework
 
 # ---------------------------------------------------------------------------
 # Documentation path resolution
