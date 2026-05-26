@@ -76,19 +76,28 @@ function loadProfile(role) {
 // ---------------------------------------------------------------------------
 
 /**
- * Resolves docs_path deterministically from config.
+ * Resolves docs_path and project context deterministically from config.
  *
  * Resolution logic:
- *   - current_project present → docs_path = apps/<current_project>/docs
- *   - current_project absent  → docs_path = .oneticket/docs  (oneticket framework itself)
+ *   - current_project present → project = <name> (application project)
+ *                               docs_path = apps/<current_project>/docs
+ *   - current_project absent  → project = oneticket (framework)
+ *                               docs_path = .oneticket/docs
  *
- * The agent never resolves docs_path — it receives it as a resolved value in the prompt.
+ * The agent never resolves docs_path or project context — both are injected
+ * as resolved values in the prompt via ## Project context.
  */
-function resolveDocsPath(config) {
+function resolveProjectContext(config) {
   if (config.current_project) {
-    return `apps/${config.current_project}/docs`;
+    return {
+      docsPath: `apps/${config.current_project}/docs`,
+      project:  `${config.current_project} (application project)`,
+    };
   }
-  return `.oneticket/docs`;
+  return {
+    docsPath: `.oneticket/docs`,
+    project:  `oneticket (framework)`,
+  };
 }
 
 /**
@@ -99,7 +108,7 @@ function resolveDocsPath(config) {
  *     - git checkout (anomalyco switched=true mechanism)
  *     - Agent profile
  *     - Language + autonomous_mode
- *     - docs_path (resolved deterministically — never by the agent)
+ *     - Project context (docs_path + project — resolved deterministically)
  *     - Request
  *   [Trigger context]
  *     - CONTEXT_BLOCK as-is (built by the trigger YAML workflow)
@@ -107,7 +116,7 @@ function resolveDocsPath(config) {
  * NOTE: git checkout at the top → anomalyco detects switched=true →
  * disables automatic push and PR creation.
  */
-function buildPrompt({ role, demande, branch, config, profile, contextBlock, docsPath }) {
+function buildPrompt({ role, demande, branch, config, profile, contextBlock, docsPath, project }) {
   const lines = [];
 
   // Common trunk — required regardless of trigger
@@ -129,13 +138,13 @@ function buildPrompt({ role, demande, branch, config, profile, contextBlock, doc
   lines.push(`autonomous_mode: ${config.autonomous_mode}`);
   lines.push('');
 
-  lines.push(`## Working branch`);
-  lines.push(branch);
-  lines.push('');
-
-  // docs_path — resolved by deterministic code, injected as-is
-  lines.push(`## docs_path`);
-  lines.push(docsPath);
+  // Project context — resolved deterministically, injected as-is
+  // docs_path: where to read/write documentation files
+  // project: framework (oneticket) or application project name
+  // Used by oneticket-init-knowledge Gate 0 to determine context without LLM inference
+  lines.push(`## Project context`);
+  lines.push(`docs_path: ${docsPath}`);
+  lines.push(`project: ${project}`);
   lines.push('');
 
   lines.push(`## Request`);
@@ -189,8 +198,8 @@ async function main() {
   }
 
   // --- 4. Build system prompt ------------------------------------------
-  const docsPath = resolveDocsPath(config);
-  console.log(`[agent-dispatch] docs_path resolved: ${docsPath}`);
+  const { docsPath, project } = resolveProjectContext(config);
+  console.log(`[agent-dispatch] project context resolved: project="${project}", docs_path="${docsPath}"`);
 
   const prompt = buildPrompt({
     role,
@@ -200,6 +209,7 @@ async function main() {
     profile,
     contextBlock,
     docsPath,
+    project,
   });
   console.log(`[agent-dispatch] Prompt built (${prompt.length} chars).`);
 

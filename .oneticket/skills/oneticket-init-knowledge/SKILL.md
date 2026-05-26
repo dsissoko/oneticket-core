@@ -44,19 +44,18 @@ Gate 4 → confirmation + handoff
 
 ### Analysis
 
-Read the request and issue context carefully.
+Read `## Project context` from the prompt — it is always present and deterministically resolved.
 
-**Framework context** — the request explicitly concerns OneTicket itself:
-- Mentions oneticket, the framework, its components
-- References agents, skills, workflows, orchestration, FAN-OUT, GATHER, manifest
-- Asks to improve, document, or extend the framework
+```
+## Project context
+docs_path: <resolved path>
+project: <oneticket (framework)> or <name (application project)>
+```
 
-**Application context** — the request concerns an external project built with OneTicket:
-- Describes a product, an app, a game, a feature
-- Does not mention the framework internals
-- Asks to build, document, or design something that is not OneTicket itself
+- If `project` contains `(framework)` → framework context — continue to Gate 1 without stopping
+- If `project` contains `(application project)` → application context — see below
 
-**If in doubt** — ask the human explicitly, do not guess.
+**No inference needed — the answer is in the prompt.**
 
 ### If framework context
 
