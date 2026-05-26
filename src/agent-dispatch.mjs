@@ -76,22 +76,25 @@ function loadProfile(role) {
 // ---------------------------------------------------------------------------
 
 /**
- * Resolves docs_path deterministically from config.current_project.
+ * Resolves docs_path and app_path deterministically from config.current_project.
  *
  * Three states for current_project:
  *   - absent (undefined) → config error — caller must notify user and stop
  *   - empty ("")         → docs_path = .oneticket/docs (framework context)
+ *                          app_path  = null (no app in framework context)
  *   - set ("myapp")      → docs_path = apps/myapp/docs (application context)
+ *                          app_path  = apps/myapp/app  (application source root)
  *
  * current_project is passed as-is into the prompt — the agent reads it directly.
  *
- * @returns {{ docsPath: string, currentProject: string, error: string|null }}
+ * @returns {{ docsPath: string, appPath: string|null, currentProject: string, error: string|null }}
  */
 function resolveProjectContext(config) {
   // current_project key absent entirely — config error
   if (config.current_project === undefined) {
     return {
       docsPath:       null,
+      appPath:        null,
       currentProject: null,
       error:          'current_project key is missing from .oneticket/config.yml. ' +
                       'Add it with your project name or leave it empty for framework context.',
@@ -102,6 +105,7 @@ function resolveProjectContext(config) {
   if (config.current_project === '' || config.current_project === null) {
     return {
       docsPath:       `.oneticket/docs`,
+      appPath:        null,
       currentProject: ``,
       error:          null,
     };
@@ -110,6 +114,7 @@ function resolveProjectContext(config) {
   // current_project set — application project context
   return {
     docsPath:       `apps/${config.current_project}/docs`,
+    appPath:        `apps/${config.current_project}/app`,
     currentProject: config.current_project,
     error:          null,
   };
@@ -131,7 +136,7 @@ function resolveProjectContext(config) {
  * NOTE: git checkout at the top → anomalyco detects switched=true →
  * disables automatic push and PR creation.
  */
-function buildPrompt({ role, demande, branch, config, profile, contextBlock, docsPath, currentProject, issueNumber, repo, originType, prNumber, replyToCommentId }) {
+function buildPrompt({ role, demande, branch, config, profile, contextBlock, docsPath, appPath, currentProject, issueNumber, repo, originType, prNumber, replyToCommentId }) {
   const lines = [];
 
   // Common trunk — required regardless of trigger
@@ -159,6 +164,7 @@ function buildPrompt({ role, demande, branch, config, profile, contextBlock, doc
   lines.push(`issue_number: ${issueNumber}`);
   lines.push(`repo: ${repo}`);
   lines.push(`docs_path: ${docsPath}`);
+  if (appPath) lines.push(`app_path: ${appPath}`);
   lines.push(`current_project: ${currentProject}`);
   lines.push('');
 
@@ -231,7 +237,7 @@ async function main() {
 
   // --- 3. Gate 0 — deterministic, before any branch creation or agent dispatch ---
   // current_project empty → post comment and stop — no branch, no agent, no PR possible
-  const { docsPath, currentProject, error } = resolveProjectContext(config);
+  const { docsPath, appPath, currentProject, error } = resolveProjectContext(config);
 
   if (error) {
     console.error(`[agent-dispatch] Project context error: ${error}`);
@@ -299,6 +305,7 @@ async function main() {
     profile,
     contextBlock,
     docsPath,
+    appPath,
     currentProject,
     issueNumber,
     repo,
