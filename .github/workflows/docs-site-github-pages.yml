@@ -2,6 +2,8 @@ name: Deploy Doc Site
 
 on:
   push:
+    tags:
+      - 'v*'
     paths:
       - '.oneticket/docs/**'
       - 'apps/**/docs/**'

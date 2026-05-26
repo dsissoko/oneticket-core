@@ -112,14 +112,11 @@ Resolved in the CI workflow from `current_project` via `node src/print-config.mj
 
 | `current_project` | `DOC_SOURCE` |
 |---|---|
-| empty | `.oneticket/docs` |
-| `breakout` | `apps/breakout/docs` |
+| absent or empty | config error — workflow stops |
+| `oneticket-core` | `.oneticket/docs` (special convention — framework repo) |
+| `breakout` (or any other) | `apps/breakout/docs` |
 
-In local development, `astro.config.mjs` defaults to `../.oneticket/docs` — no environment variable needed:
-
-```js
-const docSource = process.env.DOC_SOURCE || '../.oneticket/docs'
-```
+In local development, `astro.config.mjs` defaults to `../.oneticket/docs` — no environment variable needed.
 
 ---
 
@@ -161,21 +158,30 @@ In local development, these variables are absent — the footer reads git metada
 ```yaml
 on:
   push:
-    paths: ['.oneticket/docs/**', 'apps/**/docs/**', 'doc-site/**']
+    tags:
+      - 'v*'
+    paths:
+      - '.oneticket/docs/**'
+      - 'apps/**/docs/**'
+      - 'doc-site/**'
   pull_request:
     types: [opened, reopened, synchronize]
     branches: [main]
-    paths: ['.oneticket/docs/**', 'apps/**/docs/**', 'doc-site/**']
+    paths:
+      - '.oneticket/docs/**'
+      - 'apps/**/docs/**'
+      - 'doc-site/**'
 ```
 
-Tags `v*` are covered by the `push` trigger (no path filter needed — a tag push triggers on any path match from previous commits).
+On a tag push, GitHub Actions ignores the `paths` filter — the `tags` filter applies independently.
 
 ### Jobs
 
 ```
 resolve-context
+  → npm ci (required — print-config.mjs depends on js-yaml)
   → node src/print-config.mjs current_project
-  → slug = current_project or 'framework'
+  → slug = current_project (e.g. oneticket-core, breakout)
   → DOC_SOURCE, ASTRO_BASE, target_folder, app_url
   → outputs: doc_source, slug, astro_base, target_folder, app_url
         ↓
@@ -210,9 +216,9 @@ deploy-prod       (if push main or tag v*)
 
 | Context | URL |
 |---|---|
-| Framework doc prod | `https://dsissoko.github.io/oneticket-core/framework/docs/` |
+| Framework doc prod | `https://dsissoko.github.io/oneticket-core/oneticket-core/docs/` |
 | App doc prod | `https://dsissoko.github.io/oneticket-core/<project>/docs/` |
-| Framework doc PR preview | `https://dsissoko.github.io/oneticket-core/framework/pr/<N>/docs/` |
+| Framework doc PR preview | `https://dsissoko.github.io/oneticket-core/oneticket-core/pr/<N>/docs/` |
 | App doc PR preview | `https://dsissoko.github.io/oneticket-core/<project>/pr/<N>/docs/` |
 
 ### GitHub Pages configuration
