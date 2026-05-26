@@ -155,14 +155,6 @@ jobs:
           folder:        dist
           target-folder: ${{ needs.resolve-context.outputs.target_folder }}
           clean:         true
-          clean-exclude: '["pr"]'
-      - name: Ensure .nojekyll at gh-pages root
-        env:
-          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
-        run: |
-          git fetch origin gh-pages
-          git checkout gh-pages
-          touch .nojekyll
-          git add .nojekyll
-          git diff --cached --quiet || git commit -m "chore: ensure .nojekyll at gh-pages root"
-          git push origin gh-pages
+          clean-exclude: |
+            .nojekyll
+            pr
