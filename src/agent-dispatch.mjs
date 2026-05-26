@@ -252,38 +252,10 @@ async function main() {
     process.exit(1);
   }
 
-  if (currentProject === '') {
-    // [GATE 0 — DETERMINISTIC] current_project is empty — stop before any agent or branch
-    console.log('[agent-dispatch] Gate 0: current_project is empty — posting comment and stopping.');
-    const gate0Body = [
-      '**[Agent: `@po`]**',
-      '',
-      '`current_project` is not set in `.oneticket/config.yml`.',
-      '',
-      'Please set it to your project name before triggering an agent:',
-      '',
-      '```yaml',
-      'current_project: <your-project-name>',
-      '```',
-      '',
-      'Leave it empty only if this is a OneTicket framework request.',
-    ].join('\n');
-    try {
-      const { execFileSync } = await import('child_process');
-      execFileSync('gh', ['issue', 'comment', String(issueNumber), '--repo', repo, '--body', gate0Body],
-        { env: { ...process.env, GH_TOKEN: ghToken } }
-      );
-      console.log('[agent-dispatch] Gate 0 comment posted — waiting for human response.');
-    } catch (e) {
-      console.error('[agent-dispatch] Could not post Gate 0 comment:', e.message);
-    }
-    process.exit(0);
-  }
-
-  console.log(`[agent-dispatch] project context resolved: current_project="${currentProject}", docs_path="${docsPath}"`);
+  // current_project empty = framework context — valid, agent runs with docs_path: .oneticket/docs
+  console.log(`[agent-dispatch] project context resolved: current_project="${currentProject || '(framework)'}", docs_path="${docsPath}"`);
 
   // --- 4. Git setup + create feature branch if it doesn't exist --------
-  // Only reached if Gate 0 passed (current_project is set)
   setupGit('agent-dispatch', config, repo, ghToken);
 
   const remoteBranches = runCapture('agent-dispatch', 'git branch -r');
