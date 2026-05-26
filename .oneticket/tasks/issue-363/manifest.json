@@ -16,7 +16,7 @@
       "file": "games/breakout/game.js",
       "content": "Créer games/breakout/game.js avec : classe Game avec constructeur (init canvas, score=0, gameOver=false, bound keyboard events), méthode init() qui démarre la boucle de jeu, méthode update() qui appelle paddle.update() et ball.update(), méthode render() qui clear canvas et redessine, méthode gameOver() qui arrête le jeu et affiche l'écran. Exporter la classe Game.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "C",
