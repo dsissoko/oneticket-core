@@ -8,7 +8,7 @@
       "file": "apps/breakout/docs/what/product-spec.md",
       "content": "À partir des informations ci-dessous, crée le fichier apps/breakout/docs/what/product-spec.md selon le template de product-spec du framework OneTicket.\n\nInformations du projet Breakout :\n- Nom : Breakout\n- Description : Jeu arcade frontend JavaScript vanilla (HTML/CSS/JS, aucune dépendance externe)\n- Utilisateurs : Joueurs en quête de divertissement arcade classique\n- Problème résolu : Proposer un jeu Breakout accessible sans dépendances externes\n\nCapacités V1 :\n1. Aire de jeu avec mur de briques (5 lignes)\n2. Mécanique de jeu : balle rebondissante, raquette contrôlable aux flèches, système de 3 vies\n3. Condition de victoire/défaite : épuisement des vies (game over) ou destruction de toutes les briques\n4. Menu interactif : démarrer, rejouer, quitter (souris)\n5. Slider de contrôle de vitesse de balle (très lent à très rapide)\n\nRègles métier :\n- Clavier : flèches gauche/droite uniquement pour la raquette\n- Souris : réservée aux menus\n- Vies : 3 au démarrage, -1 par touche du bas de l'écran\n- Pas de système de niveaux ni de progression en V1\n- Balle rebondit sur les murs, plafond, et raquette\n\nUtilise le template OneTicket standard pour product-spec.md dans .oneticket/templates/product-spec.md.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
