@@ -184,6 +184,7 @@ by adding a corresponding workflow file.
 - A manifest must be a valid JSON DAG — no cycles, no undefined dependencies
 - Agent responses must always be posted as GitHub comments — no silent execution
 - Skills contain declarative instructions only — no control flow logic
+- Agent profiles define keyword-to-skill routing — the wording of a request determines which skills are referenced in the manifest content field; using the right keywords is critical to trigger the correct skill
 
 ---
 
