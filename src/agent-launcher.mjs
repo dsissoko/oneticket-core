@@ -202,13 +202,12 @@ export async function launchReadyTasks(manifest, repo, token) {
     try {
       let prompt;
       if (task.role) {
-        console.log(`[agent-launcher] Task ${task.id} has role="${task.role}" — building role prompt.`);
         prompt = buildRoleTaskPrompt(task, manifest, config, repo);
-        if (!prompt) {
-          console.error(`[agent-launcher] Skipping task ${task.id} — role prompt could not be built.`);
-          continue;
+      }
+      if (!prompt) {
+        if (task.role) {
+          console.warn(`[agent-launcher] Role "${task.role}" not found for task ${task.id} — falling back to generic worker.`);
         }
-      } else {
         prompt = buildTaskPrompt(task, manifest);
       }
 
