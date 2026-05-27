@@ -1,3 +1,8 @@
+---
+name: oneticket-style-for-vite-react-primer
+description: Review and refine existing React and Primer UIs to follow Primer conventions — polish and refactor oriented.
+compatibility: opencode
+---
 # skills/bagustris/primer-style/SKILL.md
 
 ## Objective

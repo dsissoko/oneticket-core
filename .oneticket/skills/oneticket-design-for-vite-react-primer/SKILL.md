@@ -1,3 +1,8 @@
+---
+name: oneticket-design-for-vite-react-primer
+description: Design and implement frontend interfaces using GitHub Primer design system with React in a consistent and production-grade way.
+compatibility: opencode
+---
 # skills/bas/primer-design/SKILL.md
 
 ## Objective

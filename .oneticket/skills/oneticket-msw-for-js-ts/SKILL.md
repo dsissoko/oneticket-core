@@ -1,5 +1,5 @@
 ---
-name: msw
+name: oneticket-msw-for-js-ts
 description: >
   MSW (Mock Service Worker) v2 best practices, patterns, and API guidance for
   API mocking in JavaScript/TypeScript tests and development. Covers handler
