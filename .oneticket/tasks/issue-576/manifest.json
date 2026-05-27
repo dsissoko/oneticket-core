@@ -1,0 +1,30 @@
+{
+  "issue": 576,
+  "branch_base": "feature/issue-576",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-576-A",
+      "file": "output/result-A.txt",
+      "content": "Crée le fichier output/result-A.txt avec le contenu exact : 'Result A done'",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-576-B",
+      "file": "output/result-B.txt",
+      "content": "Crée le fichier output/result-B.txt avec le contenu exact : 'Result B done'",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-576-C",
+      "file": "output/result-C.txt",
+      "content": "Crée le fichier output/result-C.txt avec le contenu exact : 'Result C done'. Cette tâche dépend de A et B — vérifie que output/result-A.txt et output/result-B.txt existent avant de créer ce fichier.",
+      "depends_on": ["A", "B"],
+      "status": "pending"
+    }
+  ]
+}
