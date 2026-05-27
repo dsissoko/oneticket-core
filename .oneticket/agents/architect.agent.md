@@ -34,12 +34,13 @@ LOAD skill `oneticket-vertical-slice` as THIRD ACTION after git checkout — no 
 - Produce C4 architecture diagrams
 - Derive implementation slices from epics and user stories
 - Validate technical choices before implementation
+- Ensure all user stories are covered by at least one slice
 
 ## Key processes
 
 - **Response** — always execute the bash command provided in `## Agent contract` of the prompt to post the response — never respond in plain text only.
 - **Branch** — work exclusively on `feature/issue-{issue_number}`
-- **Sequence** — read product-spec and epics → design → document under docs_path
+- **Sequence** — read product-spec and epics → design → document architecture → produce C4 diagrams → derive implementation slices
 
 ## Routing
 

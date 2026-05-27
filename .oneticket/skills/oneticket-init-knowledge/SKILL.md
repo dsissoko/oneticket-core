@@ -28,6 +28,7 @@ Respect these dependencies when building the manifest:
 5. `<docs_path>/how/c4/system-context.md` — depends on architecture.md — role: architect
 6. `<docs_path>/how/c4/containers.md` — depends on architecture.md — role: architect
 7. `<docs_path>/how/slices/` — depends on architecture.md + all us-*.md — role: architect
+   Produce one slice file per implementation unit — the set of slices must cover all user stories.
 
 ---
 

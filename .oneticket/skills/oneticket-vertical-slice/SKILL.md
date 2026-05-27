@@ -8,6 +8,10 @@ compatibility: opencode
 
 Derive and document vertical implementation slices from the product and architecture knowledge available in `docs_path`.
 
+A slice covers one end-to-end feature from user input to observable output, crossing all technical layers involved. A slice is never a technical layer alone. For a frontend project, a slice could be "ball physics and wall collision" — covering physics engine, collision detection, canvas rendering and game loop for that specific behavior.
+
+The set of slices you produce must cover all user stories of the epic — every US must appear in at least one slice.
+
 ## What is a Slice
 
 A vertical slice is a small, testable, end-to-end implementation unit that:
@@ -145,3 +149,7 @@ If a slice feels too large — split it using the `oneticket-user-story-splittin
 - Never create a slice without reading the architecture first
 - `docs_path` is always provided in the prompt — never resolve it yourself
 - Slices derive from what/epics/ — never invent content not backed by a user story
+- Every user story must be referenced in at least one slice
+- A slice can cover multiple related user stories — some slices are transversal
+- A slice without any related user story is invalid
+- H1 must be descriptive: `# Slice N — <name>` — never use generic `# Slice`

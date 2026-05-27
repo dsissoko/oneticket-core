@@ -1,4 +1,4 @@
-# Slice
+# Slice N — <name>
 
 ## Goal
 
