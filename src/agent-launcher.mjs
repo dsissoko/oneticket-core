@@ -197,31 +197,44 @@ export async function launchReadyTasks(manifest, repo, token) {
 
   const config = loadConfig();
 
-  // [FAN-OUT] Trigger one workflow per task — continue if one task fails
-  for (const task of readyTasks) {
-    try {
-      let prompt;
-      if (task.role) {
-        prompt = buildRoleTaskPrompt(task, manifest, config, repo);
-      }
-      if (!prompt) {
-        if (task.role) {
-          console.warn(`[agent-launcher] Role "${task.role}" not found for task ${task.id} — falling back to generic worker.`);
-        }
-        prompt = buildTaskPrompt(task, manifest);
-      }
+  // [FAN-OUT] Trigger one workflow per task — batched to avoid GitHub Actions concurrency cancellations
+  // Max BATCH_SIZE dispatches at a time, with BATCH_DELAY_MS between batches
+  const BATCH_SIZE  = 4;
+  const BATCH_DELAY_MS = 3000;
 
-      await dispatchWorkflow('agent-execute.yml', {
-        issue_number: String(manifest.issue),
-        branch:       task.branch,
-        branch_base:  manifest.branch_base,
-        prompt,
-        model:        config.model,
-        retry_max:    String(config.retry_max),
-      }, repo, token);
-      console.log(`[agent-launcher] [FAN-OUT] Workflow triggered for task ${task.id}${task.role ? ` (role: ${task.role})` : ''}.`);
-    } catch (err) {
-      console.error(`[agent-launcher] Failed to trigger workflow for task ${task.id}: ${err.message}`);
+  for (let i = 0; i < readyTasks.length; i += BATCH_SIZE) {
+    const batch = readyTasks.slice(i, i + BATCH_SIZE);
+
+    if (i > 0) {
+      console.log(`[agent-launcher] [FAN-OUT] Waiting ${BATCH_DELAY_MS}ms before next batch...`);
+      await new Promise(r => setTimeout(r, BATCH_DELAY_MS));
+    }
+
+    for (const task of batch) {
+      try {
+        let prompt;
+        if (task.role) {
+          prompt = buildRoleTaskPrompt(task, manifest, config, repo);
+        }
+        if (!prompt) {
+          if (task.role) {
+            console.warn(`[agent-launcher] Role "${task.role}" not found for task ${task.id} — falling back to generic worker.`);
+          }
+          prompt = buildTaskPrompt(task, manifest);
+        }
+
+        await dispatchWorkflow('agent-execute.yml', {
+          issue_number: String(manifest.issue),
+          branch:       task.branch,
+          branch_base:  manifest.branch_base,
+          prompt,
+          model:        config.model,
+          retry_max:    String(config.retry_max),
+        }, repo, token);
+        console.log(`[agent-launcher] [FAN-OUT] Workflow triggered for task ${task.id}${task.role ? ` (role: ${task.role})` : ''}.`);
+      } catch (err) {
+        console.error(`[agent-launcher] Failed to trigger workflow for task ${task.id}: ${err.message}`);
+      }
     }
   }
 }
