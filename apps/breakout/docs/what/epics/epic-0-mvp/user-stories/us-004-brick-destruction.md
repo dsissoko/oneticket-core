@@ -55,5 +55,5 @@ When the ball collides with a brick:
 
 ## Related Slices
 
-- Slice 3: Collision Detection System
-- Slice 4: Brick Destruction and Scoring
+- [Slice 3 — Collision Detection System](../../../how/slices/slice-3-collision-detection/slice.md)
+- [Slice 4 — Brick Destruction and Visual Feedback](../../../how/slices/slice-4-brick-destruction/slice.md)

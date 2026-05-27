@@ -56,4 +56,4 @@ Feature: Game Setup and Initialization
 
 ## Related Slices
 
-- Slice 1: Game Board and Paddle Setup
+- [Slice 1 — Game Board and Paddle Setup](../../../how/slices/slice-1-game-setup/slice.md)

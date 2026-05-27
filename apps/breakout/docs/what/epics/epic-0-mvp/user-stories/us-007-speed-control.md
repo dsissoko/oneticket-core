@@ -62,5 +62,5 @@ The speed control feature provides a visual slider in the game menu and during a
 
 ## Related Slices
 
-- Slice 2: Ball Physics Engine
-- Slice 6: Speed Adjustment and UI Controls
+- [Slice 2 — Ball Physics Engine](../../../how/slices/slice-2-ball-physics/slice.md)
+- [Slice 6 — Speed Adjustment and UI Controls](../../../how/slices/slice-6-speed-control/slice.md)

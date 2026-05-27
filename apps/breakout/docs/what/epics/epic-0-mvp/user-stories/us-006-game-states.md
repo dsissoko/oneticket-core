@@ -134,7 +134,7 @@ Feature: Game State Management
 
 ## Related Slices
 
-- **Slice 1**: Game Board and Paddle Setup — Initialize the game board and paddle structure
-- **Slice 5**: Game State Management and Transitions — Core state machine implementation
-- **Slice 6**: Speed Adjustment and UI Controls — Speed slider feedback during active state
-- **Slice 7**: Win/Loss Conditions and Final Integration — Condition detection and final state display
+- **[Slice 1 — Game Board and Paddle Setup](../../../how/slices/slice-1-game-setup/slice.md)** — Initialize the game board and paddle structure
+- **[Slice 5 — Game State Management and Transitions](../../../how/slices/slice-5-game-state-management/slice.md)** — Core state machine implementation
+- **[Slice 6 — Speed Adjustment and UI Controls](../../../how/slices/slice-6-speed-control/slice.md)** — Speed slider feedback during active state
+- **[Slice 7 — Win/Loss Conditions and Final Integration](../../../how/slices/slice-7-win-loss-conditions/slice.md)** — Condition detection and final state display
