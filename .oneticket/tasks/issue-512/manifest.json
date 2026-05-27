@@ -56,7 +56,7 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-004-brick-destruction.md",
       "content": "Crée le fichier apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-004-brick-destruction.md en utilisant le template .oneticket/templates/user-story.md. User story : En tant que joueur, je veux détruire les briques en frappant la balle contre elles, afin de progresser vers la victoire. Critères d'acceptation (Gherkin) : Given des briques en place, When la balle frappe une brique, Then cette brique disparaît. When toutes les briques sont détruites, Then j'affiche le message Victoire et la partie se termine.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "H",
