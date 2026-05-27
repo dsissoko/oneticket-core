@@ -24,7 +24,7 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/epic.md",
       "content": "Crée le fichier epic.md pour l'MVP Breakout dans apps/breakout/docs/what/epics/epic-0-mvp/epic.md. Périmètre MVP : système de jeu complet avec 1) mur de 5 lignes de briques destructibles, 2) balle avec physique de rebond sur murs/plafond/raquette/briques, 3) raquette contrôlée aux flèches clavier gauche/droite, 4) gestion de 3 vies avec game over, 5) condition de victoire (toutes briques détruites), 6) slider de vitesse de balle dans le menu, 7) menus basiques (démarrer, rejouer, quitter). Inclure la définition du succès et les critères d'acceptation globaux du MVP. Utilise le template fourni dans .oneticket/templates/docs/what/epics/epic-0-mvp/epic.md.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "D",
