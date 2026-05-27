@@ -1,0 +1,87 @@
+{
+  "issue": 644,
+  "branch_base": "feature/issue-644",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-644-A",
+      "file": "apps/breakout/docs/what/product-spec.md",
+      "content": "Tu es analyst. Produis la spécification produit (product-spec.md) pour le jeu Breakout.\n\nContexte:\n- Breakout est un jeu arcade frontend en JavaScript vanilla (HTML/CSS/JS, sans dépendances externes)\n- L'aire de jeu contient un mur de briques sur 5 lignes\n- Une balle rebondit sur les murs, plafond et raquette\n- Le joueur a 3 vies; en perd une quand la balle atteint le bas\n- Partie se termine par game over (plus de vies) ou victoire (toutes briques détruites)\n- Raquette: flèches gauche/droite du clavier\n- Souris: navigation menus (démarrer, rejouer, quitter)\n- Slider pour régler la vitesse de balle (très lente à très rapide)\n- Pas de niveaux ni progression pour l'instant\n\nUtilise le template dans .oneticket/templates/product-spec.md. Lis d'abord le template pour connaître sa structure.\nRemplis chaque section avec le contenu approprié dérivé du contexte fourni.\nCertifie que le frontmatter 'title:' est présent.",
+      "depends_on": [],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-644-B",
+      "file": "apps/breakout/docs/how/architecture.md",
+      "content": "Tu es architect. Produis le document d'architecture (architecture.md) pour le jeu Breakout.\n\nLis d'abord apps/breakout/docs/what/product-spec.md pour comprendre les capacités produit.\n\nContexte technique:\n- Stack: JavaScript vanilla (HTML/CSS/JS, aucune dépendance externe)\n- Exécution: frontend pur, pas de backend requis\n- Composants clés: moteur de jeu, gestion de la raquette, gestion de la balle, gestion des briques, système de scores/vies, menus\n- Persistance: localStorage pour les préférences (vitesse slider, scores)\n- Interfaces clés: clavier (flèches, contrôle de jeu), souris (menus), canvas ou DOM pour rendu\n\nUtilise le template dans .oneticket/templates/architecture.md. Lis d'abord le template.\nDocumente les composants, interactions, et choix techniques principaux.\nCertifie que le frontmatter 'title:' est présent.",
+      "depends_on": ["A"],
+      "status": "pending",
+      "role": "architect"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-644-C",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/epic.md",
+      "content": "Tu es analyst. Produis l'epic MVP (epic.md) pour le jeu Breakout.\n\nLis d'abord apps/breakout/docs/what/product-spec.md.\n\nContexte:\n- Cet epic représente la version minimale viable du jeu Breakout\n- Critères d'acceptation: le joueur peut jouer au jeu complet, perdre, gagner, recommencer\n- Critères d'acceptation: tous les éléments du jeu fonctionnent (balle, raquette, briques, scores, menus)\n- Critères d'acceptation: la vitesse peut être ajustée via slider\n\nUtilise le template dans .oneticket/templates/epic.md. Lis d'abord le template.\nRemplis epic.md avec:\n- Narrative et objectifs clairs\n- Critères d'acceptation métier concis\n- Périmètre MVP aligné avec product-spec\nCertifie que le frontmatter 'title:' est présent.",
+      "depends_on": ["A"],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-644-D",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-game-setup.md",
+      "content": "Tu es analyst. Produis la première user story (us-001-game-setup.md).\n\nLis d'abord:\n- apps/breakout/docs/what/product-spec.md\n- apps/breakout/docs/what/epics/epic-0-mvp/epic.md\n\nContexte:\nCette user story couvre la mise en place du jeu: aire de jeu, initialisation de l'état.\n\nStory:\n- Titre: Initialiser le jeu et configurer l'aire de jeu\n- En tant que joueur, je veux voir une aire de jeu bien définie avec un mur de briques, afin de comprendre le cadre du jeu\n- Critères Gherkin:\n  Given j'accède au jeu\n  When la page charge\n  Then je vois l'aire de jeu avec le mur de briques (5 lignes)\n  And je vois ma raquette au bas\n  And le compteur de vies affiche 3\n  And le score affiche 0\n\nUtilise le template dans .oneticket/templates/us.md. Lis d'abord le template.\nCertifie que le frontmatter 'title:' est présent.",
+      "depends_on": ["C"],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-644-E",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-002-paddle-control.md",
+      "content": "Tu es analyst. Produis la deuxième user story (us-002-paddle-control.md).\n\nLis d'abord:\n- apps/breakout/docs/what/product-spec.md\n- apps/breakout/docs/what/epics/epic-0-mvp/epic.md\n\nContexte:\nCette user story couvre le contrôle de la raquette au clavier.\n\nStory:\n- Titre: Contrôler la raquette avec le clavier\n- En tant que joueur, je veux déplacer ma raquette à gauche ou à droite avec les flèches du clavier, afin de contrôler la balle\n- Critères Gherkin:\n  Given le jeu est en cours\n  When j'appuie sur la flèche gauche\n  Then la raquette se déplace vers la gauche\n  And elle s'arrête au bord gauche de l'aire de jeu\n  When j'appuie sur la flèche droite\n  Then la raquette se déplace vers la droite\n  And elle s'arrête au bord droit de l'aire de jeu\n\nUtilise le template dans .oneticket/templates/us.md. Lis d'abord le template.\nCertifie que le frontmatter 'title:' est présent.",
+      "depends_on": ["C"],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "F",
+      "branch": "task/issue-644-F",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-003-ball-physics.md",
+      "content": "Tu es analyst. Produis la troisième user story (us-003-ball-physics.md).\n\nLis d'abord:\n- apps/breakout/docs/what/product-spec.md\n- apps/breakout/docs/what/epics/epic-0-mvp/epic.md\n\nContexte:\nCette user story couvre la physique de la balle.\n\nStory:\n- Titre: La balle rebondit sur les murs, plafond et raquette\n- En tant que joueur, je veux que la balle rebondisse réaliste-ment sur les obstacles, afin que le jeu soit jouable\n- Critères Gherkin:\n  Given le jeu est en cours\n  When la balle touche un mur latéral\n  Then elle rebondit en changeant sa direction horizontale\n  When la balle touche le plafond\n  Then elle rebondit en changeant sa direction verticale\n  When la balle touche la raquette\n  Then elle rebondit en changeant sa direction verticale\n  When la balle atteint le bas de l'écran (sans raquette)\n  Then le joueur perd une vie\n\nUtilise le template dans .oneticket/templates/us.md. Lis d'abord le template.\nCertifie que le frontmatter 'title:' est présent.",
+      "depends_on": ["C"],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "G",
+      "branch": "task/issue-644-G",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-004-brick-destruction.md",
+      "content": "Tu es analyst. Produis la quatrième user story (us-004-brick-destruction.md).\n\nLis d'abord:\n- apps/breakout/docs/what/product-spec.md\n- apps/breakout/docs/what/epics/epic-0-mvp/epic.md\n\nContexte:\nCette user story couvre la destruction des briques.\n\nStory:\n- Titre: Détruire les briques en les frappant avec la balle\n- En tant que joueur, je veux que chaque brique frappée par la balle disparaisse, afin de progresser vers la victoire\n- Critères Gherkin:\n  Given le jeu contient un mur de briques intacts\n  When la balle frappe une brique\n  Then la brique disparaît de l'aire de jeu\n  And le score augmente\n  When toutes les briques sont détruites\n  Then le jeu affiche \"Victoire!\"\n  And l'écran affiche le score final\n\nUtilise le template dans .oneticket/templates/us.md. Lis d'abord le template.\nCertifie que le frontmatter 'title:' est présent.",
+      "depends_on": ["C"],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "H",
+      "branch": "task/issue-644-H",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-005-ball-speed-control.md",
+      "content": "Tu es analyst. Produis la cinquième user story (us-005-ball-speed-control.md).\n\nLis d'abord:\n- apps/breakout/docs/what/product-spec.md\n- apps/breakout/docs/what/epics/epic-0-mvp/epic.md\n\nContexte:\nCette user story couvre le contrôle de la vitesse de balle via un slider.\n\nStory:\n- Titre: Ajuster la vitesse de la balle via un slider\n- En tant que joueur, je veux pouvoir régler la vitesse de la balle avant ou pendant une partie, afin d'adapter la difficulté à mon niveau\n- Critères Gherkin:\n  Given je suis dans le menu\n  When je manipule le slider de vitesse\n  Then la valeur change de très lente à très rapide\n  And le préférences sont sauvegardées\n  Given une partie est en cours\n  When la balle se déplace\n  Then sa vitesse correspond au réglage du slider\n\nUtilise le template dans .oneticket/templates/us.md. Lis d'abord le template.\nCertifie que le frontmatter 'title:' est présent.",
+      "depends_on": ["C"],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "I",
+      "branch": "task/issue-644-I",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-006-game-menus.md",
+      "content": "Tu es analyst. Produis la sixième user story (us-006-game-menus.md).\n\nLis d'abord:\n- apps/breakout/docs/what/product-spec.md\n- apps/breakout/docs/what/epics/epic-0-mvp/epic.md\n\nContexte:\nCette user story couvre les menus du jeu.\n\nStory:\n- Titre: Naviguer dans les menus (démarrer, rejouer, quitter)\n- En tant que joueur, je veux pouvoir démarrer une partie, recommencer après une défaite, ou quitter le jeu via des menus intuitifs, afin de contrôler mon expérience de jeu\n- Critères Gherkin:\n  Given l'application est lancée\n  When j'accède au menu principal\n  Then je vois le bouton \"Démarrer\"\n  When je clique sur \"Démarrer\"\n  Then la partie commence\n  Given j'ai perdu ou gagné\n  When l'écran \"Fin de partie\" s'affiche\n  Then je vois le bouton \"Rejouer\"\n  And je vois le bouton \"Quitter\"\n  When je clique sur \"Rejouer\"\n  Then une nouvelle partie démarre\n  When je clique sur \"Quitter\"\n  Then je reviens au menu principal\n\nUtilise le template dans .oneticket/templates/us.md. Lis d'abord le template.\nCertifie que le frontmatter 'title:' est présent.",
+      "depends_on": ["C"],
+      "status": "pending",
+      "role": "analyst"
+    }
+  ]
+}
