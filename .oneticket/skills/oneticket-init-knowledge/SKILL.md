@@ -107,6 +107,7 @@ Prochaines étapes suggérées :
 - Use templates in `.oneticket/templates/` when creating files
 - `docs_path` is always provided in the prompt — never resolve it yourself
 - One question set per run — do not chain multiple question sets in one run
+- When creating `product-spec.md`, replace the `<!-- SITE_DESCRIPTION: ... -->` placeholder with a real one-sentence description of the product (max 160 chars)
 - After creating any documentation file, immediately commit and push it:
   ```bash
   git add <file_path>
