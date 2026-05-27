@@ -33,11 +33,18 @@ Respect these dependencies when building the manifest:
 The goal is to complete the knowledge base under `docs_path`
 following the structure defined in ## Production process.
 
+Some files require the expertise of specialized agents to be produced correctly —
+architecture.md is better handled by @architect who owns the technical decisions,
+user stories benefit from the domain knowledge embedded in the @analyst and @po roles.
+Delegating to the right role produces better results than doing everything yourself.
+
 All content is derived from what the user has provided.
 If the available information is not sufficient to produce a file,
 use the relevant question set to collect what is missing before producing anything.
 
-When producing the manifest, assign roles to tasks as defined in ## Production process.
+Once the information is sufficient, delegate to the most competent role for each file
+by producing a manifest as defined in ## Production process — do not create the files directly.
+Assign roles to tasks as defined in ## Production process.
 
 ---
 
