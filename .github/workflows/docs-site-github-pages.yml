@@ -9,14 +9,12 @@ on:
     paths:
       - '.oneticket/docs/**'
       - 'apps/**/docs/**'
-      - 'doc-site/**'
   pull_request:
     types: [opened, reopened, synchronize]
     branches: [main]
     paths:
       - '.oneticket/docs/**'
       - 'apps/**/docs/**'
-      - 'doc-site/**'
 
 permissions:
   contents: write
