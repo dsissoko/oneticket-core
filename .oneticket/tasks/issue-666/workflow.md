@@ -6,3 +6,4 @@
 2026-05-27 21:18 | E | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-003-brick-destruction.md
 2026-05-27 21:18 | G | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-005-menus.md
 2026-05-27 21:31 | H | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-006-speed-slider.md
+2026-05-27 21:33 | I | apps/breakout/docs/how/architecture.md
