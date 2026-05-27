@@ -1,0 +1,110 @@
+{
+  "issue": 546,
+  "branch_base": "feature/issue-546",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-546-A",
+      "file": "apps/breakout/docs/what/product-spec.md",
+      "content": "Crée le fichier product-spec.md pour le projet Breakout. Utilise le template dans .oneticket/templates/product-spec.md et remplis-le avec les informations suivantes :\n\n## Vision\nBreakout est un jeu arcade frontend en JavaScript vanilla (HTML/CSS/JS) sans dépendances externes. Le joueur contrôle une raquette pour faire rebondir une balle et détruire un mur de briques avant de perdre ses 3 vies.\n\n## Users and Actors\n- Joueur : personne jouant au jeu, contrôlant la raquette avec les flèches gauche/droite du clavier\n\n## Problems to Solve\n- Offrir une expérience de jeu classique et accessible en pur frontend\n\n## Product Goals\n- Implémenter un jeu Breakout jouable et fonctionnel\n- Permettre au joueur de contrôler facilement la raquette\n- Proposer une difficulté ajustable via un slider de vitesse de balle\n\n## Out of Scope\n- Système de niveaux ou progression\n- Sauvegarde/persistance des scores\n- Multijoueur\n- Graphiques avancés ou animations\n\n## Business Concepts\n- Balle : élément qui rebondit sur les murs, la raquette et les briques\n- Raquette : contrôlée par le joueur avec les flèches gauche/droite\n- Mur de briques : 5 lignes de briques à détruire pour gagner\n- Vie : le joueur commence avec 3 vies, en perd une si la balle atteint le bas de l'écran\n- Vitesse de balle : ajustable via slider dans le menu (très lente à très rapide)\n\n## Product Capabilities\n1. Gameplay : balle rebondissant sur murs, plafond et raquette\n2. Contrôle joueur : déplacement raquette avec flèches gauche/droite\n3. Système de vies : 3 vies, game over à 0 vies\n4. Victoire : destruction de toutes les briques\n5. Menu : démarrer la partie, rejouer, quitter\n6. Contrôle de difficulté : slider pour régler la vitesse de la balle\n\n## High-Level Workflows\n1. Joueur accède au menu principal\n2. Joueur ajuste la vitesse de la balle (optionnel) via slider\n3. Joueur démarre la partie\n4. Balle rebondit, joueur contrôle la raquette\n5. Partie se termine par game over (0 vies) ou victoire (0 briques)\n6. Joueur peut rejouer ou quitter\n\n## Business Rules\n- La raquette se déplace uniquement avec flèches gauche et droite du clavier\n- La souris est réservée à la navigation dans les menus\n- La balle rebondit sur les murs latéraux, le plafond, la raquette et les briques\n- Chaque impact balle-brique détruit la brique\n- Perte de vie : balle atteint le bas de l'écran\n- Fin de partie : 0 vies (game over) ou 0 briques (victoire)\n- Vitesse de balle ajustable : plage très lente à très rapide\n\n## Success Criteria\n- Joueur peut contrôler la raquette facilement\n- Balle rebondit correctement\n- Système de vies fonctionne\n- Conditions de victoire et game over déclenchées correctement\n- Slider de vitesse fonctionne et affecte la balle\n\n## Open Questions\n- Vitesse par défaut de la balle ?\n- Taille des briques, de la raquette, position initiale ?\n- Design visuel (couleurs, style) ?\n- Sons/feedback auditif ?\n",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-546-B",
+      "file": "apps/breakout/docs/how/architecture.md",
+      "content": "Crée le fichier architecture.md pour le projet Breakout. Utilise le template dans .oneticket/templates/architecture.md et remplis-le basé sur la product-spec.md créée (tâche A) avec les informations suivantes :\n\n## Architecture Principles\n- Simplicity: vanilla JavaScript, zéro dépendance externe\n- Single responsibility: chaque module a une seule responsabilité (game logic, rendering, input, physics)\n- No framework: pur HTML/CSS/JS\n\n## System Overview\nApplication frontend monolithique en vanilla JS. Pas de backend, pas de base de données. Exécution entièrement côté client.\n\n## Architectural Style\nStructure modulaire vanilla JS avec séparation claire entre :\n- Game engine (logique de jeu, physics, collisions)\n- Rendering (affichage du jeu)\n- Input handling (gestion clavier/souris)\n- UI state (menus, game state)\n\n## Main Technical Boundaries\n- Game loop : moteur principal à 60 FPS\n- Collision detection : balle <-> walls, paddle, bricks\n- Physics : vitesse et trajectoire de la balle\n- Rendering : canvas ou DOM manipulation\n- Input : event listeners clavier pour raquette, souris pour menus\n\n## Key Components\n1. Game Engine : boucle de jeu, mise à jour état, détection collisions\n2. Paddle : classe/objet pour la raquette\n3. Ball : classe/objet pour la balle\n4. Brick : classe/objet pour les briques\n5. Game State : gestion du score, vies, état (menu/playing/gameover/victory)\n6. Renderer : dessine le jeu sur canvas ou DOM\n7. Input Manager : capture clavier (flèches) et souris (menus)\n8. Menu System : UI menus (start, replay, quit, difficulty slider)\n\n## Key Interfaces\n- Game.start() : démarrer une partie\n- Game.pause()/Game.resume() : pause/reprendre\n- Paddle.move(direction) : déplacer la raquette\n- Game.update(deltaTime) : mise à jour état du jeu\n- Game.render() : affichage du jeu\n- Menu.show() / Menu.hide() : afficher/masquer menus\n- Settings.setBallSpeed(speed) : définir vitesse balle\n\n## Data Architecture\n- Game State : objet contenant lives, score, game status, bricks array, ball position/velocity, paddle position\n- Pas de persistance : état complètement en mémoire\n- Pas de backend : zéro communication serveur\n\n## Security Architecture\n- N/A : application locale, pas d'authentification, pas de données sensibles\n\n## Deployment Strategy\n- Static deployment : fichiers HTML/CSS/JS sur serveur web ou CDN\n- Pas de build complexe initialement\n- Compatible navigateur moderne (ES6+)\n\n## Observability Strategy\n- Logs console pour debug\n- Pas de métriques/analytics\n\n## Related C4 Views\n- À créer : system-context.md (joueur + navigateur)\n- À créer : containers.md (Single Page Application)\n- À créer : components.md (modules JS)\n\n## Related Implementation Slices\n- À créer : slice-1 (setup projet + HTML/CSS base)\n- À créer : slice-2 (game engine + physics)\n- À créer : slice-3 (rendering + raquette)\n- À créer : slice-4 (briques + collisions)\n- À créer : slice-5 (menu + difficulté)\n\n## Technical Constraints\n- Vanilla JS : zéro framework (pas React, pas Vue, pas Angular)\n- Zéro dépendance externe\n- HTML5 standard\n- Doit fonctionner sur navigateurs modernes\n\n## Open Questions\n- Canvas ou DOM pour le rendering ?\n- Framework de test (Jest, Vitest) ou simple console ?\n- Tooling de build (si nécessaire) ?\n",
+      "depends_on": ["A"],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-546-C",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/epic.md",
+      "content": "Crée le fichier epic.md pour l'epic MVP du Breakout. Utilise le template dans .oneticket/templates/epic.md et remplis-le basé sur la product-spec.md (tâche A) avec les informations suivantes :\n\n## Goal\nImpémenter un jeu Breakout jouable avec tous les mécaniques de base : contrôle raquette, rebond balle, destruction briques, système de vies, menus et contrôle de difficulté.\n\n## Business Value\nFournir une expérience de jeu arcade fonctionnelle et amusante, démontrant la viabilité d'un jeu en pur frontend JS vanilla sans dépendances externes.\n\n## Scope\nCet epic couvre :\n1. Setup du projet (HTML/CSS/JS structure)\n2. Game engine avec physics et collision detection\n3. Raquette contrôlable par clavier\n4. Balle rebondissant sur tous les obstacles\n5. Système de briques (5 lignes) destructibles\n6. Système de vies (3 vies, game over à 0)\n7. Conditions de victoire (0 briques) et défaite (0 vies)\n8. Menu principal (démarrer, rejouer, quitter)\n9. Slider pour ajuster vitesse de balle\n10. Affichage score/vies en temps réel\n\nHors scope pour MVP :\n- Niveaux progressifs\n- Sauvegarde scores\n- Power-ups\n- Sons/musique\n- Animations avancées\n\n## Related User Stories\n- us-001-game-setup\n- us-002-game-engine\n- us-003-paddle-control\n- us-004-ball-physics\n- us-005-brick-system\n- us-006-lives-and-gameover\n- us-007-victory-condition\n- us-008-menu-system\n- us-009-difficulty-control\n- us-010-ui-display\n\n## Related Slices\n- slice-1-project-setup\n- slice-2-game-engine\n- slice-3-paddle-and-rendering\n- slice-4-brick-collision\n- slice-5-game-flow-and-ui\n",
+      "depends_on": ["A"],
+      "status": "pending"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-546-D",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-game-setup.md",
+      "content": "Crée le fichier us-001-game-setup.md. Utilise le template dans .oneticket/templates/us.md avec les informations suivantes :\n\n## Story\nEn tant que joueur, je veux accéder à l'application Breakout avec un environnement de jeu proprement structuré en HTML/CSS/JS, afin que le jeu soit prêt à jouer.\n\n## Expected Behavior\n- Application chargeable dans un navigateur moderne\n- Écran de titre/menu visible\n- Canvas ou zone de jeu visible\n- Pas d'erreurs console au chargement\n- CSS de base appliquée (couleurs, dimensions appropriées)\n\n## Acceptance Criteria\n- [ ] Projet initialisé avec index.html, style.css, script.js\n- [ ] Canvas (ou conteneur DOM) pour le jeu visible\n- [ ] Menu principal affiché (boutons start, quit)\n- [ ] Application charge sans erreur JavaScript\n- [ ] Responsive design basique (adapté à la majorité des écrans)\n\n## Related Slices\n- slice-1-project-setup\n",
+      "depends_on": ["C"],
+      "status": "pending"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-546-E",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-002-game-engine.md",
+      "content": "Crée le fichier us-002-game-engine.md. Utilise le template dans .oneticket/templates/us.md avec les informations suivantes :\n\n## Story\nEn tant que développeur, je veux une boucle de jeu stable à ~60 FPS avec gestion d'état et mise à jour physics, afin que le jeu soit réactif et fluide.\n\n## Expected Behavior\n- Boucle de jeu exécutée à ~60 FPS\n- État du jeu (position balle, position raquette, briques, vies) mis à jour à chaque frame\n- Deltatime mesuré pour normaliser le mouvement\n- Pas de stuttering ou ralentissements visibles\n\n## Acceptance Criteria\n- [ ] Game loop implémentée (requestAnimationFrame ou setInterval)\n- [ ] État du jeu stocké et accessible\n- [ ] Update() et render() séparés\n- [ ] FPS stable ~60\n- [ ] Pas de fuite mémoire sur session longue\n\n## Related Slices\n- slice-2-game-engine\n",
+      "depends_on": ["C"],
+      "status": "pending"
+    },
+    {
+      "id": "F",
+      "branch": "task/issue-546-F",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-003-paddle-control.md",
+      "content": "Crée le fichier us-003-paddle-control.md. Utilise le template dans .oneticket/templates/us.md avec les informations suivantes :\n\n## Story\nEn tant que joueur, je veux déplacer la raquette avec les flèches gauche et droite du clavier, afin de contrôler la position pour bloquer la balle.\n\n## Expected Behavior\n- Flèche gauche déplace la raquette à gauche\n- Flèche droite déplace la raquette à droite\n- Raquette reste dans les limites de l'écran\n- Déplacement fluide et réactif\n- Aucun décalage ou lag perceptible\n\n## Acceptance Criteria\n- [ ] Event listeners sur les touches flèches\n- [ ] Raquette se déplace à vitesse constante et prévisible\n- [ ] Raquette ne sort pas de l'écran\n- [ ] Contrôle immédiat sans délai\n- [ ] Souris n'affecte pas le mouvement raquette\n\n## Related Slices\n- slice-3-paddle-and-rendering\n",
+      "depends_on": ["C"],
+      "status": "pending"
+    },
+    {
+      "id": "G",
+      "branch": "task/issue-546-G",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-004-ball-physics.md",
+      "content": "Crée le fichier us-004-ball-physics.md. Utilise le template dans .oneticket/templates/us.md avec les informations suivantes :\n\n## Story\nEn tant que joueur, je veux que la balle rebondisse correctement sur les murs, le plafond, la raquette et les briques, afin que le jeu soit prévisible et juste.\n\n## Expected Behavior\n- Balle rebondit sur murs gauche/droite (angle reflété)\n- Balle rebondit sur plafond (angle reflété)\n- Balle rebondit sur raquette (angle selon position impact)\n- Balle rebondit sur briques (destructrices)\n- Aucun phénomène de \"stick\" (balle ne reste pas coincée)\n\n## Acceptance Criteria\n- [ ] Collision detection murs/plafond/raquette/briques implémentée\n- [ ] Physique de rebond réaliste (angle d'incidence = angle de réflexion)\n- [ ] Pas de glitch de collision\n- [ ] Vitesse constante entre rebonds\n- [ ] Balle destruire briques au contact\n\n## Related Slices\n- slice-2-game-engine\n- slice-4-brick-collision\n",
+      "depends_on": ["C"],
+      "status": "pending"
+    },
+    {
+      "id": "H",
+      "branch": "task/issue-546-H",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-005-brick-system.md",
+      "content": "Crée le fichier us-005-brick-system.md. Utilise le template dans .oneticket/templates/us.md avec les informations suivantes :\n\n## Story\nEn tant que joueur, je veux un mur de briques organisé sur 5 lignes destructible brique par brique, afin d'avoir un objectif clair et progresser dans le jeu.\n\n## Expected Behavior\n- 5 lignes de briques affichées au démarrage\n- Chaque brique détruite au contact balle disparaît visuellement\n- Nombre de briques diminue au fil du temps\n- Briques ne réapparaissent pas après destruction\n- Disposition symétrique et visuellement claire\n\n## Acceptance Criteria\n- [ ] Grille de briques initialisée (5 lignes x N colonnes)\n- [ ] Rendu visuel des briques\n- [ ] Détection collision balle-brique\n- [ ] Suppression brique après collision\n- [ ] Comptage briques restantes\n- [ ] Disposition stable et symétrique\n\n## Related Slices\n- slice-4-brick-collision\n",
+      "depends_on": ["C"],
+      "status": "pending"
+    },
+    {
+      "id": "I",
+      "branch": "task/issue-546-I",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-006-lives-and-gameover.md",
+      "content": "Crée le fichier us-006-lives-and-gameover.md. Utilise le template dans .oneticket/templates/us.md avec les informations suivantes :\n\n## Story\nEn tant que joueur, je veux un système de 3 vies où je perds une vie si la balle atteint le bas de l'écran, afin d'avoir des conséquences aux erreurs et une pression de jeu.\n\n## Expected Behavior\n- Joueur commence avec 3 vies\n- Balle atteint bas de l'écran = perte de 1 vie\n- Affichage du nombre de vies restantes\n- À 0 vies, partie terminée (game over)\n- Game over affiche message et options (rejouer/quitter)\n\n## Acceptance Criteria\n- [ ] Vies initialisées à 3\n- [ ] Détection balle sortie bas de l'écran\n- [ ] Décrémentation vies, réinitialisation balle après perte\n- [ ] Affichage vies en temps réel\n- [ ] Transition game over à 0 vies\n- [ ] Menu game over avec options\n\n## Related Slices\n- slice-2-game-engine\n- slice-5-game-flow-and-ui\n",
+      "depends_on": ["C"],
+      "status": "pending"
+    },
+    {
+      "id": "J",
+      "branch": "task/issue-546-J",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-007-victory-condition.md",
+      "content": "Crée le fichier us-007-victory-condition.md. Utilise le template dans .oneticket/templates/us.md avec les informations suivantes :\n\n## Story\nEn tant que joueur, je veux gagner la partie en détruisant toutes les briques, afin d'avoir un objectif clair et une récompense de victoire.\n\n## Expected Behavior\n- Destruction dernière brique déclenche victoire\n- Affichage message victoire\n- Partie pause, options (rejouer/quitter) affichées\n- Pas de continuation du jeu après victoire\n\n## Acceptance Criteria\n- [ ] Comptage briques mis à jour après destruction\n- [ ] Vérification 0 briques = victoire\n- [ ] Transition victoire (pause jeu, affichage message)\n- [ ] Menu victoire avec options\n- [ ] Pas de continuation de jeu\n\n## Related Slices\n- slice-4-brick-collision\n- slice-5-game-flow-and-ui\n",
+      "depends_on": ["C"],
+      "status": "pending"
+    },
+    {
+      "id": "K",
+      "branch": "task/issue-546-K",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-008-menu-system.md",
+      "content": "Crée le fichier us-008-menu-system.md. Utilise le template dans .oneticket/templates/us.md avec les informations suivantes :\n\n## Story\nEn tant que joueur, je veux accéder à des menus pour démarrer une partie, rejouer ou quitter l'application, afin de contrôler le flux du jeu.\n\n## Expected Behavior\n- Menu principal affiché au démarrage\n- Bouton \"Démarrer\" lance la partie\n- Menu \"Game Over\" apparu avec \"Rejouer\" et \"Quitter\"\n- Menu \"Victoire\" apparu avec \"Rejouer\" et \"Quitter\"\n- Souris navigable sur menus\n- Clavier n'affecte pas menus (réservé raquette)\n\n## Acceptance Criteria\n- [ ] Menu principal avec boutons (Start, Quit)\n- [ ] Clic Start démarre la partie\n- [ ] Clic Quit ferme/quitte l'appli\n- [ ] Menu game over avec options\n- [ ] Menu victoire avec options\n- [ ] Clics souris gérés correctement\n- [ ] Menus visibles et bien positionnés\n\n## Related Slices\n- slice-1-project-setup\n- slice-5-game-flow-and-ui\n",
+      "depends_on": ["C"],
+      "status": "pending"
+    },
+    {
+      "id": "L",
+      "branch": "task/issue-546-L",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-009-difficulty-control.md",
+      "content": "Crée le fichier us-009-difficulty-control.md. Utilise le template dans .oneticket/templates/us.md avec les informations suivantes :\n\n## Story\nEn tant que joueur, je veux ajuster la vitesse de la balle via un slider du menu avant de démarrer, afin de choisir la difficulté qui me convient.\n\n## Expected Behavior\n- Slider visible dans le menu principal\n- Slider plage très lente → très rapide\n- Valeur actuelle affichée (numérique ou visuelle)\n- Changement slider affecte immédiatement vitesse balle\n- Réglage persiste pour la partie lancée\n\n## Acceptance Criteria\n- [ ] Slider HTML implémenté\n- [ ] Plage min/max cohérente (ex: 1-10)\n- [ ] Valeur affichée et mise à jour en temps réel\n- [ ] Vitesse balle ajustée selon slider\n- [ ] Slider accessible et ergonomique\n- [ ] Pas de lags sur interaction slider\n\n## Related Slices\n- slice-5-game-flow-and-ui\n",
+      "depends_on": ["C"],
+      "status": "pending"
+    },
+    {
+      "id": "M",
+      "branch": "task/issue-546-M",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-010-ui-display.md",
+      "content": "Crée le fichier us-010-ui-display.md. Utilise le template dans .oneticket/templates/us.md avec les informations suivantes :\n\n## Story\nEn tant que joueur, je veux voir les informations de jeu (score, vies, briques restantes) affichées en temps réel pendant la partie, afin de suivre ma progression.\n\n## Expected Behavior\n- Score affiché pendant la partie\n- Nombre de vies restantes affiché\n- Nombre de briques restantes affiché\n- Informations mises à jour en temps réel\n- Positionnement clair et lisible\n- Contraste adequate pour la lisibilité\n\n## Acceptance Criteria\n- [ ] Éléments UI rendus (texte/nombres)\n- [ ] Score mis à jour après destruction brique\n- [ ] Vies mise à jour après perte\n- [ ] Briques comptées et affichées\n- [ ] Pas de confusion visuelle\n- [ ] Layout stable (pas de saut)\n\n## Related Slices\n- slice-5-game-flow-and-ui\n",
+      "depends_on": ["C"],
+      "status": "pending"
+    }
+  ]
+}
