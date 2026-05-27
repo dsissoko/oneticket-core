@@ -37,8 +37,8 @@ LOAD skill `oneticket-error-handling-patterns` as SECOND ACTION after git checko
 - **Branch** — work exclusively on `feature/issue-{issue_number}`
 - **Sequence** — read specs and epics → implement → validate
 - **Code validation — mandatory before completing any task:**
-  1. **Build** — run the project build command — blocking. Fix before continuing. After 2 failed attempts → post a comment to `@user` and stop.
-  2. **Test** — run the test suite — blocking. Fix before continuing. After 2 failed attempts → post a comment to `@user` and stop.
+  1. **Build** — run the project build command — blocking. Fix before continuing.
+  2. **Test** — run the test suite — blocking. Fix before continuing.
   3. **Smoke** — verify the app starts without crash — recommended, non-blocking.
 
 ## Routing
