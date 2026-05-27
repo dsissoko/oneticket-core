@@ -73,17 +73,27 @@ issue_number() {
 # ---------------------------------------------------------------------------
 
 run_reply() {
-  echo "=== MODE REPLY — agent @po sans manifest ==="
+  echo "=== MODE REPLY — présentation de chaque agent ==="
   echo ""
 
   URL=$(create_issue \
-    "[TEST-REPLY] Agent PO — réponse libre" \
+    "[TEST-REPLY] Présentation de l'équipe OneTicket" \
     "Contexte : projet oneticket-core, orchestrateur GitHub-native multi-agents.")
   NUM=$(issue_number "$URL")
-  post_comment "$NUM" "@po bonjour, peux-tu te présenter et m'expliquer ce que tu sais faire ?"
+
+  post_comment "$NUM" "@po présentes toi et ta team"
+  sleep 2
+  post_comment "$NUM" "@architect présentes toi et ta team"
+  sleep 2
+  post_comment "$NUM" "@dev présentes toi et ta team"
+  sleep 2
+  post_comment "$NUM" "@qa présentes toi et ta team"
+  sleep 2
+  post_comment "$NUM" "@analyst présentes toi et ta team"
+
   echo "Issue #$NUM lancée ($URL)"
   echo ""
-  echo "Attendu : l'agent répond sur l'issue, aucun manifest produit, aucun FAN-OUT."
+  echo "Attendu : chaque agent répond en commentaire avec la bonne équipe, aucun manifest produit, aucun FAN-OUT."
 }
 
 # ---------------------------------------------------------------------------
