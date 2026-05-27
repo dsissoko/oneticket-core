@@ -35,8 +35,12 @@
 
 ## Mode
 
-- `autonomous_mode: true` → poster un commentaire `@agent ...` selon la matrice ci-dessus
-- `autonomous_mode: false` → poster un commentaire `@user ...` en suggérant l'action à réaliser
+### autonomous_mode: true
+Apply the routing and handoff matrix above by posting a comment and request to the targeted agent.
+
+### autonomous_mode: false
+Handoff to `@user` and propose the routing and handoff you would have applied in autonomous mode.
+Reference agent names without `@` in backticks : `architect`, `dev`, `qa` — never unformatted.
 
 `@user` ne déclenche pas de dispatch — c'est un signal d'attente humaine.
 
