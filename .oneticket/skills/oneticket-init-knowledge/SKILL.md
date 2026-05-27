@@ -16,17 +16,16 @@ One run = one manifest produced, or one question set if information is insuffici
 
 ---
 
-## Files to generate
+## Production process
 
-| File | Purpose |
-|---|---|
-| `<docs_path>/what/product-spec.md` | Product vision, users, capabilities, business rules |
-| `<docs_path>/how/architecture.md` | Technical stack, components, interfaces, constraints |
-| `<docs_path>/what/epics/epic-0-mvp/epic.md` | MVP scope and goal |
-| `<docs_path>/what/epics/epic-0-mvp/user-stories/us-001-*.md` | MVP user stories |
+Refer to `oneticket-doc-structure` for all files to produce, their placement and naming conventions, and their templates.
 
-These files are generated from human answers — never invented, never copied from placeholders.
-Use templates in `.oneticket/templates/` when creating files.
+Respect these dependencies when building the manifest:
+
+1. `<docs_path>/what/product-spec.md` — no dependency
+2. `<docs_path>/how/architecture.md` — depends on product-spec.md
+3. `<docs_path>/what/epics/epic-0-mvp/epic.md` — depends on product-spec.md
+4. `<docs_path>/what/epics/epic-0-mvp/user-stories/us-*.md` — depends on epic.md
 
 ---
 
