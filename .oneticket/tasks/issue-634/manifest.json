@@ -8,7 +8,7 @@
       "file": "apps/breakout/docs/what/product-spec.md",
       "content": "Produis la spécification produit complète pour le jeu Breakout basée sur les informations suivantes :\n\nBreakout est un jeu arcade frontend en JavaScript vanilla (HTML/CSS/JS, aucune dépendance externe).\n\nL'aire de jeu contient un mur de briques organisé sur 5 lignes. Une balle rebondit sur les murs, le plafond et la raquette. Le joueur dispose de 3 vies ; il en perd une à chaque fois que la balle atteint le bas de l'écran. La partie se termine soit par épuisement des vies (game over), soit par destruction de toutes les briques (victoire).\n\nLa raquette se déplace exclusivement avec les flèches gauche et droite du clavier. La souris est réservée à la navigation dans les menus de l'application (démarrer, rejouer, quitter).\n\nLa vitesse de la balle est réglable via un slider accessible depuis le menu, avec une plage allant de très lente à très rapide. Il n'y a pas de système de niveaux ni de progression pour l'instant.\n\nRemplis tous les sections du template product-spec.md en utilisant ces informations.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
