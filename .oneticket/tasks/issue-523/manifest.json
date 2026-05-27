@@ -8,7 +8,7 @@
       "file": "apps/breakout/docs/what/product-spec.md",
       "content": "Crée le fichier product-spec.md pour le projet Breakout. Le projet est un jeu arcade Breakout en JavaScript vanilla (HTML/CSS/JS, aucune dépendance externe). Contenu requis : nom du produit (Breakout), description du problème résolu et utilisateurs cibles, liste des principales capacités (5 lignes de briques, balle avec rebond, raquette contrôlée aux flèches clavier, 3 vies, vitesse de balle réglable via slider, menus à la souris, conditions de victoire/défaite). Inclure les règles métier et contraintes techniques. Utilise le template fourni dans .oneticket/templates/docs/what/product-spec.md.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
