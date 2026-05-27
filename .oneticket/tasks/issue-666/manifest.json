@@ -9,7 +9,7 @@
       "role": "analyst",
       "content": "Le projet Breakout est un jeu arcade frontend en JavaScript vanilla. À partir de la description fournie dans l'issue #666, produis le fichier product-spec.md avec :\n\n1. **Nom du produit** : Breakout\n2. **Description courte** : Jeu arcade classique en JavaScript vanilla où le joueur contrôle une raquette pour détruire des briques avec une balle rebondissante (max 160 caractères)\n3. **Problème et utilisateurs** : Le jeu offre une expérience de jeu arcade rétro simple et addictive aux joueurs\n4. **Capacités principales pour V1** :\n   - Aire de jeu avec mur de 5 lignes de briques\n   - Balle rebondissante avec physique réaliste\n   - Raquette contrôlable aux flèches gauche/droite\n   - Système de vies (3 vies au départ)\n   - Détection victoire (briques détruites) et game over (vies épuisées)\n   - Menu avec boutons démarrer/rejouer/quitter\n   - Slider de vitesse de balle dans le menu (plage très lent à très rapide)\n5. **Règles métier** :\n   - Contrôle clavier uniquement pour le jeu (flèches gauche/droite)\n   - Souris pour les menus\n   - Perte d'une vie si la balle atteint le bas de l'écran\n   - Pas de système de niveaux en V1\n   - Pas de progression en V1\n6. **Stack technique** : JavaScript vanilla (HTML/CSS/JS, aucune dépendance externe)",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
@@ -17,7 +17,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/epic.md",
       "role": "analyst",
       "content": "Après la création de apps/breakout/docs/what/product-spec.md (dépend de la tâche A), produis le fichier epic.md pour l'epic MVP du projet Breakout avec :\n\n1. **Titre** : Epic 0 - Breakout MVP\n2. **Périmètre MVP** : Jeu Breakout fonctionnel avec aire de jeu, balle rebondissante, raquette contrôlable, système de vies, menus et slider de vitesse\n3. **User stories** (minimum 3-4, format Mike Cohn) :\n   - En tant que joueur, je veux contrôler une raquette avec les flèches gauche/droite afin de renvoyer la balle\n   - En tant que joueur, je veux voir la balle rebondir réalistically sur les murs, le plafond et la raquette afin de jouer correctement\n   - En tant que joueur, je veux perdre une vie si la balle atteint le bas de l'écran afin que le jeu progresse\n   - En tant que joueur, je veux détruire les briques du mur afin de progresser vers la victoire\n   - En tant que joueur, je veux accéder à un menu pour démarrer une partie, rejouer ou quitter afin de gérer le flux de jeu\n   - En tant que joueur, je veux ajuster la vitesse de la balle via un slider afin de personnaliser la difficulté\n4. **Critères d'acceptation globaux** : Le jeu est jouable de bout en bout avec les 5 lignes de briques, détection correcte de victoire/game over, menus fonctionnels",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending"
     },
     {
@@ -26,7 +28,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-paddle-control.md",
       "role": "analyst",
       "content": "Après la création de epic.md (dépend de la tâche B), produis les user stories individuelles. Commence par us-001-paddle-control.md :\n\n**Titre** : Contrôler la raquette avec les flèches\n**Format Mike Cohn** : En tant que joueur, je veux contrôler une raquette avec les flèches gauche et droite afin de renvoyer la balle\n\n**Critères d'acceptation (format Gherkin)** :\n- Given le jeu est en cours, When l'utilisateur appuie sur la flèche gauche, Then la raquette se déplace vers la gauche\n- Given la raquette est à la limite gauche de l'aire de jeu, When l'utilisateur appuie sur la flèche gauche, Then la raquette ne dépasse pas le bord\n- Given le jeu est en cours, When l'utilisateur appuie sur la flèche droite, Then la raquette se déplace vers la droite\n- Given la raquette est à la limite droite de l'aire de jeu, When l'utilisateur appuie sur la flèche droite, Then la raquette ne dépasse pas le bord\n\n**Tâches techniques** : HTML structure, CSS styling, event listeners clavier",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -35,7 +39,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-002-ball-physics.md",
       "role": "analyst",
       "content": "Après la création de epic.md (dépend de la tâche B), produis les user stories individuelles. us-002-ball-physics.md :\n\n**Titre** : Physique de la balle rebondissante\n**Format Mike Cohn** : En tant que joueur, je veux voir la balle rebondir réalistically sur les murs, le plafond et la raquette afin de jouer correctement\n\n**Critères d'acceptation (format Gherkin)** :\n- Given la balle se déplace vers un mur latéral, When elle le touche, Then elle rebondit avec l'angle de réflexion correct\n- Given la balle se déplace vers le plafond, When elle le touche, Then elle rebondit vers le bas\n- Given la balle se déplace vers la raquette, When elle la touche, Then elle rebondit vers le haut\n- Given la balle est en mouvement, When elle sort par le bas de l'aire de jeu, Then elle est considérée perdue\n\n**Tâches techniques** : Animation loop, collision detection, velocity vectors",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -44,7 +50,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-003-brick-destruction.md",
       "role": "analyst",
       "content": "Après la création de epic.md (dépend de la tâche B), produis les user stories individuelles. us-003-brick-destruction.md :\n\n**Titre** : Destruction des briques et détection de victoire\n**Format Mike Cohn** : En tant que joueur, je veux détruire les briques du mur en les frappant avec la balle afin de progresser vers la victoire\n\n**Critères d'acceptation (format Gherkin)** :\n- Given une brique est présente sur le mur, When la balle la touche, Then la brique est détruite\n- Given une brique est détruite, When la balle la dépasse, Then la brique reste détruite\n- Given il existe des briques sur le mur, When toutes sont détruites, Then le jeu affiche l'écran de victoire\n- Given l'écran de victoire s'affiche, When le joueur clique sur Rejouer, Then une nouvelle partie commence\n\n**Tâches techniques** : Grid de briques 5 lignes, collision ball-brick, suppression visuelle, détection victoire",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -53,7 +61,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-004-lives-system.md",
       "role": "analyst",
       "content": "Après la création de epic.md (dépend de la tâche B), produis les user stories individuelles. us-004-lives-system.md :\n\n**Titre** : Système de vies et détection game over\n**Format Mike Cohn** : En tant que joueur, je veux perdre une vie si la balle atteint le bas de l'écran afin que le jeu progresse\n\n**Critères d'acceptation (format Gherkin)** :\n- Given le joueur commence avec 3 vies, When la balle sort par le bas, Then le compte de vies diminue de 1\n- Given il reste au moins 1 vie, When la balle sort par le bas, Then le jeu réinitialise et relance la balle au centre\n- Given le joueur a 0 vies restantes, When la balle sort par le bas, Then le jeu affiche l'écran game over\n- Given l'écran game over s'affiche, When le joueur clique sur Rejouer, Then le compte de vies revient à 3\n\n**Tâches techniques** : Compteur de vies, affichage HUD, réinitialisation niveau, écran game over",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -62,7 +72,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-005-menus.md",
       "role": "analyst",
       "content": "Après la création de epic.md (dépend de la tâche B), produis les user stories individuelles. us-005-menus.md :\n\n**Titre** : Menus de jeu (Démarrer, Rejouer, Quitter)\n**Format Mike Cohn** : En tant que joueur, je veux accéder à un menu pour démarrer une partie, rejouer ou quitter afin de gérer le flux de jeu\n\n**Critères d'acceptation (format Gherkin)** :\n- Given le jeu démarre, When la page charge, Then l'écran de menu principal s'affiche avec boutons Démarrer, Quitter\n- Given le menu principal s'affiche, When le joueur clique sur Démarrer, Then la partie commence\n- Given une partie est en cours ou terminée, When le jeu affiche Rejouer, Then le joueur peut cliquer pour recommencer\n- Given le menu s'affiche, When le joueur clique sur Quitter, Then la page se ferme ou retourne à l'accueil\n- Given le jeu est sur n'importe quel écran de menu, When l'utilisateur utilise la souris, Then les menus répondent correctement\n\n**Tâches techniques** : DOM pour menus, événements souris, transitions état du jeu",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -71,7 +83,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-006-speed-slider.md",
       "role": "analyst",
       "content": "Après la création de epic.md (dépend de la tâche B), produis les user stories individuelles. us-006-speed-slider.md :\n\n**Titre** : Slider d'ajustement de vitesse de balle\n**Format Mike Cohn** : En tant que joueur, je veux ajuster la vitesse de la balle via un slider afin de personnaliser la difficulté\n\n**Critères d'acceptation (format Gherkin)** :\n- Given le menu s'affiche, When le joueur voit le slider de vitesse, Then il peut l'ajuster librement\n- Given le slider est à sa position minimale, When une partie démarre, Then la balle se déplace très lentement\n- Given le slider est à sa position maximale, When une partie démarre, Then la balle se déplace très rapidement\n- Given le slider est à une position intermédiaire, When une partie démarre, Then la balle se déplace à une vitesse proportionnelle\n- Given le joueur ajuste le slider, When il commence une nouvelle partie, Then le nouveau réglage s'applique\n\n**Tâches techniques** : Input range HTML, événement change, stockage vitesse dans game state",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -80,7 +94,14 @@
       "file": "apps/breakout/docs/how/architecture.md",
       "role": "architect",
       "content": "Après la création de toutes les user stories (dépend de tâches C à H), produis le fichier architecture.md pour le projet Breakout avec :\n\n1. **Stack technique** : JavaScript vanilla (HTML/CSS/JS, zéro dépendance externe)\n2. **Principaux composants** :\n   - Game Engine (boucle de jeu, state management)\n   - Game Objects (Paddle, Ball, Bricks, Walls)\n   - Collision Detection\n   - Renderer (canvas ou DOM)\n   - Input Handler (clavier pour jeu, souris pour menus)\n   - Menu System (Start, Game Over, Resume screens)\n3. **Structure des fichiers** : src/game.js (moteur), src/objects/*.js (objets), src/collision.js, src/input.js, src/menu.js, src/renderer.js, src/state.js\n4. **Points d'intégration clés** : Communication entre componentes sans external libs, stockage vitesse slider en localStorage si nécessaire\n5. **Contraintes non-fonctionnelles** : Performance suffisante pour 60 FPS, pas de build step, compatible navigateurs modernes\n6. **Décisions architecturales** : Vanilla JS pour simplicité, pas de frameworks, séparation logique métier/rendu",
-      "depends_on": ["C", "D", "E", "F", "G", "H"],
+      "depends_on": [
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
       "status": "pending"
     }
   ]
