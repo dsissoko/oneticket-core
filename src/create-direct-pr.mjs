@@ -40,6 +40,20 @@ async function getExistingPR() {
 }
 
 async function createPR() {
+  // [GUARD] Check if there are commits ahead of base — no commits = nothing to PR
+  const { execSync } = await import('child_process');
+  let aheadCount;
+  try {
+    aheadCount = execSync(`git rev-list --count origin/${prBase}..HEAD`).toString().trim();
+  } catch (e) {
+    console.log(`[create-direct-pr] Could not check commit diff — skipping: ${e.message}`);
+    return;
+  }
+  if (aheadCount === '0') {
+    console.log(`[create-direct-pr] No commits ahead of ${prBase} — nothing to PR.`);
+    return;
+  }
+
   const existing = await getExistingPR();
   if (existing) {
     console.log(`[create-direct-pr] PR already exists: ${existing.html_url} — skipping.`);
