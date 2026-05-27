@@ -29,10 +29,11 @@ Read `architecture.md` and the active request to identify the stack context:
 - Explicit stack mentions (framework, language, tools)
 - Inferable signals (e.g. "web frontend", "browser app", "node app", "mobile app")
 
-### Step 2 — Read available stack sets
+### Step 2 — Read available stack skills
 
-Read `skills/skills-set.md` — list all sets prefixed with `stack-`.
-For each, read its `description` and `keywords` fields.
+List all skill names available in the skills directory — use skills prefixed with `oneticket-stack-` as candidates.
+For each candidate, read its `description` field to understand what stack it covers.
+Never invent a skill name that doesn't exist.
 
 ### Step 3 — Apply one of three cases
 
