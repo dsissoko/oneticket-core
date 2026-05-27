@@ -162,20 +162,23 @@ Chaque tâche produit un fichier texte subtask-X.txt (où X est l'id de la tâch
 # ---------------------------------------------------------------------------
 
 run_breakout() {
-  echo "=== MODE BREAKOUT — agent @po décomposition épics + US ==="
+  echo "=== MODE BREAKOUT — agent @po initialisation base de connaissance ==="
   echo ""
 
   URL=$(create_issue \
-    "[TEST-BREAKOUT] Jeu Breakout en JS frontend pur — épics et user stories" \
-    "Créer un jeu Breakout complet en JavaScript frontend pur (HTML/CSS/JS vanilla).
-Le jeu doit avoir : une raquette contrôlable, des briques destructibles,
-une balle avec physique simple, un système de score, un écran de game over
-et un écran de victoire.")
+    "[TEST-BREAKOUT] Jeu Breakout en JS frontend pur — base de connaissance" \
+    "Breakout est un jeu arcade frontend en JavaScript vanilla (HTML/CSS/JS, aucune dépendance externe).
+
+L'aire de jeu contient un mur de briques organisé sur 5 lignes. Une balle rebondit sur les murs, le plafond et la raquette. Le joueur dispose de 3 vies ; il en perd une à chaque fois que la balle atteint le bas de l'écran. La partie se termine soit par épuisement des vies (game over), soit par destruction de toutes les briques (victoire).
+
+La raquette se déplace exclusivement avec les flèches gauche et droite du clavier. La souris est réservée à la navigation dans les menus de l'application (démarrer, rejouer, quitter).
+
+La vitesse de la balle est réglable via un slider accessible depuis le menu, avec une plage allant de très lente à très rapide. Il n'y a pas de système de niveaux ni de progression pour l'instant.")
   NUM=$(issue_number "$URL")
-  post_comment "$NUM" "@po aides moi à initialiser la connaissance produit de ce projet"
+  post_comment "$NUM" "@po ce projet n'a pas encore de base de connaissance. À partir de la description de l'application ci-dessus, initialise la base de connaissance du projet."
   echo "Issue #$NUM lancée ($URL)"
   echo ""
-  echo "Attendu : manifest épics + US → graphe de dépendances → FAN-OUT → fichiers .md → PR."
+  echo "Attendu : base de connaissance initialisée (product-spec, architecture, epic-0) → PR."
 }
 
 # ---------------------------------------------------------------------------
