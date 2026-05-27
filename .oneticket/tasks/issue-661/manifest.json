@@ -9,7 +9,7 @@
       "role": "analyst",
       "content": "Tu dois créer la spécification produit pour le jeu Breakout arcade. Utilise le template .oneticket/templates/product-spec.md.\n\nVoici les informations de base :\n- Nom du produit: Breakout\n- Type: Jeu arcade frontend JavaScript vanilla (HTML/CSS/JS, aucune dépendance externe)\n- Joueur dispose de 3 vies\n- Mur de briques organisé sur 5 lignes\n- Balle rebondit sur les murs, plafond et raquette\n- Le joueur perd une vie quand la balle atteint le bas de l'écran\n- Fin de partie: épuisement des vies (game over) ou destruction de toutes les briques (victoire)\n- Contrôles: flèches gauche/droite pour la raquette, souris pour la navigation des menus\n- Menu accessible avec slider pour régler la vitesse de la balle (très lente à très rapide)\n- Pas de système de niveaux ni de progression actuellement\n- Capacités: jeu jouable, gestion des collisions, système de vies, menu de navigation\n\nRemplis le template avec ces informations et assure-toi d'inclure :\n1. Description du produit (max 160 caractères)\n2. Problème et cible utilisateur\n3. Capacités principales pour la V1\n4. Utilisateurs/acteurs principaux\n5. Règles métier et contraintes\n\nCommit et push une fois complété.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
