@@ -9,7 +9,7 @@
       "role": "analyst",
       "content": "Le projet Breakout est un jeu arcade frontend en JavaScript vanilla. À partir de la description fournie dans l'issue #666, produis le fichier product-spec.md avec :\n\n1. **Nom du produit** : Breakout\n2. **Description courte** : Jeu arcade classique en JavaScript vanilla où le joueur contrôle une raquette pour détruire des briques avec une balle rebondissante (max 160 caractères)\n3. **Problème et utilisateurs** : Le jeu offre une expérience de jeu arcade rétro simple et addictive aux joueurs\n4. **Capacités principales pour V1** :\n   - Aire de jeu avec mur de 5 lignes de briques\n   - Balle rebondissante avec physique réaliste\n   - Raquette contrôlable aux flèches gauche/droite\n   - Système de vies (3 vies au départ)\n   - Détection victoire (briques détruites) et game over (vies épuisées)\n   - Menu avec boutons démarrer/rejouer/quitter\n   - Slider de vitesse de balle dans le menu (plage très lent à très rapide)\n5. **Règles métier** :\n   - Contrôle clavier uniquement pour le jeu (flèches gauche/droite)\n   - Souris pour les menus\n   - Perte d'une vie si la balle atteint le bas de l'écran\n   - Pas de système de niveaux en V1\n   - Pas de progression en V1\n6. **Stack technique** : JavaScript vanilla (HTML/CSS/JS, aucune dépendance externe)",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
