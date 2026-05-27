@@ -21,10 +21,10 @@ Refer to `oneticket-doc-structure` for all files to produce, their placement and
 
 Respect these dependencies when building the manifest:
 
-1. `<docs_path>/what/product-spec.md` — no dependency — no role (generic worker)
+1. `<docs_path>/what/product-spec.md` — no dependency — role: analyst
 2. `<docs_path>/how/architecture.md` — depends on product-spec.md — role: architect
-3. `<docs_path>/what/epics/epic-0-mvp/epic.md` — depends on product-spec.md — no role (generic worker)
-4. `<docs_path>/what/epics/epic-0-mvp/user-stories/us-*.md` — depends on epic.md — no role (generic worker)
+3. `<docs_path>/what/epics/epic-0-mvp/epic.md` — depends on product-spec.md — role: analyst
+4. `<docs_path>/what/epics/epic-0-mvp/user-stories/us-*.md` — depends on epic.md — role: analyst
 
 ---
 
@@ -35,7 +35,7 @@ following the structure defined in ## Production process.
 
 Some files require the expertise of specialized agents to be produced correctly —
 architecture.md is better handled by @architect who owns the technical decisions,
-user stories benefit from the domain knowledge embedded in the @analyst and @po roles.
+product-spec, epics and user stories are better handled by @analyst who owns the functional documentation.
 Delegating to the right role produces better results than doing everything yourself.
 
 All content is derived from what the user has provided.
