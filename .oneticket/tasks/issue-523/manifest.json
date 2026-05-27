@@ -1,0 +1,78 @@
+{
+  "issue": 523,
+  "branch_base": "feature/issue-523",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-523-A",
+      "file": "apps/breakout/docs/what/product-spec.md",
+      "content": "Crée le fichier product-spec.md pour le projet Breakout. Le projet est un jeu arcade Breakout en JavaScript vanilla (HTML/CSS/JS, aucune dépendance externe). Contenu requis : nom du produit (Breakout), description du problème résolu et utilisateurs cibles, liste des principales capacités (5 lignes de briques, balle avec rebond, raquette contrôlée aux flèches clavier, 3 vies, vitesse de balle réglable via slider, menus à la souris, conditions de victoire/défaite). Inclure les règles métier et contraintes techniques. Utilise le template fourni dans .oneticket/templates/docs/what/product-spec.md.",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-523-B",
+      "file": "apps/breakout/docs/how/architecture.md",
+      "content": "Crée le fichier architecture.md pour le projet Breakout. Stack technique : HTML5, CSS3, JavaScript vanilla (ES6+), aucune dépendance externe, persistence : localStorage uniquement. Composants principaux : Game (orchestration), GameBoard (physique, collision, rendu), Paddle (entité joueur), Ball (entité physique), Brick (entité mur), MenuController (UI menus), InputHandler (clavier/souris). Interfaces clés : event listeners du clavier (flèches gauche/droite), événements du menu (play, replay, quit), slider vitesse. Contraintes : vanilla JS uniquement, doit fonctionner sur tous navigateurs modernes. Utilise le template fourni dans .oneticket/templates/docs/how/architecture.md.",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-523-C",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/epic.md",
+      "content": "Crée le fichier epic.md pour l'MVP Breakout dans apps/breakout/docs/what/epics/epic-0-mvp/epic.md. Périmètre MVP : système de jeu complet avec 1) mur de 5 lignes de briques destructibles, 2) balle avec physique de rebond sur murs/plafond/raquette/briques, 3) raquette contrôlée aux flèches clavier gauche/droite, 4) gestion de 3 vies avec game over, 5) condition de victoire (toutes briques détruites), 6) slider de vitesse de balle dans le menu, 7) menus basiques (démarrer, rejouer, quitter). Inclure la définition du succès et les critères d'acceptation globaux du MVP. Utilise le template fourni dans .oneticket/templates/docs/what/epics/epic-0-mvp/epic.md.",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-523-D",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-game-initialization.md",
+      "content": "Crée la user story us-001 pour l'initialisation du jeu. Format Mike Cohn : En tant que joueur, je veux que le jeu s'initialise avec un mur de briques et une balle au lancement, afin de pouvoir commencer à jouer. Inclure critères d'acceptation Gherkin : Given the game starts, When the user clicks 'Play', Then the game board displays 5 rows of bricks and a ball positioned above the paddle. Utilise le template fourni dans .oneticket/templates/docs/what/epics/epic-0-mvp/user-stories/us-*.md.",
+      "depends_on": ["C"],
+      "status": "pending"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-523-E",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-002-paddle-controls.md",
+      "content": "Crée la user story us-002 pour le contrôle de la raquette. Format Mike Cohn : En tant que joueur, je veux contrôler la raquette avec les flèches gauche et droite, afin de diriger la balle et détruire les briques. Inclure critères d'acceptation Gherkin : Given the game is running, When the user presses the left arrow key, Then the paddle moves left within the game bounds; When the user presses the right arrow key, Then the paddle moves right within the game bounds. Utilise le template fourni.",
+      "depends_on": ["C"],
+      "status": "pending"
+    },
+    {
+      "id": "F",
+      "branch": "task/issue-523-F",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-003-ball-physics.md",
+      "content": "Crée la user story us-003 pour la physique de la balle. Format Mike Cohn : En tant que joueur, je veux que la balle rebondisse réalalement sur les murs, le plafond, la raquette et les briques, afin de progresser dans le jeu de manière prévisible. Inclure critères d'acceptation Gherkin : Given the ball is in motion, When it hits a brick, Then the brick is destroyed and the ball rebounds; When it hits a wall or ceiling, Then the ball rebounds; When it hits the paddle, Then the ball rebounds upward. Utilise le template fourni.",
+      "depends_on": ["C"],
+      "status": "pending"
+    },
+    {
+      "id": "G",
+      "branch": "task/issue-523-G",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-004-lives-system.md",
+      "content": "Crée la user story us-004 pour le système de vies. Format Mike Cohn : En tant que joueur, je veux perdre une vie quand la balle atteint le bas de l'écran, et perdre la partie après 3 vies perdues, afin d'avoir un défi à relever. Inclure critères d'acceptation Gherkin : Given the game is running with 3 lives, When the ball goes below the paddle, Then the player loses a life and the ball resets; When lives reach 0, Then the game displays 'Game Over'. Utilise le template fourni.",
+      "depends_on": ["C"],
+      "status": "pending"
+    },
+    {
+      "id": "H",
+      "branch": "task/issue-523-H",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-005-victory-condition.md",
+      "content": "Crée la user story us-005 pour la condition de victoire. Format Mike Cohn : En tant que joueur, je veux gagner la partie quand je détruis toutes les briques, afin de terminer le jeu avec satisfaction. Inclure critères d'acceptation Gherkin : Given the game is running, When all bricks are destroyed, Then the game displays 'Victory!' and offers the option to replay. Utilise le template fourni.",
+      "depends_on": ["C"],
+      "status": "pending"
+    },
+    {
+      "id": "I",
+      "branch": "task/issue-523-I",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-006-speed-control.md",
+      "content": "Crée la user story us-006 pour le contrôle de vitesse. Format Mike Cohn : En tant que joueur, je veux régler la vitesse de la balle via un slider dans le menu, afin de adapter la difficulté du jeu à mon niveau. Inclure critères d'acceptation Gherkin : Given the menu is open, When the user moves the speed slider from very slow to very fast, Then the ball speed in the next game reflects the selected setting. Utilise le template fourni.",
+      "depends_on": ["C"],
+      "status": "pending"
+    }
+  ]
+}
