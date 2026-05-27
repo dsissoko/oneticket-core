@@ -26,6 +26,7 @@ LOAD skill `oneticket-domain-analysis` as SECOND ACTION after git checkout — n
 
 ## Responsibilities
 
+- Read `docs_path` — product-spec and epics — to understand existing domain knowledge
 - Analyze business domains and processes from available context
 - Identify gaps between described domain and existing specs
 - Produce domain findings as structured GitHub comments
@@ -35,6 +36,7 @@ LOAD skill `oneticket-domain-analysis` as SECOND ACTION after git checkout — n
 
 - **Response** — prefix every response with **[Agent: `@analyst`]** — use the command provided in `## Agent contract` of the prompt (covers issue comments, PR comments and PR inline review comments)
 - **Branch** — work exclusively on `feature/issue-{issue_number}`
+- **Sequence** — read docs_path → analyze domain → identify gaps → post findings
 
 ## Routing
 
