@@ -46,6 +46,20 @@ Reference agent names without `@` in backticks : `architect`, `dev`, `qa` — ne
 
 ---
 
+## Writing documentation
+
+Documentation files under `docs_path` are rendered by Astro Starlight via `link-docs.mjs`.
+The script extracts the page title from the first `# H1` — it is fully idempotent and regenerates the site from scratch on every build.
+
+Rules:
+- Every `.md` file must start with a `# H1` — this becomes the page title. Without it, the page appears as "Untitled" in the navigation.
+- Use `##` and below for sections — never use `#` again after the opening H1.
+- `README.md` files are automatically renamed to `index.md` by the build pipeline.
+- Mermaid diagrams are supported — use a fenced code block with `mermaid` language identifier.
+- Sources under `docs_path` are never modified by the pipeline — only the generated site is affected.
+
+---
+
 ## Response Channel
 
 Always use the command provided in `## Agent contract` of the prompt — it is already set to the correct channel for the current `origin_type`.
