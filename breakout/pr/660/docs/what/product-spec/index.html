@@ -1,0 +1,288 @@
+<!DOCTYPE html><html lang="en" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-bguv2lll"> <head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Product Specification — Breakout | Breakout</title><link rel="canonical" href="https://dsissoko.github.io/oneticket-core/breakout/pr/660/docs/what/product-spec/"/><link rel="sitemap" href="/oneticket-core/breakout/pr/660/docs/sitemap-index.xml"/><link rel="shortcut icon" href="/oneticket-core/breakout/pr/660/docs/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v5.18.1"/><meta name="generator" content="Starlight v0.34.8"/><meta property="og:title" content="Product Specification — Breakout"/><meta property="og:type" content="article"/><meta property="og:url" content="https://dsissoko.github.io/oneticket-core/breakout/pr/660/docs/what/product-spec/"/><meta property="og:locale" content="en"/><meta property="og:description" content="Un jeu arcade Breakout vanilla JavaScript où le joueur casse des briques avec une balle rebondissante. 3 vies, vitesse réglable."/><meta property="og:site_name" content="Breakout"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="Un jeu arcade Breakout vanilla JavaScript où le joueur casse des briques avec une balle rebondissante. 3 vies, vitesse réglable."/><script>
+	window.StarlightThemeProvider = (() => {
+		const storedTheme =
+			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
+		const theme =
+			storedTheme ||
+			(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+		return {
+			updatePickers(theme = storedTheme || 'auto') {
+				document.querySelectorAll('starlight-theme-select').forEach((picker) => {
+					const select = picker.querySelector('select');
+					if (select) select.value = theme;
+					/** @type {HTMLTemplateElement | null} */
+					const tmpl = document.querySelector(`#theme-icons`);
+					const newIcon = tmpl && tmpl.content.querySelector('.' + theme);
+					if (newIcon) {
+						const oldIcon = picker.querySelector('svg.label-icon');
+						if (oldIcon) {
+							oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+						}
+					}
+				});
+			},
+		};
+	})();
+</script><template id="theme-icons"><svg aria-hidden="true" class="light astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg><svg aria-hidden="true" class="dark astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg><svg aria-hidden="true" class="auto astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg></template><link rel="stylesheet" href="/oneticket-core/breakout/pr/660/docs/_astro/print.DNXP8c50.css" media="print"><link rel="stylesheet" href="/oneticket-core/breakout/pr/660/docs/_astro/index.DfIxps_E.css"><script type="module" src="/oneticket-core/breakout/pr/660/docs/_astro/page.B1D-nYk3.js"></script></head> <body class="astro-bguv2lll"> <a href="#_top" class="astro-7q3lir66">Skip to content</a>  <div class="page sl-flex astro-vrdttmbt"> <header class="header astro-vrdttmbt"><div class="header astro-kmkmnagf"> <div class="title-wrapper sl-flex astro-kmkmnagf"> <a href="/oneticket-core/breakout/pr/660/docs/" class="site-title sl-flex astro-m46x6ez3">  <span class="astro-m46x6ez3" translate="no"> Breakout </span> </a>  </div> <div class="sl-flex print:hidden astro-kmkmnagf"> <site-search class="astro-kmkmnagf astro-v37mnknz" data-translations="{&#34;placeholder&#34;:&#34;Search&#34;}"> <button data-open-modal disabled aria-label="Search" aria-keyshortcuts="Control+K" class="astro-v37mnknz"> <svg aria-hidden="true" class="astro-v37mnknz astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg> <span class="sl-hidden md:sl-block astro-v37mnknz" aria-hidden="true">Search</span> <kbd class="sl-hidden md:sl-flex astro-v37mnknz" style="display: none;"> <kbd class="astro-v37mnknz">Ctrl</kbd><kbd class="astro-v37mnknz">K</kbd> </kbd> </button> <dialog style="padding:0" aria-label="Search" class="astro-v37mnknz"> <div class="dialog-frame sl-flex astro-v37mnknz">  <button data-close-modal class="sl-flex md:sl-hidden astro-v37mnknz"> Cancel </button> <div class="search-container astro-v37mnknz"> <div id="starlight__search" class="astro-v37mnknz"></div> </div> </div> </dialog> </site-search>  <script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script> <script type="module" src="/oneticket-core/breakout/pr/660/docs/_astro/Search.astro_astro_type_script_index_0_lang.kuNJNwFx.js"></script>   </div> <div class="sl-hidden md:sl-flex print:hidden right-group astro-kmkmnagf"> <div class="sl-flex social-icons astro-kmkmnagf"> <a href="https://github.com/dsissoko/oneticket-core" rel="me" class="sl-flex astro-wy4te6ga"><span class="sr-only astro-wy4te6ga">GitHub</span><svg aria-hidden="true" class="astro-wy4te6ga astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a> </div> <starlight-theme-select>  <label style="--sl-select-width: 6.25em" class="astro-4yphtoen"> <span class="sr-only astro-4yphtoen">Select theme</span> <svg aria-hidden="true" class="icon label-icon astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg> <select value="auto" autocomplete="off" class="astro-4yphtoen"> <option value="dark" class="astro-4yphtoen">Dark</option><option value="light" class="astro-4yphtoen">Light</option><option value="auto" selected class="astro-4yphtoen">Auto</option> </select> <svg aria-hidden="true" class="icon caret astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg> </label>  </starlight-theme-select>  <script>
+	StarlightThemeProvider.updatePickers();
+</script> <script type="module">const r="starlight-theme",o=e=>e==="auto"||e==="dark"||e==="light"?e:"auto",c=()=>o(typeof localStorage<"u"&&localStorage.getItem(r));function n(e){typeof localStorage<"u"&&localStorage.setItem(r,e==="light"||e==="dark"?e:"")}const l=()=>matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";function t(e){StarlightThemeProvider.updatePickers(e),document.documentElement.dataset.theme=e==="auto"?l():e,n(e)}matchMedia("(prefers-color-scheme: light)").addEventListener("change",()=>{c()==="auto"&&t("auto")});class s extends HTMLElement{constructor(){super(),t(c()),this.querySelector("select")?.addEventListener("change",a=>{a.currentTarget instanceof HTMLSelectElement&&t(o(a.currentTarget.value))})}}customElements.define("starlight-theme-select",s);</script> <script type="module">class s extends HTMLElement{constructor(){super();const e=this.querySelector("select");e&&(e.addEventListener("change",t=>{t.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=t.currentTarget.value)}),window.addEventListener("pageshow",t=>{if(!t.persisted)return;const n=e.querySelector("option[selected]")?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}}customElements.define("starlight-lang-select",s);</script> </div> </div> </header> <nav class="sidebar print:hidden astro-vrdttmbt" aria-label="Main"> <starlight-menu-button class="print:hidden astro-jif73yzw"> <button aria-expanded="false" aria-label="Menu" aria-controls="starlight__sidebar" class="sl-flex md:sl-hidden astro-jif73yzw"> <svg aria-hidden="true" class="open-menu astro-jif73yzw astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg> <svg aria-hidden="true" class="close-menu astro-jif73yzw astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"/></svg> </button> </starlight-menu-button> <script type="module">class s extends HTMLElement{constructor(){super(),this.btn=this.querySelector("button"),this.btn.addEventListener("click",()=>this.toggleExpanded());const t=this.closest("nav");t&&t.addEventListener("keyup",e=>this.closeOnEscape(e))}setExpanded(t){this.setAttribute("aria-expanded",String(t)),document.body.toggleAttribute("data-mobile-menu-expanded",t)}toggleExpanded(){this.setExpanded(this.getAttribute("aria-expanded")!=="true")}closeOnEscape(t){t.code==="Escape"&&(this.setExpanded(!1),this.btn.focus())}}customElements.define("starlight-menu-button",s);</script>   <div id="starlight__sidebar" class="sidebar-pane astro-vrdttmbt"> <div class="sidebar-content sl-flex astro-vrdttmbt"> <sl-sidebar-state-persist data-hash="1d3tcqg" class="astro-kku4brbg"> <script aria-hidden="true">
+		(() => {
+			try {
+				if (!matchMedia('(min-width: 50em)').matches) return;
+				/** @type {HTMLElement | null} */
+				const target = document.querySelector('sl-sidebar-state-persist');
+				const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
+				if (!target || !state || target.dataset.hash !== state.hash) return;
+				window._starlightScrollRestore = state.scroll;
+				customElements.define(
+					'sl-sidebar-restore',
+					class SidebarRestore extends HTMLElement {
+						connectedCallback() {
+							try {
+								const idx = parseInt(this.dataset.index || '');
+								const details = this.closest('details');
+								if (details && typeof state.open[idx] === 'boolean') details.open = state.open[idx];
+							} catch {}
+						}
+					}
+				);
+			} catch {}
+		})();
+	</script>  <ul class="top-level astro-3ii7xxms"> <li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="0"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">What</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/oneticket-core/breakout/pr/660/docs/what/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">What</span>  </a> </li><li class="astro-3ii7xxms"> <details class="astro-3ii7xxms"> <sl-sidebar-restore data-index="1"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">epics</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/oneticket-core/breakout/pr/660/docs/what/epics/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Epics</span>  </a> </li><li class="astro-3ii7xxms"> <details class="astro-3ii7xxms"> <sl-sidebar-restore data-index="2"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">epic-0-mvp</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/oneticket-core/breakout/pr/660/docs/what/epics/epic-0-mvp/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Epic 0 Mvp</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/breakout/pr/660/docs/what/epics/epic-0-mvp/epic/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Epic 0 — MVP Breakout</span>  </a> </li><li class="astro-3ii7xxms"> <details class="astro-3ii7xxms"> <sl-sidebar-restore data-index="3"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">user-stories</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/oneticket-core/breakout/pr/660/docs/what/epics/epic-0-mvp/user-stories/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">User Stories</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/breakout/pr/660/docs/what/epics/epic-0-mvp/user-stories/us-001-game-setup/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">US-001 — Game Setup</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/breakout/pr/660/docs/what/epics/epic-0-mvp/user-stories/us-002-paddle-control/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">US-002 — Paddle Control</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/breakout/pr/660/docs/what/epics/epic-0-mvp/user-stories/us-003-ball-physics/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">US-003 — Ball Physics</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/breakout/pr/660/docs/what/epics/epic-0-mvp/user-stories/us-004-collision-detection/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">US-004 — Collision Detection</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/breakout/pr/660/docs/what/epics/epic-0-mvp/user-stories/us-005-game-mechanics/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">US-005 — Game Mechanics</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/breakout/pr/660/docs/what/epics/epic-0-mvp/user-stories/us-006-game-menu/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">US-006 — Game Menu</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/breakout/pr/660/docs/what/epics/epic-0-mvp/user-stories/us-007-speed-control/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">US-007 — Speed Control</span>  </a> </li> </ul>  </details> </li> </ul>  </details> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/breakout/pr/660/docs/what/product-spec/" aria-current="page" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Product Specification — Breakout</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details class="astro-3ii7xxms"> <sl-sidebar-restore data-index="4"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">How</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/oneticket-core/breakout/pr/660/docs/how/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">How</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/breakout/pr/660/docs/how/architecture/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Architecture — Breakout</span>  </a> </li> </ul>  </details> </li> </ul>   <script aria-hidden="true">
+		(() => {
+			const scroller = document.getElementById('starlight__sidebar');
+			if (!window._starlightScrollRestore || !scroller) return;
+			scroller.scrollTop = window._starlightScrollRestore;
+			delete window._starlightScrollRestore;
+		})();
+	</script> </sl-sidebar-state-persist>  <div class="md:sl-hidden"> <div class="mobile-preferences sl-flex astro-wu23bvmt"> <div class="social-icons astro-wu23bvmt"> <a href="https://github.com/dsissoko/oneticket-core" rel="me" class="sl-flex astro-wy4te6ga"><span class="sr-only astro-wy4te6ga">GitHub</span><svg aria-hidden="true" class="astro-wy4te6ga astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a> </div> <starlight-theme-select>  <label style="--sl-select-width: 6.25em" class="astro-4yphtoen"> <span class="sr-only astro-4yphtoen">Select theme</span> <svg aria-hidden="true" class="icon label-icon astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg> <select value="auto" autocomplete="off" class="astro-4yphtoen"> <option value="dark" class="astro-4yphtoen">Dark</option><option value="light" class="astro-4yphtoen">Light</option><option value="auto" selected class="astro-4yphtoen">Auto</option> </select> <svg aria-hidden="true" class="icon caret astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg> </label>  </starlight-theme-select>  <script>
+	StarlightThemeProvider.updatePickers();
+</script>   </div>  </div> </div> </div> </nav> <div class="main-frame astro-vrdttmbt">  <script type="module">const a=document.getElementById("starlight__sidebar"),n=a?.querySelector("sl-sidebar-state-persist"),o="sl-sidebar-state",i=()=>{let t=[];const e=n?.dataset.hash||"";try{const s=sessionStorage.getItem(o),r=JSON.parse(s||"{}");Array.isArray(r.open)&&r.hash===e&&(t=r.open)}catch{}return{hash:e,open:t,scroll:a?.scrollTop||0}},c=t=>{try{sessionStorage.setItem(o,JSON.stringify(t))}catch{}},d=()=>c(i()),l=(t,e)=>{const s=i();s.open[e]=t,c(s)};n?.addEventListener("click",t=>{if(!(t.target instanceof Element))return;const e=t.target.closest("summary")?.closest("details");if(!e)return;const s=e.querySelector("sl-sidebar-restore"),r=parseInt(s?.dataset.index||"");isNaN(r)||l(!e.open,r)});addEventListener("visibilitychange",()=>{document.visibilityState==="hidden"&&d()});addEventListener("pageHide",d);</script> <div class="lg:sl-flex astro-67yu43on"> <aside class="right-sidebar-container print:hidden astro-67yu43on"> <div class="right-sidebar astro-67yu43on"> <script type="module" src="/oneticket-core/breakout/pr/660/docs/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.C181hMzK.js"></script><script type="module" src="/oneticket-core/breakout/pr/660/docs/_astro/TableOfContents.astro_astro_type_script_index_0_lang.CKWWgpjV.js"></script><div class="lg:sl-hidden astro-pb3aqygn"><mobile-starlight-toc data-min-h="2" data-max-h="3" class="astro-doynk5tl"><nav aria-labelledby="starlight__on-this-page--mobile" class="astro-doynk5tl"><details id="starlight__mobile-toc" class="astro-doynk5tl"><summary id="starlight__on-this-page--mobile" class="sl-flex astro-doynk5tl"><div class="toggle sl-flex astro-doynk5tl">On this page<svg aria-hidden="true" class="caret astro-doynk5tl astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></div><span class="display-current astro-doynk5tl"></span></summary><div class="dropdown astro-doynk5tl"><ul class="isMobile astro-g2bywc46" style="--depth: 0;"> <li class="astro-g2bywc46" style="--depth: 0;"> <a href="#_top" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Overview</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#1-vision" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">1. Vision</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#2-users-and-actors" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">2. Users and Actors</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#3-problems-to-solve" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">3. Problems to Solve</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#4-product-goals" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">4. Product Goals</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#5-out-of-scope" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">5. Out of Scope</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#6-business-concepts" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">6. Business Concepts</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#7-product-capabilities" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">7. Product Capabilities</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#8-high-level-workflows" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">8. High-Level Workflows</span> </a> <ul class="isMobile astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#workflow-1--démarrer-et-jouer-une-partie" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Workflow 1 : Démarrer et jouer une partie</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#workflow-2--perdre-une-vie-game-over" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Workflow 2 : Perdre une vie (Game Over)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#workflow-3--gagner-toutes-les-briques-détruites" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Workflow 3 : Gagner (Toutes les briques détruites)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#workflow-4--rejouer-ou-quitter" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Workflow 4 : Rejouer ou Quitter</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#9-business-rules" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">9. Business Rules</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#10-success-criteria" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">10. Success Criteria</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#11-open-questions" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">11. Open Questions</span> </a>  </li> </ul> </div></details></nav></mobile-starlight-toc></div><div class="right-sidebar-panel sl-hidden lg:sl-block astro-pb3aqygn"><div class="sl-container astro-pb3aqygn"><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">On this page</h2><ul class="astro-g2bywc46" style="--depth: 0;"> <li class="astro-g2bywc46" style="--depth: 0;"> <a href="#_top" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Overview</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#1-vision" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">1. Vision</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#2-users-and-actors" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">2. Users and Actors</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#3-problems-to-solve" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">3. Problems to Solve</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#4-product-goals" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">4. Product Goals</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#5-out-of-scope" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">5. Out of Scope</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#6-business-concepts" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">6. Business Concepts</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#7-product-capabilities" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">7. Product Capabilities</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#8-high-level-workflows" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">8. High-Level Workflows</span> </a> <ul class="astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#workflow-1--démarrer-et-jouer-une-partie" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Workflow 1 : Démarrer et jouer une partie</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#workflow-2--perdre-une-vie-game-over" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Workflow 2 : Perdre une vie (Game Over)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#workflow-3--gagner-toutes-les-briques-détruites" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Workflow 3 : Gagner (Toutes les briques détruites)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#workflow-4--rejouer-ou-quitter" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Workflow 4 : Rejouer ou Quitter</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#9-business-rules" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">9. Business Rules</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#10-success-criteria" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">10. Success Criteria</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#11-open-questions" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">11. Open Questions</span> </a>  </li> </ul> </nav></starlight-toc></div></div> </div> </aside> <div class="main-pane astro-67yu43on">  <main data-pagefind-body class="astro-bguv2lll" lang="en" dir="ltr">    <div class="content-panel astro-7nkwcw3z"> <div class="sl-container astro-7nkwcw3z"> <h1 id="_top" class="astro-j6tvhyss">Product Specification — Breakout</h1>  </div> </div>  <div class="content-panel astro-7nkwcw3z"> <div class="sl-container astro-7nkwcw3z"> <div class="sl-markdown-content"> <!-- SITE_DESCRIPTION: Un jeu arcade Breakout vanilla JavaScript où le joueur casse des briques avec une balle rebondissante. 3 vies, vitesse réglable. -->
+<div class="sl-heading-wrapper level-h2"><h2 id="1-vision">1. Vision</h2><a class="sl-anchor-link" href="#1-vision"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “1. Vision”</span></a></div>
+<p>Breakout est un jeu arcade classique en JavaScript vanilla qui capture l’essence du gameplay rétro : détruire un mur de briques en contrôlant une raquette pour garder une balle en jeu. Le jeu offre une expérience simple, accessible et entièrement jouée au clavier (flèches gauche/droite) ou à la souris (menus). Aucune dépendance externe, pas de progression multi-niveaux, juste du pur gameplay arcade.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="2-users-and-actors">2. Users and Actors</h2><a class="sl-anchor-link" href="#2-users-and-actors"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “2. Users and Actors”</span></a></div>
+<ul>
+<li><strong>Joueur arcade</strong> — Personne cherchant un divertissement rapide et classique. Utilise les flèches gauche/droite pour contrôler la raquette, souris pour naviguer les menus.</li>
+<li><strong>Navigateur</strong> — Environnement d’exécution. Le jeu s’affiche en HTML/CSS/JS vanilla, compatible avec tous les navigateurs modernes.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="3-problems-to-solve">3. Problems to Solve</h2><a class="sl-anchor-link" href="#3-problems-to-solve"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “3. Problems to Solve”</span></a></div>
+<ul>
+<li>Fournir une expérience de jeu arcade classique reconnue et facile à comprendre</li>
+<li>Offrir un contrôle réactif et précis du gameplay</li>
+<li>Permettre une personnalisation simple du rythme de jeu (vitesse réglable)</li>
+<li>Conserver une implémentation légère sans dépendances externes</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="4-product-goals">4. Product Goals</h2><a class="sl-anchor-link" href="#4-product-goals"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “4. Product Goals”</span></a></div>
+<ol>
+<li>Livrer une version jouable complète du Breakout arcade</li>
+<li>Offrir une courbe de difficulté contrôlée (vitesse ajustable via slider)</li>
+<li>Fournir des retours clairs au joueur (vies, destruction de briques, états de jeu)</li>
+<li>Garantir une expérience sans friction : contrôles simples, démarrage immédiat</li>
+</ol>
+<div class="sl-heading-wrapper level-h2"><h2 id="5-out-of-scope">5. Out of Scope</h2><a class="sl-anchor-link" href="#5-out-of-scope"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “5. Out of Scope”</span></a></div>
+<ul>
+<li>Système de niveaux ou progression</li>
+<li>Persistance des scores (sauvegarde locale) — hors scope MVP</li>
+<li>Powerups ou bonus spéciaux</li>
+<li>Éléments visuels avancés (particules, animations complexes)</li>
+<li>Sons et musiques</li>
+<li>Multijoueur</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="6-business-concepts">6. Business Concepts</h2><a class="sl-anchor-link" href="#6-business-concepts"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “6. Business Concepts”</span></a></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Concept</th><th>Description</th></tr></thead><tbody><tr><td><strong>Brique</strong></td><td>Bloc destructible dans le mur. 5 lignes, disposition quadrillée. Détruite au contact de la balle.</td></tr><tr><td><strong>Balle</strong></td><td>Projectile rebondissant. Rebondit sur les murs, le plafond, la raquette et les briques. Cause une perte de vie si elle atteint le bas.</td></tr><tr><td><strong>Raquette</strong></td><td>Contrôleur du joueur. Se déplace horizontalement (gauche/droite) pour intercepter la balle. Fixée en bas du terrain.</td></tr><tr><td><strong>Vies</strong></td><td>Resource du joueur. Le joueur commence avec 3 vies. Chaque fois que la balle sort par le bas, une vie est perdue. Jeu terminé à 0 vies.</td></tr><tr><td><strong>Score</strong></td><td>Compteur affiché durant le jeu. Incrément fixe par brique détruite (logique simple, pas de multiplicateur).</td></tr><tr><td><strong>Vitesse</strong></td><td>Paramètre ajustable du jeu. Contrôle la vélocité de la balle. Gamme : très lente à très rapide (via slider dans le menu).</td></tr><tr><td><strong>État de jeu</strong></td><td>État actuel (menu principal, en cours de jeu, game over, victoire). Détermine le rendu et les interactions possibles.</td></tr></tbody></table>
+<div class="sl-heading-wrapper level-h2"><h2 id="7-product-capabilities">7. Product Capabilities</h2><a class="sl-anchor-link" href="#7-product-capabilities"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “7. Product Capabilities”</span></a></div>
+<ol>
+<li><strong>Démarrage du jeu</strong> — Menu principal avec bouton “Démarrer” et “Quitter”. Option slider pour régler la vitesse de la balle.</li>
+<li><strong>Gameplay</strong> — Affichage du terrain, mur de briques (5 lignes), raquette mobile, balle rebondissante, affichage en temps réel des vies et du score.</li>
+<li><strong>Contrôles clavier</strong> — Flèches gauche/droite pour déplacer la raquette. Aucune autre interaction clavier en jeu.</li>
+<li><strong>Contrôles souris</strong> — Interaction avec les boutons de menu (Démarrer, Rejouer, Quitter). Pas de pointeur en jeu.</li>
+<li><strong>Menus</strong> — Menu principal (avant jeu), menu game over (rejouer/quitter), menu victoire (rejouer/quitter).</li>
+<li><strong>Réglage de vitesse</strong> — Slider accessible depuis le menu principal, gamme paramétrable (ex. 1-10), appliqué avant démarrage.</li>
+</ol>
+<div class="sl-heading-wrapper level-h2"><h2 id="8-high-level-workflows">8. High-Level Workflows</h2><a class="sl-anchor-link" href="#8-high-level-workflows"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “8. High-Level Workflows”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="workflow-1--démarrer-et-jouer-une-partie">Workflow 1 : Démarrer et jouer une partie</h3><a class="sl-anchor-link" href="#workflow-1--démarrer-et-jouer-une-partie"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Workflow 1 : Démarrer et jouer une partie”</span></a></div>
+<ol>
+<li>Joueur ouvre l’application → Menu principal affiche le slider de vitesse et boutons “Démarrer” et “Quitter”</li>
+<li>Joueur ajuste le slider de vitesse (optionnel)</li>
+<li>Joueur clique “Démarrer” → Jeu passe en mode “En cours de jeu”</li>
+<li>Terrain s’affiche : mur de briques (5 lignes), raquette en bas, balle au centre en haut</li>
+<li>Balle commence à rebondir automatiquement</li>
+<li>Joueur utilise flèches gauche/droite pour contrôler la raquette</li>
+<li>Balle rebondit sur les murs, le plafond, la raquette et les briques</li>
+<li>Chaque brique détruite incrément le score</li>
+<li>Workflow continue jusqu’à game over ou victoire</li>
+</ol>
+<div class="sl-heading-wrapper level-h3"><h3 id="workflow-2--perdre-une-vie-game-over">Workflow 2 : Perdre une vie (Game Over)</h3><a class="sl-anchor-link" href="#workflow-2--perdre-une-vie-game-over"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Workflow 2 : Perdre une vie (Game Over)”</span></a></div>
+<ol>
+<li>Balle atteint le bas de l’écran sans être interceptée</li>
+<li>Jeu soustrait 1 à “Vies”</li>
+<li>Si Vies > 0 : Balle réinitialise en haut, jeu reprend</li>
+<li>Si Vies = 0 : Jeu passe en mode “Game Over” → Menu game over (Rejouer/Quitter)</li>
+</ol>
+<div class="sl-heading-wrapper level-h3"><h3 id="workflow-3--gagner-toutes-les-briques-détruites">Workflow 3 : Gagner (Toutes les briques détruites)</h3><a class="sl-anchor-link" href="#workflow-3--gagner-toutes-les-briques-détruites"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Workflow 3 : Gagner (Toutes les briques détruites)”</span></a></div>
+<ol>
+<li>Dernière brique est détruite</li>
+<li>Jeu détecte que le mur est vide</li>
+<li>Jeu passe en mode “Victoire” → Menu victoire (Rejouer/Quitter)</li>
+</ol>
+<div class="sl-heading-wrapper level-h3"><h3 id="workflow-4--rejouer-ou-quitter">Workflow 4 : Rejouer ou Quitter</h3><a class="sl-anchor-link" href="#workflow-4--rejouer-ou-quitter"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Workflow 4 : Rejouer ou Quitter”</span></a></div>
+<ol>
+<li>Depuis le menu game over ou victoire :
+<ul>
+<li>Joueur clique “Rejouer” → Réinitialise le terrain, les vies (3), le score (0), et reprend depuis le menu principal</li>
+<li>Joueur clique “Quitter” → Ferme le jeu ou retourne au menu principal</li>
+</ul>
+</li>
+</ol>
+<div class="sl-heading-wrapper level-h2"><h2 id="9-business-rules">9. Business Rules</h2><a class="sl-anchor-link" href="#9-business-rules"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “9. Business Rules”</span></a></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Règle</th><th>Description</th><th>Critère d’entrée</th><th>Action</th><th>Critère de sortie</th></tr></thead><tbody><tr><td><strong>R1 : Initier une partie</strong></td><td>Joueur appuie sur “Démarrer” depuis le menu</td><td>État = Menu, bouton cliqué</td><td>Réinitialise score (0), vies (3), balle en haut, briques intactes</td><td>État = En jeu, balle rebondit</td></tr><tr><td><strong>R2 : Rebond sur les murs</strong></td><td>Balle touche mur gauche/droit</td><td>Balle en mouvement, X atteint limite</td><td>Inverse direction horizontale (vX = -vX)</td><td>Balle continue dans nouvelle direction</td></tr><tr><td><strong>R3 : Rebond sur le plafond</strong></td><td>Balle touche le plafond</td><td>Balle en mouvement, Y ≤ 0</td><td>Inverse direction verticale (vY = -vY)</td><td>Balle continue dans nouvelle direction</td></tr><tr><td><strong>R4 : Rebond sur la raquette</strong></td><td>Balle touche la raquette</td><td>Balle en mouvement, Y au niveau raquette, X dans zone raquette</td><td>Inverse direction verticale (vY = -vY)</td><td>Balle continue vers le haut</td></tr><tr><td><strong>R5 : Collision avec brique</strong></td><td>Balle touche une brique</td><td>Balle en mouvement, brique intacte</td><td>Brique détruite, score += 1, inverse direction balle (haut/bas selon côté)</td><td>Brique supprimée, balle continue</td></tr><tr><td><strong>R6 : Balle sort en bas</strong></td><td>Balle dépasse Y = hauteur écran</td><td>Balle en mouvement, Y > limite bas</td><td>Vies -= 1. Si Vies > 0 : Réinitialise balle en haut. Si Vies = 0 : État = Game Over</td><td>État = Game Over OU balle réinitialisée</td></tr><tr><td><strong>R7 : Victoire</strong></td><td>Toutes les briques détruites</td><td>Nombre briques = 0</td><td>État = Victoire, affiche menu victoire</td><td>Menu victoire actif</td></tr><tr><td><strong>R8 : Vitesse configurable</strong></td><td>Joueur règle le slider avant démarrage</td><td>Menu principal actif, slider accessible</td><td>vX et vY initiaux réglés selon slider</td><td>Vitesse appliquée au lancement</td></tr><tr><td><strong>R9 : Contrôle clavier uniquement</strong></td><td>Flèches gauche/droite contrôlent la raquette</td><td>État = En jeu</td><td>Flèche gauche : raquette se déplace à gauche (X -= vitesseRaquette). Flèche droite : raquette se déplace à droite (X += vitesseRaquette)</td><td>Raquette repositionnée</td></tr><tr><td><strong>R10 : Limites raquette</strong></td><td>Raquette ne dépasse pas les murs</td><td>Raquette en mouvement</td><td>Raquette X limité à [0, largeur écran - largeur raquette]</td><td>Raquette reste visible et valide</td></tr></tbody></table>
+<div class="sl-heading-wrapper level-h2"><h2 id="10-success-criteria">10. Success Criteria</h2><a class="sl-anchor-link" href="#10-success-criteria"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “10. Success Criteria”</span></a></div>
+<ol>
+<li><strong>Jeu jouable</strong> — Une partie complète (démarrage → victoire ou game over) peut être jouée sans erreurs</li>
+<li><strong>Contrôles réactifs</strong> — Flèches gauche/droite répondent immédiatement, sans latence perceptible</li>
+<li><strong>Physique de balle correcte</strong> — Rebonds calculés correctement sur tous les éléments (murs, plafond, raquette, briques)</li>
+<li><strong>Gestion des vies</strong> — Perte de vies et game over détectés correctement</li>
+<li><strong>Détection de victoire</strong> — Destruction de toutes les briques détectée, victoire affichée</li>
+<li><strong>Vitesse ajustable</strong> — Slider fonctionne, vitesse appliquée au lancement, vraiment perceptible en jeu</li>
+<li><strong>Menus fonctionnels</strong> — Clics souris sur boutons (Démarrer, Rejouer, Quitter) fonctionnent correctement</li>
+<li><strong>Pas de dépendances externes</strong> — Code vanilla JavaScript/HTML/CSS uniquement</li>
+</ol>
+<div class="sl-heading-wrapper level-h2"><h2 id="11-open-questions">11. Open Questions</h2><a class="sl-anchor-link" href="#11-open-questions"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “11. Open Questions”</span></a></div>
+<ul>
+<li>Taille exacte de chaque brique (pixels) et espacement entre briques ?</li>
+<li>Vitesse de déplacement de la raquette : fixe ou basée sur la vélocité de la balle ?</li>
+<li>Animation de destruction de brique (disparition immédiate ou fade out) ?</li>
+<li>Sons/feedback visuel au contact brique/balle ?</li>
+</ul> </div> <footer class="doc-footer astro-jtjyxvqf"> <div class="doc-footer-content astro-jtjyxvqf"> <span class="astro-jtjyxvqf">Branch: <code class="astro-jtjyxvqf">660/merge</code></span>  <span class="astro-jtjyxvqf">Build: <code class="astro-jtjyxvqf">#181</code></span> <span class="astro-jtjyxvqf">Commit: <code class="astro-jtjyxvqf">84f764a</code></span> <span class="astro-jtjyxvqf">2026-05-27</span> <span class="astro-jtjyxvqf">App: <a href="https://dsissoko.github.io/oneticket-core/breakout/pr/660/app" class="astro-jtjyxvqf">https://dsissoko.github.io/oneticket-core/breakout/pr/660/app</a></span> </div> </footer>  </div> </div>   </main> </div> </div>  </div> </div>  </body></html>
