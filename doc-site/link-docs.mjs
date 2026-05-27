@@ -31,7 +31,7 @@ function transformMarkdown(content) {
   const body    = h1Match
     ? content.replace(/^#\s+.+\n?/m, '').replace(/^\n+/, '\n')
     : content;
-  return `---\ntitle: '${title.replace(/'/g, "\\'")}'\n---\n${body}`;
+  return `---\ntitle: "${title.replace(/"/g, '\\"')}"\n---\n${body}`;
 }
 
 // Copy docSource → destDir, renaming README.md → index.md
