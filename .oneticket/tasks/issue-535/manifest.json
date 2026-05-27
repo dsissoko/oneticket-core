@@ -37,7 +37,7 @@
       "depends_on": [
         "C"
       ],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "E",
@@ -47,7 +47,7 @@
       "depends_on": [
         "C"
       ],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "F",
@@ -57,7 +57,7 @@
       "depends_on": [
         "C"
       ],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "G",
@@ -67,7 +67,7 @@
       "depends_on": [
         "C"
       ],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "H",
@@ -77,7 +77,7 @@
       "depends_on": [
         "C"
       ],
-      "status": "pending"
+      "status": "in_progress"
     }
   ]
 }
