@@ -5,3 +5,4 @@
 2026-05-27 11:26 | D | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-game-setup.md
 2026-05-27 11:26 | J | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-007-victory-condition.md
 2026-05-27 11:26 | F | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-003-paddle-control.md
+2026-05-27 11:26 | I | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-006-lives-and-gameover.md
