@@ -9,7 +9,7 @@
       "role": "analyst",
       "content": "Tu es analyst. Crée la spécification produit pour le jeu Breakout (frontend JavaScript vanilla).\n\nInformations disponibles :\n- Breakout est un jeu arcade frontend en JavaScript vanilla (HTML/CSS/JS, aucune dépendance externe)\n- L'aire de jeu contient un mur de briques organisé sur 5 lignes\n- Une balle rebondit sur les murs, le plafond et la raquette\n- Le joueur dispose de 3 vies ; il en perd une à chaque fois que la balle atteint le bas de l'écran\n- La partie se termine soit par épuisement des vies (game over), soit par destruction de toutes les briques (victoire)\n- La raquette se déplace exclusivement avec les flèches gauche et droite du clavier\n- La souris est réservée à la navigation dans les menus de l'application (démarrer, rejouer, quitter)\n- La vitesse de la balle est réglable via un slider accessible depuis le menu (plage : très lente à très rapide)\n- Il n'y a pas de système de niveaux ni de progression pour l'instant\n\nUtilise le template .oneticket/templates/product-spec.md et produis apps/breakout/docs/what/product-spec.md avec :\n1. Une vision claire du jeu\n2. Les utilisateurs/acteurs (joueur arcade, navigateur)\n3. Les problèmes résolus (divertissement, jeu classique)\n4. Les objectifs produit\n5. Le scope et les exclusions (pas de niveaux, pas de progression, vanilla JS)\n6. Les concepts métier (brique, balle, raquette, vies, score)\n7. Les capacités produit principales (gameplay, menus, contrôles, vitesse configurable)\n8. Les workflows principaux (démarrer jeu, jouer, game over, victoire, retour menu)\n9. Les règles métier (3 vies, collision, vitesse réglable, flèches clavier uniquement)\n10. Les critères de succès\n\nN'invente rien au-delà de ce qui est décrit. Utilise la description SITE_DESCRIPTION obligatoire (max 160 chars).\nAprès création, commit et push avec git add et git commit -m 'docs: add product-spec for breakout'.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
@@ -17,7 +17,9 @@
       "file": "apps/breakout/docs/how/architecture.md",
       "role": "architect",
       "content": "Tu es architect. Lis apps/breakout/docs/what/product-spec.md et produis l'architecture du jeu Breakout.\n\nProduis apps/breakout/docs/how/architecture.md en utilisant le template .oneticket/templates/architecture.md avec :\n1. Principes architecturaux (vanilla JS, sans dépendances, frontend pur)\n2. Vue d'ensemble du système\n3. Style architectural (module pattern, canvas-based game loop)\n4. Frontières techniques principales (game engine, input handler, collision detection, rendering, menu system)\n5. Composants clés (Game, Ball, Paddle, Brick, Wall, CollisionDetector, Menu, InputManager, Canvas renderer)\n6. Interfaces clés (game loop, event handling, state management)\n7. Architecture des données (game state, entities position/velocity, score/lives)\n8. Sécurité (pas de persistance réseau, jeu local)\n9. Déploiement (fichier HTML/JS/CSS statique)\n10. Observabilité (console logs pour debug)\n11. Les vues C4 liées (à générer séparément)\n12. Les slices d'implémentation liées (à générer séparément)\n13. Contraintes techniques (vanilla JS, pas de libs, canvas API)\n\nN'invente rien au-delà de la spécification produit. Après création, commit et push avec git add et git commit -m 'docs: add architecture for breakout'.",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending"
     },
     {
@@ -26,7 +28,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/epic.md",
       "role": "analyst",
       "content": "Tu es analyst. Lis apps/breakout/docs/what/product-spec.md et produis l'epic MVP pour Breakout.\n\nCrée d'abord le répertoire apps/breakout/docs/what/epics/epic-0-mvp/ s'il n'existe pas.\n\nProduis apps/breakout/docs/what/epics/epic-0-mvp/epic.md en utilisant le template .oneticket/templates/epic.md avec :\n1. Goal : Implémenter le jeu Breakout MVP fonctionnel avec gameplay complet\n2. Business Value : Fourniture d'un jeu arcade classique jouable, divertissant\n3. Scope : Tout ce qui est décrit dans product-spec.md (gameplay, menus, contrôles, vitesse réglable)\n4. Related User Stories : (tu vas créer les user stories dans la tâche D)\n5. Related Slices : (à documenter dans la tâche D)\n\nAprès création de l'epic, crée aussi le répertoire apps/breakout/docs/what/epics/epic-0-mvp/user-stories/ s'il n'existe pas.\n\nAprès création, commit et push avec git add et git commit -m 'docs: add epic-0-mvp for breakout'.",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending"
     },
     {
@@ -35,7 +39,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-game-setup.md",
       "role": "analyst",
       "content": "Tu es analyst. Lis apps/breakout/docs/what/product-spec.md et crée les user stories du MVP Breakout.\n\nCrée 5-7 user stories principales pour le MVP (format Mike Cohn avec critères d'acceptation Gherkin) :\n\nUS-001 : Configuration du jeu (setup, canvas, état initial)\nUS-002 : Contrôle de la raquette (mouvements flèches gauche/droite)\nUS-003 : Simulation de la balle (rebond, vitesse, trajectoire)\nUS-004 : Détection de collision (murs, plafond, raquette, briques)\nUS-005 : Mécaniques de jeu (vies, game over, victoire)\nUS-006 : Menu de jeu (démarrer, rejouer, quitter)\nUS-007 : Contrôle de vitesse (slider menu, ajustement balle)\n\nPour chaque user story :\n- Nom significatif (pas générique, basé sur la capacité)\n- Format: En tant que <joueur>, je veux <action>, afin de <résultat>\n- Critères d'acceptation Gherkin (Given/When/Then)\n- Liens vers le product-spec et l'architecture si pertinent\n\nUtilise le template .oneticket/templates/us.md.\n\nEmplacement : apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-NNN-<name>.md\n\nAprès création de toutes les user stories, commit et push avec git add et git commit -m 'docs: add user stories for epic-0-mvp'.",
-      "depends_on": ["C"],
+      "depends_on": [
+        "C"
+      ],
       "status": "pending"
     }
   ]
