@@ -6,9 +6,10 @@
 |---|---|
 | `@po` | Base de connaissance produit, epics, user stories, backlog |
 | `@architect` | Architecture, C4, slices d'implémentation |
+| `@leaddev` | Décomposition de l'implémentation en tâches, délégation à @dev |
 | `@dev` | Implémentation du code |
 | `@qa` | Tests, qualité, revue de code |
-| `@analyst` | Analyse métier, modélisation du domaine |
+| `@analyst` | Analyse métier, modélisation du domaine, production de doc fonctionnelle |
 | `@user` | Validation, décision finale, fourniture de contexte |
 
 ---
