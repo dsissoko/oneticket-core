@@ -40,7 +40,7 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-002-ball-physics.md",
       "content": "Crée le fichier apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-002-ball-physics.md en utilisant le template .oneticket/templates/user-story.md. User story : En tant que joueur, je veux que la balle rebondisse sur les murs, le plafond et la raquette avec une physique réaliste, afin de jouer à un jeu arcade classique. Critères d'acceptation (Gherkin) : Given une balle en mouvement, When elle frappe un mur/plafond/raquette, Then elle rebondit selon l'angle d'incidence. When elle atteint le bas sans raquette, Then une vie est perdue et la balle réapparaît.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "F",
