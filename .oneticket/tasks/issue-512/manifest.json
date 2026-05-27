@@ -32,7 +32,7 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-game-setup.md",
       "content": "Crée le fichier apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-game-setup.md en utilisant le template .oneticket/templates/user-story.md. User story : En tant que joueur, je veux voir l'écran de jeu avec le mur de briques (5 lignes), la raquette au bas de l'écran et une balle, afin de commencer à jouer. Critères d'acceptation (Gherkin) : Given un jeu lancé, When le jeu démarre, Then j'affiche 5 lignes de briques, une raquette centrée au bas, une balle au centre. Pas de briques manquantes ou mal alignées.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "E",
