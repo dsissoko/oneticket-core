@@ -105,9 +105,6 @@ The sequence of steps actors take to accomplish a goal:
 ### Gaps Identified
 - [Gap 1 — missing spec / ambiguous requirement]
 - [Gap 2]
-
-### Proposed next step
-→ Hand off to `@po` for backlog structuring
 ```
 
 ## Rules
