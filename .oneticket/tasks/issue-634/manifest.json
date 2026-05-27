@@ -1,0 +1,85 @@
+{
+  "issue": 634,
+  "branch_base": "feature/issue-634",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-634-A",
+      "file": "apps/breakout/docs/what/product-spec.md",
+      "content": "Produis la spécification produit complète pour le jeu Breakout basée sur les informations suivantes :\n\nBreakout est un jeu arcade frontend en JavaScript vanilla (HTML/CSS/JS, aucune dépendance externe).\n\nL'aire de jeu contient un mur de briques organisé sur 5 lignes. Une balle rebondit sur les murs, le plafond et la raquette. Le joueur dispose de 3 vies ; il en perd une à chaque fois que la balle atteint le bas de l'écran. La partie se termine soit par épuisement des vies (game over), soit par destruction de toutes les briques (victoire).\n\nLa raquette se déplace exclusivement avec les flèches gauche et droite du clavier. La souris est réservée à la navigation dans les menus de l'application (démarrer, rejouer, quitter).\n\nLa vitesse de la balle est réglable via un slider accessible depuis le menu, avec une plage allant de très lente à très rapide. Il n'y a pas de système de niveaux ni de progression pour l'instant.\n\nRemplis tous les sections du template product-spec.md en utilisant ces informations.",
+      "depends_on": [],
+      "status": "done"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-634-B",
+      "file": "apps/breakout/docs/how/architecture.md",
+      "content": "Lis apps/breakout/docs/what/product-spec.md et produis le document d'architecture pour le jeu Breakout. Le projet est un jeu arcade frontend vanilla JavaScript (HTML/CSS/JS sans dépendances externes). Décris la structure du code, les principaux composants du moteur de jeu (balle, raquette, briques, collision, rendu), les patterns de gestion d'état et d'événements, et les interfaces utilisateur (menu, jeu, game over).",
+      "role": "architect",
+      "depends_on": [
+        "A"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-634-C",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/epic.md",
+      "content": "Produis le document Epic MVP pour le jeu Breakout. Basé sur la spécification product-spec.md, définis l'epic MVP couvrant :\n- L'interface de jeu avec aire de jeu, briques, raquette, balle\n- La mécanique de base (collision, points, vies)\n- Le menu et les états (démarrage, jeu, victoire, défaite)\n- Les contrôles clavier (flèches) et ajustement de vitesse\n\nUtilise le template epic.md fourni.",
+      "depends_on": [
+        "A"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-634-D",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001.md",
+      "content": "Produis la user story US-001 : Initialiser le jeu avec l'aire de jeu.\n\nTitre: US-001 — Initialiser le jeu avec l'aire de jeu\n\nHistoire utilisateur:\nEn tant que joueur, je veux voir l'aire de jeu au démarrage, afin de commencer à jouer.\n\nComportement attendu:\n- L'aire de jeu s'affiche avec des dimensions fixes (ex: 800x600 ou similaire)\n- Le canvas ou container est rendu et prêt à recevoir les éléments du jeu\n- Les briques sont arrangées en 5 lignes\n\nCritères d'acceptation:\n- L'aire de jeu s'affiche correctement\n- Les briques sont visibles\n- L'interface est réactive\n\nUtilise le template us.md fourni.",
+      "depends_on": [
+        "C"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-634-E",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-002.md",
+      "content": "Produis la user story US-002 : Contrôler la raquette au clavier.\n\nTitre: US-002 — Contrôler la raquette au clavier\n\nHistoire utilisateur:\nEn tant que joueur, je veux contrôler la raquette avec les flèches gauche et droite, afin de bloquer la balle.\n\nComportement attendu:\n- La raquette répond aux touches flèche gauche et flèche droite\n- La raquette ne sort pas des limites de l'aire de jeu\n- Le mouvement est fluide et réactif\n\nCritères d'acceptation:\n- Les touches de direction sont détectées correctement\n- La raquette se déplace aux limites de l'écran\n- Pas d'accumulation de commandes (debounce correct)\n\nUtilise le template us.md fourni.",
+      "depends_on": [
+        "C"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "F",
+      "branch": "task/issue-634-F",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-003.md",
+      "content": "Produis la user story US-003 : Mettre en œuvre la mécanique de collision et de rebond.\n\nTitre: US-003 — Mettre en œuvre la mécanique de collision et de rebond\n\nHistoire utilisateur:\nEn tant que joueur, je veux que la balle rebondisse sur les murs, le plafond et la raquette, afin de continuer à jouer.\n\nComportement attendu:\n- La balle rebondit sur les murs latéraux\n- La balle rebondit sur le plafond\n- La balle rebondit sur la raquette\n- La balle sort par le bas (perte de vie)\n\nCritères d'acceptation:\n- Les collisions sont détectées correctement\n- Le rebond change la direction de la balle\n- Les vies sont décrementées quand la balle sort par le bas\n\nUtilise le template us.md fourni.",
+      "depends_on": [
+        "C"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "G",
+      "branch": "task/issue-634-G",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-004.md",
+      "content": "Produis la user story US-004 : Gérer l'état du jeu (démarrage, jeu, fin).\n\nTitre: US-004 — Gérer l'état du jeu (démarrage, jeu, fin)\n\nHistoire utilisateur:\nEn tant que joueur, je veux pouvoir démarrer, relancer et quitter le jeu via un menu, afin de contrôler mon expérience de jeu.\n\nComportement attendu:\n- Un menu d'accueil s'affiche au démarrage\n- Bouton \"Démarrer\" lance le jeu\n- Bouton \"Rejouer\" redémarre après une fin\n- Bouton \"Quitter\" ferme le jeu\n- Un écran \"Victoire\" s'affiche quand toutes les briques sont détruites\n- Un écran \"Défaite\" s'affiche quand les vies sont épuisées\n\nCritères d'acceptation:\n- Les états de jeu sont gérés correctement\n- Les transitions entre états sont fluides\n- La souris fonctionne correctement dans les menus\n\nUtilise le template us.md fourni.",
+      "depends_on": [
+        "C"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "H",
+      "branch": "task/issue-634-H",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-005.md",
+      "content": "Produis la user story US-005 : Ajuster la vitesse de la balle.\n\nTitre: US-005 — Ajuster la vitesse de la balle\n\nHistoire utilisateur:\nEn tant que joueur, je veux pouvoir ajuster la vitesse de la balle avant de commencer, afin de choisir le niveau de difficulté.\n\nComportement attendu:\n- Un slider de vitesse est accessible depuis le menu\n- La plage va de très lente à très rapide\n- Le changement de vitesse est immédiat\n- La vitesse s'applique au démarrage de la partie\n\nCritères d'acceptation:\n- Le slider fonctionne correctement\n- La balle se déplace à la vitesse sélectionnée\n- L'ajustement ne casse pas le jeu\n\nUtilise le template us.md fourni.",
+      "depends_on": [
+        "C"
+      ],
+      "status": "done"
+    }
+  ]
+}
