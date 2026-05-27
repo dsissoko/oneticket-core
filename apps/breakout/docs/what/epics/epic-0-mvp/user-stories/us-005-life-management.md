@@ -68,6 +68,6 @@ Scenario: Life counter never exceeds 3
 
 ## Related Slices
 
-- Slice 1: Game Board and Paddle Setup
-- Slice 5: Game State Management and Transitions
-- Slice 7: Win/Loss Conditions and Final Integration
+- [Slice 1 — Game Board and Paddle Setup](../../../how/slices/slice-1-game-setup/slice.md)
+- [Slice 5 — Game State Management and Transitions](../../../how/slices/slice-5-game-state-management/slice.md)
+- [Slice 7 — Win/Loss Conditions and Final Integration](../../../how/slices/slice-7-win-loss-conditions/slice.md)

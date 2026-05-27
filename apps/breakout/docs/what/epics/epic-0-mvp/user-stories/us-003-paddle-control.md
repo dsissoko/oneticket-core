@@ -89,6 +89,6 @@ Scenario: No paddle movement in Loss state
 
 ## Related Slices
 
-- Slice 1: Game Board and Paddle Setup — define paddle dimensions and initial position
-- Slice 2: Input Handling and Event Management — implement keyboard event listeners for arrow keys
-- Slice 5: Game State Management and Transitions — ensure paddle control only works in Active state
+- [Slice 1 — Game Board and Paddle Setup](../../../how/slices/slice-1-game-setup/slice.md) — define paddle dimensions and initial position
+- [Slice 6 — Speed Control and Input Handler](../../../how/slices/slice-6-speed-control/slice.md) — implement keyboard event listeners for arrow keys
+- [Slice 5 — Game State Management](../../../how/slices/slice-5-game-state-management/slice.md) — ensure paddle control only works in Active state

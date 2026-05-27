@@ -102,5 +102,5 @@ Feature: Ball Physics and Bouncing
 
 ## Related Slices
 
-- Slice 2: Ball Physics Engine
-- Slice 3: Collision Detection System
+- [Slice 2 — Ball Physics Engine](../../../how/slices/slice-2-ball-physics/slice.md)
+- [Slice 3 — Collision Detection System](../../../how/slices/slice-3-collision-detection/slice.md)
