@@ -1,0 +1,33 @@
+{
+  "issue": 661,
+  "branch_base": "feature/issue-661",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-661-A",
+      "file": "apps/breakout/docs/what/product-spec.md",
+      "role": "analyst",
+      "content": "Tu dois créer la spécification produit pour le jeu Breakout arcade. Utilise le template .oneticket/templates/product-spec.md.\n\nVoici les informations de base :\n- Nom du produit: Breakout\n- Type: Jeu arcade frontend JavaScript vanilla (HTML/CSS/JS, aucune dépendance externe)\n- Joueur dispose de 3 vies\n- Mur de briques organisé sur 5 lignes\n- Balle rebondit sur les murs, plafond et raquette\n- Le joueur perd une vie quand la balle atteint le bas de l'écran\n- Fin de partie: épuisement des vies (game over) ou destruction de toutes les briques (victoire)\n- Contrôles: flèches gauche/droite pour la raquette, souris pour la navigation des menus\n- Menu accessible avec slider pour régler la vitesse de la balle (très lente à très rapide)\n- Pas de système de niveaux ni de progression actuellement\n- Capacités: jeu jouable, gestion des collisions, système de vies, menu de navigation\n\nRemplis le template avec ces informations et assure-toi d'inclure :\n1. Description du produit (max 160 caractères)\n2. Problème et cible utilisateur\n3. Capacités principales pour la V1\n4. Utilisateurs/acteurs principaux\n5. Règles métier et contraintes\n\nCommit et push une fois complété.",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-661-B",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp",
+      "role": "analyst",
+      "content": "Tu dois créer l'epic MVP et les user stories pour Breakout.\n\n1. Lis le fichier apps/breakout/docs/what/product-spec.md pour comprendre le produit\n2. Utilise les templates .oneticket/templates/epic.md et .oneticket/templates/us.md\n3. Crée le répertoire apps/breakout/docs/what/epics/epic-0-mvp/ s'il n'existe pas\n4. Crée apps/breakout/docs/what/epics/epic-0-mvp/epic.md avec :\n   - Titre: MVP Breakout\n   - Description de ce qui sera livré dans cette épic\n   - Objectifs clés\n5. Crée des user stories dans apps/breakout/docs/what/epics/epic-0-mvp/user-stories/ pour :\n   - us-001-display-game-board.md: En tant que joueur, je veux voir le mur de briques et la raquette, afin de commencer à jouer\n   - us-002-paddle-movement.md: En tant que joueur, je veux déplacer la raquette avec les flèches gauche/droite, afin de contrôler le jeu\n   - us-003-ball-physics.md: En tant que joueur, je veux que la balle rebondisse sur les murs, le plafond et la raquette, afin de jouer à un jeu physiquement réaliste\n   - us-004-collision-detection.md: En tant que joueur, je veux que les briques disparaissent quand je les touche avec la balle, afin de progresser dans le jeu\n   - us-005-lives-system.md: En tant que joueur, je veux avoir 3 vies et en perdre une quand la balle sort par le bas, afin de gérer le risque\n   - us-006-win-lose-conditions.md: En tant que joueur, je veux une fin de partie quand toutes les briques sont cassées ou que je n'ai plus de vies, afin de savoir si j'ai gagné ou perdu\n   - us-007-speed-menu.md: En tant que joueur, je veux accéder à un menu avec un slider pour régler la vitesse de la balle, afin de personnaliser la difficulté\n\nCh user story doit inclure :\n- Description: Dans le format \"En tant que <rôle>, je veux <action>, afin de <résultat>\"\n- Critères d'acceptation en format Gherkin (Given/When/Then)\n- Notes techniques si pertinent\n\nCommit et push une fois complété.",
+      "depends_on": ["A"],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-661-C",
+      "file": "apps/breakout/docs/how/architecture.md",
+      "role": "architect",
+      "content": "Tu dois créer le document d'architecture pour Breakout.\n\n1. Lis les fichiers:\n   - apps/breakout/docs/what/product-spec.md\n   - Toutes les user stories dans apps/breakout/docs/what/epics/epic-0-mvp/user-stories/\n\n2. Utilise le template .oneticket/templates/architecture.md\n\n3. Produis apps/breakout/docs/how/architecture.md avec:\n   - Stack technique: JavaScript vanilla, HTML5, CSS3 (pas de frameworks, pas de dépendances externes)\n   - Composants principaux:\n     * Game Engine (moteur de jeu principal)\n     * Physics Engine (collision et rebond)\n     * Renderer (affichage de l'écran)\n     * Input Handler (gestion du clavier et souris)\n     * State Manager (état du jeu, vies, scores)\n     * Menu System (menus et sliders)\n   - Architecture: Model-View-Controller ou similaire adapté au vanilla JS\n   - Points d'intégration: pas d'API externe, tout en client\n   - Contraintes: aucune dépendance npm, performances optimisées pour navigateurs modernes\n   - Interfaces clés entre composants\n\n4. Assure-toi que l'architecture supporte les 7 user stories de l'épic 0-MVP\n\nCommit et push une fois complété.",
+      "depends_on": ["A", "B"],
+      "status": "pending"
+    }
+  ]
+}
