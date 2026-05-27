@@ -9,7 +9,7 @@
       "content": "Initialise le répertoire de docs et produis la spécification produit pour Breakout en utilisant le template .oneticket/templates/product-spec.md. Le projet Breakout est un jeu arcade frontend en JavaScript vanilla (HTML/CSS/JS, aucune dépendance externe). Voici les détails clés :\n\n**Gameplay:**\n- L'aire de jeu contient un mur de briques organisé sur 5 lignes\n- Une balle rebondit sur les murs, le plafond et la raquette\n- Le joueur dispose de 3 vies ; il en perd une à chaque fois que la balle atteint le bas de l'écran\n- La partie se termine soit par épuisement des vies (game over), soit par destruction de toutes les briques (victoire)\n\n**Contrôles et interaction:**\n- La raquette se déplace exclusivement avec les flèches gauche et droite du clavier\n- La souris est réservée à la navigation dans les menus (démarrer, rejouer, quitter)\n- La vitesse de la balle est réglable via un slider (très lente à très rapide)\n\n**MVP:**\n- Jeu de base sans système de niveaux ni progression\n- Gestion des vies et des états de fin de partie\n- Menu simple avec contrôles\n\nProduis une spécification qui capture la vision produit, les capacités principales, et les contraintes du projet.",
       "role": "analyst",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
@@ -17,7 +17,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/epic.md",
       "content": "Lis le fichier apps/breakout/docs/what/product-spec.md que tu viens de créer. Produis l'epic MVP pour Breakout en utilisant le template .oneticket/templates/epic.md. L'epic doit décrire le périmètre MVP du jeu Breakout avec ses capacités principales et ses objectifs.",
       "role": "analyst",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending"
     },
     {
@@ -26,7 +28,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-game-setup.md",
       "content": "Lis le fichier apps/breakout/docs/what/epics/epic-0-mvp/epic.md. Produis une user story pour la mise en place du jeu (initialisation du canvas, paramètres du jeu) en utilisant le template .oneticket/templates/us.md. La user story doit avoir le format : \"En tant que [utilisateur], je veux [action], afin de [résultat]\" avec des critères d'acceptation en Gherkin.",
       "role": "analyst",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -35,7 +39,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-002-ball-physics.md",
       "content": "Lis le fichier apps/breakout/docs/what/epics/epic-0-mvp/epic.md. Produis une user story pour la physique de la balle (rebonds, collisions) en utilisant le template .oneticket/templates/us.md. La user story doit avoir le format Mike Cohn avec critères d'acceptation en Gherkin.",
       "role": "analyst",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -44,7 +50,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-003-paddle-control.md",
       "content": "Lis le fichier apps/breakout/docs/what/epics/epic-0-mvp/epic.md. Produis une user story pour le contrôle de la raquette (déplacement aux flèches) en utilisant le template .oneticket/templates/us.md. Format Mike Cohn avec critères d'acceptation en Gherkin.",
       "role": "analyst",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -53,7 +61,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-004-brick-destruction.md",
       "content": "Lis le fichier apps/breakout/docs/what/epics/epic-0-mvp/epic.md. Produis une user story pour la destruction des briques en utilisant le template .oneticket/templates/us.md. Format Mike Cohn avec critères d'acceptation en Gherkin.",
       "role": "analyst",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -62,7 +72,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-005-life-management.md",
       "content": "Lis le fichier apps/breakout/docs/what/epics/epic-0-mvp/epic.md. Produis une user story pour la gestion des vies en utilisant le template .oneticket/templates/us.md. Format Mike Cohn avec critères d'acceptation en Gherkin.",
       "role": "analyst",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -71,7 +83,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-006-game-states.md",
       "content": "Lis le fichier apps/breakout/docs/what/epics/epic-0-mvp/epic.md. Produis une user story pour les états du jeu (menu, playing, game over, victory) en utilisant le template .oneticket/templates/us.md. Format Mike Cohn avec critères d'acceptation en Gherkin.",
       "role": "analyst",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -80,7 +94,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-007-speed-control.md",
       "content": "Lis le fichier apps/breakout/docs/what/epics/epic-0-mvp/epic.md. Produis une user story pour le contrôle de la vitesse de la balle via un slider en utilisant le template .oneticket/templates/us.md. Format Mike Cohn avec critères d'acceptation en Gherkin.",
       "role": "analyst",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -89,7 +105,16 @@
       "file": "apps/breakout/docs/how/architecture.md",
       "content": "Lis le fichier apps/breakout/docs/what/product-spec.md et les user stories que tu as créées (us-001 à us-007). Produis le document d'architecture pour Breakout en utilisant le template .oneticket/templates/architecture.md. Décris l'architecture technique du jeu JavaScript vanilla, les composants principaux (game engine, physics, input handler, renderer), les dépendances, et les choix architecturaux pour satisfaire les user stories.",
       "role": "architect",
-      "depends_on": ["A", "C", "D", "E", "F", "G", "H", "I"],
+      "depends_on": [
+        "A",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I"
+      ],
       "status": "pending"
     }
   ]
