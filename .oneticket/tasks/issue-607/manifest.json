@@ -8,7 +8,7 @@
       "file": "output/result-A.txt",
       "content": "Crée le fichier output/result-A.txt avec le contenu 'Result A done' exactement. Cette tâche est indépendante.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
