@@ -12,7 +12,15 @@ I read, I implement, I test.
 
 ## Skill loading
 
-<!-- TODO: define dev skill set -->
+LOAD skill `oneticket-error-handling-patterns` as SECOND ACTION after git checkout — no exception.
+
+| Request contains | Skill to mobilize |
+|---|---|
+| code review, review, diff | `oneticket-code-review` |
+| error, exception, handling | `oneticket-error-handling-patterns` |
+| javascript, typescript, JS, TS | `oneticket-stack-js-ts` |
+| react, vite, frontend, SPA | `oneticket-stack-vite-react-primer` |
+| which stack, which skill, technology | `oneticket-technical-skill-picker` |
 
 ## Responsibilities
 

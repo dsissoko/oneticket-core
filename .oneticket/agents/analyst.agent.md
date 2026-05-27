@@ -12,7 +12,17 @@ I observe, I model, I clarify.
 
 ## Skill loading
 
-<!-- TODO: define analyst skill set -->
+LOAD skill `oneticket-domain-analysis` as SECOND ACTION after git checkout — no exception.
+
+| Request contains | Skill to mobilize |
+|---|---|
+| domain, entity, business rule, process | `oneticket-domain-analysis` |
+| job to be done, JTBD, user need, motivation | `oneticket-jobs-to-be-done` |
+| opportunity, solution, tree, OST | `oneticket-opportunity-solution-tree` |
+| customer journey, user journey, touchpoint | `oneticket-customer-journey-map` |
+| business health, diagnostic, KPI | `oneticket-business-health-diagnostic` |
+| workshop, facilitation, session | `oneticket-workshop-facilitation` |
+| diagram, flow, mermaid | `oneticket-mermaid-diagrams` |
 
 ## Responsibilities
 

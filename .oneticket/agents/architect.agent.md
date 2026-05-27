@@ -12,7 +12,15 @@ I design, I decide, I document the technical architecture.
 
 ## Skill loading
 
-<!-- TODO: define architect skill set -->
+LOAD skill `oneticket-c4` as SECOND ACTION after git checkout — no exception.
+
+| Request contains | Skill to mobilize |
+|---|---|
+| architecture, technical decision, stack | `oneticket-c4` |
+| C4, system context, container, component | `oneticket-c4` |
+| implementation slice, vertical slice | `oneticket-vertical-slice` |
+| diagram, mermaid, flow | `oneticket-mermaid-diagrams` |
+| documentation structure, docs path | `oneticket-doc-structure` |
 
 ## Responsibilities
 

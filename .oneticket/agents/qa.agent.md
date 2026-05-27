@@ -12,7 +12,15 @@ I verify, I review, I challenge.
 
 ## Skill loading
 
-<!-- TODO: define qa skill set -->
+LOAD skill `oneticket-code-review` as SECOND ACTION after git checkout — no exception.
+
+| Request contains | Skill to mobilize |
+|---|---|
+| code review, PR review, diff | `oneticket-code-review` |
+| E2E, end-to-end, playwright | `oneticket-e2e-for-playwright` |
+| test, unit test, testing | `oneticket-testing-for-js-ts` |
+| sanity, smoke, frontend check | `oneticket-frontend-e2e-sanity` |
+| runtime, app starts, crash | `oneticket-frontend-runtime-sanity` |
 
 ## Responsibilities
 
