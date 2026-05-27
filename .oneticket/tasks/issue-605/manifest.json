@@ -1,0 +1,54 @@
+{
+  "issue": 605,
+  "branch_base": "feature/issue-605",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-605-A",
+      "file": ".oneticket/tasks/issue-605/subtask-A.txt",
+      "content": "Create file .oneticket/tasks/issue-605/subtask-A.txt with content: Subtask A completed",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-605-B",
+      "file": ".oneticket/tasks/issue-605/subtask-B.txt",
+      "content": "Create file .oneticket/tasks/issue-605/subtask-B.txt with content: Subtask B completed",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-605-C",
+      "file": ".oneticket/tasks/issue-605/subtask-C.txt",
+      "content": "Create file .oneticket/tasks/issue-605/subtask-C.txt with content: Subtask C completed",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-605-D",
+      "file": ".oneticket/tasks/issue-605/subtask-D.txt",
+      "content": "Create file .oneticket/tasks/issue-605/subtask-D.txt with content: Subtask D completed. This task depends on completion of subtasks A and B.",
+      "depends_on": ["A", "B"],
+      "status": "pending"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-605-E",
+      "file": ".oneticket/tasks/issue-605/subtask-E.txt",
+      "content": "Create file .oneticket/tasks/issue-605/subtask-E.txt with content: Subtask E completed. This task depends on completion of subtask D.",
+      "depends_on": ["D"],
+      "status": "pending"
+    },
+    {
+      "id": "F",
+      "branch": "task/issue-605-F",
+      "file": ".oneticket/tasks/issue-605/subtask-F.txt",
+      "content": "Create file .oneticket/tasks/issue-605/subtask-F.txt with content: Subtask F completed. This task depends on completion of subtask C.",
+      "depends_on": ["C"],
+      "status": "pending"
+    }
+  ]
+}
