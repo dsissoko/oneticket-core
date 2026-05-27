@@ -105,8 +105,12 @@ jobs:
         id: site-desc
         run: |
           SPEC="${{ needs.resolve-context.outputs.doc_source }}/what/product-spec.md"
+          DESC=""
           if [ -f "$SPEC" ]; then
-            DESC=$(grep -o 'SITE_DESCRIPTION:.*' "$SPEC" | head -1 | sed 's/SITE_DESCRIPTION: *//' | sed 's/ -->//' | cut -c1-160)
+            RAW=$(grep -o 'SITE_DESCRIPTION:.*' "$SPEC" | head -1 | sed 's/SITE_DESCRIPTION: *//' | sed 's/ -->//' | cut -c1-160)
+            if [[ "$RAW" != *"<!--"* && -n "$RAW" ]]; then
+              DESC="$RAW"
+            fi
           fi
           echo "description=${DESC:-Documentation for ${{ needs.resolve-context.outputs.current_project }}}" >> $GITHUB_OUTPUT
       - name: Build
