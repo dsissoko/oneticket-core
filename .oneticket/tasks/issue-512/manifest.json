@@ -72,7 +72,7 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-006-speed-control.md",
       "content": "Crée le fichier apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-006-speed-control.md en utilisant le template .oneticket/templates/user-story.md. User story : En tant que joueur, je veux régler la vitesse de la balle via un slider accessible depuis le menu, afin d'ajuster la difficulté à mes préférences. Critères d'acceptation (Gherkin) : Given le menu accessible, When j'utilise le slider de vitesse (très lente à très rapide), Then la vitesse change immédiatement ou au prochain lancement. When le slider est au minimum, Then la balle se déplace lentement. When au maximum, Then rapidement. Le réglage persiste entre les parties (ou réinitialise selon la règle métier choisie).",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     }
   ]
 }
