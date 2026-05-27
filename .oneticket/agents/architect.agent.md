@@ -18,6 +18,7 @@ I work with a team described in `.agents/AGENTS.md`.
 ## Skill loading
 
 LOAD skill `oneticket-c4` as SECOND ACTION after git checkout — no exception.
+LOAD skill `oneticket-vertical-slice` as THIRD ACTION after git checkout — no exception.
 
 | Request contains | Skill to mobilize |
 |---|---|
