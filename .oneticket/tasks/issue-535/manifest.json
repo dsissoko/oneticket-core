@@ -16,7 +16,7 @@
       "file": "apps/breakout/docs/how/architecture.md",
       "content": "À partir des informations ci-dessous, crée le fichier apps/breakout/docs/how/architecture.md selon le template du framework OneTicket.\n\nStack technique :\n- Frontend : JavaScript vanilla (HTML/CSS/JS)\n- Aucune dépendance externe\n- Runtime : navigateur moderne\n- Canvas API pour le rendu graphique\n\nPrincipaux composants :\n1. Game Engine : boucle de jeu, gestion d'état\n2. Renderer : rendu Canvas de la scène (briques, balle, raquette)\n3. Input Handler : gestion des événements clavier (flèches) et souris\n4. Physics Engine : collision balle-briques, balle-raquette, balle-murs\n5. UI Manager : menus (démarrer, rejouer, quitter), slider vitesse\n6. Game State Manager : vies, score, progression\n\nInterfaces clés :\n- Input → Game Engine (événements clavier/souris)\n- Game Engine → Physics (calculs de collision)\n- Game Engine → State Manager (mise à jour états)\n- Game Engine → Renderer (rendu écran)\n- UI → Game Engine (paramètres vitesse)\n\nContraintes techniques :\n- Pas de framework (vanilla JS)\n- Pas de dépendances npm\n- Compatible avec navigateurs modernes (ES6+)\n- Performance : 60 FPS souhaité\n\nUtilise le template OneTicket standard pour architecture.md.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "C",
