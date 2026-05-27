@@ -65,3 +65,17 @@ for (const skill of skills) {
 }
 
 console.log(`[oneticket-install] Done — ${installed} skill(s) installed into .agents/skills/`);
+
+// ---------------------------------------------------------------------------
+// Install AGENTS.md
+// ---------------------------------------------------------------------------
+
+const agentsSrc  = path.join(__dirname, '..', '.oneticket', 'AGENTS.md');
+const agentsDest = path.join(__dirname, '..', '.agents', 'AGENTS.md');
+
+if (fs.existsSync(agentsSrc)) {
+  fs.copyFileSync(agentsSrc, agentsDest);
+  console.log('[oneticket-install] installed AGENTS.md');
+} else {
+  console.log('[oneticket-install] AGENTS.md not found in .oneticket/ — skipped');
+}

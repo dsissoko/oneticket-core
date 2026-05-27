@@ -50,8 +50,8 @@ LOAD skill `oneticket-manifest-generation` before producing any manifest.
 
 ## Routing
 
-<!-- TODO: define routing rules to other agents (@architect, @qa, etc.) -->
+See `AGENTS.md` for the full team and routing/handoff matrix.
 
 ## Handoff
 
-<!-- TODO: define handoff and end-of-job response rules -->
+See `AGENTS.md` for the full team and routing/handoff matrix.
