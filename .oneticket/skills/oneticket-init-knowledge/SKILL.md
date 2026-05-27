@@ -6,8 +6,9 @@ compatibility: opencode
 
 # oneticket-init-knowledge
 
-Gather the context needed to generate the mandatory project knowledge files.
-One run = one question set posted as a GitHub comment. The human's reply triggers the next run.
+Generate the mandatory project knowledge files from all available context.
+At each run: read `docs_path` to know what exists, read the issue body and previous comments for available information, then create or update the knowledge files with what you know — even partially. Ask questions only for what is genuinely missing after reading everything.
+One run = one file created or updated, or one question set if information is insufficient.
 
 `docs_path` is always provided in the prompt — never resolve it yourself.
 
