@@ -64,7 +64,7 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-005-lives-gameend.md",
       "content": "Crée le fichier apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-005-lives-gameend.md en utilisant le template .oneticket/templates/user-story.md. User story : En tant que joueur, je veux que le jeu gère mes 3 vies et se termine quand je les perds toutes, afin de avoir un défi et une fin claire. Critères d'acceptation (Gherkin) : Given la partie en cours, When la balle atteint le bas 3 fois, Then affiche Game Over. When j'ai au moins une vie, Then le jeu continue après une perte de balle. L'affichage des vies restantes est visible à tout moment.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "I",
