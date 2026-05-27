@@ -52,7 +52,7 @@ Documentation files under `docs_path` are rendered by Astro Starlight via `link-
 The script extracts the page title from the first `# H1` — it is fully idempotent and regenerates the site from scratch on every build.
 
 Rules:
-- Every `.md` file must start with a `# H1` — this becomes the page title. Without it, the page appears as "Untitled" in the navigation.
+- Every `.md` file must start with a descriptive `# H1` that names the specific content — not a generic title like "User Story" or "Epic". Example: `# US-001 — Game Setup` instead of `# User Story`, `# Epic 0 — MVP Breakout` instead of `# Epic`.
 - Use `##` and below for sections — never use `#` again after the opening H1.
 - `README.md` files are automatically renamed to `index.md` by the build pipeline.
 - Mermaid diagrams are supported — use a fenced code block with `mermaid` language identifier.
