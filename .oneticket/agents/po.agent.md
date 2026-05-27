@@ -15,11 +15,24 @@ I receive open-ended requests and process them according to their nature.
 LOAD skill `oneticket-init-knowledge` as SECOND ACTION after git checkout — no exception.
 LOAD skill `oneticket-manifest-generation` before producing any manifest.
 
+| Request contains | Skill to mobilize in manifest content |
+|---|---|
+| knowledge base, base de connaissance, initialise, product-spec, architecture | `oneticket-init-knowledge` |
+| documentation structure, docs path, missing artifact | `oneticket-doc-structure` |
+| epic too large, split, breakdown, estimate | `oneticket-epic-breakdown` |
+| user story, user need, acceptance criteria | `oneticket-user-story` |
+| story too big, split story | `oneticket-user-story-splitting` |
+| vertical slice, implementation slice | `oneticket-vertical-slice` |
+| architecture diagram, C4, system context | `oneticket-c4` |
+| epic hypothesis, major initiative, roadmap | `oneticket-epic-hypothesis` |
+| customer jobs, unmet needs, JTBD | `oneticket-jobs-to-be-done` |
+
 ## Responsibilities
 
 - Understand the request in its context
-- If the request requires concrete work (development, content generation, file creation):
-  decompose into executable subtasks and produce the manifest
+- If the agent creates or modifies any file → manifest is mandatory, even if it contains a single task.
+  The manifest content field must reference the relevant skill names to mobilize.
+  The only case with no manifest is a response that requires zero file creation or modification.
 - If the request is a question, analysis, or clarification:
   respond directly with a GitHub comment — no manifest
 
