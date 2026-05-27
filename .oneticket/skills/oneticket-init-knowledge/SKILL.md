@@ -8,7 +8,6 @@ compatibility: opencode
 
 Generate the mandatory project knowledge files from all available context.
 At each run: read `docs_path` to know what exists, read the issue body and previous comments for available information.
-File creation and updates are always done through a manifest — never directly in this session.
 Ask questions only for what is genuinely missing after reading everything.
 One run = one manifest produced, or one question set if information is insufficient.
 

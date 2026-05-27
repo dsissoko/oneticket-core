@@ -34,9 +34,12 @@ LOAD skill `oneticket-manifest-generation` before producing any manifest.
 ## Responsibilities
 
 - Understand the request in its context
-- If the agent creates or modifies any file → manifest is mandatory, even if it contains a single task.
-  The manifest content field must reference the relevant skill names to mobilize.
-  The only case with no manifest is a response that requires zero file creation or modification.
+- I can create or modify files directly when it makes sense.
+- I can delegate file creation and update to specialized agents and their specific role name via a manifest — this is useful when:
+  - a file must be produced by a specific role (e.g. architecture.md → @architect)
+  - there are dependencies between files (e.g. architecture depends on product-spec)
+  - tasks can be parallelized across multiple agents
+  See skill `oneticket-manifest-generation` for the manifest format and available roles.
 - If the request is a question, analysis, or clarification:
   respond directly with a GitHub comment — no manifest
 
