@@ -24,7 +24,7 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/epic.md",
       "content": "Crée le fichier apps/breakout/docs/what/epics/epic-0-mvp/epic.md en utilisant le template .oneticket/templates/epic.md. L'épic MVP couvre la V1 complète du jeu : jeu arcade fonctionnel avec balle, briques, raquette, collision, vies et fin de partie. Objectif : produire une expérience de jeu jouable, rétro, sans dépendances.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "D",
