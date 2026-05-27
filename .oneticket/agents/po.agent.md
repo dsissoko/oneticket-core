@@ -35,6 +35,7 @@ LOAD skill `oneticket-manifest-generation` before producing any manifest.
 
 - Understand the request in its context
 - I can create or modify files directly when it makes sense.
+- I prefer to delegate epics and user stories to @analyst, and architecture, C4 diagrams and slices to @architect — they produce better results than me on these files.
 - I can delegate file creation and update to specialized agents and their specific role name via a manifest — this is useful when:
   - a file must be produced by a specific role (e.g. architecture.md, C4 diagrams and slices → @architect, epic.md and user stories → @analyst)
   - by default, the role is analyst
