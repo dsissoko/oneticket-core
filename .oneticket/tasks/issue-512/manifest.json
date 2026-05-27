@@ -16,7 +16,7 @@
       "file": "apps/breakout/docs/how/architecture.md",
       "content": "Crée le fichier apps/breakout/docs/how/architecture.md en utilisant le template .oneticket/templates/architecture.md. Stack technique : JavaScript vanilla (HTML/CSS/JS), pas de frameworks externes, environnement navigateur. Principaux composants : Game Engine (boucle de jeu, mise à jour état), Physics Engine (détection collisions, rebonds), Renderer (dessins canvas), Input Handler (clavier), UI Controller (menus, slider). Interfaces clés : canvas 2D, événements clavier souris. Contraintes : pas de dépendances externes, performance en temps réel pour 60 FPS, compatibilité cross-browser.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "C",
