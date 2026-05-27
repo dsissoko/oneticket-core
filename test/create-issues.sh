@@ -86,13 +86,13 @@ run_reply() {
   NUM=$(issue_number "$URL")
 
   post_comment "$NUM" "@po présentes toi et ta team"
-  sleep 2
+  sleep 10
   post_comment "$NUM" "@architect présentes toi et ta team"
-  sleep 2
+  sleep 10
   post_comment "$NUM" "@dev présentes toi et ta team"
-  sleep 2
+  sleep 10
   post_comment "$NUM" "@qa présentes toi et ta team"
-  sleep 2
+  sleep 10
   post_comment "$NUM" "@analyst présentes toi et ta team"
 
   echo "Issue #$NUM lancée ($URL)"
