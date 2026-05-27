@@ -8,7 +8,7 @@
       "file": "apps/breakout/docs/what/product-spec.md",
       "content": "Crée le fichier apps/breakout/docs/what/product-spec.md en utilisant le template .oneticket/templates/product-spec.md. Le produit est Breakout, un jeu arcade JavaScript vanilla (HTML/CSS/JS) sans dépendances externes. L'aire de jeu contient un mur de briques sur 5 lignes. Une balle rebondit sur les murs, le plafond et la raquette. Le joueur dispose de 3 vies et en perd une quand la balle atteint le bas. La partie se termine par game over (épuisement des vies) ou victoire (toutes les briques détruites). La raquette se déplace avec les flèches gauche/droite. La souris est pour les menus. La vitesse de la balle est réglable via un slider (très lente à très rapide). Pas de niveaux ni de progression pour l'instant. L'utilisateur principal est un joueur de jeux rétro simples cherchant une distraction rapide. Les capacités principales sont : jeu en temps réel avec physique de collision, contrôle au clavier, réglage de la difficulté et gestion des vies.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
@@ -16,7 +16,7 @@
       "file": "apps/breakout/docs/how/architecture.md",
       "content": "Crée le fichier apps/breakout/docs/how/architecture.md en utilisant le template .oneticket/templates/architecture.md. Stack technique : JavaScript vanilla (HTML/CSS/JS), pas de frameworks externes, environnement navigateur. Principaux composants : Game Engine (boucle de jeu, mise à jour état), Physics Engine (détection collisions, rebonds), Renderer (dessins canvas), Input Handler (clavier), UI Controller (menus, slider). Interfaces clés : canvas 2D, événements clavier souris. Contraintes : pas de dépendances externes, performance en temps réel pour 60 FPS, compatibilité cross-browser.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "C",
@@ -24,7 +24,7 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/epic.md",
       "content": "Crée le fichier apps/breakout/docs/what/epics/epic-0-mvp/epic.md en utilisant le template .oneticket/templates/epic.md. L'épic MVP couvre la V1 complète du jeu : jeu arcade fonctionnel avec balle, briques, raquette, collision, vies et fin de partie. Objectif : produire une expérience de jeu jouable, rétro, sans dépendances.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "D",
@@ -32,7 +32,7 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-game-setup.md",
       "content": "Crée le fichier apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-game-setup.md en utilisant le template .oneticket/templates/user-story.md. User story : En tant que joueur, je veux voir l'écran de jeu avec le mur de briques (5 lignes), la raquette au bas de l'écran et une balle, afin de commencer à jouer. Critères d'acceptation (Gherkin) : Given un jeu lancé, When le jeu démarre, Then j'affiche 5 lignes de briques, une raquette centrée au bas, une balle au centre. Pas de briques manquantes ou mal alignées.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "E",
@@ -40,7 +40,7 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-002-ball-physics.md",
       "content": "Crée le fichier apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-002-ball-physics.md en utilisant le template .oneticket/templates/user-story.md. User story : En tant que joueur, je veux que la balle rebondisse sur les murs, le plafond et la raquette avec une physique réaliste, afin de jouer à un jeu arcade classique. Critères d'acceptation (Gherkin) : Given une balle en mouvement, When elle frappe un mur/plafond/raquette, Then elle rebondit selon l'angle d'incidence. When elle atteint le bas sans raquette, Then une vie est perdue et la balle réapparaît.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "F",
@@ -48,7 +48,7 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-003-paddle-control.md",
       "content": "Crée le fichier apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-003-paddle-control.md en utilisant le template .oneticket/templates/user-story.md. User story : En tant que joueur, je veux contrôler la raquette avec les flèches gauche et droite du clavier, afin de rattraper la balle et poursuivre le jeu. Critères d'acceptation (Gherkin) : Given la raquette en place, When j'appuie sur la flèche gauche, Then la raquette se déplace vers la gauche. When j'appuie sur la flèche droite, Then la raquette se déplace vers la droite. La raquette ne sort pas des limites de l'écran.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "G",
@@ -56,7 +56,7 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-004-brick-destruction.md",
       "content": "Crée le fichier apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-004-brick-destruction.md en utilisant le template .oneticket/templates/user-story.md. User story : En tant que joueur, je veux détruire les briques en frappant la balle contre elles, afin de progresser vers la victoire. Critères d'acceptation (Gherkin) : Given des briques en place, When la balle frappe une brique, Then cette brique disparaît. When toutes les briques sont détruites, Then j'affiche le message Victoire et la partie se termine.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "H",
@@ -64,7 +64,7 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-005-lives-gameend.md",
       "content": "Crée le fichier apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-005-lives-gameend.md en utilisant le template .oneticket/templates/user-story.md. User story : En tant que joueur, je veux que le jeu gère mes 3 vies et se termine quand je les perds toutes, afin de avoir un défi et une fin claire. Critères d'acceptation (Gherkin) : Given la partie en cours, When la balle atteint le bas 3 fois, Then affiche Game Over. When j'ai au moins une vie, Then le jeu continue après une perte de balle. L'affichage des vies restantes est visible à tout moment.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "I",
@@ -72,7 +72,7 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-006-speed-control.md",
       "content": "Crée le fichier apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-006-speed-control.md en utilisant le template .oneticket/templates/user-story.md. User story : En tant que joueur, je veux régler la vitesse de la balle via un slider accessible depuis le menu, afin d'ajuster la difficulté à mes préférences. Critères d'acceptation (Gherkin) : Given le menu accessible, When j'utilise le slider de vitesse (très lente à très rapide), Then la vitesse change immédiatement ou au prochain lancement. When le slider est au minimum, Then la balle se déplace lentement. When au maximum, Then rapidement. Le réglage persiste entre les parties (ou réinitialise selon la règle métier choisie).",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     }
   ]
 }
