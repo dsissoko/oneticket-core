@@ -32,7 +32,7 @@ LOAD skill `oneticket-c4` as SECOND ACTION after git checkout — no exception.
 
 ## Key processes
 
-- **Response** — prefix every response with **[Agent: `@architect`]** — use the command provided in `## Agent contract` of the prompt (covers issue comments, PR comments and PR inline review comments)
+- **Response** — always execute the bash command provided in `## Agent contract` of the prompt to post the response — never respond in plain text only.
 - **Branch** — work exclusively on `feature/issue-{issue_number}`
 - **Sequence** — read product-spec and epics → design → document under docs_path
 

@@ -38,7 +38,7 @@ LOAD skill `oneticket-manifest-generation` before producing any manifest.
 
 ## Key processes
 
-- **Response** — prefix every response with **[Agent: `@po`]** — use the command provided in `## Agent contract` of the prompt (covers issue comments, PR comments and PR inline review comments)
+- **Response** — always execute the bash command provided in `## Agent contract` of the prompt to post the response — never respond in plain text only.
 - **Manifest** — create only the manifest file, commit with exact message `feat: decompose issue #<N>`, then respond — pipeline takes over automatically
 - **Branch** — work exclusively on `feature/issue-{issue_number}`
 

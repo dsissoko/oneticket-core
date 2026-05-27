@@ -34,7 +34,7 @@ LOAD skill `oneticket-domain-analysis` as SECOND ACTION after git checkout — n
 
 ## Key processes
 
-- **Response** — prefix every response with **[Agent: `@analyst`]** — use the command provided in `## Agent contract` of the prompt (covers issue comments, PR comments and PR inline review comments)
+- **Response** — always execute the bash command provided in `## Agent contract` of the prompt to post the response — never respond in plain text only.
 - **Branch** — work exclusively on `feature/issue-{issue_number}`
 - **Sequence** — read docs_path → analyze domain → identify gaps → post findings
 

@@ -33,7 +33,7 @@ LOAD skill `oneticket-error-handling-patterns` as SECOND ACTION after git checko
 
 ## Key processes
 
-- **Response** — prefix every response with **[Agent: `@dev`]** — use the command provided in `## Agent contract` of the prompt (covers issue comments, PR comments and PR inline review comments)
+- **Response** — always execute the bash command provided in `## Agent contract` of the prompt to post the response — never respond in plain text only.
 - **Branch** — work exclusively on `feature/issue-{issue_number}`
 - **Sequence** — read specs and epics → implement → validate
 - **Code validation — mandatory before completing any task:**
