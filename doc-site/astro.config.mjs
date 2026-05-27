@@ -43,22 +43,7 @@ const site = process.env.ASTRO_SITE || 'http://localhost:4321';
 const base = process.env.ASTRO_BASE || '';
 const currentProject = process.env.CURRENT_PROJECT || 'OneTicket';
 const siteTitle = currentProject.charAt(0).toUpperCase() + currentProject.slice(1);
-
-// Try to extract description from product-spec.md — first non-empty paragraph after H1
-function extractDescription(docsDir) {
-  const specPath = path.join(docsDir, 'what', 'product-spec.md');
-  if (!fs.existsSync(specPath)) return `Documentation for ${siteTitle}`;
-  const content = fs.readFileSync(specPath, 'utf8');
-  const lines = content.split('\n');
-  let foundH1 = false;
-  for (const line of lines) {
-    if (!foundH1 && line.startsWith('# ')) { foundH1 = true; continue; }
-    if (foundH1 && line.trim() && !line.startsWith('#')) return line.trim().slice(0, 160);
-  }
-  return `Documentation for ${siteTitle}`;
-}
-
-const siteDescription = extractDescription(docSource);
+const siteDescription = process.env.SITE_DESCRIPTION || `Documentation for ${siteTitle}`;
 
 export default defineConfig({
   site,

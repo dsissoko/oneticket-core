@@ -1,5 +1,7 @@
 # Product Specification
 
+<!-- SITE_DESCRIPTION: one sentence describing this product — used as doc site description (max 160 chars) -->
+
 ## 1. Vision
 
 ## 2. Users and Actors

@@ -101,6 +101,14 @@ jobs:
         run: npx playwright install chromium --with-deps
       - name: Set build date
         run: echo "BUILD_DATE=$(date -u +%Y-%m-%d)" >> $GITHUB_ENV
+      - name: Extract site description
+        id: site-desc
+        run: |
+          SPEC="${{ needs.resolve-context.outputs.doc_source }}/what/product-spec.md"
+          if [ -f "$SPEC" ]; then
+            DESC=$(grep -o 'SITE_DESCRIPTION:.*' "$SPEC" | head -1 | sed 's/SITE_DESCRIPTION: *//' | sed 's/ -->//' | cut -c1-160)
+          fi
+          echo "description=${DESC:-Documentation for ${{ needs.resolve-context.outputs.current_project }}}" >> $GITHUB_OUTPUT
       - name: Build
         working-directory: doc-site
         env:
@@ -108,6 +116,7 @@ jobs:
           ASTRO_SITE:          https://dsissoko.github.io/oneticket-core
           ASTRO_BASE:          ${{ needs.resolve-context.outputs.astro_base }}
           CURRENT_PROJECT:     ${{ needs.resolve-context.outputs.current_project }}
+          SITE_DESCRIPTION:    ${{ steps.site-desc.outputs.description }}
           PUBLIC_BRANCH:       ${{ github.ref_name }}
           PUBLIC_COMMIT_SHA:   ${{ github.sha }}
           PUBLIC_TAG:          ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
