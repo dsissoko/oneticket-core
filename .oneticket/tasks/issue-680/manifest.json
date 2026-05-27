@@ -9,7 +9,7 @@
       "content": "Initialise le répertoire de docs et produis la spécification produit pour Breakout en utilisant le template .oneticket/templates/product-spec.md. Le projet Breakout est un jeu arcade frontend en JavaScript vanilla (HTML/CSS/JS, aucune dépendance externe). Voici les détails clés :\n\n**Gameplay:**\n- L'aire de jeu contient un mur de briques organisé sur 5 lignes\n- Une balle rebondit sur les murs, le plafond et la raquette\n- Le joueur dispose de 3 vies ; il en perd une à chaque fois que la balle atteint le bas de l'écran\n- La partie se termine soit par épuisement des vies (game over), soit par destruction de toutes les briques (victoire)\n\n**Contrôles et interaction:**\n- La raquette se déplace exclusivement avec les flèches gauche et droite du clavier\n- La souris est réservée à la navigation dans les menus (démarrer, rejouer, quitter)\n- La vitesse de la balle est réglable via un slider (très lente à très rapide)\n\n**MVP:**\n- Jeu de base sans système de niveaux ni progression\n- Gestion des vies et des états de fin de partie\n- Menu simple avec contrôles\n\nProduis une spécification qui capture la vision produit, les capacités principales, et les contraintes du projet.",
       "role": "analyst",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
