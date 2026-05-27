@@ -7,8 +7,10 @@ compatibility: opencode
 # oneticket-init-knowledge
 
 Generate the mandatory project knowledge files from all available context.
-At each run: read `docs_path` to know what exists, read the issue body and previous comments for available information, then create or update the knowledge files with what you know — even partially. Ask questions only for what is genuinely missing after reading everything.
-One run = one file created or updated, or one question set if information is insufficient.
+At each run: read `docs_path` to know what exists, read the issue body and previous comments for available information.
+File creation and updates are always done through a manifest — never directly in this session.
+Ask questions only for what is genuinely missing after reading everything.
+One run = one manifest produced, or one question set if information is insufficient.
 
 `docs_path` is always provided in the prompt — never resolve it yourself.
 
