@@ -8,7 +8,7 @@
       "file": "apps/breakout/docs/what/product-spec.md",
       "content": "Tu es analyst. Produis la spécification produit (product-spec.md) pour le jeu Breakout.\n\nContexte:\n- Breakout est un jeu arcade frontend en JavaScript vanilla (HTML/CSS/JS, sans dépendances externes)\n- L'aire de jeu contient un mur de briques sur 5 lignes\n- Une balle rebondit sur les murs, plafond et raquette\n- Le joueur a 3 vies; en perd une quand la balle atteint le bas\n- Partie se termine par game over (plus de vies) ou victoire (toutes briques détruites)\n- Raquette: flèches gauche/droite du clavier\n- Souris: navigation menus (démarrer, rejouer, quitter)\n- Slider pour régler la vitesse de balle (très lente à très rapide)\n- Pas de niveaux ni progression pour l'instant\n\nUtilise le template dans .oneticket/templates/product-spec.md. Lis d'abord le template pour connaître sa structure.\nRemplis chaque section avec le contenu approprié dérivé du contexte fourni.\nCertifie que le frontmatter 'title:' est présent.",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "analyst"
     },
     {
