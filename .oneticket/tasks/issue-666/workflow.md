@@ -3,3 +3,4 @@
 2026-05-27 21:18 | C | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-paddle-control.md
 2026-05-27 21:18 | D | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-002-ball-physics.md
 2026-05-27 21:18 | F | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-004-lives-system.md
+2026-05-27 21:18 | E | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-003-brick-destruction.md
