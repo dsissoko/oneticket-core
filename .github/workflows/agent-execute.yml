@@ -213,11 +213,11 @@ jobs:
           BRANCH_BASE: ${{ inputs.branch_base }}
         run: node src/dispatch-gather.mjs
 
-      # [DETERMINISTIC] FAN-OUT if the agent produced a manifest
+      # [DETERMINISTIC] FAN-OUT if the agent produced a manifest — otherwise create PR directly
       # Only for free invocations (branch_base empty = @po, @dev, etc.)
       # FAN-OUT tasks (branch_base non-empty) must not re-trigger FAN-OUT
       # as orchestrate.mjs handles it via Workflow Gather — avoids double launchReadyTasks
-      - name: Launch FAN-OUT if manifest present
+      - name: Launch FAN-OUT or create PR if no manifest
         if: steps.run-agent.outcome == 'success' && inputs.branch_base == ''
         env:
           GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
@@ -228,7 +228,8 @@ jobs:
             echo "Manifest detected — launching FAN-OUT"
             node src/launch-fanout.mjs
           else
-            echo "No manifest — nothing to do"
+            echo "No manifest — creating PR directly"
+            node src/create-direct-pr.mjs
           fi
 
   # [FAILURE NOTIFICATION] Posted on the issue on definitive failure
