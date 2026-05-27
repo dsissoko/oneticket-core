@@ -58,6 +58,7 @@ Le contenu doit être exactement ce JSON (pas de commentaires, pas de markdown a
 | `content` | Instruction complète, précise, autosuffisante — l'agent n'a pas d'autre contexte |
 | `depends_on` | Tableau d'ids existants dans ce même manifest — `[]` si aucune dépendance |
 | `status` | Toujours `"pending"` à la création — jamais autre chose |
+| `role` | **Optionnel** — nom d'un profil agent (`architect`, `dev`, `qa`, `analyst`). Si présent, le worker reçoit un prompt enrichi avec le profil complet. Si absent, worker générique (comportement par défaut). |
 
 ---
 
@@ -106,6 +107,33 @@ Il doit être :
   ]
 }
 ```
+
+## Exemple avec champ `role` — tâche confiée à un agent spécialisé
+
+Le champ `role` est optionnel. Sans `role`, la tâche est exécutée par un worker générique.
+Avec `role`, le worker reçoit le profil complet de l'agent (profil, contexte projet, contract).
+
+```json
+{
+  "issue": 42,
+  "branch_base": "feature/issue-42",
+  "tasks": [
+    { "id": "A", "branch": "task/issue-42-A", "file": "apps/breakout/docs/how/architecture.md",
+      "content": "Lis apps/breakout/docs/what/product-spec.md et produis l'architecture C4 du projet Breakout.",
+      "role": "architect",
+      "depends_on": [], "status": "pending" },
+    { "id": "B", "branch": "task/issue-42-B", "file": "apps/breakout/app/src/game.ts",
+      "content": "Lis apps/breakout/docs/how/architecture.md et implémente le moteur de jeu principal.",
+      "role": "dev",
+      "depends_on": ["A"], "status": "pending" },
+    { "id": "C", "branch": "task/issue-42-C", "file": "apps/breakout/docs/run/changelog.md",
+      "content": "Produis le changelog de la v1.0.0 à partir des fichiers modifiés.",
+      "depends_on": ["B"], "status": "pending" }
+  ]
+}
+```
+
+`role` absent sur la tâche C → worker générique (créer le fichier tel quel).
 
 ---
 
