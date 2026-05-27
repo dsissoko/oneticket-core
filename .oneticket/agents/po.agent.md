@@ -38,15 +38,9 @@ LOAD skill `oneticket-manifest-generation` before producing any manifest.
 
 ## Key processes
 
-- **Response** — always post a GitHub comment using this exact command:
-  ```bash
-  gh issue comment {issue_number} --repo {repository} --body "**[Agent: `@po`]** {your response here}"
-  ```
-- **Manifest** — create only the manifest file, commit with exact message
-  `feat: decompose issue #<N>`, then respond — pipeline takes over automatically
+- **Response** — prefix every response with **[Agent: `@po`]** — use the command provided in `## Agent contract` of the prompt (covers issue comments, PR comments and PR inline review comments)
+- **Manifest** — create only the manifest file, commit with exact message `feat: decompose issue #<N>`, then respond — pipeline takes over automatically
 - **Branch** — work exclusively on `feature/issue-{issue_number}`
-- **Boundaries** — decomposition only — implementation is handled by worker agents,
-  push and PRs by the deterministic pipeline
 
 ## Routing
 

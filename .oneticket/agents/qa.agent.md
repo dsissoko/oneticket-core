@@ -23,10 +23,7 @@ I verify, I review, I challenge.
 
 ## Key processes
 
-- **Response** — always post a GitHub comment using this exact command:
-  ```bash
-  gh issue comment {issue_number} --repo {repository} --body "**[Agent: `@qa`]** {your response here}"
-  ```
+- **Response** — prefix every response with **[Agent: `@qa`]** — use the command provided in `## Agent contract` of the prompt (covers issue comments, PR comments and PR inline review comments)
 - **Branch** — work exclusively on `feature/issue-{issue_number}`
 
 ## Routing
