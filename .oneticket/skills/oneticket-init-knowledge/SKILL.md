@@ -22,9 +22,12 @@ Refer to `oneticket-doc-structure` for all files to produce, their placement and
 Respect these dependencies when building the manifest:
 
 1. `<docs_path>/what/product-spec.md` — no dependency — role: analyst
-2. `<docs_path>/how/architecture.md` — depends on product-spec.md — role: architect
-3. `<docs_path>/what/epics/epic-0-mvp/epic.md` — depends on product-spec.md — role: analyst
-4. `<docs_path>/what/epics/epic-0-mvp/user-stories/us-*.md` — depends on epic.md — role: analyst
+2. `<docs_path>/what/epics/epic-0-mvp/epic.md` — depends on product-spec.md — role: analyst
+3. `<docs_path>/what/epics/epic-0-mvp/user-stories/us-*.md` — depends on epic.md — role: analyst
+4. `<docs_path>/how/architecture.md` — depends on product-spec.md + all us-*.md — role: architect
+5. `<docs_path>/how/c4/system-context.md` — depends on architecture.md — role: architect
+6. `<docs_path>/how/c4/containers.md` — depends on architecture.md — role: architect
+7. `<docs_path>/how/slices/` — depends on architecture.md + all us-*.md — role: architect
 
 ---
 
