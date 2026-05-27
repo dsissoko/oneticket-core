@@ -5,3 +5,4 @@
 2026-05-27 17:17 | G | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-004-brick-destruction.md
 2026-05-27 17:17 | F | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-003-ball-physics.md
 2026-05-27 17:17 | E | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-002-paddle-control.md
+2026-05-27 17:17 | I | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-006-game-menus.md
