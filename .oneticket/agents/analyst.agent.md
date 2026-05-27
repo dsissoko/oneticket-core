@@ -33,6 +33,7 @@ LOAD skill `oneticket-domain-analysis` as SECOND ACTION after git checkout — n
 | vertical slice | `oneticket-vertical-slice` |
 | C4, architecture diagram | `oneticket-c4` |
 | doc structure, docs path | `oneticket-doc-structure` |
+| game, game engine, canvas, physics, collision, game loop | `game-engine` |
 
 ## Responsibilities
 

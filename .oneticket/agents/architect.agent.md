@@ -27,6 +27,7 @@ LOAD skill `oneticket-vertical-slice` as THIRD ACTION after git checkout — no 
 | implementation slice, vertical slice | `oneticket-vertical-slice` |
 | diagram, mermaid, flow | `oneticket-mermaid-diagrams` |
 | documentation structure, docs path | `oneticket-doc-structure` |
+| game, game engine, canvas, physics, collision, game loop | `game-engine` |
 
 ## Responsibilities
 
