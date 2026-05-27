@@ -94,6 +94,8 @@ run_reply() {
   post_comment "$NUM" "@qa présentes toi et ta team"
   sleep 10
   post_comment "$NUM" "@analyst présentes toi et ta team"
+  sleep 10
+  post_comment "$NUM" "@leaddev présentes toi et ta team"
 
   echo "Issue #$NUM lancée ($URL)"
   echo ""
