@@ -27,11 +27,12 @@ jobs:
   resolve-context:
     runs-on: ubuntu-latest
     outputs:
-      doc_source:    ${{ steps.ctx.outputs.doc_source }}
-      slug:          ${{ steps.ctx.outputs.slug }}
-      astro_base:    ${{ steps.ctx.outputs.astro_base }}
-      target_folder: ${{ steps.ctx.outputs.target_folder }}
-      app_url:       ${{ steps.ctx.outputs.app_url }}
+      doc_source:      ${{ steps.ctx.outputs.doc_source }}
+      slug:            ${{ steps.ctx.outputs.slug }}
+      astro_base:      ${{ steps.ctx.outputs.astro_base }}
+      target_folder:   ${{ steps.ctx.outputs.target_folder }}
+      app_url:         ${{ steps.ctx.outputs.app_url }}
+      current_project: ${{ steps.ctx.outputs.current_project }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -82,6 +83,7 @@ jobs:
           echo "astro_base=$ASTRO_BASE"     >> $GITHUB_OUTPUT
           echo "target_folder=$TARGET"      >> $GITHUB_OUTPUT
           echo "app_url=$APP_URL"           >> $GITHUB_OUTPUT
+          echo "current_project=$PROJECT"   >> $GITHUB_OUTPUT
 
   build-doc-site:
     needs: resolve-context
@@ -105,6 +107,7 @@ jobs:
           DOC_SOURCE:          ${{ needs.resolve-context.outputs.doc_source }}
           ASTRO_SITE:          https://dsissoko.github.io/oneticket-core
           ASTRO_BASE:          ${{ needs.resolve-context.outputs.astro_base }}
+          CURRENT_PROJECT:     ${{ needs.resolve-context.outputs.current_project }}
           PUBLIC_BRANCH:       ${{ github.ref_name }}
           PUBLIC_COMMIT_SHA:   ${{ github.sha }}
           PUBLIC_TAG:          ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}

@@ -41,13 +41,15 @@ const sidebar = buildSidebar(docSource);
 // Local dev: no base, localhost site
 const site = process.env.ASTRO_SITE || 'http://localhost:4321';
 const base = process.env.ASTRO_BASE || '';
+const currentProject = process.env.CURRENT_PROJECT || 'OneTicket';
+const siteTitle = currentProject.charAt(0).toUpperCase() + currentProject.slice(1);
 
 export default defineConfig({
   site,
   base,
   integrations: [
     starlight({
-      title: 'OneTicket',
+      title: siteTitle,
       description: 'GitHub-native autonomous multi-agent orchestration framework',
       social: [
         { icon: 'github', label: 'GitHub', href: 'https://github.com/dsissoko/oneticket-core' },
