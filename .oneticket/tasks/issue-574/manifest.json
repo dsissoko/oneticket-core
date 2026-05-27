@@ -1,0 +1,54 @@
+{
+  "issue": 574,
+  "branch_base": "feature/issue-574",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-574-A",
+      "file": ".oneticket/tasks/issue-574/subtask-A.txt",
+      "content": "Produis le fichier .oneticket/tasks/issue-574/subtask-A.txt avec le contenu exact : 'Subtask A completed'",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-574-B",
+      "file": ".oneticket/tasks/issue-574/subtask-B.txt",
+      "content": "Produis le fichier .oneticket/tasks/issue-574/subtask-B.txt avec le contenu exact : 'Subtask B completed'",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-574-C",
+      "file": ".oneticket/tasks/issue-574/subtask-C.txt",
+      "content": "Produis le fichier .oneticket/tasks/issue-574/subtask-C.txt avec le contenu exact : 'Subtask C completed'",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-574-D",
+      "file": ".oneticket/tasks/issue-574/subtask-D.txt",
+      "content": "Produis le fichier .oneticket/tasks/issue-574/subtask-D.txt avec le contenu exact : 'Subtask D completed'. Cette tâche dépend de A et B.",
+      "depends_on": ["A", "B"],
+      "status": "pending"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-574-E",
+      "file": ".oneticket/tasks/issue-574/subtask-E.txt",
+      "content": "Produis le fichier .oneticket/tasks/issue-574/subtask-E.txt avec le contenu exact : 'Subtask E completed'. Cette tâche dépend de D.",
+      "depends_on": ["D"],
+      "status": "pending"
+    },
+    {
+      "id": "F",
+      "branch": "task/issue-574-F",
+      "file": ".oneticket/tasks/issue-574/subtask-F.txt",
+      "content": "Produis le fichier .oneticket/tasks/issue-574/subtask-F.txt avec le contenu exact : 'Subtask F completed'. Cette tâche dépend de C.",
+      "depends_on": ["C"],
+      "status": "pending"
+    }
+  ]
+}
