@@ -20,8 +20,11 @@
 #   breakout   — demande riche : jeu Breakout en épics + US
 #                Teste la décomposition d'une demande complexe
 #
+#   direct    — demande à @po de créer un fichier de test à la racine du dépôt
+#                Valide que create-direct-pr.mjs crée bien une PR sans manifest
+#
 #   parallel   — 2 décompositions simultanées (séquentiel vs parallèle)
-#   all        — enchaîne reply + manifest + decompose + parallel + breakout
+#   all        — enchaîne reply + manifest + decompose + parallel + breakout + direct
 #
 # Prérequis :
 #   - gh CLI installé et authentifié
@@ -32,6 +35,7 @@
 #   ./test/create-issues.sh manifest
 #   ./test/create-issues.sh decompose
 #   ./test/create-issues.sh breakout
+#   ./test/create-issues.sh direct
 #   ./test/create-issues.sh parallel
 #   ./test/create-issues.sh all
 #
@@ -167,6 +171,26 @@ Chaque tâche produit un fichier texte subtask-X.txt (où X est l'id de la tâch
 }
 
 # ---------------------------------------------------------------------------
+# Mode : direct
+# Demande à @po de créer un fichier directement (sans manifest)
+# Valide que create-direct-pr.mjs génère bien une PR sans FAN-OUT
+# ---------------------------------------------------------------------------
+
+run_direct() {
+  echo "=== MODE DIRECT — @po crée un fichier sans manifest → PR attendue ==="
+  echo ""
+
+  URL=$(create_issue \
+    "[TEST-DIRECT] Création de fichier sans manifest — PR directe" \
+    "Test de validation du pipeline create-direct-pr.")
+  NUM=$(issue_number "$URL")
+  post_comment "$NUM" "@po crée le fichier test/direct-test-${NUM}.md à la racine du dépôt avec le contenu exactement : 'direct PR test for issue #${NUM}'. Commite et pushe uniquement ce fichier."
+  echo "Issue #$NUM lancée ($URL)"
+  echo ""
+  echo "Attendu : fichier créé + commité + pushé par @po, aucun manifest, PR créée automatiquement par create-direct-pr.mjs."
+}
+
+# ---------------------------------------------------------------------------
 # Mode : breakout
 # Demande riche : jeu Breakout en épics + US
 # ---------------------------------------------------------------------------
@@ -244,6 +268,9 @@ case "$MODE" in
   decompose)
     run_decompose
     ;;
+  direct)
+    run_direct
+    ;;
   breakout)
     run_breakout
     ;;
@@ -260,10 +287,12 @@ case "$MODE" in
     run_parallel
     echo ""
     run_breakout
+    echo ""
+    run_direct
     ;;
   *)
     echo "Mode inconnu : $MODE"
-    echo "Usage : $0 [reply|manifest|decompose|breakout|parallel|all] [REPO]"
+    echo "Usage : $0 [reply|manifest|decompose|direct|breakout|parallel|all] [REPO]"
     exit 1
     ;;
 esac
