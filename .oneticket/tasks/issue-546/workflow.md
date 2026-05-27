@@ -7,3 +7,4 @@
 2026-05-27 11:26 | F | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-003-paddle-control.md
 2026-05-27 11:26 | I | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-006-lives-and-gameover.md
 2026-05-27 11:26 | H | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-005-brick-system.md
+2026-05-27 11:26 | L | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-009-difficulty-control.md
