@@ -1,0 +1,30 @@
+{
+  "issue": 607,
+  "branch_base": "feature/issue-607",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-607-A",
+      "file": "output/result-A.txt",
+      "content": "Crée le fichier output/result-A.txt avec le contenu 'Result A done' exactement. Cette tâche est indépendante.",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-607-B",
+      "file": "output/result-B.txt",
+      "content": "Crée le fichier output/result-B.txt avec le contenu 'Result B done' exactement. Cette tâche est indépendante.",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-607-C",
+      "file": "output/result-C.txt",
+      "content": "Crée le fichier output/result-C.txt avec le contenu 'Result C done' exactement. Cette tâche dépend de A et B — tu peux la lancer une fois que A et B sont terminées.",
+      "depends_on": ["A", "B"],
+      "status": "pending"
+    }
+  ]
+}
