@@ -8,7 +8,7 @@
       "file": "apps/breakout/docs/what/product-spec.md",
       "content": "Crée le fichier apps/breakout/docs/what/product-spec.md en utilisant le template .oneticket/templates/product-spec.md. Le produit est Breakout, un jeu arcade JavaScript vanilla (HTML/CSS/JS) sans dépendances externes. L'aire de jeu contient un mur de briques sur 5 lignes. Une balle rebondit sur les murs, le plafond et la raquette. Le joueur dispose de 3 vies et en perd une quand la balle atteint le bas. La partie se termine par game over (épuisement des vies) ou victoire (toutes les briques détruites). La raquette se déplace avec les flèches gauche/droite. La souris est pour les menus. La vitesse de la balle est réglable via un slider (très lente à très rapide). Pas de niveaux ni de progression pour l'instant. L'utilisateur principal est un joueur de jeux rétro simples cherchant une distraction rapide. Les capacités principales sont : jeu en temps réel avec physique de collision, contrôle au clavier, réglage de la difficulté et gestion des vies.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
