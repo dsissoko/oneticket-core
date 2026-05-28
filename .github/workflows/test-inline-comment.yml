@@ -23,17 +23,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Log event payload
+        env:
+          COMMENT_BODY:      ${{ github.event.comment.body }}
+          COMMENT_DIFF_HUNK: ${{ github.event.comment.diff_hunk }}
+          REVIEW_BODY:       ${{ github.event.review.body }}
+          ISSUE_PR:          ${{ github.event.issue.pull_request }}
         run: |
           echo "=== EVENT ==="
           echo "event_name:        ${{ github.event_name }}"
           echo ""
           echo "=== COMMENT ==="
           echo "comment.id:        ${{ github.event.comment.id }}"
-          echo "comment.body:      ${{ github.event.comment.body }}"
+          echo "comment.body:      $COMMENT_BODY"
           echo "comment.user:      ${{ github.event.comment.user.login }}"
           echo "comment.path:      ${{ github.event.comment.path }}"
           echo "comment.line:      ${{ github.event.comment.line }}"
-          echo "comment.diff_hunk: ${{ github.event.comment.diff_hunk }}"
+          echo "comment.diff_hunk: $COMMENT_DIFF_HUNK"
           echo ""
           echo "=== PR (via pull_request_review_comment) ==="
           echo "pull_request.number: ${{ github.event.pull_request.number }}"
@@ -41,11 +46,11 @@ jobs:
           echo ""
           echo "=== ISSUE (via issue_comment) ==="
           echo "issue.number:        ${{ github.event.issue.number }}"
-          echo "issue.pull_request:  ${{ github.event.issue.pull_request }}"
+          echo "issue.pull_request:  $ISSUE_PR"
           echo ""
           echo "=== REVIEW (via pull_request_review) ==="
           echo "review.id:           ${{ github.event.review.id }}"
           echo "review.state:        ${{ github.event.review.state }}"
-          echo "review.body:         ${{ github.event.review.body }}"
+          echo "review.body:         $REVIEW_BODY"
           echo "review.user:         ${{ github.event.review.user.login }}"
           echo "review.pr_number:    ${{ github.event.pull_request.number }}"

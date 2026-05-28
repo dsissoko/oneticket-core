@@ -31,3 +31,16 @@ export const AGENT_EXT       = '.agent.md';
 
 // Framework skills directory
 export const SKILLS_DIR      = `${ONETICKET_DIR}/skills`;
+
+// ---------------------------------------------------------------------------
+// Comment history — injected into agent prompts via build-context.mjs
+// ---------------------------------------------------------------------------
+
+// Maximum number of previous comments to inject in the context block
+export const COMMENT_HISTORY_MAX    = 10;
+
+// Maximum characters per comment body before truncation
+export const COMMENT_BODY_MAX_CHARS = 500;
+
+// Section title for comment history in the context block
+export const COMMENT_HISTORY_TITLE  = '## Recent comments';

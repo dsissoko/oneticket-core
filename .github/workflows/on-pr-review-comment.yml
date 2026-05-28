@@ -52,26 +52,25 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Builds the CONTEXT_BLOCK specific to the PR review comment trigger.
+      # Fetches inline comment history + diff hunk context.
+      # Constants: src/constants.mjs — COMMENT_HISTORY_MAX, COMMENT_BODY_MAX_CHARS
       - name: Build context block
         id: context
+        env:
+          GITHUB_TOKEN:       ${{ secrets.ONETICKET_GH_PAT }}
+          REPO:               ${{ github.repository }}
+          ORIGIN_TYPE:        pull_request_review_comment
+          ISSUE_NUMBER:       ${{ github.event.pull_request.number }}
+          CURRENT_COMMENT_ID: ${{ github.event.comment.id }}
+          ISSUE_TITLE:        ${{ github.event.pull_request.title }}
+          ISSUE_BODY:         ${{ github.event.pull_request.body }}
+          COMMENT_PATH:       ${{ github.event.comment.path }}
+          COMMENT_LINE:       ${{ github.event.comment.line }}
+          COMMENT_DIFF_HUNK:  ${{ github.event.comment.diff_hunk }}
+          COMMENT_BODY:       ${{ github.event.comment.body }}
         run: |
-          CONTEXT=$(cat <<'CONTEXT_EOF'
-          ## Context for PR #${{ github.event.pull_request.number }}
-          **Title:** ${{ github.event.pull_request.title }}
-
-          **File:** ${{ github.event.comment.path }}
-          **Line:** ${{ github.event.comment.line }}
-
-          **Diff hunk:**
-          ```
-          ${{ github.event.comment.diff_hunk }}
-          ```
-
-          **Original comment:**
-          ${{ github.event.comment.body }}
-          CONTEXT_EOF
-          )
-          echo "block=$(echo "$CONTEXT" | base64 -w 0)" >> $GITHUB_OUTPUT
+          echo "block=$(node src/build-context.mjs)" >> $GITHUB_OUTPUT
 
       - name: Dispatch agent
         env:

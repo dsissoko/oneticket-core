@@ -51,17 +51,21 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Builds the CONTEXT_BLOCK specific to the PR comment trigger.
+      # Fetches comment history via GitHub API (last COMMENT_HISTORY_MAX comments).
+      # Constants: src/constants.mjs — COMMENT_HISTORY_MAX, COMMENT_BODY_MAX_CHARS
       - name: Build context block
         id: context
+        env:
+          GITHUB_TOKEN:       ${{ secrets.ONETICKET_GH_PAT }}
+          REPO:               ${{ github.repository }}
+          ORIGIN_TYPE:        pull_request_comment
+          ISSUE_NUMBER:       ${{ github.event.issue.number }}
+          CURRENT_COMMENT_ID: ${{ github.event.comment.id }}
+          ISSUE_TITLE:        ${{ github.event.issue.title }}
+          ISSUE_BODY:         ${{ github.event.issue.body }}
         run: |
-          CONTEXT=$(cat <<'CONTEXT_EOF'
-          ## Context for PR #${{ github.event.issue.number }}
-          **Title:** ${{ github.event.issue.title }}
-
-          ${{ github.event.issue.body }}
-          CONTEXT_EOF
-          )
-          echo "block=$(echo "$CONTEXT" | base64 -w 0)" >> $GITHUB_OUTPUT
+          echo "block=$(node src/build-context.mjs)" >> $GITHUB_OUTPUT
 
       - name: Dispatch agent
         env:

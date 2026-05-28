@@ -56,20 +56,20 @@ jobs:
         run: npm ci
 
       # Builds the CONTEXT_BLOCK specific to the issue_comment trigger.
-      # This block will be inserted as-is into the system prompt by agent-dispatch.mjs.
-      # Each trigger is free to build its own format.
+      # Fetches comment history via GitHub API (last COMMENT_HISTORY_MAX comments).
+      # Constants: src/constants.mjs — COMMENT_HISTORY_MAX, COMMENT_BODY_MAX_CHARS
       - name: Build context block
         id: context
+        env:
+          GITHUB_TOKEN:       ${{ secrets.ONETICKET_GH_PAT }}
+          REPO:               ${{ github.repository }}
+          ORIGIN_TYPE:        issue_comment
+          ISSUE_NUMBER:       ${{ github.event.issue.number }}
+          CURRENT_COMMENT_ID: ${{ github.event.comment.id }}
+          ISSUE_TITLE:        ${{ github.event.issue.title }}
+          ISSUE_BODY:         ${{ github.event.issue.body }}
         run: |
-          CONTEXT=$(cat <<'CONTEXT_EOF'
-          ## Context for issue #${{ github.event.issue.number }}
-          **Title:** ${{ github.event.issue.title }}
-
-          ${{ github.event.issue.body }}
-          CONTEXT_EOF
-          )
-          # Base64-encode to avoid special character issues
-          echo "block=$(echo "$CONTEXT" | base64 -w 0)" >> $GITHUB_OUTPUT
+          echo "block=$(node src/build-context.mjs)" >> $GITHUB_OUTPUT
 
       - name: Dispatch agent
         env:
