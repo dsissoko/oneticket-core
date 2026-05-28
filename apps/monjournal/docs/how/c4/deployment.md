@@ -6,47 +6,40 @@ Journal Personnel is deployed as a static SPA on GitHub Pages. The build process
 ## Diagram
 
 ```mermaid
-C4Deployment
-  title Deployment Diagram — Journal Personnel
+graph TD
+  subgraph Browser["End User Browser"]
+    SPA["Journal Personnel SPA\nHTML + JS + CSS"]
+    LS["localStorage\njournal_entries, journal_theme"]
+  end
 
-  Deployment_Node(browser, "End User Browser", "Chrome, Firefox, Safari, Edge") {
-    Container(spa, "Journal Personnel SPA", "HTML + JavaScript + CSS", "React app bundle (~500 KB gzipped)")
-    ContainerDb(localStorage, "Browser localStorage", "localStorage API", "journal_entries, journal_theme")
-  }
+  subgraph GitHub["GitHub Platform"]
+    subgraph Pages["GitHub Pages"]
+      DIST["Static Files\ndist/ folder"]
+    end
+    subgraph Actions["GitHub Actions CI/CD"]
+      BUILD["Build Job\nNode.js + Vite"]
+      DEPLOY["Deploy Job\ngh-pages branch"]
+    end
+    subgraph Repo["Repository"]
+      CODE["Source Code\nTypeScript + React"]
+      CONFIG["Config Files\nvite.config.ts, package.json"]
+    end
+  end
 
-  Deployment_Node(github, "GitHub Platform", "GitHub Inc.") {
-    Deployment_Node(pages, "GitHub Pages", "Static Web Hosting") {
-      Container(dist, "Static Files", "HTML, JS, CSS, Assets", "dist/ folder from Vite build")
-    }
+  subgraph Dev["Developer Machine"]
+    EDITOR["Code Editor\nVS Code"]
+    NPM["npm CLI\nNode.js"]
+  end
 
-    Deployment_Node(actions, "GitHub Actions", "CI/CD") {
-      Container(build, "Build Job", "Node.js + Vite", "npm install → npm run build")
-      Container(deploy, "Deploy Job", "GitHub CLI", "Deploy dist/ to gh-pages branch")
-    }
-
-    Deployment_Node(repo, "Repository", "Git") {
-      Container(code, "Source Code", "TypeScript + React", "apps/monjournal/src/")
-      Container(config, "Config Files", "JSON, YAML", "vite.config.ts, package.json, .github/workflows/")
-    }
-  }
-
-  Deployment_Node(dev, "Developer Machine", "Local Environment") {
-    Container(editor, "Code Editor", "VS Code", "Write source code")
-    Container(npm, "npm CLI", "Node.js", "npm install, npm run dev")
-  }
-
-  Rel(browser, pages, "Fetches SPA", "HTTPS")
-  Rel(spa, localStorage, "Reads/writes entries", "localStorage API")
-  Rel(code, build, "Source triggers")
-  Rel(build, config, "Reads config from")
-  Rel(build, dist, "Produces")
-  Rel(dist, pages, "Deployed to")
-  Rel(pages, browser, "Serves via HTTPS")
-  Rel(deploy, pages, "Pushes bundle to")
-  Rel(dev, repo, "Pushes commits to")
-  Rel(actions, code, "Triggers on push")
-  Rel(actions, build, "Runs build job")
-  Rel(actions, deploy, "Runs deploy job")
+  Browser -->|"HTTPS"| Pages
+  SPA -->|"localStorage API"| LS
+  CODE --> BUILD
+  CONFIG --> BUILD
+  BUILD -->|"dist/"| DIST
+  DIST --> Pages
+  DEPLOY -->|"pushes bundle"| Pages
+  Dev -->|"git push"| Repo
+  Repo -->|"triggers"| Actions
 ```
 
 ## Deployment Nodes
