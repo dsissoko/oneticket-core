@@ -19,6 +19,8 @@ One run = one manifest produced, or one question set if information is insuffici
 
 Refer to `oneticket-doc-structure` for all files to produce, their placement and naming conventions, and their templates.
 
+**All 8 steps must be included in a single manifest — never split across multiple runs or handoffs.**
+
 Respect these dependencies when building the manifest:
 
 1. `<docs_path>/what/product-spec.md` — no dependency — role: analyst
