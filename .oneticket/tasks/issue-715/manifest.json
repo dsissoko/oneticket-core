@@ -9,7 +9,7 @@
       "content": "Tu es @architect. Lis apps/breakout/docs/what/product-spec.md et tous les fichiers user stories dans apps/breakout/docs/what/epics/epic-0-mvp/user-stories/. Produis apps/breakout/docs/how/architecture.md qui documente l'architecture technique du jeu Breakout : composants principaux (game loop, physics engine, collision detector, input handler, renderer), interactions entre composants, et flux d'exécution. Le fichier doit être conforme au template architecture.md.",
       "role": "architect",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "I",
