@@ -141,7 +141,7 @@
       "content": "Lis apps/monjournal/docs/how/slices/slice-6-theme-switcher/slice.md. Implémente useTheme hook avec { theme: 'light' | 'dark', setTheme }. Sur montage : (1) vérifier localStorage['journal_theme'], (2) si vide, détecter system preference via matchMedia('(prefers-color-scheme: dark)'), (3) appliquer et sauvegarder. Applique l'attribut data-theme au root element.",
       "role": "dev",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "N",
