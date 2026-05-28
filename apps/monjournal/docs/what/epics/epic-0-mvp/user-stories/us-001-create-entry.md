@@ -68,4 +68,4 @@ Feature: Créer une nouvelle entrée de journal
 
 ## Related Slices
 
-- [Slice 1 — Entry CRUD Operations](../../../how/slices/slice-1-entry-crud/slice.md)
+- [Slice 1 — Entry CRUD Operations](../../../../how/slices/slice-1-entry-crud/slice.md)

@@ -95,4 +95,4 @@ Feature: Timeline visuelle chronologique
 
 ## Related Slices
 
-- [Slice 3 — Timeline Visualization and Navigation](../../../how/slices/slice-3-timeline-view/slice.md)
+- [Slice 3 — Timeline Visualization and Navigation](../../../../how/slices/slice-3-timeline-view/slice.md)

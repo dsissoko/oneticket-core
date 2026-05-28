@@ -90,4 +90,4 @@ Feature: Découvrir une entrée aléatoire
 
 ## Related Slices
 
-- [Slice 4 — Surprise Feature (Random Entry Picker)](../../../how/slices/slice-4-surprise-feature/slice.md)
+- [Slice 4 — Surprise Feature (Random Entry Picker)](../../../../how/slices/slice-4-surprise-feature/slice.md)

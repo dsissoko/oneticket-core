@@ -84,4 +84,4 @@ Feature: Rechercher par période
 
 ## Related Slices
 
-- [Slice 2 — Search and Period-Based Filtering](../../../how/slices/slice-2-search-filter/slice.md)
+- [Slice 2 — Search and Period-Based Filtering](../../../../how/slices/slice-2-search-filter/slice.md)

@@ -80,4 +80,4 @@ Feature: Voir, éditer et supprimer les entrées
 
 ## Related Slices
 
-- [Slice 1 — Entry CRUD Operations](../../../how/slices/slice-1-entry-crud/slice.md)
+- [Slice 1 — Entry CRUD Operations](../../../../how/slices/slice-1-entry-crud/slice.md)
