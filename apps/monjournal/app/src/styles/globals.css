@@ -1,0 +1,163 @@
+/* Global Styles - Theme Integration */
+/* Applies CSS custom properties from theme files to the application */
+
+@import './colors.css';
+@import './theme-light.css';
+@import './theme-dark.css';
+
+/* Default to light theme if no data-theme attribute is set */
+:root {
+  color-scheme: light;
+}
+
+html[data-theme='light'] {
+  color-scheme: light;
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+/* Apply theme colors globally */
+html {
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+/* Ensure all text elements use the theme colors */
+p,
+span,
+div,
+a,
+button,
+input,
+textarea,
+select {
+  color: var(--color-fg);
+}
+
+/* Links styling */
+a {
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a:visited {
+  color: var(--color-link);
+}
+
+/* Focus state for accessibility */
+a:focus,
+button:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid var(--color-state-focus-outline);
+  outline-offset: 2px;
+}
+
+/* Button styling */
+button {
+  background-color: var(--color-btn-bg);
+  color: var(--color-btn-text);
+  border: 1px solid var(--color-btn-border);
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+button:hover {
+  background-color: var(--color-btn-hover-bg);
+}
+
+button:active {
+  background-color: var(--color-btn-active-bg);
+}
+
+button:disabled {
+  color: var(--color-btn-disabled-text);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Input styling */
+input,
+textarea,
+select {
+  background-color: var(--color-input-bg);
+  color: var(--color-input-text);
+  border: 1px solid var(--color-input-border);
+  border-radius: 4px;
+  padding: 8px;
+  font-family: inherit;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-input-placeholder-text);
+}
+
+/* Border and divider styling */
+hr,
+.border,
+.separator {
+  border-color: var(--color-border);
+}
+
+/* Ensure no hard-coded colors override theme */
+/* These selectors target common patterns */
+.bg-default,
+.background-default {
+  background-color: var(--color-bg);
+}
+
+.text-default,
+.text-primary {
+  color: var(--color-fg);
+}
+
+.border-default {
+  border-color: var(--color-border);
+}
+
+.link-primary {
+  color: var(--color-link);
+}
+
+.text-success {
+  color: var(--color-success);
+}
+
+.text-danger {
+  color: var(--color-danger);
+}
+
+.text-warning {
+  color: var(--color-warning);
+}
+
+.text-info {
+  color: var(--color-info);
+}
+
+/* Transition support for smooth theme changes */
+* {
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out,
+    border-color 0.2s ease-in-out;
+}
+
+/* Disable transitions during page load for performance */
+body.no-transition * {
+  transition: none !important;
+}

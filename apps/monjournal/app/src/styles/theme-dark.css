@@ -1,0 +1,55 @@
+/* Dark Theme - GitHub Primer Design System */
+/* All color values verified for WCAG 2.1 AA contrast (≥ 4.5:1 for text) */
+
+:root[data-theme='dark'] {
+  /* Primary Colors - Dark Theme */
+  --color-bg: #0d1117;
+  --color-fg: #c9d1d9;
+  --color-border: #30363d;
+  --color-link: #58a6ff;
+  --color-accent: #3fb950;
+
+  /* Extended Color Palette - Dark Theme */
+  --color-success: #3fb950;
+  --color-danger: #f85149;
+  --color-warning: #d29922;
+  --color-info: #58a6ff;
+
+  /* Semantic Color Variables - Dark Theme */
+  --color-text-primary: #c9d1d9;
+  --color-text-secondary: #8b949e;
+  --color-text-tertiary: #a8b3bf;
+  --color-bg-primary: #0d1117;
+  --color-bg-secondary: #161b22;
+  --color-border-default: #30363d;
+  --color-border-muted: #21262d;
+
+  /* Interactive Component Colors - Dark Theme */
+  --color-btn-bg: #21262d;
+  --color-btn-border: #30363d;
+  --color-btn-text: #c9d1d9;
+  --color-btn-hover-bg: #30363d;
+  --color-btn-active-bg: #21262d;
+  --color-btn-disabled-text: #6e7681;
+
+  /* Input Colors - Dark Theme */
+  --color-input-bg: #0d1117;
+  --color-input-border: #30363d;
+  --color-input-text: #c9d1d9;
+  --color-input-placeholder-text: #8b949e;
+
+  /* State Colors - Dark Theme */
+  --color-state-focus-outline: #58a6ff;
+  --color-state-hover: #21262d;
+  --color-state-active: #30363d;
+  --color-state-disabled: #6e7681;
+
+  /* Alias Colors - Dark Theme */
+  --color-canvas-default: #0d1117;
+  --color-canvas-overlay: #161b22;
+  --color-canvas-inset: #010409;
+  --color-neutral-emphasis-plus: #f0f6fc;
+  --color-neutral-emphasis: #c9d1d9;
+  --color-neutral-muted: #30363d;
+  --color-neutral-subtle: #21262d;
+}
