@@ -90,7 +90,7 @@ export function validateUUID(id: string): boolean {
  * Validates an ISO 8601 timestamp format
  */
 export function validateISO8601(timestamp: string): boolean {
-  const iso8601Regex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
+  const iso8601Regex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/;
   if (!iso8601Regex.test(timestamp)) {
     return false;
   }
