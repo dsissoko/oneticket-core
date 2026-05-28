@@ -102,7 +102,7 @@
       "role": "architect",
       "content": "Tu es l'architect. Lis les fichiers suivants :\n\n1. apps/breakout/docs/what/product-spec.md\n2. apps/breakout/docs/how/architecture.md\n\nCrée le diagramme C4 Components (apps/breakout/docs/how/c4/components.md) qui décompose les composants clés :\n- Game Engine : boucle de jeu, update, render\n- Physics Engine : mouvement balle, collisions\n- Input Handler : clavier, souris\n- Menu UI : HTML/CSS pour menus et slider\n- Game State Manager : gestion d'état\n\nUtilise Mermaid pour le diagramme.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "K",
