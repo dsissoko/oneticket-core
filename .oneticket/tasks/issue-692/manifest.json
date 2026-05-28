@@ -84,7 +84,7 @@
       "role": "architect",
       "content": "Tu es l'architect. Lis les fichiers suivants :\n\n1. apps/breakout/docs/what/product-spec.md\n2. apps/breakout/docs/how/architecture.md\n\nCrée le diagramme C4 System Context (apps/breakout/docs/how/c4/system-context.md) qui montre :\n- Le jeu Breakout en tant que système\n- Les utilisateurs/acteurs (joueur)\n- Les systèmes externes (aucun pour V1)\n- Les interactions (clavier, souris, écran)\n\nUtilise Mermaid pour le diagramme.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "I",
