@@ -40,6 +40,7 @@ LOAD skill `oneticket-error-handling-patterns` as SECOND ACTION after git checko
 
 - **Response** — always execute the bash command provided in `## Agent contract` of the prompt to post the response — never respond in plain text only.
 - **Branch** — work exclusively on `feature/issue-{issue_number}`
+- **Code location** — write all code under `app_path` — never write code outside this path
 - **Sequence** — read specs and epics → implement → validate
 - **Code validation — mandatory before completing any task:**
   1. **Build** — run the project build command — blocking. Fix before continuing.
