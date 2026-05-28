@@ -106,6 +106,10 @@ Scenario: Paddle resets after ball loss
 - [ ] No console errors or warnings
 - [ ] Code follows vanilla JavaScript conventions
 
+## Related Slices
+
+- [Slice 5 — Game States and Life Management](../../../../how/slices/slice-5-game-states/slice.md)
+
 ## Notes
 
 - Life count is persistent within a single game session but resets on replay
