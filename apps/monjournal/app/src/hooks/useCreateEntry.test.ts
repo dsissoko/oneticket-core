@@ -7,6 +7,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useCreateEntry } from './useCreateEntry';
+import type { JournalEntry } from '../domain/Entry';
 import { LocalStorageRepository } from '../infrastructure/LocalStorageRepository';
 
 describe('useCreateEntry', () => {
@@ -32,7 +33,7 @@ describe('useCreateEntry', () => {
   it('should create entry with valid input', async () => {
     const { result } = renderHook(() => useCreateEntry());
 
-    let createdEntry;
+    let createdEntry: JournalEntry | undefined;
     await act(async () => {
       createdEntry = await result.current.createEntry({
         date: '2026-05-28',
@@ -157,7 +158,8 @@ describe('useCreateEntry', () => {
   it('should generate unique IDs for each entry', async () => {
     const { result } = renderHook(() => useCreateEntry());
 
-    let entry1, entry2;
+    let entry1: JournalEntry | undefined;
+    let entry2: JournalEntry | undefined;
     await act(async () => {
       entry1 = await result.current.createEntry({
         date: '2026-05-28',
@@ -177,7 +179,7 @@ describe('useCreateEntry', () => {
 
     const beforeTime = new Date().getTime();
 
-    let createdEntry;
+    let createdEntry: JournalEntry | undefined;
     await act(async () => {
       createdEntry = await result.current.createEntry({
         date: '2026-05-28',

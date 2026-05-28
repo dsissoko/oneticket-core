@@ -7,6 +7,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useEditEntry } from './useEditEntry';
+import type { JournalEntry } from '../domain/Entry';
 import { LocalStorageRepository } from '../infrastructure/LocalStorageRepository';
 
 describe('useEditEntry', () => {
@@ -34,7 +35,7 @@ describe('useEditEntry', () => {
 
     const { result } = renderHook(() => useEditEntry());
 
-    let updatedEntry;
+    let updatedEntry: JournalEntry | undefined;
     await act(async () => {
       updatedEntry = await result.current.editEntry(entry.id, {
         text: 'Updated',
@@ -49,7 +50,7 @@ describe('useEditEntry', () => {
 
     const { result } = renderHook(() => useEditEntry());
 
-    let updatedEntry;
+    let updatedEntry: JournalEntry | undefined;
     await act(async () => {
       updatedEntry = await result.current.editEntry(entry.id, {
         date: '2026-05-27',
@@ -64,7 +65,7 @@ describe('useEditEntry', () => {
 
     const { result } = renderHook(() => useEditEntry());
 
-    let updatedEntry;
+    let updatedEntry: JournalEntry | undefined;
     await act(async () => {
       updatedEntry = await result.current.editEntry(entry.id, {
         date: '2026-05-27',
@@ -82,7 +83,7 @@ describe('useEditEntry', () => {
 
     const { result } = renderHook(() => useEditEntry());
 
-    let updatedEntry;
+    let updatedEntry: JournalEntry | undefined;
     await act(async () => {
       updatedEntry = await result.current.editEntry(entry.id, {
         text: 'Updated',
@@ -101,7 +102,7 @@ describe('useEditEntry', () => {
 
     const { result } = renderHook(() => useEditEntry());
 
-    let updatedEntry;
+    let updatedEntry: JournalEntry | undefined;
     await act(async () => {
       updatedEntry = await result.current.editEntry(entry.id, {
         text: 'Updated',
@@ -199,7 +200,7 @@ describe('useEditEntry', () => {
 
     const { result } = renderHook(() => useEditEntry());
 
-    let updatedEntry;
+    let updatedEntry: JournalEntry | undefined;
     await act(async () => {
       updatedEntry = await result.current.editEntry(entry.id, {
         date: '2026-05-27',
@@ -216,7 +217,7 @@ describe('useEditEntry', () => {
 
     const { result } = renderHook(() => useEditEntry());
 
-    let updatedEntry;
+    let updatedEntry: JournalEntry | undefined;
     await act(async () => {
       updatedEntry = await result.current.editEntry(entry.id, {
         text: 'Updated',
@@ -231,7 +232,8 @@ describe('useEditEntry', () => {
 
     const { result } = renderHook(() => useEditEntry());
 
-    let entry1, entry2;
+    let entry1: JournalEntry | undefined;
+    let entry2: JournalEntry | undefined;
     await act(async () => {
       entry1 = await result.current.editEntry(entry.id, {
         text: 'First update',
