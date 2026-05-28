@@ -19,7 +19,7 @@
       "depends_on": [
         "A"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "dev"
     },
     {
@@ -30,7 +30,7 @@
       "depends_on": [
         "A"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "dev"
     },
     {
@@ -41,7 +41,7 @@
       "depends_on": [
         "A"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "dev"
     },
     {
@@ -52,7 +52,7 @@
       "depends_on": [
         "A"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "dev"
     },
     {
@@ -63,7 +63,7 @@
       "depends_on": [
         "A"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "dev"
     },
     {
@@ -74,7 +74,7 @@
       "depends_on": [
         "A"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "dev"
     },
     {
@@ -85,7 +85,7 @@
       "depends_on": [
         "A"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "dev"
     },
     {
@@ -96,7 +96,7 @@
       "depends_on": [
         "A"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "dev"
     },
     {
@@ -107,7 +107,7 @@
       "depends_on": [
         "A"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "dev"
     },
     {
