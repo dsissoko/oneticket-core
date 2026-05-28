@@ -4,3 +4,4 @@
 2026-05-28 12:07 | D | apps/monjournal/docs/how/architecture.md
 2026-05-28 12:10 | E | apps/monjournal/docs/how/c4/system-context.md
 2026-05-28 12:12 | F | apps/monjournal/docs/how/c4/containers.md
+2026-05-28 12:17 | G | apps/monjournal/docs/how/slices/
