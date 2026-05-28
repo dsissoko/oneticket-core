@@ -76,6 +76,10 @@ As a player, I want the game to initialize with a properly configured play area,
 - `apps/breakout/app/js/brick.js` — Brick grid generation and rendering
 - `apps/breakout/app/css/style.css` — Canvas and game object styling
 
+## Related Slices
+
+- [Slice 1 — Game Setup](../../../../how/slices/slice-1-game-setup/slice.md)
+
 ## Definition of Done
 
 - [ ] Canvas renders with correct dimensions (per product spec)

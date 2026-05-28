@@ -8,3 +8,4 @@
 2026-05-28 08:05 | F | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-005-lives-and-gameover.md
 2026-05-28 08:04 | E | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-004-brick-destruction.md
 2026-05-28 08:05 | G | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-006-menus-and-settings.md
+2026-05-28 08:07 | K | apps/breakout/docs/how/slices/slice-1-game-setup/slice.md
