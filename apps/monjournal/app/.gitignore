@@ -29,6 +29,13 @@ dist-ssr
 coverage
 .vitest
 
+# Playwright
+playwright-report/
+test-results/
+
+# TypeScript build info (composite project)
+*.tsbuildinfo
+
 # Environment
 .env
 .env.local
