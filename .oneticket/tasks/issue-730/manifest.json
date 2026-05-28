@@ -1,0 +1,105 @@
+{
+  "issue": 730,
+  "branch_base": "feature/issue-730",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-730-A",
+      "file": "apps/breakout/app/index.html",
+      "content": "Lis apps/breakout/docs/how/slices/slice-01-game-setup/slice.md. Crée index.html avec canvas element, liens CSS/JS, et structure HTML minimale pour menu. Ne crée pas encore les JS.",
+      "role": "dev",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-730-B",
+      "file": "apps/breakout/app/js/gameState.js",
+      "content": "Lis apps/breakout/docs/how/architecture.md section 5.2 Game State et apps/breakout/docs/how/slices/slice-01-game-setup/slice.md. Implémente GameState classe avec: lives, bricks array, ball/paddle objects, speedMultiplier, phase, et méthodes: resetGame(), decrementLives(), isGameOver(), isVictory(), setSpeedMultiplier().",
+      "role": "dev",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-730-C",
+      "file": "apps/breakout/app/js/brickFactory.js",
+      "content": "Lis apps/breakout/docs/how/slices/slice-01-game-setup/slice.md. Implémente BrickFactory classe avec méthode createInitialLayout() qui retourne array de 50 bricks (5 rows × 10 cols). Chaque brick a: id, x, y, width, height, color (rainbow: red, orange, yellow, green, blue).",
+      "role": "dev",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-730-D",
+      "file": "apps/breakout/app/js/renderer.js",
+      "content": "Lis apps/breakout/docs/how/architecture.md section 5.6 Renderer et apps/breakout/docs/how/slices/slice-01-game-setup/slice.md. Implémente Renderer classe avec: draw(gameState), drawBrick(), drawBall(), drawPaddle(), clear(), et rendu UI (lives counter, menu).",
+      "role": "dev",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-730-E",
+      "file": "apps/breakout/app/js/gameLoop.js",
+      "content": "Lis apps/breakout/docs/how/architecture.md section 5.1 Game Loop et apps/breakout/docs/how/slices/slice-01-game-setup/slice.md. Implémente GameLoop classe avec: run() lancé via requestAnimationFrame, appelant chaque frame: physics.update(), collisionDetector.detectAndResolve(), renderer.draw(). Initialise: inputHandler, physics, renderer.",
+      "role": "dev",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "F",
+      "branch": "task/issue-730-F",
+      "file": "apps/breakout/app/js/physics.js",
+      "content": "Lis apps/breakout/docs/how/architecture.md section 5.3 Physics et apps/breakout/docs/how/slices/slice-02-ball-physics/slice.md et slice-03-paddle-control/slice.md. Implémente Physics classe avec: update(deltaTime, gameState) qui met à jour ball position/velocity, applique speedMultiplier, met à jour paddle position, et clamp paddle aux bounds.",
+      "role": "dev",
+      "depends_on": ["E"],
+      "status": "pending"
+    },
+    {
+      "id": "G",
+      "branch": "task/issue-730-G",
+      "file": "apps/breakout/app/js/collisionDetector.js",
+      "content": "Lis apps/breakout/docs/how/architecture.md section 5.4 Collision Detector et apps/breakout/docs/how/slices/slice-02-ball-physics/slice.md. Implémente CollisionDetector classe avec: detectAndResolve(gameState) qui check floor/brick/paddle/wall collisions dans cet ordre, resolve une seule par frame, retourne collision event. Inclut reflectBallFromPaddle().",
+      "role": "dev",
+      "depends_on": ["E"],
+      "status": "pending"
+    },
+    {
+      "id": "H",
+      "branch": "task/issue-730-H",
+      "file": "apps/breakout/app/js/inputHandler.js",
+      "content": "Lis apps/breakout/docs/how/architecture.md section 5.5 Input Handler et apps/breakout/docs/how/slices/slice-03-paddle-control/slice.md. Implémente InputHandler classe avec: listeners keydown/keyup pour ArrowLeft/ArrowRight, update() pour mettre à jour gameState.paddle.vx. Ignore autres keys.",
+      "role": "dev",
+      "depends_on": ["E"],
+      "status": "pending"
+    },
+    {
+      "id": "I",
+      "branch": "task/issue-730-I",
+      "file": "apps/breakout/app/js/menuController.js",
+      "content": "Lis apps/breakout/docs/how/architecture.md section 5.7 Menu Controller et apps/breakout/docs/how/slices/slice-05-victory-menu/slice.md et slice-06-speed-control/slice.md. Implémente MenuController classe avec: handleStartGame(), handlePlayAgain(), handleReturnToMenu(), handleOptionsClicked(), handleSpeedChange(). Attache click listeners aux boutons.",
+      "role": "dev",
+      "depends_on": ["E"],
+      "status": "pending"
+    },
+    {
+      "id": "J",
+      "branch": "task/issue-730-J",
+      "file": "apps/breakout/app/js/integration.js",
+      "content": "Lis apps/breakout/docs/how/slices/ (tous les slices). Crée integration.js qui instancie et connecte tous les modules: GameState, BrickFactory, Renderer, GameLoop, Physics, CollisionDetector, InputHandler, MenuController. Lance gameLoop.run() au démarrage. Gère transitions de phase (menu/playing/victory/gameover).",
+      "role": "dev",
+      "depends_on": ["B", "C", "D", "E", "F", "G", "H", "I"],
+      "status": "pending"
+    },
+    {
+      "id": "K",
+      "branch": "task/issue-730-K",
+      "file": "apps/breakout/app/css/styles.css",
+      "content": "Crée styles.css pour: canvas container, menu screen, victory screen, game-over screen, buttons (hover/click states), speed slider, lives counter. Supports light/dark themes si possible. Layout responsive avec flexbox/grid.",
+      "role": "dev",
+      "depends_on": ["A"],
+      "status": "pending"
+    }
+  ]
+}
