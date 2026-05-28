@@ -9,7 +9,7 @@
       "content": "Lis apps/breakout/docs/how/slices/slice-01-game-setup/slice.md. Crée index.html avec canvas element, liens CSS/JS, et structure HTML minimale pour menu. Ne crée pas encore les JS.",
       "role": "dev",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
