@@ -14,6 +14,7 @@ class Renderer {
     this.ctx = canvas.getContext('2d');
     this.canvasWidth = canvas.width;
     this.canvasHeight = canvas.height;
+    this.lastRenderedPhase = null; // track last phase to avoid re-rendering menu every frame
   }
 
   /**
@@ -35,13 +36,18 @@ class Renderer {
     // Update UI display
     this.updateUIPanel(gameState);
 
-    // Render phase-specific overlays
-    if (gameState.phase === 'menu') {
-      this.renderMenu();
-    } else if (gameState.phase === 'victory') {
-      this.renderVictory();
-    } else if (gameState.phase === 'gameover') {
-      this.renderGameOver();
+    // Render phase-specific overlays — only when phase changes to avoid destroying DOM every frame
+    if (gameState.phase !== this.lastRenderedPhase) {
+      this.lastRenderedPhase = gameState.phase;
+      if (gameState.phase === 'menu') {
+        this.renderMenu();
+      } else if (gameState.phase === 'victory') {
+        this.renderVictory();
+      } else if (gameState.phase === 'gameover') {
+        this.renderGameOver();
+      } else if (gameState.phase === 'playing') {
+        this.hideMenuOverlay();
+      }
     }
   }
 
