@@ -63,4 +63,4 @@ Voir [Epic 0 — MVP Breakout](../epic.md)
 
 ## Related Slices
 
-- [Slice 4 — Lives System & Game Over Screen](../../how/slices/slice-04-lives-system/slice.md)
+- [Slice 4 — Lives System & Game Over Screen](../../../../how/slices/slice-04-lives-system/slice.md)

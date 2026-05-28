@@ -48,4 +48,4 @@ En tant que joueur, je veux voir un écran de victoire quand toutes les briques 
 
 ## Related Slices
 
-- [Slice 5 — Victory Screen & Menu Navigation](../../how/slices/slice-05-victory-menu/slice.md)
+- [Slice 5 — Victory Screen & Menu Navigation](../../../../how/slices/slice-05-victory-menu/slice.md)

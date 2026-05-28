@@ -27,4 +27,4 @@ En tant que joueur, je veux contrôler la raquette avec les flèches gauche et d
 
 ## Related Slices
 
-- [Slice 3 — Paddle Control & Input Handling](../../how/slices/slice-03-paddle-control/slice.md)
+- [Slice 3 — Paddle Control & Input Handling](../../../../how/slices/slice-03-paddle-control/slice.md)

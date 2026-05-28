@@ -67,9 +67,9 @@ Deliver a fully playable, responsive Breakout game in vanilla JavaScript (HTML/C
 
 ## Related Slices
 
-- [Slice 1 — Game Setup & Display](../../how/slices/slice-01-game-setup/slice.md)
-- [Slice 2 — Ball Physics & Collision Detection](../../how/slices/slice-02-ball-physics/slice.md)
-- [Slice 3 — Paddle Control & Input Handling](../../how/slices/slice-03-paddle-control/slice.md)
-- [Slice 4 — Lives System & Game Over Screen](../../how/slices/slice-04-lives-system/slice.md)
-- [Slice 5 — Victory Screen & Menu Navigation](../../how/slices/slice-05-victory-menu/slice.md)
-- [Slice 6 — Speed Control & Difficulty Settings](../../how/slices/slice-06-speed-control/slice.md)
+- [Slice 1 — Game Setup & Display](../../../how/slices/slice-01-game-setup/slice.md)
+- [Slice 2 — Ball Physics & Collision Detection](../../../how/slices/slice-02-ball-physics/slice.md)
+- [Slice 3 — Paddle Control & Input Handling](../../../how/slices/slice-03-paddle-control/slice.md)
+- [Slice 4 — Lives System & Game Over Screen](../../../how/slices/slice-04-lives-system/slice.md)
+- [Slice 5 — Victory Screen & Menu Navigation](../../../how/slices/slice-05-victory-menu/slice.md)
+- [Slice 6 — Speed Control & Difficulty Settings](../../../how/slices/slice-06-speed-control/slice.md)

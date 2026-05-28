@@ -48,4 +48,4 @@ And les calculs sont suffisamment précis pour éviter tunneling
 
 ## Related Slices
 
-- [Slice 2 — Ball Physics & Collision Detection](../../how/slices/slice-02-ball-physics/slice.md)
+- [Slice 2 — Ball Physics & Collision Detection](../../../../how/slices/slice-02-ball-physics/slice.md)

@@ -26,4 +26,4 @@ En tant que joueur, je veux voir l'écran de jeu avec le mur de briques, la ball
 
 ## Related Slices
 
-- [Slice 1 — Game Setup & Display](../../how/slices/slice-01-game-setup/slice.md)
+- [Slice 1 — Game Setup & Display](../../../../how/slices/slice-01-game-setup/slice.md)
