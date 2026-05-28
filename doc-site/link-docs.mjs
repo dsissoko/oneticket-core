@@ -24,6 +24,10 @@ const docSource = process.env.DOC_SOURCE
 
 const destDir = path.resolve(__dirname, 'src/content/docs');
 
+// ASTRO_BASE is set by CI workflow — used to prefix absolute URLs in links
+// so they resolve correctly regardless of the site base path
+const astroBase = (process.env.ASTRO_BASE || '').replace(/\/$/, '');
+
 // Transform a single markdown file — inject title from H1, remove H1 from body
 // srcFile: absolute path of the source file (used to resolve relative links)
 function transformMarkdown(content, srcFile) {
@@ -51,9 +55,9 @@ function transformMarkdown(content, srcFile) {
       }
       // Resolve relative path from source file location
       const absPath   = path.resolve(srcDir, mdPath);
-      // Make it relative to docSource root → Starlight URL
+      // Make it relative to docSource root → Starlight URL prefixed with ASTRO_BASE
       const fromRoot  = path.relative(docSource, absPath);
-      const urlPath   = '/' + fromRoot.replace(/\.md$/, '/').replace(/\\/g, '/');
+      const urlPath   = astroBase + '/' + fromRoot.replace(/\.md$/, '/').replace(/\\/g, '/');
       return `[${text}](${urlPath}${anchor || ''})`;
     }
   );
