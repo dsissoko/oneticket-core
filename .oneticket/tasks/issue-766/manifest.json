@@ -9,7 +9,7 @@
       "content": "Lis apps/monjournal/docs/how/slices/slice-1-entry-crud/slice.md. Implémente le type JournalEntry et l'interface IEntryRepository dans src/domain/Entry.ts et src/domain/IEntryRepository.ts avec tous les champs et invariants décrits. Ceci est la fondation pour toutes les slices suivantes.",
       "role": "dev",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
