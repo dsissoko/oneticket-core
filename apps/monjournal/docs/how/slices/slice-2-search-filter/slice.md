@@ -6,11 +6,11 @@ Implement search functionality allowing users to filter journal entries by date 
 
 ## Related Epics
 
-- [Epic 0 — Journal Personnel MVP](../../what/epics/epic-0-mvp/epic.md)
+- [Epic 0 — Journal Personnel MVP](../../../what/epics/epic-0-mvp/epic.md)
 
 ## Related User Stories
 
-- [US-003 — Rechercher ses entrées par période](../../what/epics/epic-0-mvp/user-stories/us-003-search-by-period.md)
+- [US-003 — Rechercher ses entrées par période](../../../what/epics/epic-0-mvp/user-stories/us-003-search-by-period.md)
 
 ## Impacted Components
 

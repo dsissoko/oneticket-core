@@ -6,15 +6,15 @@ Establish comprehensive end-to-end testing that validates all core user workflow
 
 ## Related Epics
 
-- [Epic 0 — Journal Personnel MVP](../../what/epics/epic-0-mvp/epic.md)
+- [Epic 0 — Journal Personnel MVP](../../../what/epics/epic-0-mvp/epic.md)
 
 ## Related User Stories
 
-- [US-001 — Créer une nouvelle entrée de journal](../../what/epics/epic-0-mvp/user-stories/us-001-create-entry.md)
-- [US-002 — Voir, éditer et supprimer ses entrées](../../what/epics/epic-0-mvp/user-stories/us-002-view-edit-delete.md)
-- [US-003 — Rechercher ses entrées par période](../../what/epics/epic-0-mvp/user-stories/us-003-search-by-period.md)
-- [US-004 — Voir une timeline visuelle](../../what/epics/epic-0-mvp/user-stories/us-004-timeline-view.md)
-- [US-005 — Découvrir une entrée aléatoire](../../what/epics/epic-0-mvp/user-stories/us-005-surprise-feature.md)
+- [US-001 — Créer une nouvelle entrée de journal](../../../what/epics/epic-0-mvp/user-stories/us-001-create-entry.md)
+- [US-002 — Voir, éditer et supprimer ses entrées](../../../what/epics/epic-0-mvp/user-stories/us-002-view-edit-delete.md)
+- [US-003 — Rechercher ses entrées par période](../../../what/epics/epic-0-mvp/user-stories/us-003-search-by-period.md)
+- [US-004 — Voir une timeline visuelle](../../../what/epics/epic-0-mvp/user-stories/us-004-timeline-view.md)
+- [US-005 — Découvrir une entrée aléatoire](../../../what/epics/epic-0-mvp/user-stories/us-005-surprise-feature.md)
 
 ## Impacted Components
 

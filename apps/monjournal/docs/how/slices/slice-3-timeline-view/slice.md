@@ -6,11 +6,11 @@ Implement chronological timeline view displaying all journal entries with date a
 
 ## Related Epics
 
-- [Epic 0 — Journal Personnel MVP](../../what/epics/epic-0-mvp/epic.md)
+- [Epic 0 — Journal Personnel MVP](../../../what/epics/epic-0-mvp/epic.md)
 
 ## Related User Stories
 
-- [US-004 — Voir une timeline visuelle chronologique de ses entrées](../../what/epics/epic-0-mvp/user-stories/us-004-timeline-view.md)
+- [US-004 — Voir une timeline visuelle chronologique de ses entrées](../../../what/epics/epic-0-mvp/user-stories/us-004-timeline-view.md)
 
 ## Impacted Components
 

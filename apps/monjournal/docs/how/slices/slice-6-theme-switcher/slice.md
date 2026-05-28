@@ -6,7 +6,7 @@ Implement light/dark theme switching using GitHub Primer design system CSS varia
 
 ## Related Epics
 
-- [Epic 0 — Journal Personnel MVP](../../what/epics/epic-0-mvp/epic.md)
+- [Epic 0 — Journal Personnel MVP](../../../what/epics/epic-0-mvp/epic.md)
 
 ## Related User Stories
 

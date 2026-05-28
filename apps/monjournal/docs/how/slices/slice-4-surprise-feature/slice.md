@@ -6,11 +6,11 @@ Implement random entry selection feature allowing users to discover past entries
 
 ## Related Epics
 
-- [Epic 0 — Journal Personnel MVP](../../what/epics/epic-0-mvp/epic.md)
+- [Epic 0 — Journal Personnel MVP](../../../what/epics/epic-0-mvp/epic.md)
 
 ## Related User Stories
 
-- [US-005 — Découvrir une entrée aléatoire du passé avec le bouton "Surprise"](../../what/epics/epic-0-mvp/user-stories/us-005-surprise-feature.md)
+- [US-005 — Découvrir une entrée aléatoire du passé avec le bouton "Surprise"](../../../what/epics/epic-0-mvp/user-stories/us-005-surprise-feature.md)
 
 ## Impacted Components
 

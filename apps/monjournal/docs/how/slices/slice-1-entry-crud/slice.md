@@ -6,12 +6,12 @@ Implement complete Create, Read, Update, Delete (CRUD) operations for journal en
 
 ## Related Epics
 
-- [Epic 0 — Journal Personnel MVP](../../what/epics/epic-0-mvp/epic.md)
+- [Epic 0 — Journal Personnel MVP](../../../what/epics/epic-0-mvp/epic.md)
 
 ## Related User Stories
 
-- [US-001 — Créer une nouvelle entrée de journal](../../what/epics/epic-0-mvp/user-stories/us-001-create-entry.md)
-- [US-002 — Voir, éditer et supprimer ses entrées de journal](../../what/epics/epic-0-mvp/user-stories/us-002-view-edit-delete.md)
+- [US-001 — Créer une nouvelle entrée de journal](../../../what/epics/epic-0-mvp/user-stories/us-001-create-entry.md)
+- [US-002 — Voir, éditer et supprimer ses entrées de journal](../../../what/epics/epic-0-mvp/user-stories/us-002-view-edit-delete.md)
 
 ## Impacted Components
 
