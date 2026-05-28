@@ -156,6 +156,53 @@ async function createFinalPR(manifest, repo, token, config) {
   return data;
 }
 
+/**
+ * Builds a deterministic progress comment from the manifest state.
+ * Pure function — no network call, no LLM.
+ */
+function buildProgressComment(manifest) {
+  const total  = manifest.tasks.length;
+  const done   = manifest.tasks.filter(t => t.status === 'done');
+  const failed = manifest.tasks.filter(t => t.status === 'merge-failed');
+  const pendingCount = total - done.length - failed.length;
+
+  const filled = total > 0 ? Math.round((done.length / total) * 20) : 0;
+  const bar = '█'.repeat(filled) + '░'.repeat(20 - filled);
+
+  return [
+    `📊 Progression — issue #${manifest.issue}`,
+    '',
+    `\`${bar}\`  ${done.length}/${total} done`,
+    '',
+    `✅ Done         (${done.length}) : ${done.map(t => t.id).join(', ') || '—'}`,
+    `❌ Merge-failed (${failed.length}) : ${failed.map(t => t.id).join(', ') || '—'}`,
+    `⏳ Pending      (${pendingCount})`,
+  ].join('\n');
+}
+
+/**
+ * Posts a progress comment on the issue.
+ * Called after each done merge or merge-failed event.
+ */
+async function postProgressComment(manifest, issueNumber, repo, token) {
+  try {
+    const body = buildProgressComment(manifest);
+    await fetch(`https://api.github.com/repos/${repo}/issues/${issueNumber}/comments`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/vnd.github+json',
+        'Content-Type': 'application/json',
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+      body: JSON.stringify({ body }),
+    });
+    console.log(`[orchestrate] Progress comment posted on #${issueNumber}`);
+  } catch (err) {
+    console.warn(`[orchestrate] Could not post progress comment on #${issueNumber}: ${err.message}`);
+  }
+}
+
 async function postMergeFailureComment(issueNumber, taskId, branch, featureBranch, repo, token) {
   try {
     const body = [
@@ -286,6 +333,13 @@ async function main() {
     await applyLabel('merge error', issueNumber, repo, ghToken, 'orchestrate');
     await postMergeFailureComment(issueNumber, taskId, taskBranch, featureBranch, repo, ghToken);
 
+    const failedPrNumber = prNumber || await findTaskPR(taskBranch, featureBranch, repo, ghToken);
+    if (failedPrNumber) {
+      await applyLabel('merge error', failedPrNumber, repo, ghToken, 'orchestrate');
+    }
+
+    await postProgressComment(manifest, issueNumber, repo, ghToken);
+
     console.error(`[orchestrate] Workflow stopped — human intervention required.`);
     process.exit(1);
   }
@@ -297,6 +351,8 @@ async function main() {
     await closePR(resolvedPrNumber, repo, ghToken);
   }
   await deleteRemoteBranch(taskBranch, repo, ghToken);
+
+  await postProgressComment(manifest, issueNumber, repo, ghToken);
 
   const allDone    = manifest.tasks.every(t => t.status === 'done');
   const readyTasks = getReadyTasks(manifest);
