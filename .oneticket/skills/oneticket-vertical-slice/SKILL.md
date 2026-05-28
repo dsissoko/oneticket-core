@@ -31,7 +31,6 @@ Use this skill when:
 - Epics and user stories are defined in `what/epics/`
 - Architecture is defined in `how/architecture.md`
 - You need to plan the implementation incrementally
-- You need to update `## Related Slices` in epics or user stories
 
 ## Output Location
 
@@ -120,57 +119,6 @@ Create `<docs_path>/how/slices/slice-N-<name>/slice.md` using the template:
 <Logs, metrics, traces added or modified>
 ```
 
-### Step 4 — Update cross-references
-
-After writing a slice:
-- Add the slice reference to `## Related Slices` in each related epic
-- Add the slice reference to `## Related Slices` in each related user story
-- Add the epic and US references to `## Related Epics` and `## Related User Stories` in the slice
-
-**Always use relative paths computed from the actual file location.**
-
-File tree reference:
-```
-<docs_path>/
-  what/
-    epics/
-      epic-N-<name>/
-        epic.md                        ← depth 3 from docs_path
-        user-stories/
-          us-NNN-<name>.md             ← depth 4 from docs_path
-  how/
-    slices/
-      slice-N-<name>/
-        slice.md                       ← depth 3 from docs_path
-```
-
-Cross-reference path table (relative links):
-
-| From file | To file | Relative path to use |
-|---|---|---|
-| `what/epics/epic-N/epic.md` | `how/slices/slice-N/slice.md` | `../../../how/slices/slice-N-<name>/slice.md` |
-| `what/epics/epic-N/user-stories/us-NNN.md` | `how/slices/slice-N/slice.md` | `../../../../how/slices/slice-N-<name>/slice.md` |
-| `how/slices/slice-N/slice.md` | `what/epics/epic-N/epic.md` | `../../what/epics/epic-N-<name>/epic.md` |
-| `how/slices/slice-N/slice.md` | `what/epics/epic-N/user-stories/us-NNN.md` | `../../what/epics/epic-N-<name>/user-stories/us-NNN-<name>.md` |
-
-Examples:
-```markdown
-## Related Slices
-- [Slice 1 — Game Setup](../../../how/slices/slice-1-game-setup/slice.md)
-```
-```markdown
-## Related Slices
-- [Slice 1 — Game Setup](../../../../how/slices/slice-1-game-setup/slice.md)
-```
-```markdown
-## Related Epics
-- [Epic 0 — MVP Breakout](../../what/epics/epic-0-mvp/epic.md)
-
-## Related User Stories
-- [US-001 — Game Setup](../../what/epics/epic-0-mvp/user-stories/us-001-game-setup.md)
-- [US-003 — Paddle Control](../../what/epics/epic-0-mvp/user-stories/us-003-paddle-control.md)
-```
-
 ## Sizing Guidelines
 
 A well-sized slice:
@@ -184,7 +132,6 @@ If a slice feels too large — split it using the `oneticket-user-story-splittin
 ## Rules
 
 - Never overwrite an existing slice — check before writing
-- Always update cross-references in epics and user stories after writing a slice
 - Never create a slice without reading the architecture first
 - `docs_path` is always provided in the prompt — never resolve it yourself
 - Slices derive from what/epics/ — never invent content not backed by a user story
