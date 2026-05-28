@@ -8,7 +8,7 @@
       "file": "apps/breakout/skeleton.json",
       "content": "Lis apps/breakout/docs/how/architecture.md section '5. Key Components' et produis le skeleton complet du jeu Breakout en créant TOUS les fichiers avec leur structure vide : apps/breakout/index.html, apps/breakout/css/styles.css, et apps/breakout/js/{gameLoop.js, gameState.js, physics.js, collisionDetector.js, renderer.js, inputHandler.js, menuController.js, brickFactory.js}. Chaque fichier .js doit contenir les classes décrites avec leurs méthodes (signatures seulement, pas de logique). Le fichier index.html doit importer tous les scripts dans le bon ordre. Le fichier styles.css doit contenir les styles de base pour le canvas et l'UI. Pas de logique implémentée, juste la structure.",
       "depends_on": [],
-      "status": "pending",
+      "status": "in_progress",
       "role": "dev"
     },
     {
@@ -16,7 +16,9 @@
       "branch": "task/issue-741-B",
       "file": "apps/breakout/js/gameLoop.js",
       "content": "Lis apps/breakout/docs/how/architecture.md section '5.1 Game Loop'. Implémente gameLoop.js avec la classe GameLoop complète : méthode run() avec requestAnimationFrame, handleGamePhaseChange(), checkWinCondition(), checkLossCondition(). La classe doit orchestrer chaque frame en appelant inputHandler.update(), physics.update(), collisionDetector.detectAndResolve(), renderer.draw(). Gère les transitions de phase (menu → playing → victory/gameover).",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -25,7 +27,9 @@
       "branch": "task/issue-741-C",
       "file": "apps/breakout/js/gameState.js",
       "content": "Lis apps/breakout/docs/how/architecture.md section '5.2 Game State'. Implémente gameState.js avec la classe GameState complète : constructeur, resetGame(), decrementLives(), removeBrick(id), setPause(), setSpeedMultiplier(), isGameOver(), isVictory(). Le state doit être la source unique de vérité pour { phase, lives, bricks[], ball, paddle, speedMultiplier, isPaused }.",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -34,7 +38,9 @@
       "branch": "task/issue-741-D",
       "file": "apps/breakout/js/physics.js",
       "content": "Lis apps/breakout/docs/how/architecture.md section '5.3 Physics Engine'. Implémente physics.js avec la classe Physics complète : update(deltaTime, gameState) qui met à jour la position de la balle (x += vx * dt, y += vy * dt) et la paddle. Méthodes : applySpeedMultiplier(multiplier), clampPaddleToBounds(). La physique ne doit contenir AUCUNE logique de collision.",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -43,7 +49,9 @@
       "branch": "task/issue-741-E",
       "file": "apps/breakout/js/collisionDetector.js",
       "content": "Lis apps/breakout/docs/how/architecture.md section '5.4 Collision Detector'. Implémente collisionDetector.js avec la classe CollisionDetector complète : detectAndResolve(gameState) qui détecte les collisions en priorité (floor, brick, paddle, wall/ceiling). Méthodes : reflectBallFromPaddle(), reflectBallX(), reflectBallY(). IMPORTANT : une seule collision par frame (pas de tunneling). Retourne le type de collision détecté.",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -52,7 +60,9 @@
       "branch": "task/issue-741-F",
       "file": "apps/breakout/js/renderer.js",
       "content": "Lis apps/breakout/docs/how/architecture.md section '5.6 Renderer'. Implémente renderer.js avec la classe Renderer complète : draw(gameState) qui clear le canvas, dessine l'arrière-plan, les briques, la balle et la paddle sur canvas. Méthodes : drawBrick(brick), drawBall(ball), drawPaddle(paddle), renderMenu(state), renderGameOver(won). Utilise Canvas 2D API uniquement. Renderise aussi l'UI (lives counter, speed indicator).",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -61,7 +71,9 @@
       "branch": "task/issue-741-G",
       "file": "apps/breakout/js/inputHandler.js",
       "content": "Lis apps/breakout/docs/how/architecture.md section '5.5 Input Handler'. Implémente inputHandler.js avec la classe InputHandler complète : onKeyDown(event), onKeyUp(event) pour capturer les flèches gauche/droite et mettre à jour gameState.paddle.vx. Méthodes : onMouseClick(event), onSliderChange(value). Le handler doit attacher les event listeners au DOM au démarrage.",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -70,7 +82,9 @@
       "branch": "task/issue-741-H",
       "file": "apps/breakout/js/menuController.js",
       "content": "Lis apps/breakout/docs/how/architecture.md section '5.7 Menu Controller'. Implémente menuController.js avec la classe MenuController complète : handleStartGame(), handleSliderChange(value), handleReplay(), handleReturnToMenu(), render(). Gère la navigation entre Main Menu → Options → Playing → Victory/GameOver. Le slider persiste en mémoire pendant le menu, réinitialise à 1.0x au démarrage d'une nouvelle partie.",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -79,7 +93,9 @@
       "branch": "task/issue-741-I",
       "file": "apps/breakout/js/brickFactory.js",
       "content": "Lis apps/breakout/docs/how/architecture.md section '5.8 Brick Factory'. Implémente brickFactory.js avec la classe BrickFactory complète : createInitialLayout() qui retourne un tableau de 5 lignes de briques (chaque ligne contient N briques éventuelles). Chaque brick possède { id, x, y, width, height, color, isDestroyed }. Les briques doivent être espacées uniformément et positionnées au sommet du canvas.",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -88,7 +104,9 @@
       "branch": "task/issue-741-J",
       "file": "apps/breakout/css/styles.css",
       "content": "Lis apps/breakout/docs/how/architecture.md. Implémente styles.css avec les styles du canvas, des boutons du menu, du slider de vitesse, et de l'UI (lives counter, speed indicator). Le canvas doit avoir des dimensions claires (suggérées : 800x600 ou 640x480). Les boutons et le slider doivent être stylisés avec des états visuels (hover, active, default). Utilise seulement vanilla CSS, pas de framework.",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -97,7 +115,17 @@
       "branch": "task/issue-741-K",
       "file": "apps/breakout/index.html",
       "content": "Lis apps/breakout/docs/how/architecture.md section '9. Deployment Strategy'. Implémente index.html en HTML5 qui charge TOUS les modules JavaScript dans l'ordre correct : brickFactory → gameState → physics → collisionDetector → inputHandler → renderer → menuController → gameLoop. Contient un canvas avec ID 'gameCanvas', des éléments DOM pour le menu et l'UI (lives counter, speed slider). Le fichier doit initialiser l'app en appelant gameLoop.run() et vérifier que tous les modules sont chargés correctement.",
-      "depends_on": ["B", "C", "D", "E", "F", "G", "H", "I", "J"],
+      "depends_on": [
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J"
+      ],
       "status": "pending",
       "role": "dev"
     }
