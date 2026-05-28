@@ -299,3 +299,73 @@ Task A → Task B (depends_on: [A]) → Task C (depends_on: [B])
 - Pattern 3 is acceptable only when file coupling makes parallel execution impossible.
 
 A manifest where parallel tasks produce the same file is invalid and will cause a merge conflict at GATHER.
+
+---
+
+## 14. Decomposition and Quality Trade-offs
+
+Operating a multi-agent pipeline requires navigating two fundamental tensions. Understanding them allows conscious, deliberate configuration — not trial and error.
+
+### The Cost Triangle
+
+Every pipeline run sits inside a triangle with three competing forces:
+
+```
+         Agentic cost
+        (tokens, CI runs)
+              /\
+             /  \
+            /    \
+           /______\
+    LLM quality    Human cost
+    (model choice)  (review, debug, correction)
+```
+
+- **Reducing agentic cost** (cheaper model, fewer tasks) increases human cost — the agent produces more imprecisions, inconsistencies, and structural errors that require human correction.
+- **Increasing LLM quality** (more capable model) reduces human cost but increases agentic cost.
+- **The framework acts as a quality multiplier** — robust skills, guided templates, and deterministic guards reduce human cost independently of the model. A well-designed framework shifts the entire triangle toward lower human cost at any given model tier.
+
+There is no universally optimal configuration. The right balance depends on the project phase, the acceptable level of human involvement, and the budget allocated to agent runs.
+
+### The Decomposition Triangle
+
+Task granularity introduces a second tension:
+
+```
+         Decomposition granularity
+         (number of tasks, task scope)
+                  /\
+                 /  \
+                /    \
+               /______\
+   Unit errors        Integration risks
+   (per-task quality)  (merge, incoherence,
+                        runtime dysfunction)
+```
+
+- **Coarse decomposition** (few large tasks, one agent handles many files) — unit errors are higher because the agent has more surface to cover and more decisions to make. Integration risks are lower because fewer merges occur and the agent maintains its own coherence.
+- **Fine decomposition** (many small tasks, one agent per file) — unit errors are lower because each agent has a narrow, focused scope. Integration risks are higher: merge conflicts, interface mismatches, and runtime incoherence between independently produced modules.
+
+### Combined implications
+
+The two triangles are not independent. A fine-grained decomposition amplifies the impact of LLM quality: with a capable model, fine decomposition produces clean, coherent modules that integrate well; with a weaker model, the same fine decomposition produces modules that are individually correct but fail at integration boundaries.
+
+Key principles:
+
+- **Documentation phase** — fine decomposition is safer. Documentation files are largely independent; integration risk is low; a file produced by one agent does not need to call functions defined in another.
+- **Implementation phase** — decomposition granularity must be matched to the integration strategy. The skeleton-first pattern (§13) is the recommended mitigation: a single task establishes the shared structure, then fine-grained tasks fill independent modules.
+- **Model choice is a project-level decision** — it should be made explicitly, not by default. A cheaper model with a more robust framework configuration can outperform a capable model with a poorly structured decomposition.
+- **Human cost is never zero** — the framework reduces it, it does not eliminate it. Planning for a human validation pass is part of the delivery process, not a sign of framework failure.
+
+### Observed examples
+
+These examples illustrate the trade-offs in practice. They are not exceptional failures — they are the expected behavior of any multi-agent system operating at this granularity.
+
+**Documentation — coarse task, unit error:**
+A single task asked to produce all implementation slices for a project generated duplicate slices (two slices sharing the same sequence number, different names). The agent had too much freedom within one task and diverged mid-execution. Mitigation: one task per slice, explicit naming in the manifest.
+
+**Documentation — fine tasks, integration success:**
+When the manifest explicitly named each slice as a separate task, each agent produced a coherent slice file. No duplicates. Cross-references were handled by a dedicated final task. The documentation was complete and navigable on the first pass.
+
+**Implementation — fine tasks, integration failure:**
+A game implementation decomposed into one task per JS module produced individually correct files. At runtime, the ball had a radius of zero (not initialized by the module that owned the ball), physics ran during the menu phase (no shared phase guard), and the first game frame computed a large delta time after the menu delay — causing the ball to teleport outside the canvas. Five debug iterations were required to identify and fix the integration boundaries. The agents had no shared contract on initial state, lifecycle phases, or timing assumptions. Mitigation: skeleton-first task establishes the shared contract before any parallel implementation begins.
