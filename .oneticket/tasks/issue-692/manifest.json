@@ -9,7 +9,7 @@
       "role": "analyst",
       "content": "Tu es l'analyst. Lis les fichiers suivants pour comprendre le contexte :\n\n1. apps/breakout/docs/what/product-spec.md (la spécification produit Breakout complète)\n\nCrée le fichier apps/breakout/docs/what/epics/epic-0-mvp/epic.md qui définit l'Epic 0 MVP du jeu Breakout.\n\nL'epic doit couvrir les capacités clés du V1 décrites dans la spec :\n- Rendu du jeu et de la raquette\n- Contrôle de la raquette au clavier\n- Physique de la balle et collisions\n- Destruction des briques\n- Gestion des vies et des états du jeu\n- Menu et paramètres (slider vitesse)\n\nUtilise le template apps/breakout/docs/what/epics/epic-0-mvp/epic.md (créé par init-doc). Respecte la convention de nommage et la structure C4/slices.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
@@ -17,7 +17,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-game-setup.md",
       "role": "analyst",
       "content": "Tu es l'analyst. Lis les fichiers suivants :\n\n1. apps/breakout/docs/what/product-spec.md\n2. apps/breakout/docs/what/epics/epic-0-mvp/epic.md\n\nCrée la user story us-001-game-setup.md : setup initial du jeu, création de l'aire de jeu, initialisation des briques et raquette.\n\nFormat : Mike Cohn avec critères d'acceptation Gherkin.\n\nTemplate : apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-*.md",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending"
     },
     {
@@ -26,7 +28,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-002-ball-physics.md",
       "role": "analyst",
       "content": "Tu es l'analyst. Lis les fichiers suivants :\n\n1. apps/breakout/docs/what/product-spec.md\n2. apps/breakout/docs/what/epics/epic-0-mvp/epic.md\n\nCrée la user story us-002-ball-physics.md : mouvement et rebonds de la balle sur murs, plafond, raquette et briques.\n\nFormat : Mike Cohn avec critères d'acceptation Gherkin.\n\nTemplate : apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-*.md",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending"
     },
     {
@@ -35,7 +39,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-003-paddle-control.md",
       "role": "analyst",
       "content": "Tu es l'analyst. Lis les fichiers suivants :\n\n1. apps/breakout/docs/what/product-spec.md\n2. apps/breakout/docs/what/epics/epic-0-mvp/epic.md\n\nCrée la user story us-003-paddle-control.md : contrôle de la raquette avec les flèches gauche/droite du clavier.\n\nFormat : Mike Cohn avec critères d'acceptation Gherkin.\n\nTemplate : apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-*.md",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending"
     },
     {
@@ -44,7 +50,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-004-brick-destruction.md",
       "role": "analyst",
       "content": "Tu es l'analyst. Lis les fichiers suivants :\n\n1. apps/breakout/docs/what/product-spec.md\n2. apps/breakout/docs/what/epics/epic-0-mvp/epic.md\n\nCrée la user story us-004-brick-destruction.md : destruction des briques au contact de la balle, gestion de la victoire quand toutes les briques sont détruites.\n\nFormat : Mike Cohn avec critères d'acceptation Gherkin.\n\nTemplate : apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-*.md",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending"
     },
     {
@@ -53,7 +61,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-005-lives-and-gameover.md",
       "role": "analyst",
       "content": "Tu es l'analyst. Lis les fichiers suivants :\n\n1. apps/breakout/docs/what/product-spec.md\n2. apps/breakout/docs/what/epics/epic-0-mvp/epic.md\n\nCrée la user story us-005-lives-and-gameover.md : gestion des 3 vies, perte de vie quand la balle atteint le bas, affichage du nombre de vies, condition de game over.\n\nFormat : Mike Cohn avec critères d'acceptation Gherkin.\n\nTemplate : apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-*.md",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending"
     },
     {
@@ -62,7 +72,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-006-menus-and-settings.md",
       "role": "analyst",
       "content": "Tu es l'analyst. Lis les fichiers suivants :\n\n1. apps/breakout/docs/what/product-spec.md\n2. apps/breakout/docs/what/epics/epic-0-mvp/epic.md\n\nCrée la user story us-006-menus-and-settings.md : menu principal, menu paramètres, slider vitesse balle, boutons démarrer/rejouer/quitter.\n\nFormat : Mike Cohn avec critères d'acceptation Gherkin.\n\nTemplate : apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-*.md",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending"
     },
     {
@@ -72,7 +84,7 @@
       "role": "architect",
       "content": "Tu es l'architect. Lis les fichiers suivants :\n\n1. apps/breakout/docs/what/product-spec.md\n2. apps/breakout/docs/how/architecture.md\n\nCrée le diagramme C4 System Context (apps/breakout/docs/how/c4/system-context.md) qui montre :\n- Le jeu Breakout en tant que système\n- Les utilisateurs/acteurs (joueur)\n- Les systèmes externes (aucun pour V1)\n- Les interactions (clavier, souris, écran)\n\nUtilise Mermaid pour le diagramme.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "I",
@@ -81,7 +93,7 @@
       "role": "architect",
       "content": "Tu es l'architect. Lis les fichiers suivants :\n\n1. apps/breakout/docs/what/product-spec.md\n2. apps/breakout/docs/how/architecture.md\n\nCrée le diagramme C4 Containers (apps/breakout/docs/how/c4/containers.md) qui décompose le système en :\n- Container HTML/CSS/JS (application web statique)\n- Canvas (rendu du jeu)\n- DOM (UI menus)\n- État en mémoire (Game State)\n\nUtilise Mermaid pour le diagramme.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "J",
@@ -90,7 +102,7 @@
       "role": "architect",
       "content": "Tu es l'architect. Lis les fichiers suivants :\n\n1. apps/breakout/docs/what/product-spec.md\n2. apps/breakout/docs/how/architecture.md\n\nCrée le diagramme C4 Components (apps/breakout/docs/how/c4/components.md) qui décompose les composants clés :\n- Game Engine : boucle de jeu, update, render\n- Physics Engine : mouvement balle, collisions\n- Input Handler : clavier, souris\n- Menu UI : HTML/CSS pour menus et slider\n- Game State Manager : gestion d'état\n\nUtilise Mermaid pour le diagramme.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "K",
@@ -98,7 +110,9 @@
       "file": "apps/breakout/docs/how/slices/slice-1-game-setup/slice.md",
       "role": "architect",
       "content": "Tu es l'architect. Lis les fichiers suivants :\n\n1. apps/breakout/docs/what/product-spec.md\n2. apps/breakout/docs/what/epics/epic-0-mvp/epic.md\n3. apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-game-setup.md\n4. apps/breakout/docs/how/architecture.md\n\nCrée la slice d'implémentation slice-1-game-setup (apps/breakout/docs/how/slices/slice-1-game-setup/slice.md) qui couvre :\n- Initialisation du canvas HTML5\n- Création et position initiale du mur de briques (5 lignes)\n- Création et position initiale de la raquette\n- Création et position initiale de la balle\n- Rendu initial sur le canvas\n\nTemplate : apps/breakout/docs/how/slices/slice-1-game-setup/slice.md",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -107,7 +121,9 @@
       "file": "apps/breakout/docs/how/slices/slice-2-ball-physics/slice.md",
       "role": "architect",
       "content": "Tu es l'architect. Lis les fichiers suivants :\n\n1. apps/breakout/docs/what/product-spec.md\n2. apps/breakout/docs/what/epics/epic-0-mvp/epic.md\n3. apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-002-ball-physics.md\n4. apps/breakout/docs/how/architecture.md\n\nCrée la slice d'implémentation slice-2-ball-physics (apps/breakout/docs/how/slices/slice-2-ball-physics/slice.md) qui couvre :\n- Boucle de jeu (game loop avec requestAnimationFrame)\n- Mise à jour position balle (vélocité x/y)\n- Rebonds sur murs gauche/droite\n- Rebonds sur plafond\n- Rendu de la balle à chaque frame\n\nTemplate : apps/breakout/docs/how/slices/slice-2-ball-physics/slice.md",
-      "depends_on": ["K"],
+      "depends_on": [
+        "K"
+      ],
       "status": "pending"
     },
     {
@@ -116,7 +132,9 @@
       "file": "apps/breakout/docs/how/slices/slice-3-collisions/slice.md",
       "role": "architect",
       "content": "Tu es l'architect. Lis les fichiers suivants :\n\n1. apps/breakout/docs/what/product-spec.md\n2. apps/breakout/docs/what/epics/epic-0-mvp/epic.md\n3. apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-002-ball-physics.md\n4. apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-004-brick-destruction.md\n5. apps/breakout/docs/how/architecture.md\n\nCrée la slice d'implémentation slice-3-collisions (apps/breakout/docs/how/slices/slice-3-collisions/slice.md) qui couvre :\n- Détection collision balle ↔ raquette (rebond)\n- Détection collision balle ↔ briques (destruction + rebond)\n- Détection collision balle ↔ bas écran (perte vie)\n- Callback destruction brique\n\nTemplate : apps/breakout/docs/how/slices/slice-3-collisions/slice.md",
-      "depends_on": ["L"],
+      "depends_on": [
+        "L"
+      ],
       "status": "pending"
     },
     {
@@ -125,7 +143,9 @@
       "file": "apps/breakout/docs/how/slices/slice-4-paddle-input/slice.md",
       "role": "architect",
       "content": "Tu es l'architect. Lis les fichiers suivants :\n\n1. apps/breakout/docs/what/product-spec.md\n2. apps/breakout/docs/what/epics/epic-0-mvp/epic.md\n3. apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-003-paddle-control.md\n4. apps/breakout/docs/how/architecture.md\n\nCrée la slice d'implémentation slice-4-paddle-input (apps/breakout/docs/how/slices/slice-4-paddle-input/slice.md) qui couvre :\n- Écoute événements clavier (ArrowLeft, ArrowRight)\n- State du joueur (paddleDirection: -1, 0, +1)\n- Mise à jour position raquette chaque frame\n- Limites écran (raquette ne sort pas du canvas)\n\nTemplate : apps/breakout/docs/how/slices/slice-4-paddle-input/slice.md",
-      "depends_on": ["L"],
+      "depends_on": [
+        "L"
+      ],
       "status": "pending"
     },
     {
@@ -134,7 +154,9 @@
       "file": "apps/breakout/docs/how/slices/slice-5-game-states/slice.md",
       "role": "architect",
       "content": "Tu es l'architect. Lis les fichiers suivants :\n\n1. apps/breakout/docs/what/product-spec.md\n2. apps/breakout/docs/what/epics/epic-0-mvp/epic.md\n3. apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-005-lives-and-gameover.md\n4. apps/breakout/docs/how/architecture.md\n\nCrée la slice d'implémentation slice-5-game-states (apps/breakout/docs/how/slices/slice-5-game-states/slice.md) qui couvre :\n- Machine d'état du jeu (MENU, PLAYING, VICTORY, DEFEAT)\n- Gestion des 3 vies (initialisation, décrémentation, affichage)\n- Transition PLAYING → DEFEAT (vies = 0)\n- Transition PLAYING → VICTORY (briques = 0)\n- Réinitialisation après fin de partie\n\nTemplate : apps/breakout/docs/how/slices/slice-5-game-states/slice.md",
-      "depends_on": ["M"],
+      "depends_on": [
+        "M"
+      ],
       "status": "pending"
     },
     {
@@ -143,7 +165,9 @@
       "file": "apps/breakout/docs/how/slices/slice-6-menus-ui/slice.md",
       "role": "architect",
       "content": "Tu es l'architect. Lis les fichiers suivants :\n\n1. apps/breakout/docs/what/product-spec.md\n2. apps/breakout/docs/what/epics/epic-0-mvp/epic.md\n3. apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-006-menus-and-settings.md\n4. apps/breakout/docs/how/architecture.md\n\nCrée la slice d'implémentation slice-6-menus-ui (apps/breakout/docs/how/slices/slice-6-menus-ui/slice.md) qui couvre :\n- Menu principal (HTML/CSS) avec boutons Démarrer, Paramètres, Quitter\n- Menu paramètres avec slider vitesse balle (0-100%)\n- Écrans victoire et défaite\n- Gestion show/hide des menus selon l'état du jeu\n- Écoute clics souris sur boutons\n\nTemplate : apps/breakout/docs/how/slices/slice-6-menus-ui/slice.md",
-      "depends_on": ["O"],
+      "depends_on": [
+        "O"
+      ],
       "status": "pending"
     }
   ]
