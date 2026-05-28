@@ -1,0 +1,56 @@
+/* Base Color Variables */
+/* GitHub Primer Design System - Semantic Color Variables */
+/* These variables are overridden in theme-light.css and theme-dark.css */
+
+:root {
+  /* Primary Colors - To be overridden by theme */
+  --color-bg: #ffffff;
+  --color-fg: #24292e;
+  --color-border: #d1d5da;
+  --color-link: #0366d6;
+  --color-accent: #28a745;
+
+  /* Extended Color Palette - Semantic uses */
+  --color-success: #28a745;
+  --color-danger: #cb2431;
+  --color-warning: #ffd33d;
+  --color-info: #0366d6;
+
+  /* Semantic Color Variables */
+  --color-text-primary: var(--color-fg);
+  --color-text-secondary: var(--color-fg);
+  --color-text-tertiary: var(--color-fg);
+  --color-bg-primary: var(--color-bg);
+  --color-bg-secondary: var(--color-bg);
+  --color-border-default: var(--color-border);
+  --color-border-muted: var(--color-border);
+
+  /* Interactive Component Colors */
+  --color-btn-bg: var(--color-bg);
+  --color-btn-border: var(--color-border);
+  --color-btn-text: var(--color-fg);
+  --color-btn-hover-bg: var(--color-bg);
+  --color-btn-active-bg: var(--color-bg);
+  --color-btn-disabled-text: var(--color-fg);
+
+  /* Input Colors */
+  --color-input-bg: var(--color-bg);
+  --color-input-border: var(--color-border);
+  --color-input-text: var(--color-fg);
+  --color-input-placeholder-text: var(--color-fg);
+
+  /* State Colors */
+  --color-state-focus-outline: var(--color-link);
+  --color-state-hover: var(--color-bg);
+  --color-state-active: var(--color-bg);
+  --color-state-disabled: var(--color-fg);
+
+  /* Alias Colors for common usage */
+  --color-canvas-default: var(--color-bg);
+  --color-canvas-overlay: var(--color-bg);
+  --color-canvas-inset: var(--color-bg);
+  --color-neutral-emphasis-plus: var(--color-fg);
+  --color-neutral-emphasis: var(--color-fg);
+  --color-neutral-muted: var(--color-border);
+  --color-neutral-subtle: var(--color-border);
+}

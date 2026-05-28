@@ -62,6 +62,6 @@ export default defineConfig({
     }),
   ],
   markdown: {
-    rehypePlugins: [rehypeMermaid],
+    rehypePlugins: [[rehypeMermaid, { strategy: 'img-png' }]],
   },
 });
