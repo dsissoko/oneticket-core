@@ -29,6 +29,12 @@ Respect these dependencies when building the manifest:
 6. `<docs_path>/how/c4/containers.md` — depends on architecture.md — role: architect
 7. `<docs_path>/how/slices/` — depends on architecture.md + all us-*.md — role: architect
    Produce one slice file per implementation unit — the set of slices must cover all user stories.
+   Each slice task produces ONLY its own `slice.md` file — do NOT update cross-references here.
+   Cross-references (## Related Slices in epics and user stories) are handled exclusively by step 8.
+8. cross-references — depends on ALL slices from step 7 — role: architect
+   Single sequential task — never parallelize with slice production.
+   Read all produced slice files and update `## Related Slices` in `epic.md` and all `us-*.md` files.
+   This is the only task allowed to modify `epic.md` and `us-*.md` after their initial creation.
 
 ---
 
