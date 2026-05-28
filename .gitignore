@@ -1,11 +1,8 @@
 **/node_modules/
-opencode.json
-.opencode/
-/tasks/
 
-# .agents/ — sandbox artefacts generated at CI runtime by src/oneticket-install.mjs
+# .agents/, .opencode/, opencode.json — sandbox artefacts generated at CI runtime
 # Protected via .git/info/exclude injected in agent-execute.yml — never committed
-# Dev framework is free to version any .agents/ content locally
+# Dev framework is free to version any of these locally
 
 # doc-site build artifacts — generated at CI runtime, never committed
 doc-site/dist/
