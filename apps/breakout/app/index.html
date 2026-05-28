@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Breakout — Arcade Game</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="game-wrapper">
+      <!-- Canvas for game rendering -->
+      <canvas id="gameCanvas" width="800" height="600"></canvas>
+      
+      <!-- UI Counter (lives, speed) -->
+      <div id="ui-counter" class="ui-counter"></div>
+      
+      <!-- Menu Overlay -->
+      <div id="menu-overlay" class="menu-overlay">
+        <!-- Menu content rendered by JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Game logic scripts -->
+  <script src="js/gameState.js"></script>
+  <script src="js/brickFactory.js"></script>
+  <script src="js/renderer.js"></script>
+  <script src="js/gameLoop.js"></script>
+  <script src="js/bootstrap.js"></script>
+</body>
+</html>
