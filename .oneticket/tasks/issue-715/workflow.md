@@ -1,0 +1,13 @@
+2026-05-28 10:20 | A | apps/breakout/docs/what/product-spec.md
+2026-05-28 10:22 | B | apps/breakout/docs/what/epics/epic-0-mvp/epic.md
+2026-05-28 10:24 | E | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-003-paddle-control.md
+2026-05-28 10:24 | C | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-game-setup.md
+2026-05-28 10:24 | H | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-006-speed-control.md
+2026-05-28 10:24 | D | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-002-ball-physics.md
+2026-05-28 10:24 | F | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-004-lives-and-gameover.md
+2026-05-28 10:24 | G | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-005-victory-and-menu.md
+2026-05-28 10:31 | H | apps/breakout/docs/how/architecture.md
+2026-05-28 10:33 | J | apps/breakout/docs/how/c4/containers.md
+2026-05-28 10:34 | I | apps/breakout/docs/how/c4/system-context.md
+2026-05-28 10:37 | K | apps/breakout/docs/how/slices/
+2026-05-28 10:40 | L | apps/breakout/docs/how/slices/cross-references.md

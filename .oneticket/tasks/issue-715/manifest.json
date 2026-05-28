@@ -1,0 +1,59 @@
+{
+  "issue": 715,
+  "branch_base": "feature/issue-715",
+  "tasks": [
+    {
+      "id": "H",
+      "branch": "task/issue-715-H",
+      "file": "apps/breakout/docs/how/architecture.md",
+      "content": "Tu es @architect. Lis apps/breakout/docs/what/product-spec.md et tous les fichiers user stories dans apps/breakout/docs/what/epics/epic-0-mvp/user-stories/. Produis apps/breakout/docs/how/architecture.md qui documente l'architecture technique du jeu Breakout : composants principaux (game loop, physics engine, collision detector, input handler, renderer), interactions entre composants, et flux d'exécution. Le fichier doit être conforme au template architecture.md.",
+      "role": "architect",
+      "depends_on": [],
+      "status": "done"
+    },
+    {
+      "id": "I",
+      "branch": "task/issue-715-I",
+      "file": "apps/breakout/docs/how/c4/system-context.md",
+      "content": "Tu es @architect. Lis apps/breakout/docs/how/architecture.md. Produis apps/breakout/docs/how/c4/system-context.md qui contient un diagramme C4 System Context montrant le jeu Breakout, le joueur, et les systèmes externes (clavier, canvas, localStorage pour les préférences). Utilise la syntaxe Mermaid pour le diagramme.",
+      "role": "architect",
+      "depends_on": [
+        "H"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "J",
+      "branch": "task/issue-715-J",
+      "file": "apps/breakout/docs/how/c4/containers.md",
+      "content": "Tu es @architect. Lis apps/breakout/docs/how/architecture.md. Produis apps/breakout/docs/how/c4/containers.md qui contient un diagramme C4 Containers montrant les principaux conteneurs : Game Engine, Physics Engine, Renderer (Canvas), Input Handler, Game State Manager, Menu UI. Utilise la syntaxe Mermaid pour le diagramme.",
+      "role": "architect",
+      "depends_on": [
+        "H"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "K",
+      "branch": "task/issue-715-K",
+      "file": "apps/breakout/docs/how/slices/",
+      "content": "Tu es @architect. Lis apps/breakout/docs/how/architecture.md et tous les fichiers user stories dans apps/breakout/docs/what/epics/epic-0-mvp/user-stories/. Produis les slices verticaux d'implémentation dans apps/breakout/docs/how/slices/ : crée un fichier slice-0-game-foundation.md (pour US-001), slice-1-ball-physics.md (pour US-002), slice-2-paddle-control.md (pour US-003), slice-3-lives-system.md (pour US-004), slice-4-victory-menu.md (pour US-005), slice-5-speed-control.md (pour US-006). Chaque slice doit définir les composants à implémenter, les dépendances techniques, les fichiers cibles, et les critères d'acceptation.",
+      "role": "architect",
+      "depends_on": [
+        "H"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "L",
+      "branch": "task/issue-715-L",
+      "file": "apps/breakout/docs/how/slices/cross-references.md",
+      "content": "Tu es @architect. Lis apps/breakout/docs/what/epics/epic-0-mvp/epic.md, tous les fichiers user stories, et tous les fichiers slice produits par la tâche K. Produis les cross-références : mets à jour apps/breakout/docs/what/epics/epic-0-mvp/epic.md avec une section '## Related Slices' listant les slices ; mets à jour chaque fichier user story avec une section '## Related Slices' ; mets à jour chaque fichier slice avec les sections '## Related Epics' et '## Related User Stories'. Utilise les chemins relatifs corrects selon la matrice de chemins définie dans le skill oneticket-init-knowledge.",
+      "role": "architect",
+      "depends_on": [
+        "K"
+      ],
+      "status": "done"
+    }
+  ]
+}
