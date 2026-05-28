@@ -1,0 +1,78 @@
+{
+  "issue": 755,
+  "branch_base": "feature/issue-755",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-755-A",
+      "file": "apps/monjournal/docs/what/product-spec.md",
+      "role": "analyst",
+      "content": "Tu es analyst. Crée apps/monjournal/docs/what/product-spec.md selon le template .oneticket/templates/product-spec.md\n\nContexte du projet monjournal :\n- Nom: Journal Personnel (Mon Journal)\n- Vision: Une application web de journal intime simple et élégante\n- Utilisateurs: Individu qui souhaite écrire et gérer son journal personnel\n\nFonctionnalités principales (MVP):\n1. Créer, éditer et supprimer des entrées de journal datées avec du texte libre\n2. Permettre plusieurs entrées pour la même date\n3. Recherche par période (date de début et date de fin)\n4. Lecture aléatoire — un bouton \"Surprise\" qui affiche une entrée passée aléatoire\n5. Timeline visuelle des entrées — fil chronologique avec ancres de dates\n\nStack technique:\n- Frontend: React 18 + Vite + TypeScript\n- UI: Primer React, style sobre type GitHub\n- Backend: simulé avec MSW, données persistées en localStorage\n- Thèmes: mode clair / sombre + sélecteur de skin Primer\n- Déploiement: GitHub Pages\n- Zéro coût, pas de base de données réelle, MSW + localStorage uniquement\n\nRemplis tous les sections du template selon ce contexte. Le H1 doit être: # Journal Personnel — Spécification produit",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-755-B",
+      "file": "apps/monjournal/docs/what/epics/epic-0-mvp/epic.md",
+      "role": "analyst",
+      "content": "Tu es analyst. Crée apps/monjournal/docs/what/epics/epic-0-mvp/epic.md selon le template .oneticket/templates/epic.md\n\nLis d'abord apps/monjournal/docs/what/product-spec.md pour comprendre la vision complète.\n\nCréé l'epic MVP qui englobe:\n- Gestion des entrées (créer, éditer, supprimer, afficher)\n- Recherche par période\n- Timeline visuelle\n- Lecture aléatoire (Surprise)\n- Thèmes (clair/sombre, skins Primer)\n\nLe H1 doit être: # Epic 0 — Journal Personnel MVP\n\nRemplace les sections du template avec:\n- Vision MVP alignée avec product-spec.md\n- Résultats attendus\n- Contraintes (MSW, localStorage, zéro backend, GitHub Pages)\n- Critères d'acceptation\n\nCet epic sera décomposé en user stories dans la tâche C.",
+      "depends_on": ["A"],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-755-C",
+      "file": "apps/monjournal/docs/what/epics/epic-0-mvp/user-stories/us-placeholder.md",
+      "role": "analyst",
+      "content": "Tu es analyst. Crée 5 user stories dans apps/monjournal/docs/what/epics/epic-0-mvp/user-stories/ selon le template .oneticket/templates/us.md\n\nLis d'abord:\n- apps/monjournal/docs/what/product-spec.md\n- apps/monjournal/docs/what/epics/epic-0-mvp/epic.md\n\nCrée exactement 5 user stories (us-001 à us-005) couvrant le MVP:\n\n1. us-001-create-entry.md: En tant qu'utilisateur, je veux créer une nouvelle entrée de journal pour une date donnée avec du texte libre, afin de documenter mes pensées quotidiennes.\n\n2. us-002-view-edit-delete.md: En tant qu'utilisateur, je veux voir, éditer et supprimer mes entrées de journal, afin de gérer mon contenu.\n\n3. us-003-search-by-period.md: En tant qu'utilisateur, je veux rechercher mes entrées par période (date de début et fin), afin de retrouver mes souvenirs sur une plage de temps spécifique.\n\n4. us-004-timeline-view.md: En tant qu'utilisateur, je veux voir une timeline visuelle chronologique de mes entrées avec ancres de dates, afin de naviguer rapidement dans mon journal.\n\n5. us-005-surprise-feature.md: En tant qu'utilisateur, je veux cliquer sur un bouton \"Surprise\" pour lire une entrée aléatoire de mon passé, afin de revivre des moments mémorables de façon inattendue.\n\nPour chaque user story:\n- H1: # US-NNN — Titre descriptif\n- Remplis le template avec contexte du projet\n- Acceptation criteria en format Gherkin (Given, When, Then)\n- Inclus les contraintes téchniques (MSW, localStorage)\n- Ajoute ## Related Slices (à remplir plus tard par task H)",
+      "depends_on": ["B"],
+      "status": "pending"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-755-D",
+      "file": "apps/monjournal/docs/how/architecture.md",
+      "role": "architect",
+      "content": "Tu es architect. Crée apps/monjournal/docs/how/architecture.md selon le template .oneticket/templates/architecture.md\n\nLis d'abord:\n- apps/monjournal/docs/what/product-spec.md\n- apps/monjournal/docs/what/epics/epic-0-mvp/epic.md\n- Tous les user stories dans apps/monjournal/docs/what/epics/epic-0-mvp/user-stories/\n\nConçois l'architecture React + Vite pour monjournal:\n\nStack: React 18 + Vite + TypeScript + Primer React + MSW + localStorage\n\nComposants clés:\n- Journal entries model (date, text, id)\n- Entry API layer (avec MSW pour simulation)\n- localStorage persistence (read/write entries)\n- Entry CRUD components (Create, Edit, Delete)\n- Timeline component (chronological view)\n- Search component (date range filter)\n- Surprise component (random picker)\n- Theme selector (light/dark + Primer skins)\n\nArchitecture hexagonale recommandée:\n- Domain layer: Journal entry entity, business rules\n- Application layer: Use cases (create, search, random, etc.)\n- Adapter layer: React components, MSW handlers\n- Infrastructure layer: localStorage adapter\n\nH1: # Journal Personnel — Architecture\n\nRemplis tous les sections du template avec cette architecture.",
+      "depends_on": ["C"],
+      "status": "pending"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-755-E",
+      "file": "apps/monjournal/docs/how/c4/system-context.md",
+      "role": "architect",
+      "content": "Tu es architect. Crée apps/monjournal/docs/how/c4/system-context.md\n\nLis d'abord apps/monjournal/docs/how/architecture.md\n\nProduis un diagramme C4 System Context qui montre:\n- Utilisateur (User)\n- Système Journal Personnel (Personal Journal System)\n- Interactions et flux de données\n\nFormat: Mermaid diagram\n\nExemple structure:\n```\nUser interacts with Journal Personal System\nJournal Personal System uses localStorage for persistence\nJournal Personal System provides MSW mock API\n```\n\nH1: # C4 — System Context — Journal Personnel\n\nInclus un diagramme Mermaid clair et une description textuelle.",
+      "depends_on": ["D"],
+      "status": "pending"
+    },
+    {
+      "id": "F",
+      "branch": "task/issue-755-F",
+      "file": "apps/monjournal/docs/how/c4/containers.md",
+      "role": "architect",
+      "content": "Tu es architect. Crée apps/monjournal/docs/how/c4/containers.md\n\nLis d'abord apps/monjournal/docs/how/architecture.md\n\nProduis un diagramme C4 Containers montrant:\n- React SPA (Frontend Container)\n- MSW handlers (API simulation)\n- localStorage (Data persistence)\n\nFormat: Mermaid diagram ou tableau\n\nExemple structure:\n- Container 1: React SPA (TypeScript, Vite, Primer React)\n  Responsabilités: UI, user interactions, state management\n- Container 2: MSW Mock API\n  Responsabilités: HTTP mocking, simulated backend\n- Container 3: Browser localStorage\n  Responsabilités: Persistent data storage\n\nH1: # C4 — Containers — Journal Personnel\n\nInclus diagramme Mermaid clair et descriptions détaillées de chaque container.",
+      "depends_on": ["E"],
+      "status": "pending"
+    },
+    {
+      "id": "G",
+      "branch": "task/issue-755-G",
+      "file": "apps/monjournal/docs/how/slices/slice-placeholder.md",
+      "role": "architect",
+      "content": "Tu es architect. Crée 5 vertical slices dans apps/monjournal/docs/how/slices/ selon le template .oneticket/templates/slice.md\n\nLis d'abord:\n- apps/monjournal/docs/what/epics/epic-0-mvp/epic.md\n- apps/monjournal/docs/what/epics/epic-0-mvp/user-stories/*.md\n- apps/monjournal/docs/how/architecture.md\n\nCrée exactement 5 slices (slice-1 à slice-5) couvrant chaque user story en vertical (UI + Logic + Tests + MSW handlers + localStorage):\n\n1. slice-1-entry-crud/slice.md: CRUD operations for journal entries\n2. slice-2-search-filter/slice.md: Search and period-based filtering\n3. slice-3-timeline-view/slice.md: Timeline visualization component\n4. slice-4-surprise-feature/slice.md: Random entry picker feature\n5. slice-5-theming/slice.md: Theme switching (light/dark, Primer skins)\n\nPour chaque slice:\n- H1: # Slice N — Titre descriptif\n- Remplis le template (objectives, tasks, acceptance criteria, related user stories)\n- Inclus components, MSW handlers, localStorage operations\n- Ajoute ## Related Epics et ## Related User Stories (à valider avec task H)\n- Ajoute les détails d'implémentation technique\n\nChaque slice doit être indépendant et deliverable.",
+      "depends_on": ["F"],
+      "status": "pending"
+    },
+    {
+      "id": "H",
+      "branch": "task/issue-755-H",
+      "file": "apps/monjournal/docs/what/epics/epic-0-mvp/epic.md",
+      "role": "architect",
+      "content": "Tu es architect. Effectue les cross-références finales après avoir lu tous les fichiers produits.\n\nLis:\n- apps/monjournal/docs/what/epics/epic-0-mvp/epic.md\n- apps/monjournal/docs/what/epics/epic-0-mvp/user-stories/us-*.md\n- apps/monjournal/docs/how/slices/slice-*/*.md\n\nMets à jour les sections ## Related Slices dans:\n1. apps/monjournal/docs/what/epics/epic-0-mvp/epic.md\n   Ajoute les liens vers slice-1 à slice-5\n\n2. apps/monjournal/docs/what/epics/epic-0-mvp/user-stories/us-001-create-entry.md\n   Ajoute le lien vers slice-1-entry-crud/slice.md\n\n3. apps/monjournal/docs/what/epics/epic-0-mvp/user-stories/us-002-view-edit-delete.md\n   Ajoute le lien vers slice-1-entry-crud/slice.md\n\n4. apps/monjournal/docs/what/epics/epic-0-mvp/user-stories/us-003-search-by-period.md\n   Ajoute le lien vers slice-2-search-filter/slice.md\n\n5. apps/monjournal/docs/what/epics/epic-0-mvp/user-stories/us-004-timeline-view.md\n   Ajoute le lien vers slice-3-timeline-view/slice.md\n\n6. apps/monjournal/docs/what/epics/epic-0-mvp/user-stories/us-005-surprise-feature.md\n   Ajoute le lien vers slice-4-surprise-feature/slice.md\n\nEt ajoute les liens inverses dans chaque slice vers epic.md et user stories associées.\n\nUtilise les chemins relatifs corrects comme défini dans la skill oneticket-init-knowledge.",
+      "depends_on": ["G"],
+      "status": "pending"
+    }
+  ]
+}
