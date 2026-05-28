@@ -8,7 +8,7 @@
       "file": "apps/breakout/skeleton.json",
       "content": "Lis apps/breakout/docs/how/architecture.md section '5. Key Components' et produis le skeleton complet du jeu Breakout en créant TOUS les fichiers avec leur structure vide : apps/breakout/index.html, apps/breakout/css/styles.css, et apps/breakout/js/{gameLoop.js, gameState.js, physics.js, collisionDetector.js, renderer.js, inputHandler.js, menuController.js, brickFactory.js}. Chaque fichier .js doit contenir les classes décrites avec leurs méthodes (signatures seulement, pas de logique). Le fichier index.html doit importer tous les scripts dans le bon ordre. Le fichier styles.css doit contenir les styles de base pour le canvas et l'UI. Pas de logique implémentée, juste la structure.",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "dev"
     },
     {
