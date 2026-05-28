@@ -64,6 +64,22 @@ jobs:
       id-token: write
 
     steps:
+      # [GUARD] Validate branch name format before doing anything
+      # Accepted patterns: task/issue-<N>-<ID> or feature/issue-<N>
+      # Rejects any other branch (e.g. main, feature/issue-N pushed directly by an agent)
+      # This prevents spurious agent-execute runs triggered by unexpected pushes.
+      - name: Validate branch name
+        run: |
+          BRANCH="${{ inputs.branch }}"
+          if echo "$BRANCH" | grep -qE '^task/issue-[0-9]+-[A-Za-z0-9]+$'; then
+            echo "[guard] task branch — OK: $BRANCH"
+          elif echo "$BRANCH" | grep -qE '^feature/issue-[0-9]+$'; then
+            echo "[guard] feature branch — OK: $BRANCH"
+          else
+            echo "[guard] REJECTED: branch '$BRANCH' does not match task/issue-N-X or feature/issue-N"
+            exit 1
+          fi
+
       # [DETERMINISTIC] Checkout the working branch
       # - FAN-OUT case (branch_base provided): checkout branch_base (always exists)
       #   the task/* branch will be created from it in the next step
