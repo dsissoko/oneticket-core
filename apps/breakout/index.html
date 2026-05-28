@@ -8,47 +8,119 @@
 </head>
 <body>
   <div id="game-container">
-    <canvas id="game-canvas" width="800" height="600"></canvas>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
     <div id="menu-overlay" class="menu-overlay">
       <div id="menu-content" class="menu-content"></div>
     </div>
     <div id="ui-panel" class="ui-panel">
       <div id="lives-counter" class="lives-counter">Lives: <span>3</span></div>
-      <div id="speed-indicator" class="speed-indicator">Speed: <span>1.0x</span></div>
+      <div id="speed-slider-container" class="speed-slider-container">
+        <label for="speed-slider">Speed: </label>
+        <input id="speed-slider" type="range" min="0.5" max="2.0" step="0.1" value="1.0">
+        <span id="speed-indicator">1.0x</span>
+      </div>
     </div>
   </div>
 
-  <!-- Game Scripts in Dependency Order -->
-  <script src="js/gameState.js"></script>
+  <!-- Game Scripts in Correct Dependency Order -->
+  <!-- Order: brickFactory → gameState → physics → collisionDetector → inputHandler → renderer → menuController → gameLoop -->
   <script src="js/brickFactory.js"></script>
+  <script src="js/gameState.js"></script>
   <script src="js/physics.js"></script>
   <script src="js/collisionDetector.js"></script>
-  <script src="js/renderer.js"></script>
   <script src="js/inputHandler.js"></script>
+  <script src="js/renderer.js"></script>
   <script src="js/menuController.js"></script>
   <script src="js/gameLoop.js"></script>
 
   <script>
+    // Verify all required modules are loaded
+    function verifyModulesLoaded() {
+      const requiredModules = [
+        'BrickFactory',
+        'GameState',
+        'Physics',
+        'CollisionDetector',
+        'InputHandler',
+        'Renderer',
+        'MenuController',
+        'GameLoop'
+      ];
+
+      const missingModules = [];
+      for (const moduleName of requiredModules) {
+        if (typeof window[moduleName] === 'undefined') {
+          missingModules.push(moduleName);
+          console.error(`❌ Module not loaded: ${moduleName}`);
+        } else {
+          console.log(`✓ Module loaded: ${moduleName}`);
+        }
+      }
+
+      if (missingModules.length > 0) {
+        throw new Error(`Failed to load modules: ${missingModules.join(', ')}`);
+      }
+      console.log('✓ All modules loaded successfully');
+      return true;
+    }
+
     // Initialize and start the game
     document.addEventListener('DOMContentLoaded', () => {
-      const canvas = document.getElementById('game-canvas');
-      const gameState = new GameState();
-      const brickFactory = new BrickFactory();
-      const physics = new Physics();
-      const collisionDetector = new CollisionDetector();
-      const renderer = new Renderer(canvas);
-      const inputHandler = new InputHandler(gameState);
-      const menuController = new MenuController(canvas);
-      const gameLoop = new GameLoop(
-        gameState,
-        physics,
-        collisionDetector,
-        renderer,
-        inputHandler,
-        menuController
-      );
+      try {
+        // Verify all modules are available
+        verifyModulesLoaded();
 
-      gameLoop.run();
+        const canvas = document.getElementById('gameCanvas');
+        if (!canvas) {
+          throw new Error('Canvas element with ID "gameCanvas" not found');
+        }
+        console.log('✓ Canvas element found:', canvas);
+
+        // Create game instances in order
+        console.log('Creating GameState...');
+        const gameState = new GameState();
+
+        console.log('Creating BrickFactory...');
+        const brickFactory = new BrickFactory();
+
+        console.log('Creating Physics...');
+        const physics = new Physics();
+
+        console.log('Creating CollisionDetector...');
+        const collisionDetector = new CollisionDetector();
+
+        console.log('Creating Renderer...');
+        const renderer = new Renderer(canvas);
+
+        console.log('Creating InputHandler...');
+        const inputHandler = new InputHandler(gameState);
+
+        console.log('Creating MenuController...');
+        const menuController = new MenuController(canvas);
+
+        console.log('Creating GameLoop...');
+        const gameLoop = new GameLoop(
+          gameState,
+          physics,
+          collisionDetector,
+          renderer,
+          inputHandler,
+          menuController
+        );
+
+        console.log('✓ All game instances created successfully');
+        console.log('Starting game loop...');
+        gameLoop.run();
+        console.log('✓ Game loop started');
+
+      } catch (error) {
+        console.error('❌ Failed to initialize game:', error);
+        const errorContainer = document.getElementById('game-container');
+        if (errorContainer) {
+          errorContainer.innerHTML = `<div style="color: red; padding: 20px; font-family: monospace;"><h2>Game Initialization Error</h2><p>${error.message}</p></div>`;
+        }
+        throw error;
+      }
     });
   </script>
 </body>
