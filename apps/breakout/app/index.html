@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breakout — Jeu de Casse-Brique</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        
+        <!-- Menu principal -->
+        <div id="menu" class="menu">
+            <div class="menu-content">
+                <h1>Breakout</h1>
+                <button id="startButton" class="btn btn-primary">Démarrer</button>
+                <button id="instructionsButton" class="btn btn-secondary">Instructions</button>
+            </div>
+        </div>
+        
+        <!-- Interface de jeu -->
+        <div id="game-ui" class="game-ui">
+            <div class="ui-stats">
+                <span id="livesCounter">Vies: 3</span>
+                <span id="scoreCounter">Score: 0</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="gameState.js"></script>
+    <script src="brickFactory.js"></script>
+    <script src="renderer.js"></script>
+    <script src="gameLoop.js"></script>
+    <script src="inputHandler.js"></script>
+    <script src="physics.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
