@@ -9,7 +9,7 @@
       "role": "analyst",
       "content": "Initialise la spécification produit pour Breakout, un jeu arcade frontend en JavaScript vanilla.\n\nContexte fourni :\n- Jeu Breakout arcade classique en JS vanilla (HTML/CSS/JS, aucune dépendance externe)\n- Aire de jeu avec mur de briques sur 5 lignes\n- Balle qui rebondit sur les murs, plafond et raquette\n- Joueur avec 3 vies, perd une vie quand la balle atteint le bas\n- Fin : game over (vies épuisées) ou victoire (toutes briques détruites)\n- Raquette contrôlée aux flèches gauche/droite du clavier\n- Souris réservée à la navigation dans les menus\n- Vitesse de balle réglable via slider (plage très lente → très rapide)\n- Pas de système de niveaux ou progression pour V1\n\nProduis apps/breakout/docs/what/product-spec.md en utilisant le template product-spec.md du répertoire .oneticket/templates/.\n\nRemplis les 11 sections avec les informations du contexte ci-dessus. Sois précis sur la vision, les acteurs (joueur arcade), les problèmes résolus, les capacités produit (mécanique de jeu, contrôles, menu, réglage vitesse), et les règles métier (3 vies, progression par destruction de briques).",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
