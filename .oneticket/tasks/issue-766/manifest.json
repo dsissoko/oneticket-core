@@ -109,7 +109,7 @@
       "depends_on": [
         "A"
       ],
-      "status": "in_progress"
+      "status": "merge-failed"
     },
     {
       "id": "K",
