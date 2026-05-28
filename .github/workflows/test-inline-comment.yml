@@ -15,6 +15,8 @@ on:
     types: [created]
   pull_request_review_comment:
     types: [created]
+  pull_request_review:
+    types: [submitted]
 
 jobs:
   log-event:
@@ -40,3 +42,10 @@ jobs:
           echo "=== ISSUE (via issue_comment) ==="
           echo "issue.number:        ${{ github.event.issue.number }}"
           echo "issue.pull_request:  ${{ github.event.issue.pull_request }}"
+          echo ""
+          echo "=== REVIEW (via pull_request_review) ==="
+          echo "review.id:           ${{ github.event.review.id }}"
+          echo "review.state:        ${{ github.event.review.state }}"
+          echo "review.body:         ${{ github.event.review.body }}"
+          echo "review.user:         ${{ github.event.review.user.login }}"
+          echo "review.pr_number:    ${{ github.event.pull_request.number }}"
