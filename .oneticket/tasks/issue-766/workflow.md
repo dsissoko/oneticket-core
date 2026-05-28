@@ -29,3 +29,4 @@
 2026-05-28 18:16 | G | apps/monjournal/app/src/components/SearchPanel.tsx
 2026-05-28 18:18 | L | apps/monjournal/app/src/components/SurpriseView.tsx
 2026-05-28 18:23 | P | apps/monjournal/app/src/App.tsx
+2026-05-28 18:28 | Q | apps/monjournal/app/tests/e2e/workflows.spec.ts
