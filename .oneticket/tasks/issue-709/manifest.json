@@ -8,7 +8,7 @@
       "file": "apps/breakout/docs/what/product-spec.md",
       "content": "Tu es analyst. Crée apps/breakout/docs/what/product-spec.md basée sur la description du jeu Breakout fournie dans l'issue #709 :\n\n- Nom : Breakout\n- Problème : Un jeu arcade Breakout en JavaScript vanilla (HTML/CSS/JS) sans dépendances externes\n- Utilisateurs : Joueurs de jeux arcade classiques\n- Capacités principales V1 :\n  1. Aire de jeu avec mur de briques (5 lignes)\n  2. Balle rebondissant sur les murs, le plafond et la raquette\n  3. Système de vies (3 vies, perte au bas de l'écran)\n  4. Conditions de fin : défaite (vies épuisées) ou victoire (toutes briques détruites)\n  5. Raquette contrôlée par flèches gauche/droite du clavier\n  6. Menus à la souris (démarrer, rejouer, quitter)\n  7. Slider de vitesse de la balle (lent à rapide)\n  8. Pas de système de niveaux ni progression en V1\n\nUse the template in .oneticket/templates/product-spec.md and follow the structure defined in oneticket-doc-structure skill.",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "analyst"
     },
     {
