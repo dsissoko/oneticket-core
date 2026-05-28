@@ -219,7 +219,7 @@
       "content": "Lis apps/monjournal/docs/how/slices/slice-7-e2e-deployment/slice.md et architecture. Configure package.json avec les scripts build, dev, preview, test:e2e. Dépendances : react 18.x, typescript, @primer/react, @primer/primitives, vite, playwright, vitest. Version pour monjournal MVP. Pas de breaking changes.",
       "role": "dev",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "U",
