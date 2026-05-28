@@ -81,6 +81,11 @@ function processDirectory(dir) {
 }
 
 // Clean previous copy and rebuild
+if (!fs.existsSync(docSource)) {
+  console.error(`[link-docs] ERROR: doc source not found: ${docSource}`);
+  console.error(`[link-docs] Set DOC_SOURCE env var or ensure .oneticket/docs exists.`);
+  process.exit(1);
+}
 if (fs.existsSync(destDir)) fs.rmSync(destDir, { recursive: true, force: true });
 copyDir(docSource, destDir);
 processDirectory(destDir);
