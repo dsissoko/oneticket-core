@@ -230,7 +230,7 @@
       "depends_on": [
         "P"
       ],
-      "status": "in_progress"
+      "status": "done"
     }
   ]
 }
