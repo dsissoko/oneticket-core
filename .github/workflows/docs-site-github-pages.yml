@@ -171,8 +171,9 @@ jobs:
 
   # [APP BUILD] Parallel to build-doc-site — no dependency between them
   # Skipped for framework (oneticket-core) — only runs for app projects (monjournal, etc.)
-  # Uses delegated workflow {slug}-app-build.yml if it exists,
-  # falls back to npm ci && npm run build otherwise
+  # Note: delegated workflow pattern ({slug}-app-build.yml) is defined for future use
+  # when GitHub Actions supports dynamic `uses:` expressions.
+  # Currently always uses npm ci && npm run build directly.
   build-app:
     needs: resolve-context
     if: needs.resolve-context.outputs.app_path != ''
@@ -180,30 +181,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check if delegated build workflow exists
-        id: check-delegated
-        run: |
-          SLUG="${{ needs.resolve-context.outputs.slug }}"
-          if [ -f ".github/workflows/${SLUG}-app-build.yml" ]; then
-            echo "exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "exists=false" >> $GITHUB_OUTPUT
-          fi
-
       - uses: actions/setup-node@v4
-        if: steps.check-delegated.outputs.exists == 'false'
         with:
           node-version: '20'
           cache: 'npm'
           cache-dependency-path: ${{ needs.resolve-context.outputs.app_path }}/package-lock.json
 
-      - name: Install dependencies (fallback npm)
-        if: steps.check-delegated.outputs.exists == 'false'
+      - name: Install dependencies
         working-directory: ${{ needs.resolve-context.outputs.app_path }}
         run: npm ci
 
-      - name: Build (fallback npm)
-        if: steps.check-delegated.outputs.exists == 'false'
+      - name: Build
         working-directory: ${{ needs.resolve-context.outputs.app_path }}
         run: npm run build
 
@@ -212,7 +200,7 @@ jobs:
         with:
           name: app-static
           path: ${{ needs.resolve-context.outputs.app_path }}/dist/
-          if-no-files-found: ignore
+          if-no-files-found: error
           retention-days: 7
 
   deploy-preview:
@@ -238,13 +226,15 @@ jobs:
 
       - name: Download app artifact
         if: needs.resolve-context.outputs.app_url != ''
+        continue-on-error: true
+        id: download-app
         uses: actions/download-artifact@v4
         with:
           name: app-static
           path: app-dist/
 
       - name: Deploy app preview
-        if: needs.resolve-context.outputs.app_url != ''
+        if: needs.resolve-context.outputs.app_url != '' && steps.download-app.outcome == 'success'
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           token:         ${{ secrets.ONETICKET_GH_PAT }}
