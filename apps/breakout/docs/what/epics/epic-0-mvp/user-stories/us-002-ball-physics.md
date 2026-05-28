@@ -48,4 +48,4 @@ And les calculs sont suffisamment précis pour éviter tunneling
 
 ## Related Slices
 
-<!-- @architect fills this section after producing slices -->
+- [Slice 2 — Ball Physics & Collision Detection](../../how/slices/slice-02-ball-physics/slice.md)

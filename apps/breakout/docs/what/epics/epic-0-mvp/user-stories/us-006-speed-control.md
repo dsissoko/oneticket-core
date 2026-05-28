@@ -36,4 +36,4 @@ Un slider de contrôle de vitesse est accessible depuis le menu principal permet
 
 ## Related Slices
 
-<!-- @architect fills this section after producing slices -->
+- [Slice 6 — Speed Control & Difficulty Settings](../../how/slices/slice-06-speed-control/slice.md)
