@@ -155,6 +155,4 @@ class GameState {
 }
 
 // Export for use in other modules
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = GameState;
-}
+export default GameState;
