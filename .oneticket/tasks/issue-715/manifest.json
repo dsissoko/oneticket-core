@@ -9,7 +9,7 @@
       "role": "analyst",
       "content": "Initialise la spécification produit pour Breakout, un jeu arcade frontend en JavaScript vanilla.\n\nContexte fourni :\n- Jeu Breakout arcade classique en JS vanilla (HTML/CSS/JS, aucune dépendance externe)\n- Aire de jeu avec mur de briques sur 5 lignes\n- Balle qui rebondit sur les murs, plafond et raquette\n- Joueur avec 3 vies, perd une vie quand la balle atteint le bas\n- Fin : game over (vies épuisées) ou victoire (toutes briques détruites)\n- Raquette contrôlée aux flèches gauche/droite du clavier\n- Souris réservée à la navigation dans les menus\n- Vitesse de balle réglable via slider (plage très lente → très rapide)\n- Pas de système de niveaux ou progression pour V1\n\nProduis apps/breakout/docs/what/product-spec.md en utilisant le template product-spec.md du répertoire .oneticket/templates/.\n\nRemplis les 11 sections avec les informations du contexte ci-dessus. Sois précis sur la vision, les acteurs (joueur arcade), les problèmes résolus, les capacités produit (mécanique de jeu, contrôles, menu, réglage vitesse), et les règles métier (3 vies, progression par destruction de briques).",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
@@ -17,7 +17,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/epic.md",
       "role": "analyst",
       "content": "Initialise l'epic MVP pour Breakout en fonction de la product-spec créée en tâche A.\n\nLis apps/breakout/docs/what/product-spec.md et produis l'epic MVP dans apps/breakout/docs/what/epics/epic-0-mvp/epic.md.\n\nL'epic MVP doit couvrir les capacités essentielles du jeu : mécanique de gameplay (balle, briques, raquette, collision), gestion des vies, système de menu, et contrôle de la vitesse de balle.\n\nUtilise le template epic.md du répertoire .oneticket/templates/.",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending"
     },
     {
@@ -26,7 +28,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-game-setup.md",
       "role": "analyst",
       "content": "Crée la première user story du MVP : initialisation et affichage du jeu.\n\nLis apps/breakout/docs/what/epics/epic-0-mvp/epic.md et produis la user story dans apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-game-setup.md.\n\nHistoire : En tant que joueur, je veux voir l'écran de jeu avec le mur de briques, la balle et la raquette, afin de comprendre la mécanique du jeu.\n\nCritères d'acceptation :\n- L'écran affiche un canvas ou une grille de 5 lignes de briques\n- La balle est visible au centre ou à proximité de la raquette\n- La raquette est visible au bas de l'écran\n- Le compteur de vies est affiché\n\nUtilise le template us.md du répertoire .oneticket/templates/.",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -35,7 +39,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-002-ball-physics.md",
       "role": "analyst",
       "content": "Crée la deuxième user story du MVP : physique et collision de la balle.\n\nLis apps/breakout/docs/what/epics/epic-0-mvp/epic.md et produis la user story dans apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-002-ball-physics.md.\n\nHistoire : En tant que joueur, je veux que la balle rebondisse réalistes sur les briques, les murs, le plafond et la raquette, afin de jouer au jeu.\n\nCritères d'acceptation :\n- La balle rebondit sur les murs latéraux\n- La balle rebondit sur le plafond\n- La balle rebondit sur la raquette\n- La balle détruit les briques au contact\n- La position et la direction de la balle sont mises à jour à chaque frame\n\nUtilise le template us.md du répertoire .oneticket/templates/.",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -44,7 +50,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-003-paddle-control.md",
       "role": "analyst",
       "content": "Crée la troisième user story du MVP : contrôle de la raquette.\n\nLis apps/breakout/docs/what/epics/epic-0-mvp/epic.md et produis la user story dans apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-003-paddle-control.md.\n\nHistoire : En tant que joueur, je veux contrôler la raquette avec les flèches gauche et droite du clavier, afin d'intercepter la balle.\n\nCritères d'acceptation :\n- La touche flèche gauche déplace la raquette vers la gauche\n- La touche flèche droite déplace la raquette vers la droite\n- La raquette s'arrête aux limites de l'écran\n- Le contrôle est réactif (input lag minimal)\n\nUtilise le template us.md du répertoire .oneticket/templates/.",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -53,7 +61,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-004-lives-and-gameover.md",
       "role": "analyst",
       "content": "Crée la quatrième user story du MVP : gestion des vies et game over.\n\nLis apps/breakout/docs/what/epics/epic-0-mvp/epic.md et produis la user story dans apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-004-lives-and-gameover.md.\n\nHistoire : En tant que joueur, je veux perdre une vie chaque fois que la balle atteint le bas de l'écran, et voir l'écran de game over quand j'ai épuisé mes 3 vies, afin de savoir l'état de ma partie.\n\nCritères d'acceptation :\n- Le joueur démarre avec 3 vies\n- Perte d'une vie quand la balle atteint le bas\n- Le compteur de vies est mis à jour\n- Affichage d'un écran game over après la 3ème vie perdue\n- Option pour rejouer depuis l'écran game over\n\nUtilise le template us.md du répertoire .oneticket/templates/.",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -62,7 +72,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-005-victory-and-menu.md",
       "role": "analyst",
       "content": "Crée la cinquième user story du MVP : victoire et menu.\n\nLis apps/breakout/docs/what/epics/epic-0-mvp/epic.md et produis la user story dans apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-005-victory-and-menu.md.\n\nHistoire : En tant que joueur, je veux voir un écran de victoire quand toutes les briques sont détruites, et accéder à un menu avec les options démarrer, rejouer et quitter, afin de naviguer dans l'application.\n\nCritères d'acceptation :\n- Affichage d'un écran victoire quand toutes les briques sont détruites\n- Présence d'un menu principal avec boutons : Démarrer, Options, Quitter\n- Option Rejouer disponible après une partie (victoire ou game over)\n- Le menu est navigué à la souris\n- Fermeture de l'application depuis le menu Quitter\n\nUtilise le template us.md du répertoire .oneticket/templates/.",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -71,7 +83,9 @@
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-006-speed-control.md",
       "role": "analyst",
       "content": "Crée la sixième user story du MVP : contrôle de la vitesse de la balle.\n\nLis apps/breakout/docs/what/epics/epic-0-mvp/epic.md et produis la user story dans apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-006-speed-control.md.\n\nHistoire : En tant que joueur, je veux ajuster la vitesse de la balle via un slider dans le menu des options, avec une plage allant de très lente à très rapide, afin de choisir la difficulté qui me convient.\n\nCritères d'acceptation :\n- Présence d'un menu Options accessible depuis le menu principal\n- Présence d'un slider pour régler la vitesse de la balle\n- Plage de vitesse : très lente → très rapide (ex. 0.5x à 2x vitesse normale)\n- La vitesse est appliquée immédiatement au démarrage d'une partie\n- La valeur du slider est sauvegardée entre les sessions\n\nUtilise le template us.md du répertoire .oneticket/templates/.",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     }
   ]
