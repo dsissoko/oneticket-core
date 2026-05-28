@@ -210,7 +210,7 @@
       "content": "Lis apps/monjournal/docs/how/slices/slice-7-e2e-deployment/slice.md et apps/monjournal/docs/how/architecture.md. Optimise la config Vite pour production : (1) React plugin, (2) tree-shaking + minification, (3) code-splitting, (4) target ES2020, (5) base path pour GitHub Pages si nécessaire, (6) outDir dist/, (7) gzip compression. Bundle size target < 500 KB gzipped. Source maps pour dev.",
       "role": "dev",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "merge-failed"
     },
     {
       "id": "T",
