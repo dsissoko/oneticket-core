@@ -33,6 +33,7 @@ Eliminates manual task decomposition, branch management, and PR creation. A sing
 - [US-003 — Multi-trigger support](user-stories/us-003-multi-trigger.md)
 - [US-004 — Project context isolation](user-stories/us-004-project-context.md)
 - [US-005 — Agent profile and skill extension](user-stories/us-005-agent-profile-skills.md)
+- [US-006 — Issue lifecycle labels](user-stories/us-006-issue-lifecycle-labels.md)
 
 ## Related Slices
 
