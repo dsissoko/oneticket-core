@@ -27,7 +27,7 @@
       "content": "Lis apps/breakout/docs/how/slices/slice-01-game-setup/slice.md. Implémente BrickFactory classe avec méthode createInitialLayout() qui retourne array de 50 bricks (5 rows × 10 cols). Chaque brick a: id, x, y, width, height, color (rainbow: red, orange, yellow, green, blue).",
       "role": "dev",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "D",
