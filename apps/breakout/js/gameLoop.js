@@ -98,20 +98,24 @@ class GameLoop {
     const deltaTime = Math.max(0, (currentTime - this.lastFrameTime) / 1000);
     this.lastFrameTime = currentTime;
 
-    // 1. Process input
-    this.inputHandler.update(this.gameState);
+    // Only process physics and collisions during gameplay
+    if (this.gameState.phase === 'playing') {
+      // 1. Process input
+      this.inputHandler.update(this.gameState);
 
-    // 2. Update physics
-    this.physics.update(deltaTime, this.gameState);
+      // 2. Update physics — cap deltaTime to avoid large jumps after menu
+      const cappedDelta = Math.min(deltaTime, 0.05);
+      this.physics.update(cappedDelta, this.gameState);
 
-    // 3. Detect and resolve collisions
-    this.handleCollisions();
+      // 3. Detect and resolve collisions
+      this.handleCollisions();
 
-    // 4. Render
+      // 4. Check win/loss conditions
+      this.checkGameConditions();
+    }
+
+    // 5. Render always (menu, playing, victory, gameover)
     this.renderer.draw(this.gameState);
-
-    // 5. Check win/loss conditions
-    this.checkGameConditions();
 
     // Continue loop
     if (this.isRunning) {
