@@ -113,7 +113,7 @@
       "depends_on": [
         "B"
       ],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "L",
