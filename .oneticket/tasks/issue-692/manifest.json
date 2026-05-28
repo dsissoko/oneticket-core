@@ -9,7 +9,7 @@
       "role": "analyst",
       "content": "Tu es l'analyst. Lis les fichiers suivants pour comprendre le contexte :\n\n1. apps/breakout/docs/what/product-spec.md (la spécification produit Breakout complète)\n\nCrée le fichier apps/breakout/docs/what/epics/epic-0-mvp/epic.md qui définit l'Epic 0 MVP du jeu Breakout.\n\nL'epic doit couvrir les capacités clés du V1 décrites dans la spec :\n- Rendu du jeu et de la raquette\n- Contrôle de la raquette au clavier\n- Physique de la balle et collisions\n- Destruction des briques\n- Gestion des vies et des états du jeu\n- Menu et paramètres (slider vitesse)\n\nUtilise le template apps/breakout/docs/what/epics/epic-0-mvp/epic.md (créé par init-doc). Respecte la convention de nommage et la structure C4/slices.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
