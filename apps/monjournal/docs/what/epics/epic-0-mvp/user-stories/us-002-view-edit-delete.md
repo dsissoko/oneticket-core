@@ -80,6 +80,4 @@ Feature: Voir, éditer et supprimer les entrées
 
 ## Related Slices
 
-<!-- @architect will populate this section after producing implementation slices -->
-- Slice 2: CRUD operations (read, update, delete operations)
-- Slice 4: Timeline component and navigation
+- [Slice 1 — Entry CRUD Operations](../../../how/slices/slice-1-entry-crud/slice.md)

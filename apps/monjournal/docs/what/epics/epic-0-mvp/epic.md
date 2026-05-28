@@ -103,13 +103,7 @@ Créer l'expérience core d'une application de journal intime simple et privée.
 
 ## Related Slices
 
-<!-- @architect will populate this after producing implementation slices -->
-<!-- Expected slices from architecture:
-- Slice 1: Data model (Entry entity, localStorage adapter)
-- Slice 2: CRUD operations (create, edit, delete, read)
-- Slice 3: Search and filter (date range queries)
-- Slice 4: Timeline component and navigation
-- Slice 5: Random selection (Surprise feature)
-- Slice 6: Theme switcher and Primer integration
-- Slice 7: E2E tests and deployment validation
--->
+- [Slice 1 — Entry CRUD Operations](../../how/slices/slice-1-entry-crud/slice.md)
+- [Slice 2 — Search and Period-Based Filtering](../../how/slices/slice-2-search-filter/slice.md)
+- [Slice 3 — Timeline Visualization and Navigation](../../how/slices/slice-3-timeline-view/slice.md)
+- [Slice 4 — Surprise Feature (Random Entry Picker)](../../how/slices/slice-4-surprise-feature/slice.md)

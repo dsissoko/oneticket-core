@@ -90,7 +90,4 @@ Feature: Découvrir une entrée aléatoire
 
 ## Related Slices
 
-<!-- @architect will populate this section after producing implementation slices -->
-- Slice 1: Data model (Entry entity, localStorage adapter)
-- Slice 2: CRUD operations (read operation)
-- Slice 5: Random selection (Surprise feature)
+- [Slice 4 — Surprise Feature (Random Entry Picker)](../../../how/slices/slice-4-surprise-feature/slice.md)
