@@ -28,3 +28,4 @@
 2026-05-28 18:12 | F | apps/monjournal/app/src/hooks/useSearchEntries.ts
 2026-05-28 18:16 | G | apps/monjournal/app/src/components/SearchPanel.tsx
 2026-05-28 18:18 | L | apps/monjournal/app/src/components/SurpriseView.tsx
+2026-05-28 18:23 | P | apps/monjournal/app/src/App.tsx
