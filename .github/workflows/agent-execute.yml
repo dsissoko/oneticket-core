@@ -123,6 +123,13 @@ jobs:
       - name: Install OneTicket skills
         run: node src/oneticket-install.mjs
 
+      # [DETERMINISTIC] Exclude .agents/ from git index for this CI clone
+      # Prevents sandbox artefacts (AGENTS.md, skills/) from being committed by the agent.
+      # Uses .git/info/exclude — local to this clone, never committed, invisible to the agent.
+      # Dev framework remains free to version .agents/ content locally.
+      - name: Exclude sandbox artefacts from git
+        run: echo ".agents/" >> .git/info/exclude
+
       # [DETERMINISTIC] Configure git from .oneticket/config.yml
       # Single source of truth — no hardcoded values in this workflow
       - name: Configure git

@@ -3,9 +3,9 @@ opencode.json
 .opencode/
 /tasks/
 
-# OneTicket framework skills — installed at CI runtime by src/oneticket-install.mjs
-# Not committed — do not pollute app developer repos
-.agents/skills/oneticket-*
+# .agents/ — sandbox artefacts generated at CI runtime by src/oneticket-install.mjs
+# Protected via .git/info/exclude injected in agent-execute.yml — never committed
+# Dev framework is free to version any .agents/ content locally
 
 # doc-site build artifacts — generated at CI runtime, never committed
 doc-site/dist/

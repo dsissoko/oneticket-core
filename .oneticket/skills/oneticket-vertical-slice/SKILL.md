@@ -125,11 +125,50 @@ Create `<docs_path>/how/slices/slice-N-<name>/slice.md` using the template:
 After writing a slice:
 - Add the slice reference to `## Related Slices` in each related epic
 - Add the slice reference to `## Related Slices` in each related user story
+- Add the epic and US references to `## Related Epics` and `## Related User Stories` in the slice
 
-Use relative paths from the epic/US file to the slice:
+**Always use relative paths computed from the actual file location.**
+
+File tree reference:
+```
+<docs_path>/
+  what/
+    epics/
+      epic-N-<name>/
+        epic.md                        ← depth 3 from docs_path
+        user-stories/
+          us-NNN-<name>.md             ← depth 4 from docs_path
+  how/
+    slices/
+      slice-N-<name>/
+        slice.md                       ← depth 3 from docs_path
+```
+
+Cross-reference path table (relative links):
+
+| From file | To file | Relative path to use |
+|---|---|---|
+| `what/epics/epic-N/epic.md` | `how/slices/slice-N/slice.md` | `../../../how/slices/slice-N-<name>/slice.md` |
+| `what/epics/epic-N/user-stories/us-NNN.md` | `how/slices/slice-N/slice.md` | `../../../../how/slices/slice-N-<name>/slice.md` |
+| `how/slices/slice-N/slice.md` | `what/epics/epic-N/epic.md` | `../../what/epics/epic-N-<name>/epic.md` |
+| `how/slices/slice-N/slice.md` | `what/epics/epic-N/user-stories/us-NNN.md` | `../../what/epics/epic-N-<name>/user-stories/us-NNN-<name>.md` |
+
+Examples:
 ```markdown
 ## Related Slices
-- [slice-1-user-login](../../../how/slices/slice-1-user-login/slice.md)
+- [Slice 1 — Game Setup](../../../how/slices/slice-1-game-setup/slice.md)
+```
+```markdown
+## Related Slices
+- [Slice 1 — Game Setup](../../../../how/slices/slice-1-game-setup/slice.md)
+```
+```markdown
+## Related Epics
+- [Epic 0 — MVP Breakout](../../what/epics/epic-0-mvp/epic.md)
+
+## Related User Stories
+- [US-001 — Game Setup](../../what/epics/epic-0-mvp/user-stories/us-001-game-setup.md)
+- [US-003 — Paddle Control](../../what/epics/epic-0-mvp/user-stories/us-003-paddle-control.md)
 ```
 
 ## Sizing Guidelines
