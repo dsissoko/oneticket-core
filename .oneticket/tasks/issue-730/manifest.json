@@ -18,7 +18,7 @@
       "content": "Lis apps/breakout/docs/how/architecture.md section 5.2 Game State et apps/breakout/docs/how/slices/slice-01-game-setup/slice.md. Implémente GameState classe avec: lives, bricks array, ball/paddle objects, speedMultiplier, phase, et méthodes: resetGame(), decrementLives(), isGameOver(), isVictory(), setSpeedMultiplier().",
       "role": "dev",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "C",
