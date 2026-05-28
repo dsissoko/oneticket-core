@@ -60,7 +60,7 @@ Provides a complete, engaging arcade experience with zero external dependencies.
 - [US-002 — Paddle Rendering and Keyboard Control](user-stories/us-002-paddle-control.md)
 - [US-003 — Ball Physics and Collision Detection](user-stories/us-003-ball-physics.md)
 - [US-004 — Brick Rendering and Destruction](user-stories/us-004-brick-destruction.md)
-- [US-005 — Life Management and Game States](user-stories/us-005-life-states.md)
+- [US-005 — Life Management and Game Over States](user-stories/us-005-lives-and-gameover.md)
 - [US-006 — Settings Menu and Speed Configuration](user-stories/us-006-settings-speed.md)
 
 ## Related Slices
