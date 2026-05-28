@@ -95,16 +95,11 @@ Créer l'expérience core d'une application de journal intime simple et privée.
 
 ## Related User Stories
 
-<!-- @analyst will populate this after task C (user story decomposition) -->
-<!-- Expected structure:
-- ./user-stories/us-001-create-entry.md
-- ./user-stories/us-002-edit-entry.md
-- ./user-stories/us-003-delete-entry.md
-- ./user-stories/us-004-search-by-period.md
-- ./user-stories/us-005-timeline-visualization.md
-- ./user-stories/us-006-random-reading.md
-- ./user-stories/us-007-theme-switcher.md
--->
+- [./user-stories/us-001-create-entry.md](./user-stories/us-001-create-entry.md) — Créer une nouvelle entrée
+- [./user-stories/us-002-view-edit-delete.md](./user-stories/us-002-view-edit-delete.md) — Voir, éditer et supprimer ses entrées
+- [./user-stories/us-003-search-by-period.md](./user-stories/us-003-search-by-period.md) — Rechercher par période
+- [./user-stories/us-004-timeline-view.md](./user-stories/us-004-timeline-view.md) — Timeline visuelle
+- [./user-stories/us-005-surprise-feature.md](./user-stories/us-005-surprise-feature.md) — Découvrir une entrée aléatoire
 
 ## Related Slices
 
