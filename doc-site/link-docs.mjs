@@ -26,12 +26,29 @@ const destDir = path.resolve(__dirname, 'src/content/docs');
 
 // Transform a single markdown file — inject title from H1, remove H1 from body
 function transformMarkdown(content) {
-  const h1Match = content.match(/^#\s+(.+)$/m);
+  // Strip existing YAML frontmatter if present (agents may commit files with frontmatter)
+  const fmMatch = content.match(/^---\n[\s\S]*?\n---\n?/);
+  const stripped = fmMatch ? content.slice(fmMatch[0].length) : content;
+
+  // Extract title from first H1
+  const h1Match = stripped.match(/^#\s+(.+)$/m);
   const title   = h1Match ? h1Match[1].trim() : 'Untitled';
   const body    = h1Match
-    ? content.replace(/^#\s+.+\n?/m, '').replace(/^\n+/, '\n')
-    : content;
-  return `---\ntitle: "${title.replace(/"/g, '\\"')}"\n---\n${body}`;
+    ? stripped.replace(/^#\s+.+\n?/m, '').replace(/^\n+/, '\n')
+    : stripped;
+
+  // Convert markdown links from .md to Starlight URLs (no extension, trailing slash)
+  // e.g. [text](path/to/file.md) → [text](path/to/file/)
+  // Preserves anchors: [text](file.md#section) → [text](file/#section)
+  const converted = body.replace(
+    /\[([^\]]*)\]\(([^)]+\.md)(#[^)]*)?\)/g,
+    (_, text, mdPath, anchor) => {
+      const urlPath = mdPath.replace(/\.md$/, '/');
+      return `[${text}](${urlPath}${anchor || ''})`;
+    }
+  );
+
+  return `---\ntitle: "${title.replace(/"/g, '\\"')}"\n---\n${converted}`;
 }
 
 // Copy docSource → destDir, renaming README.md → index.md
