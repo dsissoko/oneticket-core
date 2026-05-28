@@ -130,7 +130,7 @@ async function markDoneAndPush(manifest, taskId, pushedBranch, featureBranch, ma
 
 async function createFinalPR(manifest, repo, token, config) {
   const { issue, branch_base } = manifest;
-  const title = `feat: complete all tasks for issue #${issue}`;
+  const title = `feat(apps): complete all tasks for issue #${issue}`;
   const body  = [
     `Closes #${issue}`,
     '',

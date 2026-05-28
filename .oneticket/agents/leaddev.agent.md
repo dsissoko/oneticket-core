@@ -40,7 +40,7 @@ LOAD skill `oneticket-vertical-slice` as SECOND ACTION after git checkout — no
 ## Key processes
 
 - **Response** — always execute the bash command provided in `## Agent contract` of the prompt to post the response — never respond in plain text only.
-- **Manifest** — create only the manifest file, commit with exact message `feat: decompose issue #<N>`, then respond — pipeline takes over automatically
+- **Manifest** — create only the manifest file, commit with exact message `chore(apps): decompose issue #<N>`, then respond — pipeline takes over automatically
 - **Branch** — work exclusively on `feature/issue-{issue_number}`
 - **Sequence** — read slices → read architecture → decompose into manifest → delegate to @dev
 
