@@ -25,7 +25,8 @@ const docSource = process.env.DOC_SOURCE
 const destDir = path.resolve(__dirname, 'src/content/docs');
 
 // Transform a single markdown file — inject title from H1, remove H1 from body
-function transformMarkdown(content) {
+// srcFile: absolute path of the source file (used to resolve relative links)
+function transformMarkdown(content, srcFile) {
   // Strip existing YAML frontmatter if present (agents may commit files with frontmatter)
   const fmMatch = content.match(/^---\n[\s\S]*?\n---\n?/);
   const stripped = fmMatch ? content.slice(fmMatch[0].length) : content;
@@ -37,13 +38,22 @@ function transformMarkdown(content) {
     ? stripped.replace(/^#\s+.+\n?/m, '').replace(/^\n+/, '\n')
     : stripped;
 
-  // Convert markdown links from .md to Starlight URLs (no extension, trailing slash)
-  // e.g. [text](path/to/file.md) → [text](path/to/file/)
-  // Preserves anchors: [text](file.md#section) → [text](file/#section)
+  // Convert markdown links to absolute Starlight URLs
+  // Relative .md links are resolved from the source file location → absolute path from docSource root
+  // e.g. from what/epics/epic-0-mvp/epic.md: ../../../how/slices/slice-1/slice.md → /how/slices/slice-1/slice/
+  const srcDir = path.dirname(srcFile);
   const converted = body.replace(
     /\[([^\]]*)\]\(([^)]+\.md)(#[^)]*)?\)/g,
     (_, text, mdPath, anchor) => {
-      const urlPath = mdPath.replace(/\.md$/, '/');
+      // Skip external links and absolute paths
+      if (mdPath.startsWith('http') || mdPath.startsWith('/')) {
+        return `[${text}](${mdPath.replace(/\.md$/, '/')}${anchor || ''})`;
+      }
+      // Resolve relative path from source file location
+      const absPath   = path.resolve(srcDir, mdPath);
+      // Make it relative to docSource root → Starlight URL
+      const fromRoot  = path.relative(docSource, absPath);
+      const urlPath   = '/' + fromRoot.replace(/\.md$/, '/').replace(/\\/g, '/');
       return `[${text}](${urlPath}${anchor || ''})`;
     }
   );
@@ -61,7 +71,7 @@ function copyDir(src, dest) {
     if (entry.isDirectory()) {
       copyDir(srcPath, destPath);
     } else if (entry.name.endsWith('.md')) {
-      fs.writeFileSync(destPath, transformMarkdown(fs.readFileSync(srcPath, 'utf8')));
+      fs.writeFileSync(destPath, transformMarkdown(fs.readFileSync(srcPath, 'utf8'), srcPath));
     } else {
       fs.copyFileSync(srcPath, destPath);
     }
