@@ -69,3 +69,4 @@ Provides a complete, engaging arcade experience with zero external dependencies.
 - [Slice 2 — Ball Physics and Wall Collision](../../how/slices/slice-2-ball-physics/slice.md)
 - [Slice 3 — Paddle, Brick Collisions & Life Management](../../how/slices/slice-3-collisions/slice.md)
 - [Slice 5 — Game States and Life Management](../../how/slices/slice-5-game-states/slice.md)
+- [Slice 6 — Menus UI](../../how/slices/slice-6-menus-ui/slice.md)

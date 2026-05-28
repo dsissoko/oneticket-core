@@ -12,3 +12,4 @@
 2026-05-28 08:10 | L | apps/breakout/docs/how/slices/slice-2-ball-physics/slice.md
 2026-05-28 08:13 | M | apps/breakout/docs/how/slices/slice-3-collisions/slice.md
 2026-05-28 08:15 | O | apps/breakout/docs/how/slices/slice-5-game-states/slice.md
+2026-05-28 08:19 | P | apps/breakout/docs/how/slices/slice-6-menus-ui/slice.md

@@ -91,6 +91,12 @@ As a player, I want to access main menu buttons and configure ball speed via a s
 
 ---
 
+## Related Slices
+
+- [Slice 6 — Menus UI](../../../../how/slices/slice-6-menus-ui/slice.md)
+
+---
+
 ## Definition of Done
 
 - [x] All acceptance criteria pass functional testing
