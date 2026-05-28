@@ -1,0 +1,34 @@
+{
+  "name": "monjournal",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Journal Personnel — Personal journaling app with localStorage persistence",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test:e2e": "playwright test",
+    "test:unit": "vitest",
+    "test": "vitest && playwright test",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "@primer/react": "^36.0.0",
+    "@primer/primitives": "^8.3.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.0",
+    "@types/node": "^22.0.0",
+    "vite": "^5.4.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "playwright": "^1.48.0",
+    "@playwright/test": "^1.48.0",
+    "vitest": "^1.6.0",
+    "@vitest/ui": "^1.6.0"
+  }
+}
