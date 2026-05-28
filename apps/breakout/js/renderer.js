@@ -25,16 +25,14 @@ class Renderer {
     // Clear canvas
     this.clearCanvas();
 
-    // Draw background
-    this.drawBackground();
-
-    // Draw game objects
-    this.drawBricks(gameState.bricks);
-    this.drawBall(gameState.ball);
-    this.drawPaddle(gameState.paddle);
-
-    // Update UI display
-    this.updateUIPanel(gameState);
+    // Only draw game objects during gameplay — not in menu/victory/gameover
+    if (gameState.phase === 'playing') {
+      this.drawBackground();
+      this.drawBricks(gameState.bricks);
+      this.drawBall(gameState.ball);
+      this.drawPaddle(gameState.paddle);
+      this.updateUIPanel(gameState);
+    }
 
     // Render phase-specific overlays — only when phase changes to avoid destroying DOM every frame
     if (gameState.phase !== this.lastRenderedPhase) {

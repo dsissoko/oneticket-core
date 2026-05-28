@@ -197,8 +197,12 @@ class GameLoop {
     this.gameState.ball.y = canvasHeight - 80;
     this.gameState.ball.vx = 200;
     this.gameState.ball.vy = -200;
+    this.gameState.ball.radius = 6;
 
-    this.gameState.paddle.x = canvasWidth / 2;
+    this.gameState.paddle.x = canvasWidth / 2 - 40;
+    this.gameState.paddle.y = canvasHeight - 30;
+    this.gameState.paddle.width = 80;
+    this.gameState.paddle.height = 15;
     this.gameState.paddle.vx = 0;
   }
 

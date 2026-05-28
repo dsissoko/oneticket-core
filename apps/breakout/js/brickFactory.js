@@ -32,7 +32,7 @@ class BrickFactory {
         const brick = {
           id: brickId++,
           x: col * (this.brickWidth + this.brickPaddingX) + this.brickPaddingX,
-          y: row * (this.brickHeight + this.brickPaddingY) + this.brickPaddingY + 40,
+          y: row * (this.brickHeight + this.brickPaddingY) + this.brickPaddingY + 10,
           width: this.brickWidth,
           height: this.brickHeight,
           color: this.colors[row % this.colors.length],
