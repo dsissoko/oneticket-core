@@ -229,3 +229,73 @@ by adding a corresponding workflow file.
 | **V2** — planned | Cloud runtime, persistent sandboxes, multi-sandbox fan-out, observability | Long-running agent sessions without GitHub Actions constraints |
 
 > Macro-versions V1 and V2 are planning labels, not SemVer versions. Official releases follow semantic versioning — `v0.1.0`, `v0.2.0`, `v1.0.0`, etc. — carried by git tags. Documentation is a snapshot of the repository state at each tag.
+
+---
+
+## 13. Parallel Task Execution Contract
+
+OneTicket executes tasks in parallel via FAN-OUT — each task runs on its own isolated branch and produces files that are merged back into the feature branch by GATHER.
+
+For deterministic merging to work, parallel tasks must respect one absolute rule:
+
+> **No two tasks that run in parallel may produce or modify the same file.**
+
+A violation causes an `add/add` merge conflict that cannot be resolved automatically and requires human intervention. This is not a recoverable error — it is a design flaw in the manifest.
+
+### Why this matters
+
+Git merge strategy for `add/add` conflicts has no automatic resolution — both versions are equally valid, and only a human can decide which to keep. In a FAN-OUT pipeline, this blocks GATHER and stalls the entire issue.
+
+### Known patterns for conflict-free parallel decomposition
+
+Three patterns are documented in multi-agent coding research and validated in OneTicket:
+
+#### Pattern 1 — Skeleton-first (recommended for greenfield implementation)
+
+A single sequential task with no `depends_on` creates all files as empty stubs (class declarations, empty functions, module exports — no logic). All parallel tasks then fill their own module with real logic, without creating new files.
+
+```
+Task A  (skeleton, depends_on: [])           → creates ALL empty files
+    ↓
+Tasks B, C, D, E  (parallel, depends_on: [A]) → each fills ONE file with real logic
+    ↓
+Task F  (integration, depends_on: [B,C,D,E]) → verifies everything assembles
+```
+
+**Use when:** starting from scratch, no existing codebase.
+
+**Reference:** [DevSwarm — branch isolation pattern](https://github.com/devswarm-ai/devswarm)
+
+#### Pattern 2 — Strict file ownership per task
+
+Each task declares exactly which files it owns. The manifest makes ownership explicit. No two parallel tasks may declare the same file in their scope.
+
+```json
+{ "id": "B", "file": "app/js/gameState.js", "depends_on": ["A"], ... }
+{ "id": "C", "file": "app/js/physics.js",   "depends_on": ["A"], ... }
+{ "id": "D", "file": "app/js/renderer.js",  "depends_on": ["A"], ... }
+```
+
+**Use when:** decomposing by module with clear boundaries, each module maps to one file.
+
+**Reference:** [MetaGPT — role-based file assignment](https://github.com/geekan/MetaGPT), [ChatDev — atomic task assignment](https://github.com/OpenBMB/ChatDev)
+
+#### Pattern 3 — Sequential dependency chain
+
+Tasks that share files are chained sequentially with explicit `depends_on`. No parallelism — simpler but slower.
+
+```
+Task A → Task B (depends_on: [A]) → Task C (depends_on: [B])
+```
+
+**Use when:** file boundaries cannot be separated cleanly, or the implementation is inherently sequential.
+
+### Rule for `@leaddev`
+
+`@leaddev` **must use Pattern 1 or Pattern 2** when producing implementation manifests.
+
+- Pattern 1 is preferred for new projects or when the file structure is not yet established.
+- Pattern 2 is preferred when the architecture defines clear module boundaries.
+- Pattern 3 is acceptable only when file coupling makes parallel execution impossible.
+
+A manifest where parallel tasks produce the same file is invalid and will cause a merge conflict at GATHER.
