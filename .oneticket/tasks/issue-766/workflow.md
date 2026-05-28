@@ -13,3 +13,4 @@
 2026-05-28 13:41 | L | apps/monjournal/docs/how/slices/slice-4-surprise-feature/slice.md
 2026-05-28 13:42 | M | apps/monjournal/app/src/hooks/useTheme.ts
 2026-05-28 13:22 | A | apps/monjournal/app/src/domain/Entry.ts
+2026-05-28 13:26 | B | apps/monjournal/app/src/infrastructure/LocalStorageRepository.ts
