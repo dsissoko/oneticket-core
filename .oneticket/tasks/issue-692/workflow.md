@@ -6,3 +6,4 @@
 2026-05-28 08:04 | C | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-002-ball-physics.md
 2026-05-28 08:05 | B | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-game-setup.md
 2026-05-28 08:05 | F | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-005-lives-and-gameover.md
+2026-05-28 08:04 | E | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-004-brick-destruction.md
