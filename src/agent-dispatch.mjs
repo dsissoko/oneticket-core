@@ -25,7 +25,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { loadConfig } from './config.mjs';
-import { run, runCapture, runWithRetry, setupGit, dispatchWorkflow } from './utils.mjs';
+import { run, runCapture, runWithRetry, setupGit, dispatchWorkflow, applyLabel } from './utils.mjs';
 import { AGENTS_DIR, AGENT_EXT } from './constants.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -327,6 +327,7 @@ async function main() {
     retry_max:    String(config.retry_max),
   }, repo, ghToken);
 
+  await applyLabel('in progress', issueNumber, repo, ghToken, 'agent-dispatch');
   console.log('[agent-dispatch] Dispatch complete.');
 }
 

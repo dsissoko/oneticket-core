@@ -12,7 +12,7 @@
  * Value sourced from agent_config.<cli>.model in .oneticket/config.yml.
  */
 
-import { dispatchWorkflow } from './utils.mjs';
+import { dispatchWorkflow, applyLabel } from './utils.mjs';
 
 async function main() {
   const repo       = process.env.REPO;
@@ -27,6 +27,10 @@ async function main() {
 
   if (retryCount >= retryMax) {
     console.error(`[retry-dispatch] Max retries reached (${retryMax}). Definitive failure.`);
+    const issueNumber = process.env.ISSUE_NUMBER;
+    if (issueNumber) {
+      await applyLabel('blocked', issueNumber, repo, token, 'retry-dispatch');
+    }
     process.exit(1);
   }
 

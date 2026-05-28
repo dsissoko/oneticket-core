@@ -136,6 +136,90 @@ export function areDependenciesSatisfied(task, allTasks) {
 }
 
 // ---------------------------------------------------------------------------
+// GitHub label helpers
+// ---------------------------------------------------------------------------
+
+const LABEL_COLORS = {
+  'in progress':      '0075ca',
+  'merge error':      'b60205',
+  'blocked':          'd93f0b',
+  'ready for review': '0e8a16',
+};
+
+const GH_HEADERS = (token) => ({
+  Authorization:        `Bearer ${token}`,
+  Accept:               'application/vnd.github+json',
+  'Content-Type':       'application/json',
+  'X-GitHub-Api-Version': '2022-11-28',
+});
+
+/**
+ * Ensures a label exists in the repo (creates it if not found).
+ */
+async function ensureLabel(labelName, repo, token) {
+  const color = LABEL_COLORS[labelName] || 'ededed';
+  const checkRes = await fetch(
+    `https://api.github.com/repos/${repo}/labels/${encodeURIComponent(labelName)}`,
+    { headers: GH_HEADERS(token) }
+  );
+  if (checkRes.status === 404) {
+    await fetch(`https://api.github.com/repos/${repo}/labels`, {
+      method: 'POST',
+      headers: GH_HEADERS(token),
+      body: JSON.stringify({ name: labelName, color }),
+    });
+  }
+}
+
+/**
+ * Applies a label to an issue (creates the label if needed).
+ * Silently warns on error — never throws.
+ *
+ * @param {string} labelName  - Label name (e.g. 'in progress')
+ * @param {string|number} issueNumber
+ * @param {string} repo       - "owner/repo"
+ * @param {string} token      - GitHub PAT
+ * @param {string} prefix     - Log prefix
+ */
+export async function applyLabel(labelName, issueNumber, repo, token, prefix = 'label') {
+  try {
+    await ensureLabel(labelName, repo, token);
+    await fetch(`https://api.github.com/repos/${repo}/issues/${issueNumber}/labels`, {
+      method: 'POST',
+      headers: GH_HEADERS(token),
+      body: JSON.stringify({ labels: [labelName] }),
+    });
+    console.log(`[${prefix}] Label "${labelName}" applied on #${issueNumber}`);
+  } catch (err) {
+    console.warn(`[${prefix}] Could not apply label "${labelName}" on #${issueNumber}: ${err.message}`);
+  }
+}
+
+/**
+ * Removes a label from an issue.
+ * Silently warns on error — never throws.
+ *
+ * @param {string} labelName  - Label name to remove
+ * @param {string|number} issueNumber
+ * @param {string} repo       - "owner/repo"
+ * @param {string} token      - GitHub PAT
+ * @param {string} prefix     - Log prefix
+ */
+export async function removeLabel(labelName, issueNumber, repo, token, prefix = 'label') {
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${repo}/issues/${issueNumber}/labels/${encodeURIComponent(labelName)}`,
+      { method: 'DELETE', headers: GH_HEADERS(token) }
+    );
+    if (res.ok || res.status === 404) {
+      console.log(`[${prefix}] Label "${labelName}" removed from #${issueNumber}`);
+    }
+  } catch (err) {
+    console.warn(`[${prefix}] Could not remove label "${labelName}" from #${issueNumber}: ${err.message}`);
+  }
+}
+
+// ---------------------------------------------------------------------------
 // GitHub workflow dispatch
 // ---------------------------------------------------------------------------
 

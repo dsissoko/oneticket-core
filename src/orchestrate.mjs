@@ -34,6 +34,8 @@ import {
   writeManifest,
   readManifest,
   areDependenciesSatisfied,
+  applyLabel,
+  removeLabel,
 } from './utils.mjs';
 import { TASKS_DIR, MANIFEST_FILE } from './constants.mjs';
 
@@ -152,34 +154,6 @@ async function createFinalPR(manifest, repo, token, config) {
   if (!res.ok) throw new Error(`Failed to create PR: ${JSON.stringify(data)}`);
   console.log(`[orchestrate] Final PR created: ${data.html_url}`);
   return data;
-}
-
-async function ensureAndApplyLabel(issueNumber, repo, token) {
-  try {
-    const labelName  = 'merge error';
-    const labelColor = 'b60205';
-
-    const checkRes = await fetch(
-      `https://api.github.com/repos/${repo}/labels/${encodeURIComponent(labelName)}`,
-      { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' } }
-    );
-
-    if (checkRes.status === 404) {
-      await fetch(`https://api.github.com/repos/${repo}/labels`, {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json', 'X-GitHub-Api-Version': '2022-11-28' },
-        body: JSON.stringify({ name: labelName, color: labelColor }),
-      });
-    }
-
-    await fetch(`https://api.github.com/repos/${repo}/issues/${issueNumber}/labels`, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json', 'X-GitHub-Api-Version': '2022-11-28' },
-      body: JSON.stringify({ labels: [labelName] }),
-    });
-  } catch (err) {
-    console.warn(`[orchestrate] Could not apply label on #${issueNumber}: ${err.message}`);
-  }
 }
 
 async function postMergeFailureComment(issueNumber, taskId, branch, featureBranch, repo, token) {
@@ -309,7 +283,7 @@ async function main() {
     run('orchestrate', `git commit -m "chore: mark task ${taskId} as merge-failed"`);
     runWithRetry('orchestrate', `git push origin ${featureBranch}`);
 
-    await ensureAndApplyLabel(issueNumber, repo, ghToken);
+    await applyLabel('merge error', issueNumber, repo, ghToken, 'orchestrate');
     await postMergeFailureComment(issueNumber, taskId, taskBranch, featureBranch, repo, ghToken);
 
     console.error(`[orchestrate] Workflow stopped — human intervention required.`);
@@ -330,6 +304,8 @@ async function main() {
   if (allDone) {
     console.log('[orchestrate] All tasks done. Creating final PR.');
     await createFinalPR(manifest, repo, ghToken, config);
+    await applyLabel('ready for review', issueNumber, repo, ghToken, 'orchestrate');
+    await removeLabel('in progress', issueNumber, repo, ghToken, 'orchestrate');
   } else if (readyTasks.length > 0) {
     console.log(`[orchestrate] [FAN-IN → FAN-OUT] ${readyTasks.length} unblocked task(s): ${readyTasks.map(t => t.id).join(', ')}`);
     await launchReadyTasks(manifest, repo, ghToken);
