@@ -3,3 +3,4 @@
 2026-05-28 10:24 | E | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-003-paddle-control.md
 2026-05-28 10:24 | C | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-game-setup.md
 2026-05-28 10:24 | H | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-006-speed-control.md
+2026-05-28 10:24 | D | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-002-ball-physics.md
