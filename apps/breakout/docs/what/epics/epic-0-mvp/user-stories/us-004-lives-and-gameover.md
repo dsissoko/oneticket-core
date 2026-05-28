@@ -63,4 +63,4 @@ Voir [Epic 0 — MVP Breakout](../epic.md)
 
 ## Related Slices
 
-<!-- @architect fills this section after producing slices -->
+- [Slice 4 — Lives System & Game Over Screen](../../how/slices/slice-04-lives-system/slice.md)
