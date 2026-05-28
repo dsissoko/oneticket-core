@@ -136,7 +136,7 @@ function buildRoleTaskPrompt(task, manifest, config, repo) {
   lines.push(`- ALWAYS respond at the end of every job — no exception.`);
   lines.push(`- The exact command to respond (issue comment):`);
   lines.push('  ```bash');
-  lines.push(`  gh issue comment ${manifest.issue} --repo ${repo} --body "**[Agent: @${task.role}]** {your message here}"`);
+  lines.push(`  gh api repos/${repo}/issues/${manifest.issue}/comments --method POST --field body="**[Agent: @${task.role}]** {your message here}"`);
   lines.push('  ```');
   lines.push('');
 

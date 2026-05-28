@@ -185,15 +185,13 @@ function buildPrompt({ role, demande, branch, config, profile, contextBlock, doc
   } else if (originType === 'pull_request_comment') {
     lines.push(`- The exact command to respond (PR comment):`);
     lines.push('  ```bash');
-    const prBody = `**[Agent: @${role}]** {your message here}`;
-    lines.push(`  gh pr comment ${prNumber} --repo ${repo} --body "${prBody}"`);
+    lines.push(`  gh api repos/${repo}/issues/${prNumber}/comments --method POST --field body="**[Agent: @${role}]** {your message here}"`);
     lines.push('  ```');
   } else {
     // Default: issue_comment
     lines.push(`- The exact command to respond (issue comment):`);
     lines.push('  ```bash');
-    const issueBody = `**[Agent: @${role}]** {your message here}`;
-    lines.push(`  gh issue comment ${issueNumber} --repo ${repo} --body "${issueBody}"`);
+    lines.push(`  gh api repos/${repo}/issues/${issueNumber}/comments --method POST --field body="**[Agent: @${role}]** {your message here}"`);
     lines.push('  ```');
   }
   lines.push('');
