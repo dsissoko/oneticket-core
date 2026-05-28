@@ -195,7 +195,7 @@ jobs:
         working-directory: ${{ needs.resolve-context.outputs.app_path }}
         run: npm run build
         env:
-          VITE_BASE_PATH: /${{ needs.resolve-context.outputs.app_target_folder }}/
+          VITE_BASE_PATH: /oneticket-core/${{ needs.resolve-context.outputs.app_target_folder }}/
 
       - name: Upload app artifact
         uses: actions/upload-artifact@v4
