@@ -168,7 +168,7 @@
       "depends_on": [
         "O"
       ],
-      "status": "pending"
+      "status": "in_progress"
     }
   ]
 }
