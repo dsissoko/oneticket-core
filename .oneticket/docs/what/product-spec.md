@@ -362,7 +362,7 @@ Key principles:
 These examples illustrate the trade-offs in practice. They are not exceptional failures — they are the expected behavior of any multi-agent system operating at this granularity.
 
 **Documentation — coarse task, unit error:**
-A single task asked to produce all implementation slices for a project generated duplicate slices (two slices sharing the same sequence number, different names). The agent had too much freedom within one task and diverged mid-execution. Mitigation: one task per slice, explicit naming in the manifest.
+A single task asked to produce all implementation slices for a project generated duplicate slices (two slices sharing the same sequence number, different names, e.g. `slice-1-entry-crud` and `slice-1-entry-data-model`). The agent had too much freedom within one task and produced redundant artifacts requiring manual cleanup. Mitigation: one task per slice, explicit naming in the manifest.
 
 **Documentation — fine tasks, integration success:**
 When the manifest explicitly named each slice as a separate task, each agent produced a coherent slice file. No duplicates. Cross-references were handled by a dedicated final task. The documentation was complete and navigable on the first pass.
