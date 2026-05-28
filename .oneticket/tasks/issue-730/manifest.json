@@ -45,7 +45,7 @@
       "content": "Lis apps/breakout/docs/how/architecture.md section 5.1 Game Loop et apps/breakout/docs/how/slices/slice-01-game-setup/slice.md. Implémente GameLoop classe avec: run() lancé via requestAnimationFrame, appelant chaque frame: physics.update(), collisionDetector.detectAndResolve(), renderer.draw(). Initialise: inputHandler, physics, renderer.",
       "role": "dev",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "F",
