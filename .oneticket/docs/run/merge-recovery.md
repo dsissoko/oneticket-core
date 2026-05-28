@@ -1,3 +1,8 @@
+---
+weight: 1
+title: "Merge Conflict Recovery"
+---
+
 # Runbook — Merge Conflict Recovery
 
 ## General principle
