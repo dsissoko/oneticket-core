@@ -1,0 +1,42 @@
+{
+  "issue": 709,
+  "branch_base": "feature/issue-709",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-709-A",
+      "file": "apps/breakout/docs/what/product-spec.md",
+      "content": "Tu es analyst. Crée apps/breakout/docs/what/product-spec.md basée sur la description du jeu Breakout fournie dans l'issue #709 :\n\n- Nom : Breakout\n- Problème : Un jeu arcade Breakout en JavaScript vanilla (HTML/CSS/JS) sans dépendances externes\n- Utilisateurs : Joueurs de jeux arcade classiques\n- Capacités principales V1 :\n  1. Aire de jeu avec mur de briques (5 lignes)\n  2. Balle rebondissant sur les murs, le plafond et la raquette\n  3. Système de vies (3 vies, perte au bas de l'écran)\n  4. Conditions de fin : défaite (vies épuisées) ou victoire (toutes briques détruites)\n  5. Raquette contrôlée par flèches gauche/droite du clavier\n  6. Menus à la souris (démarrer, rejouer, quitter)\n  7. Slider de vitesse de la balle (lent à rapide)\n  8. Pas de système de niveaux ni progression en V1\n\nUse the template in .oneticket/templates/product-spec.md and follow the structure defined in oneticket-doc-structure skill.",
+      "depends_on": [],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-709-B",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/epic.md",
+      "content": "Tu es analyst. Crée apps/breakout/docs/what/epics/epic-0-mvp/epic.md pour l'epic MVP du jeu Breakout.\n\nLis d'abord apps/breakout/docs/what/product-spec.md créé en tâche A.\n\nL'epic MVP doit couvrir les capacités principales V1 du jeu Breakout :\n- Système de jeu de base (balle, raquette, briques)\n- Mécanique de jeu (collision, rebonds, vie)\n- Interface de jeu (menu de démarrage, affichage du score/vies)\n- Contrôles (clavier pour la raquette, souris pour les menus)\n- Paramétrage (slider de vitesse)\n\nUse the template in .oneticket/templates/epic.md and follow the structure defined in oneticket-doc-structure skill.",
+      "depends_on": ["A"],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-709-C",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/",
+      "content": "Tu es analyst. Crée 5-6 user stories pour l'epic MVP du jeu Breakout sous apps/breakout/docs/what/epics/epic-0-mvp/user-stories/.\n\nLis d'abord apps/breakout/docs/what/epics/epic-0-mvp/epic.md créé en tâche B.\n\nPropose des user stories couvrant :\n1. US-001 : Système de jeu de base (balle, raquette, briques, aire de jeu)\n2. US-002 : Mécanique de collision et rebonds\n3. US-003 : Système de vies et conditions de victoire/défaite\n4. US-004 : Contrôles de la raquette (flèches gauche/droite)\n5. US-005 : Menu de démarrage, rejouer, quitter (souris)\n6. US-006 : Slider de contrôle de vitesse de la balle\n\nChaque user story doit être au format Mike Cohn avec critères d'acceptation Gherkin.\nUse the template in .oneticket/templates/us.md for each story.\nFollow the structure and naming conventions from oneticket-doc-structure skill.",
+      "depends_on": ["B"],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-709-D",
+      "file": "apps/breakout/docs/how/architecture.md",
+      "content": "Tu es architect. Crée apps/breakout/docs/how/architecture.md pour l'architecture technique du jeu Breakout.\n\nLis d'abord :\n- apps/breakout/docs/what/product-spec.md (tâche A)\n- apps/breakout/docs/what/epics/epic-0-mvp/epic.md (tâche B)\n- Toutes les user stories créées en tâche C\n\nDocumente l'architecture C4 du jeu Breakout :\n\nStack technique :\n- Frontend : HTML5, CSS3, JavaScript vanilla (ES6+)\n- Aucune dépendance externe (pas de framework, pas de librairie)\n- Rendu : Canvas 2D pour le jeu, DOM pour les menus\n\nPrincipaux composants :\n1. Game Engine : boucle de jeu, mise à jour d'état, rendu\n2. Game Objects : Ball, Paddle, Brick, Wall\n3. Physics : collisions, rebonds, trajectoires\n4. Input Handler : clavier (raquette), souris (menus)\n5. UI : menus, affichage score/vies, slider vitesse\n6. Game State : gestion des vies, briques restantes, état du jeu\n\nArchitecture modulaire en fichiers JS séparés (ou classes selon le choix).\n\nUse the template in .oneticket/templates/architecture.md and follow the structure from oneticket-doc-structure skill.",
+      "depends_on": ["C"],
+      "status": "pending",
+      "role": "architect"
+    }
+  ]
+}
