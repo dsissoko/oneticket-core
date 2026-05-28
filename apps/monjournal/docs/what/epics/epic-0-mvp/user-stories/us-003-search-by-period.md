@@ -84,6 +84,4 @@ Feature: Rechercher par période
 
 ## Related Slices
 
-<!-- @architect will populate this section after producing implementation slices -->
-- Slice 1: Data model (Entry entity, localStorage adapter)
-- Slice 3: Search and filter (date range queries)
+- [Slice 2 — Search and Period-Based Filtering](../../../how/slices/slice-2-search-filter/slice.md)

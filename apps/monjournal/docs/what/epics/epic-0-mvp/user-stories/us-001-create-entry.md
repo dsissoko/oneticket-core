@@ -68,6 +68,4 @@ Feature: Créer une nouvelle entrée de journal
 
 ## Related Slices
 
-<!-- @architect will populate this section after producing implementation slices -->
-- Slice 1: Data model (Entry entity, localStorage adapter)
-- Slice 2: CRUD operations (create operation)
+- [Slice 1 — Entry CRUD Operations](../../../how/slices/slice-1-entry-crud/slice.md)

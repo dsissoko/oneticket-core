@@ -95,7 +95,4 @@ Feature: Timeline visuelle chronologique
 
 ## Related Slices
 
-<!-- @architect will populate this section after producing implementation slices -->
-- Slice 1: Data model (Entry entity, localStorage adapter)
-- Slice 2: CRUD operations (read operation)
-- Slice 4: Timeline component and navigation
+- [Slice 3 — Timeline Visualization and Navigation](../../../how/slices/slice-3-timeline-view/slice.md)
