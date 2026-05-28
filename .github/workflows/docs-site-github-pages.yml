@@ -5,7 +5,8 @@ on:
     tags:
       - 'v*'
     branches:
-      - '**'
+      - main
+      - 'feature/**'
     paths:
       - '.oneticket/docs/**'
       - 'apps/**/docs/**'
@@ -41,20 +42,41 @@ jobs:
       - name: Resolve context
         id: ctx
         run: |
-          PROJECT=$(node src/print-config.mjs current_project)
+          # Deduce DOC_SOURCE from changed files — independent of config.yml
+          # For pull_request: compare PR head against base
+          # For push: compare HEAD against previous commit
+          # For tags: fall back to config.yml (full rebuild on release)
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            CHANGED=$(git diff --name-only origin/${{ github.base_ref }}...HEAD 2>/dev/null || true)
+          elif [ "${{ github.event_name }}" = "push" ] && [ -n "${{ github.event.before }}" ] && [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
+            CHANGED=$(git diff --name-only ${{ github.event.before }} HEAD 2>/dev/null || true)
+          else
+            CHANGED=""
+          fi
+
+          # Derive PROJECT and DOC_SOURCE from changed paths
+          if echo "$CHANGED" | grep -q "^\.oneticket/docs/"; then
+            PROJECT="oneticket-core"
+            DOC_SOURCE=".oneticket/docs"
+          elif echo "$CHANGED" | grep -qE "^apps/[^/]+/docs/"; then
+            PROJECT=$(echo "$CHANGED" | grep -oE "^apps/[^/]+/docs/" | head -1 | cut -d/ -f2)
+            DOC_SOURCE="apps/$PROJECT/docs"
+          else
+            # Fallback to config.yml (e.g. tag push with no CHANGED)
+            PROJECT=$(node src/print-config.mjs current_project)
+            if [ "$PROJECT" = "oneticket-core" ] || [ -z "$PROJECT" ]; then
+              DOC_SOURCE=".oneticket/docs"
+              PROJECT="oneticket-core"
+            else
+              DOC_SOURCE="apps/$PROJECT/docs"
+            fi
+          fi
 
           # oneticket-core → slug 'framework' to avoid /oneticket-core/oneticket-core/ in URL
           if [ "$PROJECT" = "oneticket-core" ] || [ -z "$PROJECT" ]; then
             SLUG="framework"
           else
             SLUG="$PROJECT"
-          fi
-
-          # Special convention: oneticket-core uses .oneticket/docs, not apps/oneticket-core/docs
-          if [ "$PROJECT" = "oneticket-core" ] || [ -z "$PROJECT" ]; then
-            DOC_SOURCE=".oneticket/docs"
-          else
-            DOC_SOURCE="apps/$PROJECT/docs"
           fi
 
           if [ "${{ github.event_name }}" = "pull_request" ]; then
