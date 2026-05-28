@@ -42,7 +42,7 @@
       "depends_on": [
         "C"
       ],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "E",
@@ -87,7 +87,7 @@
       "depends_on": [
         "C"
       ],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "I",
