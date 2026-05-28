@@ -10,3 +10,4 @@
 2026-05-28 08:05 | G | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-006-menus-and-settings.md
 2026-05-28 08:07 | K | apps/breakout/docs/how/slices/slice-1-game-setup/slice.md
 2026-05-28 08:10 | L | apps/breakout/docs/how/slices/slice-2-ball-physics/slice.md
+2026-05-28 08:13 | N | apps/breakout/docs/how/slices/slice-4-paddle-input/slice.md

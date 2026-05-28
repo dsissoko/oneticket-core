@@ -57,3 +57,7 @@ Permettre au joueur de contrôler la raquette au clavier avec les flèches gauch
 - The paddle should move at a consistent speed throughout the gameplay
 - Keyboard input should be non-blocking (the game loop continues while waiting for input)
 - Arrow keys are the only required input method for paddle movement in this story (mouse control of paddle is out of scope)
+
+## Related Slices
+
+- [Slice 4 — Paddle Input and Movement](../../../../how/slices/slice-4-paddle-input/slice.md)
