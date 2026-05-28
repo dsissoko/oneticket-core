@@ -9,7 +9,7 @@
       "role": "analyst",
       "content": "Tu es analyst. Crée apps/monjournal/docs/what/product-spec.md selon le template .oneticket/templates/product-spec.md\n\nContexte du projet monjournal :\n- Nom: Journal Personnel (Mon Journal)\n- Vision: Une application web de journal intime simple et élégante\n- Utilisateurs: Individu qui souhaite écrire et gérer son journal personnel\n\nFonctionnalités principales (MVP):\n1. Créer, éditer et supprimer des entrées de journal datées avec du texte libre\n2. Permettre plusieurs entrées pour la même date\n3. Recherche par période (date de début et date de fin)\n4. Lecture aléatoire — un bouton \"Surprise\" qui affiche une entrée passée aléatoire\n5. Timeline visuelle des entrées — fil chronologique avec ancres de dates\n\nStack technique:\n- Frontend: React 18 + Vite + TypeScript\n- UI: Primer React, style sobre type GitHub\n- Backend: simulé avec MSW, données persistées en localStorage\n- Thèmes: mode clair / sombre + sélecteur de skin Primer\n- Déploiement: GitHub Pages\n- Zéro coût, pas de base de données réelle, MSW + localStorage uniquement\n\nRemplis tous les sections du template selon ce contexte. Le H1 doit être: # Journal Personnel — Spécification produit",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
