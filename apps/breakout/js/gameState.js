@@ -115,3 +115,4 @@ class GameState {
     this.phase = newPhase;
   }
 }
+window.GameState = GameState;

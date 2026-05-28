@@ -139,3 +139,4 @@ class Physics {
     ball.vy *= -1;
   }
 }
+window.Physics = Physics;

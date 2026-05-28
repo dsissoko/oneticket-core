@@ -159,3 +159,4 @@ class InputHandler {
     this.keysPressed.clear();
   }
 }
+window.InputHandler = InputHandler;

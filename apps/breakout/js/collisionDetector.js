@@ -260,3 +260,4 @@ class CollisionDetector {
     this.floorY = height;
   }
 }
+window.CollisionDetector = CollisionDetector;

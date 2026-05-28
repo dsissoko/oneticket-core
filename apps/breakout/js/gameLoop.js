@@ -287,3 +287,4 @@ class GameLoop {
     }
   }
 }
+window.GameLoop = GameLoop;

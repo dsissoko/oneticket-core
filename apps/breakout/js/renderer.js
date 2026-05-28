@@ -233,3 +233,4 @@ class Renderer {
     this.canvasHeight = height;
   }
 }
+window.Renderer = Renderer;

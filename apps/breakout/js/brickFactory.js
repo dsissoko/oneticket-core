@@ -74,3 +74,4 @@ class BrickFactory {
     return this.colors[row % this.colors.length];
   }
 }
+window.BrickFactory = BrickFactory;

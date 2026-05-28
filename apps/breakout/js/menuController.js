@@ -362,3 +362,4 @@ class MenuController {
     `;
   }
 }
+window.MenuController = MenuController;
