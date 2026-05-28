@@ -37,7 +37,7 @@
       const physics = new Physics();
       const collisionDetector = new CollisionDetector();
       const renderer = new Renderer(canvas);
-      const inputHandler = new InputHandler();
+      const inputHandler = new InputHandler(gameState);
       const menuController = new MenuController(canvas);
       const gameLoop = new GameLoop(
         gameState,
