@@ -65,9 +65,9 @@ Provides a complete, engaging arcade experience with zero external dependencies.
 
 ## Related Slices
 
-- [Slice 1 — Canvas Setup and Rendering Foundation](../../how/slices/slice-1-canvas-setup.md)
-- [Slice 2 — Paddle and Keyboard Input](../../how/slices/slice-2-paddle-input.md)
-- [Slice 3 — Ball Physics and Wall Collision](../../how/slices/slice-3-ball-physics.md)
-- [Slice 4 — Brick Grid and Ball-Brick Collision](../../how/slices/slice-4-brick-collision.md)
-- [Slice 5 — Game State Machine and Menus](../../how/slices/slice-5-game-states.md)
-- [Slice 6 — Life Tracking and Victory/Defeat Conditions](../../how/slices/slice-6-life-tracking.md)
+- [Slice 1 — Game Setup](../../how/slices/slice-1-game-setup/slice.md)
+- [Slice 2 — Paddle and Keyboard Input](../../how/slices/slice-2-paddle-input/slice.md)
+- [Slice 3 — Ball Physics and Wall Collision](../../how/slices/slice-3-ball-physics/slice.md)
+- [Slice 4 — Brick Grid and Ball-Brick Collision](../../how/slices/slice-4-brick-collision/slice.md)
+- [Slice 5 — Game State Machine and Menus](../../how/slices/slice-5-game-states/slice.md)
+- [Slice 6 — Life Tracking and Victory/Defeat Conditions](../../how/slices/slice-6-life-tracking/slice.md)
