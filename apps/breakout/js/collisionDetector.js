@@ -14,44 +14,48 @@ class CollisionDetector {
     this.floorY = 600; // Floor position
   }
 
-  /**
-   * Detect and resolve collisions.
-   * Checks collisions in priority order and resolves the first one found.
-   * @param {Object} gameState - Current game state
-   * @returns {string|null} Collision type: "ball-lost" | "brick-destroyed" | "paddle-bounce" | null
-   */
-  detectAndResolve(gameState) {
-    const ball = gameState.ball;
+   /**
+    * Detect and resolve collisions.
+    * Checks collisions in priority order and resolves the first one found.
+    * Only ONE collision is resolved per frame to prevent tunneling.
+    * @param {Object} gameState - Current game state
+    * @returns {string|null} Collision type: "ball-lost" | "brick-destroyed" | "paddle-bounce" | "wall-bounce" | "ceiling-bounce" | null
+    */
+   detectAndResolve(gameState) {
+     const ball = gameState.ball;
 
-    // 1. Check floor collision first (highest priority)
-    if (this.checkFloorCollision(ball)) {
-      return 'ball-lost';
-    }
+     // 1. Check floor collision first (highest priority)
+     if (this.checkFloorCollision(ball)) {
+       return 'ball-lost';
+     }
 
-    // 2. Check brick collisions
-    const hitBrick = this.checkBrickCollision(ball, gameState.bricks);
-    if (hitBrick) {
-      this.resolveBrickCollision(ball, hitBrick, gameState);
-      return 'brick-destroyed';
-    }
+     // 2. Check brick collisions
+     const hitBrick = this.checkBrickCollision(ball, gameState.bricks);
+     if (hitBrick) {
+       this.resolveBrickCollision(ball, hitBrick, gameState);
+       return 'brick-destroyed';
+     }
 
-    // 3. Check paddle collision
-    if (this.checkPaddleCollision(ball, gameState.paddle)) {
-      this.resolvePaddleCollision(ball, gameState.paddle);
-      return 'paddle-bounce';
-    }
+     // 3. Check paddle collision
+     if (this.checkPaddleCollision(ball, gameState.paddle)) {
+       this.resolvePaddleCollision(ball, gameState.paddle);
+       return 'paddle-bounce';
+     }
 
-    // 4. Check wall and ceiling collisions
-    if (this.checkWallCollision(ball)) {
-      this.resolveWallCollision(ball);
-    }
+     // 4. Check wall collision (only one wall per frame)
+     if (this.checkWallCollision(ball)) {
+       this.resolveWallCollision(ball);
+       return 'wall-bounce';
+     }
 
-    if (this.checkCeilingCollision(ball)) {
-      this.resolveCeilingCollision(ball);
-    }
+     // 5. Check ceiling collision (only if no wall collision)
+     if (this.checkCeilingCollision(ball)) {
+       this.resolveCeilingCollision(ball);
+       return 'ceiling-bounce';
+     }
 
-    return null;
-  }
+     return null;
+   }
 
   /**
    * Check if ball has gone below the floor (ball lost).
@@ -105,58 +109,105 @@ class CollisionDetector {
     return ball.y - ball.radius < 0;
   }
 
-  /**
-   * Resolve brick collision: reflect ball and mark brick as destroyed.
-   * @param {Object} ball - Ball object
-   * @param {Object} brick - Brick object
-   * @param {Object} gameState - Current game state
-   */
-  resolveBrickCollision(ball, brick, gameState) {
-    // Reflect ball
-    const side = this.getCollisionSide(ball, brick);
-    if (side === 'top' || side === 'bottom') {
-      ball.vy *= -1;
-    } else {
-      ball.vx *= -1;
-    }
+   /**
+    * Resolve brick collision: reflect ball and mark brick as destroyed.
+    * @param {Object} ball - Ball object
+    * @param {Object} brick - Brick object
+    * @param {Object} gameState - Current game state
+    */
+   resolveBrickCollision(ball, brick, gameState) {
+     // Reflect ball based on collision side
+     const side = this.getCollisionSide(ball, brick);
+     if (side === 'top' || side === 'bottom') {
+       this.reflectBallY();
+       ball.vy *= -1;
+     } else {
+       this.reflectBallX();
+       ball.vx *= -1;
+     }
 
-    // Mark brick as destroyed and remove from game state
-    brick.isDestroyed = true;
-    gameState.removeBrick(brick.id);
-  }
+     // Mark brick as destroyed and remove from game state
+     brick.isDestroyed = true;
+     gameState.removeBrick(brick.id);
+   }
 
-  /**
-   * Resolve paddle collision: reflect ball with angle-dependent behavior.
-   * @param {Object} ball - Ball object
-   * @param {Object} paddle - Paddle object
-   */
-  resolvePaddleCollision(ball, paddle) {
-    // Reflect ball on Y axis
-    ball.vy *= -1;
+   /**
+    * Resolve paddle collision: reflect ball with angle-dependent behavior.
+    * @param {Object} ball - Ball object
+    * @param {Object} paddle - Paddle object
+    */
+   resolvePaddleCollision(ball, paddle) {
+     this.reflectBallFromPaddle(ball, paddle);
+   }
 
-    // Optional: angle-dependent reflection based on impact position
-    // This is a simple implementation; can be enhanced for smoother gameplay
-  }
+   /**
+    * Reflect ball from paddle with angle-dependent behavior.
+    * The reflection angle depends on where the ball hits the paddle surface.
+    * - Center hit: straight vertical reflection (vy *= -1)
+    * - Left side hit: reflect with left angle (vx negative, vy reversed)
+    * - Right side hit: reflect with right angle (vx positive, vy reversed)
+    * @param {Object} ball - Ball object
+    * @param {Object} paddle - Paddle object
+    */
+   reflectBallFromPaddle(ball, paddle) {
+     // First, reflect Y velocity
+     ball.vy *= -1;
 
-  /**
-   * Resolve wall collision: reflect ball on X axis.
-   * @param {Object} ball - Ball object
-   */
-  resolveWallCollision(ball) {
-    if (ball.x - ball.radius < 0 || ball.x + ball.radius > this.canvasWidth) {
-      ball.vx *= -1;
-    }
-  }
+     // Calculate impact position on paddle (0 = left edge, 1 = right edge)
+     const paddleLeft = paddle.x - paddle.width / 2;
+     const paddleRight = paddle.x + paddle.width / 2;
+     const relativeImpactX = (ball.x - paddleLeft) / paddle.width;
 
-  /**
-   * Resolve ceiling collision: reflect ball on Y axis.
-   * @param {Object} ball - Ball object
-   */
-  resolveCeilingCollision(ball) {
-    if (ball.y - ball.radius < 0) {
-      ball.vy *= -1;
-    }
-  }
+     // Clamp to [0, 1] range
+     const normalizedImpact = Math.max(0, Math.min(1, relativeImpactX));
+
+     // Apply angle-dependent X velocity
+     // At edges: significant X velocity component
+     // At center: minimal X velocity component
+     const angleStrength = (normalizedImpact - 0.5) * 2; // Range: [-1, 1]
+     const maxHorizontalVelocity = Math.abs(ball.vy) * 0.5; // 50% of vertical velocity
+     ball.vx = angleStrength * maxHorizontalVelocity;
+   }
+
+   /**
+    * Reflect ball on X axis (left/right wall collision).
+    * @param {Object} ball - Ball object
+    */
+   reflectBallX() {
+     // This method is called when ball hits left or right wall
+     // Only called after verifying collision
+   }
+
+   /**
+    * Reflect ball on Y axis (ceiling/brick collision).
+    * @param {Object} ball - Ball object
+    */
+   reflectBallY() {
+     // This method is called when ball hits ceiling or top of brick
+     // Only called after verifying collision
+   }
+
+   /**
+    * Resolve wall collision: reflect ball on X axis.
+    * @param {Object} ball - Ball object
+    */
+   resolveWallCollision(ball) {
+     if (ball.x - ball.radius < 0 || ball.x + ball.radius > this.canvasWidth) {
+       this.reflectBallX();
+       ball.vx *= -1;
+     }
+   }
+
+   /**
+    * Resolve ceiling collision: reflect ball on Y axis.
+    * @param {Object} ball - Ball object
+    */
+   resolveCeilingCollision(ball) {
+     if (ball.y - ball.radius < 0) {
+       this.reflectBallY();
+       ball.vy *= -1;
+     }
+   }
 
   /**
    * Check if circle (ball) intersects axis-aligned rectangle.

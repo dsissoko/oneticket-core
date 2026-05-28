@@ -5,3 +5,4 @@
 2026-05-28 11:28 | F | apps/breakout/js/renderer.js
 2026-05-28 11:28 | C | apps/breakout/js/gameState.js
 2026-05-28 11:28 | D | apps/breakout/js/physics.js
+2026-05-28 11:29 | E | apps/breakout/js/collisionDetector.js
