@@ -87,37 +87,9 @@ For each user story or group of related user stories:
 2. Determine the end-to-end flow (from API to data to UI)
 3. Define the smallest deliverable increment that is testable
 
-### Step 3 — Write the slice
+### Step 4 — Write the slice
 
-Create `<docs_path>/how/slices/slice-N-<name>/slice.md` using the template:
-
-```markdown
-# Slice
-
-## Goal
-<What this slice delivers end-to-end>
-
-## Related Epics
-<Links to epics in what/epics/>
-
-## Related User Stories
-<Links to US files in what/epics/>
-
-## Impacted Components
-<Components from architecture.md involved in this slice>
-
-## Interfaces
-<API contracts, events, data formats exchanged>
-
-## Data Changes
-<Schema changes, migrations, new entities>
-
-## Sequence Flow
-<Step-by-step flow across layers>
-
-## Observability Impact
-<Logs, metrics, traces added or modified>
-```
+Use the template at `.oneticket/templates/slice.md`.
 
 ## Sizing Guidelines
 
