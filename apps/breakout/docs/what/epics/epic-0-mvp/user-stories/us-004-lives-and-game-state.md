@@ -57,7 +57,11 @@
   - **Then:** There is a 1–2 second delay before the ball starts moving again
   - **And:** The player can move the paddle during this pause to position it
 
+## Related Epic
+
+- [Epic 0 — MVP Breakout](../epic.md)
+
 ## Related Slices
 
-- Slice 2 — Moteur de jeu (boucle, physique, détection de collisions)
-- Slice 3 — Système d'état et gestion des menus
+- [Slice 2 — Game Engine and Physics Core](../../../../how/slices/slice-2-game-engine-and-physics/slice.md)
+- [Slice 3 — State Management and Menu Navigation](../../../../how/slices/slice-3-state-management-and-menus/slice.md)

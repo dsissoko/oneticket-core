@@ -110,7 +110,11 @@
   - **Then:** The main menu appears
   - **And:** The speed control screen disappears
 
+## Related Epic
+
+- [Epic 0 — MVP Breakout](../epic.md)
+
 ## Related Slices
 
-- Slice 3 — Système d'état et gestion des menus
-- Slice 4 — Intégration complète et test de gameplay
+- [Slice 3 — State Management and Menu Navigation](../../../../how/slices/slice-3-state-management-and-menus/slice.md)
+- [Slice 4 — Full Integration and Quality Assurance](../../../../how/slices/slice-4-full-integration-and-testing/slice.md)

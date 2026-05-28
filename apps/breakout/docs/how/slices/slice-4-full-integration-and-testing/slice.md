@@ -8,16 +8,16 @@ Livrable testable : Un jeu Breakout complètement fonctionnel, jouable du début
 
 ## Related Epics
 
-- Epic 0 — MVP Breakout
+- [Epic 0 — MVP Breakout](../../../what/epics/epic-0-mvp/epic.md)
 
 ## Related User Stories
 
-- **US-001 — Game Setup** : Initialiser le jeu et afficher le menu principal
-- **US-002 — Ball Physics and Playfield Elements** : Mouvement fluide
-- **US-003 — Collision Detection and Ball Bouncing** : Rebonds corrects
-- **US-004 — Lives System and Game State Management** : Gestion vies
-- **US-005 — Paddle Controls and Input Handling** : Contrôles réactifs
-- **US-006 — Menus and Game State Navigation** : Navigation menus
+- [US-001 — Game Setup](../../../what/epics/epic-0-mvp/user-stories/us-001-game-setup.md)
+- [US-002 — Ball Physics and Playfield Elements](../../../what/epics/epic-0-mvp/user-stories/us-002-ball-paddle-bricks.md)
+- [US-003 — Collision Detection and Ball Bouncing](../../../what/epics/epic-0-mvp/user-stories/us-003-collision-detection.md)
+- [US-004 — Lives System and Game State Management](../../../what/epics/epic-0-mvp/user-stories/us-004-lives-and-game-state.md)
+- [US-005 — Paddle Controls and Input Handling](../../../what/epics/epic-0-mvp/user-stories/us-005-paddle-controls.md)
+- [US-006 — Menus and Game State Navigation](../../../what/epics/epic-0-mvp/user-stories/us-006-menus-and-state-navigation.md)
 
 ## Impacted Components
 

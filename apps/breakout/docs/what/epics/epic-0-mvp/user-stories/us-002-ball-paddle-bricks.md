@@ -49,6 +49,10 @@ During gameplay:
   - **Then:** All bricks in the 5-row grid are visible
   - **And:** Bricks do not move or change until collision occurs
 
+## Related Epic
+
+- [Epic 0 — MVP Breakout](../epic.md)
+
 ## Related Slices
 
-- Slice 2 — Moteur de jeu (boucle, physique, détection de collisions)
+- [Slice 2 — Game Engine and Physics Core](../../../../how/slices/slice-2-game-engine-and-physics/slice.md)

@@ -59,19 +59,18 @@ Créer une implémentation fonctionnelle et jouable d'un jeu Breakout classique 
 
 Les user stories suivantes implémentent cet epic :
 
-- US-001 — Initialiser le jeu et afficher le menu principal
-- US-002 — Implémenter la physique et les rebonds de balle
-- US-003 — Gérer la détection des collisions avec les briques
-- US-004 — Implémenter le système de vies
-- US-005 — Créer l'interface de contrôle et le slider de vitesse
-- US-006 — Implémenter les conditions de fin (victoire/défaite)
-- US-007 — Gérer la navigation entre les menus et les états de jeu
+- [US-001 — Game Setup](./user-stories/us-001-game-setup.md)
+- [US-002 — Ball Physics and Playfield Elements](./user-stories/us-002-ball-paddle-bricks.md)
+- [US-003 — Collision Detection and Ball Bouncing](./user-stories/us-003-collision-detection.md)
+- [US-004 — Lives System and Game State Management](./user-stories/us-004-lives-and-game-state.md)
+- [US-005 — Paddle Controls and Input Handling](./user-stories/us-005-paddle-controls.md)
+- [US-006 — Menus and Game State Navigation](./user-stories/us-006-menus-and-state-navigation.md)
 
 ## Related Slices
 
 Les slices d'implémentation suivants structurent le travail technique :
 
-- Slice 1 — Configuration du projet et structure HTML/CSS de base
-- Slice 2 — Moteur de jeu (boucle, physique, détection de collisions)
-- Slice 3 — Système d'état et gestion des menus
-- Slice 4 — Intégration complète et test de gameplay
+- [Slice 1 — Project Setup and HTML/CSS Base](../../../how/slices/slice-1-project-setup-and-html-css-base/slice.md)
+- [Slice 2 — Game Engine and Physics Core](../../../how/slices/slice-2-game-engine-and-physics/slice.md)
+- [Slice 3 — State Management and Menu Navigation](../../../how/slices/slice-3-state-management-and-menus/slice.md)
+- [Slice 4 — Full Integration and Quality Assurance](../../../how/slices/slice-4-full-integration-and-testing/slice.md)

@@ -8,12 +8,12 @@ Livrable testable : Une page HTML chargeable dans le navigateur affichant un can
 
 ## Related Epics
 
-- Epic 0 — MVP Breakout
+- [Epic 0 — MVP Breakout](../../../what/epics/epic-0-mvp/epic.md)
 
 ## Related User Stories
 
-- **US-001 — Game Setup** : Initialiser le jeu et afficher le menu principal
-- **US-005 — Paddle Controls and Input Handling** : Structure HTML pour menus et slider
+- [US-001 — Game Setup](../../../what/epics/epic-0-mvp/user-stories/us-001-game-setup.md)
+- [US-005 — Paddle Controls and Input Handling](../../../what/epics/epic-0-mvp/user-stories/us-005-paddle-controls.md)
 
 ## Impacted Components
 

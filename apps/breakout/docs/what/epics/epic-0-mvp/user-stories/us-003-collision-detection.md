@@ -58,6 +58,10 @@ Collisions are detected in real-time as the ball moves, and visual feedback is i
   - **Then:** The ball is no longer visible on screen
   - **And:** The player loses one life (confirmed by lives counter update)
 
+## Related Epic
+
+- [Epic 0 — MVP Breakout](../epic.md)
+
 ## Related Slices
 
-- Slice 2 — Moteur de jeu (boucle, physique, détection de collisions)
+- [Slice 2 — Game Engine and Physics Core](../../../../how/slices/slice-2-game-engine-and-physics/slice.md)

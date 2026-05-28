@@ -42,6 +42,10 @@ The game initializes with:
   - **When:** I click the Quit button
   - **Then:** The game closes or returns to the previous page
 
+## Related Epic
+
+- [Epic 0 — MVP Breakout](../epic.md)
+
 ## Related Slices
 
-- Slice 1 — Configuration du projet et structure HTML/CSS de base
+- [Slice 1 — Project Setup and HTML/CSS Base](../../../../how/slices/slice-1-project-setup-and-html-css-base/slice.md)

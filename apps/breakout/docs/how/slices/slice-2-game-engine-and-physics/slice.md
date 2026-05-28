@@ -8,14 +8,14 @@ Livrable testable : Un jeu où la balle se déplace, rebondit sur tous les obsta
 
 ## Related Epics
 
-- Epic 0 — MVP Breakout
+- [Epic 0 — MVP Breakout](../../../what/epics/epic-0-mvp/epic.md)
 
 ## Related User Stories
 
-- **US-002 — Ball Physics and Playfield Elements** : Mouvement continu et responsivité du paddle
-- **US-003 — Collision Detection and Ball Bouncing** : Rebonds réalistes sur tous les obstacles
-- **US-004 — Lives System and Game State Management** : Détection balle sortie en bas
-- **US-005 — Paddle Controls and Input Handling** : Contrôle clavier de la raquette
+- [US-002 — Ball Physics and Playfield Elements](../../../what/epics/epic-0-mvp/user-stories/us-002-ball-paddle-bricks.md)
+- [US-003 — Collision Detection and Ball Bouncing](../../../what/epics/epic-0-mvp/user-stories/us-003-collision-detection.md)
+- [US-004 — Lives System and Game State Management](../../../what/epics/epic-0-mvp/user-stories/us-004-lives-and-game-state.md)
+- [US-005 — Paddle Controls and Input Handling](../../../what/epics/epic-0-mvp/user-stories/us-005-paddle-controls.md)
 
 ## Impacted Components
 

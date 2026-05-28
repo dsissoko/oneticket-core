@@ -68,7 +68,11 @@
   - **And:** I press an arrow key
   - **Then:** The paddle moves as expected
 
+## Related Epic
+
+- [Epic 0 — MVP Breakout](../epic.md)
+
 ## Related Slices
 
-- Slice 1 — Configuration du projet et structure HTML/CSS de base
-- Slice 2 — Moteur de jeu (boucle, physique, détection de collisions)
+- [Slice 1 — Project Setup and HTML/CSS Base](../../../../how/slices/slice-1-project-setup-and-html-css-base/slice.md)
+- [Slice 2 — Game Engine and Physics Core](../../../../how/slices/slice-2-game-engine-and-physics/slice.md)
