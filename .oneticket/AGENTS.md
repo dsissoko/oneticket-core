@@ -70,3 +70,15 @@ Always use the command provided in `## Agent contract` of the prompt — it is a
 | `issue_comment` | `gh issue comment` |
 | `pull_request_comment` | `gh pr comment` |
 | `pull_request_review_comment` | `gh api .../pulls/.../comments` with `in_reply_to` |
+
+---
+
+## Response Style
+
+Keep responses **short and focused** — the comment history is visible to all agents and accumulates fast.
+
+- Answer the specific question asked — do not repeat context already in the thread
+- No summaries of what you just did unless explicitly asked
+- No lists of files you created unless they are the direct answer
+- Maximum 5-10 lines for a status update, 20 lines for a technical response
+- If you need to share a long artifact, commit it to the branch — do not paste it in a comment
