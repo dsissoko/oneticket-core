@@ -21,3 +21,4 @@
 2026-05-28 13:48 | I | apps/monjournal/app/src/components/Timeline.tsx
 2026-05-28 13:31 | O | apps/monjournal/app/src/components/ThemeSelector.tsx
 2026-05-28 13:27 | E | apps/monjournal/app/src/domain/SearchService.ts
+2026-05-28 13:27 | J | apps/monjournal/app/src/domain/RandomSelector.ts
