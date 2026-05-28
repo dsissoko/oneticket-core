@@ -7,8 +7,10 @@
 class InputHandler {
   /**
    * Initialize input handler and register event listeners.
+   * @param {GameState} gameState - Game state reference (optional)
    */
-  constructor() {
+  constructor(gameState = null) {
+    this.gameState = gameState;
     this.keysPressed = new Set();
     this.paddleSpeed = 400; // pixels per second
     this.sliderValue = 1.0;
@@ -130,10 +132,16 @@ class InputHandler {
 
   /**
    * Handle slider change event.
-   * @param {number} value - New slider value
+   * Updates the speed multiplier in gameState.
+   * @param {number} value - New slider value (0.5-2.0)
    */
   onSliderChange(value) {
     this.sliderValue = parseFloat(value);
+    
+    // Update gameState speed multiplier if gameState is available
+    if (this.gameState) {
+      this.gameState.setSpeedMultiplier(this.sliderValue);
+    }
   }
 
   /**
