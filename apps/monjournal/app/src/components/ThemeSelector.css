@@ -1,0 +1,133 @@
+/* ThemeSelector Component Styles */
+
+.theme-selector {
+  /* Base styles */
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background-color: var(--color-btn-bg);
+  color: var(--color-btn-text);
+  border: 1px solid var(--color-btn-border);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  white-space: nowrap;
+  
+  /* Performance optimization: Use will-change sparingly */
+  will-change: background-color;
+  
+  /* Instant transitions for theme changes */
+  transition: background-color 150ms ease-in-out,
+              border-color 150ms ease-in-out,
+              color 150ms ease-in-out;
+}
+
+/* Icon SVG styling */
+.theme-selector .theme-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+  stroke: currentColor;
+  fill: none;
+  flex-shrink: 0;
+  
+  /* Instant visual feedback - CSS variables update < 50ms */
+  transition: stroke 150ms ease-in-out;
+}
+
+/* Label styling */
+.theme-selector__label {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Hover state */
+.theme-selector:hover {
+  background-color: var(--color-btn-hover-bg);
+  border-color: var(--color-btn-border);
+}
+
+/* Active/pressed state */
+.theme-selector:active {
+  background-color: var(--color-btn-active-bg);
+  border-color: var(--color-btn-border);
+}
+
+/* Focus state - keyboard navigation */
+.theme-selector:focus {
+  outline: 2px solid var(--color-state-focus-outline);
+  outline-offset: 2px;
+}
+
+.theme-selector:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Light theme styling */
+.theme-selector--light {
+  /* Light mode button appearance */
+}
+
+/* Dark theme styling */
+.theme-selector--dark {
+  /* Dark mode button appearance - inherits from CSS variables */
+}
+
+/* Disabled state */
+.theme-selector:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  color: var(--color-btn-disabled-text);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .theme-selector {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  .theme-selector .theme-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .theme-selector__label {
+    /* Hide label on very small screens if needed */
+    /* display: none; */
+  }
+}
+
+/* Accessibility: High contrast mode */
+@media (prefers-contrast: more) {
+  .theme-selector {
+    border-width: 2px;
+  }
+
+  .theme-selector:focus {
+    outline-width: 3px;
+  }
+}
+
+/* Accessibility: Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .theme-selector {
+    transition: none;
+  }
+
+  .theme-selector .theme-icon {
+    transition: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  .theme-selector {
+    display: none;
+  }
+}
