@@ -19,6 +19,11 @@
 #
 #   breakout   — demande riche : jeu Breakout en épics + US
 #                Teste la décomposition d'une demande complexe
+#                Prérequis : current_project: breakout dans config.yml
+#
+#   monjournal — application Journal Personnel (React+Vite+MSW+localStorage)
+#                Teste la décomposition d'une app React complète avec MSW
+#                Prérequis : current_project: monjournal dans config.yml
 #
 #   direct    — demande à @po de créer un fichier de test à la racine du dépôt
 #                Valide que create-direct-pr.mjs crée bien une PR sans manifest
@@ -35,6 +40,7 @@
 #   ./test/create-issues.sh manifest
 #   ./test/create-issues.sh decompose
 #   ./test/create-issues.sh breakout
+#   ./test/create-issues.sh monjournal
 #   ./test/create-issues.sh direct
 #   ./test/create-issues.sh parallel
 #   ./test/create-issues.sh all
@@ -218,6 +224,48 @@ La vitesse de la balle est réglable via un slider accessible depuis le menu, av
 }
 
 # ---------------------------------------------------------------------------
+# Mode : monjournal
+# Application Journal Personnel — React + Vite + TypeScript + MSW + localStorage
+# Prérequis : current_project: monjournal dans .oneticket/config.yml
+# ---------------------------------------------------------------------------
+
+run_monjournal() {
+  echo "=== MODE MONJOURNAL — agent @po initialisation base de connaissance ==="
+  echo ""
+
+  URL=$(create_issue \
+    "[monjournal] Journal personnel — initialisation base de connaissance" \
+    "Application: Journal Personnel
+
+Je veux créer une application web de journal intime simple et élégante.
+
+Fonctionnalités :
+- Créer, éditer et supprimer des entrées de journal datées avec du texte libre
+- Permettre plusieurs entrées pour la même date
+- Recherche par période (date de début et date de fin)
+- Lecture aléatoire — un bouton \"Surprise\" qui affiche une entrée passée aléatoire
+- Timeline visuelle des entrées — fil chronologique avec ancres de dates
+
+Stack technique :
+- Frontend : React 18 + Vite + TypeScript
+- UI : Primer React, style sobre type GitHub
+- Backend : simulé avec MSW, données persistées en localStorage
+- Thèmes : mode clair / sombre + sélecteur de skin Primer
+
+Contraintes :
+- Pas de vrai backend
+- Pas de base de données
+- MSW + localStorage uniquement
+- Déploiement sur GitHub Pages
+- Zéro coût")
+  NUM=$(issue_number "$URL")
+  post_comment "$NUM" "@po ce projet n'a pas encore de base de connaissance. À partir de la description de l'application ci-dessus, initialise la base de connaissance du projet."
+  echo "Issue #$NUM lancée ($URL)"
+  echo ""
+  echo "Attendu : base de connaissance initialisée (product-spec, architecture, epics, US, C4, slices) → PR."
+}
+
+# ---------------------------------------------------------------------------
 # Mode : parallel
 # 2 issues lancées simultanément avec des graphes différents
 # Issue 1 : A → B → C (séquence pure)
@@ -276,6 +324,9 @@ case "$MODE" in
   breakout)
     run_breakout
     ;;
+  monjournal)
+    run_monjournal
+    ;;
   parallel)
     run_parallel
     ;;
@@ -294,7 +345,7 @@ case "$MODE" in
     ;;
   *)
     echo "Mode inconnu : $MODE"
-    echo "Usage : $0 [reply|manifest|decompose|direct|breakout|parallel|all] [REPO]"
+    echo "Usage : $0 [reply|manifest|decompose|direct|breakout|monjournal|parallel|all] [REPO]"
     exit 1
     ;;
 esac
