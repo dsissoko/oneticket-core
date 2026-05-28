@@ -4,8 +4,8 @@
  * Configures test environment with necessary polyfills and global setup.
  */
 
-import '@testing-library/jest-dom';
 import { beforeEach } from 'vitest';
+import '@testing-library/jest-dom';
 
 // Polyfill CSS.supports for jsdom — required by @primer/react
 if (typeof window !== 'undefined' && !window.CSS) {
