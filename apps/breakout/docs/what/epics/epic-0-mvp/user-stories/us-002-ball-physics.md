@@ -90,6 +90,10 @@ The ball should:
 - **Ball state:** `apps/breakout/app/src/state.js` (ball position, velocity, speed multiplier)
 - **Configuration:** `apps/breakout/app/src/config.js` (initial ball properties, speed ranges)
 
+## Related Slices
+
+- [Slice 2 — Ball Physics and Wall Collision](../../../../how/slices/slice-2-ball-physics/slice.md)
+
 ## Definition of Done
 
 - ✅ Ball renders visually on canvas
