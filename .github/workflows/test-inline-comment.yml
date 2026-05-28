@@ -1,0 +1,42 @@
+name: Test Inline Comment
+
+# [TEST] Temporary workflow — to be deleted after validation.
+#
+# Purpose: verify which event is emitted when posting an inline PR review comment
+# via "Add review comment" button, and inspect the full payload.
+#
+# Tests:
+#   - Does pull_request_review_comment fire without Submit?
+#   - Does issue_comment fire instead?
+#   - What fields are available (comment.id, path, line, diff_hunk, etc.)?
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+
+jobs:
+  log-event:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log event payload
+        run: |
+          echo "=== EVENT ==="
+          echo "event_name:        ${{ github.event_name }}"
+          echo ""
+          echo "=== COMMENT ==="
+          echo "comment.id:        ${{ github.event.comment.id }}"
+          echo "comment.body:      ${{ github.event.comment.body }}"
+          echo "comment.user:      ${{ github.event.comment.user.login }}"
+          echo "comment.path:      ${{ github.event.comment.path }}"
+          echo "comment.line:      ${{ github.event.comment.line }}"
+          echo "comment.diff_hunk: ${{ github.event.comment.diff_hunk }}"
+          echo ""
+          echo "=== PR (via pull_request_review_comment) ==="
+          echo "pull_request.number: ${{ github.event.pull_request.number }}"
+          echo "pull_request.head:   ${{ github.event.pull_request.head.ref }}"
+          echo ""
+          echo "=== ISSUE (via issue_comment) ==="
+          echo "issue.number:        ${{ github.event.issue.number }}"
+          echo "issue.pull_request:  ${{ github.event.issue.pull_request }}"
