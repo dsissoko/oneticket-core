@@ -9,7 +9,7 @@
       "role": "analyst",
       "content": "Produis le document product-spec.md pour AppShell en utilisant le template .oneticket/templates/product-spec.md. AppShell est le skeleton de référence pour tous les projets app de oneticket-core. Contenu basé sur l'issue #854: (1) AppShell est le projet skeleton pour tous les projets; (2) eliminer les merge errors en FAN-OUT grace a la structure exclusive de propriete des fichiers; (3) qualite design par contrainte via design tokens, shadcn primitives et systeme de layout; (4) Stack: Vite ^5, React 18 + TypeScript, React Router ^6, Tailwind CSS ^3, shadcn/ui via Radix, React Hook Form, @tanstack/react-query ^5, MSW ^2, Zustand ^4, lucide-react, next-themes, Vitest; (5) Structure claire: src/screens/ (one screen = one file = exclusive ownership), src/components/ (shadcn setup once), src/hooks/ (React Query examples), src/mocks/ (MSW setup), src/stores/ (Zustand convention), src/lib/ (utilities, query-client, schemas). Remplace le placeholder SITE_DESCRIPTION par une description en une phrase max 160 caracteres. Assure toi que le frontmatter inclut le champ 'title'.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
