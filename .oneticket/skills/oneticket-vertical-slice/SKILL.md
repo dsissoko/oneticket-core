@@ -115,6 +115,8 @@ This maps directly to how `@leaddev` should structure the manifest:
 
 ## Rules
 
+- The foundation slice must group all shared technical setup (config files, layout, routing skeleton, theme, shared components) — never spread shared setup across multiple slices
+- Always produce at least 2 slices: one foundation slice + one or more feature slices — never group all user stories into a single slice
 - Never overwrite an existing slice — check before writing
 - Never create a slice without reading the architecture first
 - `docs_path` is always provided in the prompt — never resolve it yourself
@@ -123,5 +125,3 @@ This maps directly to how `@leaddev` should structure the manifest:
 - A slice can cover multiple related user stories — some slices are transversal
 - A slice without any related user story is invalid
 - H1 must be descriptive: `# Slice N — <name>` — never use generic `# Slice`
-- Always produce at least 2 slices: one foundation slice + one or more feature slices — never group all user stories into a single slice
-- The foundation slice must group all shared technical setup (config files, layout, routing skeleton, theme, shared components) — never spread shared setup across multiple slices
