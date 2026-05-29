@@ -42,7 +42,7 @@
       "depends_on": [
         "C"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "analyst"
     },
     {
@@ -53,7 +53,7 @@
       "depends_on": [
         "C"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "analyst"
     },
     {
@@ -64,7 +64,7 @@
       "depends_on": [
         "C"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "analyst"
     },
     {
@@ -75,7 +75,7 @@
       "depends_on": [
         "C"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "analyst"
     },
     {
@@ -86,7 +86,7 @@
       "depends_on": [
         "C"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "analyst"
     },
     {
@@ -387,7 +387,7 @@
         "B",
         "C"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "analyst"
     },
     {
@@ -485,7 +485,7 @@
       "depends_on": [
         "C"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "analyst"
     },
     {
@@ -507,7 +507,7 @@
       "depends_on": [
         "C"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "analyst"
     },
     {
