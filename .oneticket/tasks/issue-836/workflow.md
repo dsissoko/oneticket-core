@@ -6,3 +6,4 @@
 2026-05-29 09:28 | D | apps/appshell/docs/how/architecture.md
 2026-05-29 09:28 | I | apps/appshell/docs/what/epics/epic-0-mvp/skills/
 2026-05-29 09:30 | E | apps/appshell/docs/how/c4/system-context.md
+2026-05-29 09:30 | L | docs/what/epics/epic-0-mvp/user-stories/us-005-agent-profile-skills.md
