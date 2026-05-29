@@ -30,20 +30,22 @@ const destDir = path.resolve(__dirname, 'src/content/docs');
 // so they resolve correctly regardless of the site base path
 const astroBase = (process.env.ASTRO_BASE || '').replace(/\/$/, '');
 
-// Build a map of all .md files: by filename and by parent/filename
+// Build a map of all .md files indexed by all path suffixes (most specific first)
+// e.g. "how/slices/slice-0-setup/slice.md", "slices/slice-0-setup/slice.md",
+//      "slice-0-setup/slice.md", "slice.md"
+// First entry wins — most specific path takes precedence over ambiguous basename
 function buildFileIndex(dir, root, index = new Map()) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       buildFileIndex(fullPath, root, index);
     } else if (entry.name.endsWith('.md')) {
-      // Index by filename alone: "us-001-setup.md" → fullPath
-      index.set(entry.name, fullPath);
-      // Index by parent/filename: "slice-1-foundation/slice.md" → fullPath
-      const rel = path.relative(root, fullPath);
-      const parts = rel.split(path.sep);
-      if (parts.length >= 2) {
-        index.set(parts.slice(-2).join('/'), fullPath);
+      const rel   = path.relative(root, fullPath).replace(/\\/g, '/');
+      const parts = rel.split('/');
+      // Index by all suffixes from most specific to least — skip if already set
+      for (let i = 0; i < parts.length; i++) {
+        const key = parts.slice(i).join('/');
+        if (!index.has(key)) index.set(key, fullPath);
       }
     }
   }
@@ -66,12 +68,16 @@ function fixCrossRefLinks(content, destFile, destDir, fileIndex) {
       const resolved = path.resolve(destFileDir, mdPath);
       if (fs.existsSync(resolved)) return match; // already correct
 
-      // Not found — try to look up by filename or partial path in the index
-      // Normalize the mdPath to try both "file.md" and "dir/file.md" lookups
-      const basename = path.basename(mdPath);
-      const partial  = mdPath.replace(/^(\.\.\/)+/, ''); // strip leading ../
-
-      const target = fileIndex.get(partial) || fileIndex.get(basename);
+      // Not found — try all suffixes of the stripped path from most to least specific
+      // e.g. "how/slices/slice-0-setup/slice.md" → "slices/slice-0-setup/slice.md"
+      //      → "slice-0-setup/slice.md" → "slice.md"
+      const stripped = mdPath.replace(/^(\.\.\/)+/, '');
+      const parts    = stripped.split('/');
+      let target;
+      for (let i = 0; i < parts.length; i++) {
+        const key = parts.slice(i).join('/');
+        if (fileIndex.has(key)) { target = fileIndex.get(key); break; }
+      }
 
       if (target) {
         const newRel = path.relative(destFileDir, target).replace(/\\/g, '/');
