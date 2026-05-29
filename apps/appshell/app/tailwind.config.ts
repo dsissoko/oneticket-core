@@ -101,15 +101,25 @@ const config: Config = {
   },
 
   /**
-   * Tailwind plugins
-   *
-   * Plugins extend Tailwind with custom utilities or component classes.
-   * Currently empty; add as needed (e.g., @tailwindcss/typography, @tailwindcss/forms)
-   *
-   * @example
-   * plugins: [require('@tailwindcss/typography'), require('@tailwindcss/forms')]
-   */
-  plugins: [],
-};
+    * Dark mode configuration
+    *
+    * Uses 'class' strategy: dark mode is enabled via .dark class on document root
+    * This is compatible with next-themes which manages the class dynamically
+    *
+    * @see {@link https://tailwindcss.com/docs/dark-mode Tailwind Dark Mode Docs}
+    */
+   darkMode: 'class',
 
-export default config;
+  /**
+    * Tailwind plugins
+    *
+    * Plugins extend Tailwind with custom utilities or component classes.
+    * Currently empty; add as needed (e.g., @tailwindcss/typography, @tailwindcss/forms)
+    *
+    * @example
+    * plugins: [require('@tailwindcss/typography'), require('@tailwindcss/forms')]
+    */
+   plugins: [],
+ };
+ 
+ export default config;
