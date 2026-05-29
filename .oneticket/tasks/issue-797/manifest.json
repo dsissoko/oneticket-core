@@ -441,7 +441,7 @@
       "file": ".oneticket/docs/run/appshell-reuse.md",
       "content": "Créer le runbook appshell-reuse.md. Utiliser le template .oneticket/templates/runbook.md. Contenu : 7 étapes pour réutiliser AppShell (voir issue #797 section HelpScreen). (1) Copy apps/appshell/app/ → apps/{project}/app/. (2) Set VITE_APP_NAME in .env.example. (3) Update current_project in .oneticket/config.yml. (4) Update AboutScreen with project description. (5) Update HelpScreen with project quickstart. (6) Add feature screens in screens/. (7) Deploy automatic via docs-site-github-pages.yml. Ajouter notes sur convention screens et task decomposition. Lire template avant création.",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "analyst"
     },
     {
