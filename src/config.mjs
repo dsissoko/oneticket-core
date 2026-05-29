@@ -89,6 +89,7 @@ export function loadConfig() {
     autonomous_mode:          parsed.autonomous_mode !== false, // optional, defaults to true
     current_project:          parsed.current_project !== undefined ? (parsed.current_project || '') : undefined,
     clear_session_cache:      parsed.clear_session_cache !== false, // optional, defaults to true
+    max_tasks:                parsed.max_tasks       || null,  // optional
     cli,
     model:                    cliConfig.model,
     retry_max:                require(parsed, 'retry_max'),
