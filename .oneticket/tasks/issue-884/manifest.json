@@ -8,7 +8,7 @@
       "file": "output/step-A.txt",
       "content": "Crée le fichier output/step-A.txt avec le contenu exactement 'Step A done'. Assure-toi que le répertoire output existe avant de créer le fichier.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
