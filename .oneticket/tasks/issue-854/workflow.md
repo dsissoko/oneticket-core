@@ -3,3 +3,4 @@
 2026-05-29 13:39 | Q | apps/appshell/docs/run/README.md
 2026-05-29 13:40 | A | apps/appshell/docs/what/product-spec.md
 2026-05-29 13:40 | N | .oneticket/docs/run/appshell-reuse.md
+2026-05-29 13:42 | S | apps/appshell/docs/what/product-spec.md
