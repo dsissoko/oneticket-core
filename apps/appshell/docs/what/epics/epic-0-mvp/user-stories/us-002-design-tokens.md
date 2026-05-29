@@ -49,5 +49,5 @@ En tant que designer/développeur, je veux utiliser des design tokens Tailwind c
 
 ## Related Slices
 
-- [../../../how/slices/slice-1-skeleton-foundation/slice.md](../../../how/slices/slice-1-skeleton-foundation/slice.md) — Design tokens (Tailwind, CSS custom properties) and theme system setup
-- [../../../how/slices/slice-4-theme-system/slice.md](../../../how/slices/slice-4-theme-system/slice.md) — Light/dark/system theme system with reactive switching and CSS custom properties
+- [../../../../how/slices/slice-1-skeleton-foundation/slice.md](../../../../how/slices/slice-1-skeleton-foundation/slice.md) — Design tokens (Tailwind, CSS custom properties) and theme system setup
+- [../../../../how/slices/slice-4-theme-system/slice.md](../../../../how/slices/slice-4-theme-system/slice.md) — Light/dark/system theme system with reactive switching and CSS custom properties

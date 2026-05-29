@@ -28,4 +28,4 @@ En tant que développeur, je veux copier le skeleton AppShell et l'adapter pour 
 
 ## Related Slices
 
-- [../../../how/slices/slice-1-skeleton-foundation/slice.md](../../../how/slices/slice-1-skeleton-foundation/slice.md) — Application skeleton with React Router v6, AppLayout, and theme system
+- [../../../../how/slices/slice-1-skeleton-foundation/slice.md](../../../../how/slices/slice-1-skeleton-foundation/slice.md) — Application skeleton with React Router v6, AppLayout, and theme system
