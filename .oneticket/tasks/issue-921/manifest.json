@@ -31,7 +31,7 @@
         "B"
       ],
       "role": "dev",
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "D",
@@ -53,7 +53,7 @@
         "B"
       ],
       "role": "dev",
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "F",
