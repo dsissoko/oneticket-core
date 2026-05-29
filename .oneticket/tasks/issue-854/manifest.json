@@ -190,7 +190,7 @@
       "role": "analyst",
       "content": "Produis le fichier ship/README.md en utilisant le template .oneticket/templates/docs/ship/README.md. Ce fichier est une page d'accueil pour la section 'ship' (build, CI/CD, release pipelines). Pour AppShell, contenu minimal: description du build avec Vite, CI triggers sur main pour docs-site-github-pages.yml. Assure toi que le frontmatter inclut le champ 'title'.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "S",
