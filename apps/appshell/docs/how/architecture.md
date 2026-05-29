@@ -17,8 +17,36 @@
 ### Single Responsibility
 - **API layer** — `api/client.ts` and `api/endpoints.ts` centralize all HTTP communication
 - **State management** — Zustand stores encapsulate domain state; React Query encapsulates server state
-- **Hooks isolation** — each hook manages one concern (auth, users, theme, etc.)
+- **Hooks isolation** — each hook manages one concern (auth, users, etc.)
 - **Route isolation** — each page component manages its own features without importing from other pages
+- **Theme isolation** — next-themes (v2.0+) manages all theme state; no Zustand theme logic
+
+---
+
+## 1.5 V2.0 Migration Highlights
+
+**AppShell v2.0** (this issue, #929) adds the complete UI stack alignment:
+
+| Aspect | v0.1 Status | v2.0 Status | Key Change |
+|---|---|---|---|
+| UI components | Minimal | shadcn/ui (5+ core components) | `components/ui/` via shadcn CLI |
+| Theme system | Zustand custom | next-themes | Replaces `appStore.ts` theme logic entirely |
+| Icons | Inline SVGs | lucide-react | Replace all `<svg>` with lucide imports |
+| Form library | None | React Hook Form + Zod | New `schemas/` directory for validation |
+| Helper utilities | None | `cn()` from shadcn | `lib/utils.ts` for Tailwind class composition |
+| File structure | `pages/` + `main.css` | `screens/` + `styles/globals.css` | Alignment with brief naming conventions |
+| Testing setup | Vitest basic | Vitest + setup files | `vitest.config.ts` + `vitest.setup.ts` + MSW in tests |
+| Environment config | None | `.env.example` | Document required env vars |
+
+**Migration path:**
+1. Task 0 (shadcn/ui init) — sequential blocker
+2. Rename entry point & CSS file (main.tsx, globals.css)
+3. Rename directory (pages/ → screens/)
+4. Delete theme Zustand logic, install next-themes
+5. Rewrite ThemeToggle, replace SVGs with lucide icons
+6. Add form libraries and Vitest config
+
+See `MIGRATION-v0.1-to-v2.md` for detailed file-by-file breakdown and `SHADCN-NEXT-THEMES-INTEGRATION.md` for theme integration specifics.
 
 ---
 
@@ -92,7 +120,8 @@ Re-render
 - **Lucide icons** — 300+ consistent SVG icons
 
 ### State Boundary
-- **Zustand stores** — synchronous, local-first state (auth status, theme preference, UI state)
+- **Zustand stores** — synchronous, local-first state (auth status, UI state, sidebar, etc.) — **NOT theme** (v2.0+)
+- **next-themes** (v2.0+) — all theme/dark mode management via context (replaces Zustand theme logic)
 - **React Query** — async server state (user data, lists, etc.) with automatic caching and synchronization
 
 ---
@@ -121,18 +150,19 @@ Re-render
 
 ### Page Components (Exclusive Files)
 
-**HomePage** (`src/pages/HomePage.tsx`)
+**HomeScreen** (`src/screens/HomeScreen.tsx`)
 - Landing/welcome page at `/`
 - Introduces AppShell vision and capabilities
 - Displays current theme
+- Uses shadcn/ui `Card` component for layout
 - Links to other sections
 
-**AboutPage** (`src/pages/AboutPage.tsx`)
+**AboutScreen** (`src/screens/AboutScreen.tsx`)
 - About AppShell at `/about`
 - OneTicket team, vision, tech stack
 - Product metrics and design principles
 
-**HelpPage** (`src/pages/HelpPage.tsx`)
+**HelpScreen** (`src/screens/HelpScreen.tsx`)
 - FAQ and documentation at `/help`
 - Links to GitHub, docs, discussions
 - Common troubleshooting
@@ -140,9 +170,10 @@ Re-render
 ### Core Feature Components
 
 **ThemeToggle** (`src/components/ThemeToggle.tsx`)
-- Dropdown to select system/light/dark theme
-- Integrates with next-themes
-- Persists to localStorage
+- Dropdown menu to select system/light/dark theme preference
+- Uses `useTheme()` hook from next-themes (v2.0+)
+- Automatically persists to localStorage and applies `.dark` class
+- Includes lucide-react icons (Sun, Moon, Monitor)
 
 **ProtectedRoute** (`src/components/ProtectedRoute.tsx`)
 - Wrapper component for authenticated pages
