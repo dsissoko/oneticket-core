@@ -8,6 +8,12 @@ At the end of this slice, developers will have a deployable, production-ready sk
 
 ---
 
+## Related Epics
+
+- [Epic 0 — AppShell MVP](../../what/epics/epic-0-mvp/epic.md)
+
+---
+
 ## Related User Stories
 
 - [US-001: File structure and project setup](../../what/epics/epic-0-mvp/us-001.md)
