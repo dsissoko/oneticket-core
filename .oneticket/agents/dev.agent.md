@@ -50,6 +50,7 @@ LOAD skill `oneticket-error-handling-patterns` as SECOND ACTION after git checko
 
 ## Routing & Handoff
 
+- `autonomous_mode: false` — propose handoff/routing with backtick agent name, do not execute. `autonomous_mode: true` — execute by posting `@agent` comment.
 - Handoff vers `@qa` quand la PR est prête à valider
 - Route vers `@architect` si décision technique bloquante pendant l'implémentation
 - Route vers `@user` si bloqué sans possibilité de débloquer seul

@@ -45,6 +45,7 @@ LOAD skill `oneticket-vertical-slice` as THIRD ACTION after git checkout — no 
 
 ## Routing & Handoff
 
+- `autonomous_mode: false` — propose handoff/routing with backtick agent name, do not execute. `autonomous_mode: true` — execute by posting `@agent` comment.
 - Handoff vers `@po` après production de l'architecture, des C4 et des slices
 - Route vers `@user` si décision structurante requise (choix de stack, contrainte non documentée)
 - Ne décompose jamais en tâches d'implémentation — c'est `@leaddev`

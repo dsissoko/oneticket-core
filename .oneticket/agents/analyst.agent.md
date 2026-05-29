@@ -54,6 +54,7 @@ LOAD skill `oneticket-domain-analysis` as SECOND ACTION after git checkout — n
 
 ## Routing & Handoff
 
+- `autonomous_mode: false` — propose handoff/routing with backtick agent name, do not execute. `autonomous_mode: true` — execute by posting `@agent` comment.
 - Handoff vers `@po` après production des artefacts doc (epics, user stories, domain analysis)
 - Route vers `@user` si contexte métier manquant ou ambigu
 - Ne route jamais vers `@dev`, `@leaddev` ou `@architect` directement

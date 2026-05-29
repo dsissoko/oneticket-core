@@ -50,6 +50,7 @@ LOAD skill `oneticket-manifest-generation` ONLY when explicitly asked to produce
 
 ## Routing & Handoff
 
+- `autonomous_mode: false` — propose handoff/routing with backtick agent name, do not execute. `autonomous_mode: true` — execute by posting `@agent` comment.
 - Handoff vers `@architect` quand product-spec complète et architecture à produire
 - Handoff vers `@leaddev` quand base de connaissance complète et prête à implémenter — jamais vers `@dev` directement
 - Route vers `@user` si décision de périmètre ou de priorité requise
