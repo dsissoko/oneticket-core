@@ -11,3 +11,4 @@
 2026-05-29 13:44 | D | apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-002-design-tokens.md
 2026-05-29 13:44 | E | apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-003-exclusive-ownership.md
 2026-05-29 13:46 | F | apps/appshell/docs/how/architecture.md
+2026-05-29 13:48 | J | apps/appshell/docs/how/slices/slice-2-home-screen-example/slice.md
