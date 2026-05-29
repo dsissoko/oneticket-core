@@ -14,23 +14,13 @@
 
 ---
 
-## Routing vs Handoff
+## Routing & Handoff
 
-- **handoff** : passer la main définitivement en postant un commentaire `@agent ...` — l'agent destinataire a la responsabilité complète, aucun retour attendu, s'arrêter après
-- **routing** : sous-traiter une question en postant un commentaire `@agent ...` — l'agent destinataire répond par commentaire uniquement, le demandeur garde la responsabilité
+**Handoff** : passer la main définitivement — l'agent destinataire prend la responsabilité complète, aucun retour attendu. S'arrêter après avoir posté le commentaire.
 
----
+**Routing** : sous-traiter une question — l'agent destinataire répond par commentaire uniquement, le demandeur garde la responsabilité.
 
-## Matrice
-
-| Situation | De | Vers | Type |
-|---|---|---|---|
-| Spec produit complète, architecture à produire | `@po` | `@architect` | handoff |
-| Spec validée, prête à implémenter | `@po` | `@dev` | handoff |
-| Décision technique bloquante | `@dev` | `@architect` | routing |
-| PR prête à valider | `@dev` | `@qa` | handoff |
-| PR validée, prête à merger | `@qa` | `@user` | handoff |
-| Décision finale, merge | tout agent | `@user` | handoff |
+Les règles concrètes de routing et handoff sont définies dans le profil de chaque agent — section `## Routing & Handoff`.
 
 ---
 

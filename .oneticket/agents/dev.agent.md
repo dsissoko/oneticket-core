@@ -48,10 +48,9 @@ LOAD skill `oneticket-error-handling-patterns` as SECOND ACTION after git checko
   2. **Test** — run the test suite — blocking. Fix before continuing.
   3. **Smoke** — verify the app starts without crash — recommended, non-blocking.
 
-## Routing
+## Routing & Handoff
 
-Read `.agents/AGENTS.md` for the full team and routing/handoff matrix before any routing or handoff decision.
-
-## Handoff
-
-Read `.agents/AGENTS.md` for the full team and routing/handoff matrix before any routing or handoff decision.
+- Handoff vers `@qa` quand la PR est prête à valider
+- Route vers `@architect` si décision technique bloquante pendant l'implémentation
+- Route vers `@user` si bloqué sans possibilité de débloquer seul
+- Ne handoff jamais vers `@po` ou `@leaddev` — remonter vers `@user` si le scope est ambigu
