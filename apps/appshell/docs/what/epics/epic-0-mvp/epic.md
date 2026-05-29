@@ -31,9 +31,9 @@ This epic covers the creation of AppShell with four core capabilities:
 
 ## Related Slices
 
-<!-- @architect fills this section after producing slices -->
-
-<!-- Relative path from what/epics/epic-0-mvp/epic.md to how/slices/ -->
+- [../../how/slices/slice-1-skeleton-foundation/slice.md](../../how/slices/slice-1-skeleton-foundation/slice.md) — Application skeleton with React Router v6, AppLayout, and theme system
+- [../../how/slices/slice-2-home-screen-example/slice.md](../../how/slices/slice-2-home-screen-example/slice.md) — Data fetching example with React Query and MSW
+- [../../how/slices/slice-4-theme-system/slice.md](../../how/slices/slice-4-theme-system/slice.md) — Light/dark/system theme system with reactive switching
 
 ---
 
