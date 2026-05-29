@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClientProvider } from '@tanstack/react-query';
 import './main.css';
 import { AppLayout, ErrorBoundary, LoadingIndicator } from './components';
-import { queryClient } from './lib/queryClient';
+import { queryClient } from './lib/query-client';
 
 // __ENABLE_MSW__ is defined at build time in vite.config.ts → define block.
 // true  = MSW active (demo, preview, no-backend mode)
