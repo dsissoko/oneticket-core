@@ -12,3 +12,4 @@
 2026-05-29 13:44 | E | apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-003-exclusive-ownership.md
 2026-05-29 13:46 | F | apps/appshell/docs/how/architecture.md
 2026-05-29 13:48 | G | apps/appshell/docs/how/c4/system-context.md
+2026-05-29 13:48 | I | apps/appshell/docs/how/slices/slice-1-skeleton-foundation/slice.md
