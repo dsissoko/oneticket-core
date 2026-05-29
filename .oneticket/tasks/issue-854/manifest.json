@@ -181,7 +181,7 @@
       "role": "analyst",
       "content": "Produis le fichier run/README.md en utilisant le template .oneticket/templates/docs/run/README.md. Ce fichier est une page d'accueil pour la section 'run' (operations, infrastructure, observability). Pour AppShell, contenu minimal: description du deployment automatique via docs-site-github-pages.yml, reference au runbook appshell-reuse.md. Assure toi que le frontmatter inclut le champ 'title'.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "R",
