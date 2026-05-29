@@ -11,21 +11,15 @@ import { queryClient } from './lib/queryClient';
 // false = MSW disabled, real backend is used
 declare const __ENABLE_MSW__: boolean;
 
-// Lazy load page components
-const HomePage = lazy(() =>
-  import('./pages/HomePage').then((mod) => ({ default: mod.HomePage }))
+// Lazy load screen components
+const HomeScreen = lazy(() =>
+  import('./screens/HomeScreen').then((mod) => ({ default: mod.HomeScreen }))
 );
-const AboutPage = lazy(() =>
-  import('./pages/AboutPage').then((mod) => ({ default: mod.AboutPage }))
+const AboutScreen = lazy(() =>
+  import('./screens/AboutScreen').then((mod) => ({ default: mod.AboutScreen }))
 );
-const HelpPage = lazy(() =>
-  import('./pages/HelpPage').then((mod) => ({ default: mod.HelpPage }))
-);
-const UsersPage = lazy(() =>
-  import('./pages/UsersPage').then((mod) => ({ default: mod.UsersPage }))
-);
-const NotFoundPage = lazy(() =>
-  import('./pages/NotFoundPage').then((mod) => ({ default: mod.NotFoundPage }))
+const HelpScreen = lazy(() =>
+  import('./screens/HelpScreen').then((mod) => ({ default: mod.HelpScreen }))
 );
 
 /**
@@ -43,12 +37,10 @@ function App(): React.ReactElement {
           <Suspense fallback={<LoadingIndicator />}>
             <Routes>
               <Route element={<AppLayout />}>
-                <Route index element={<HomePage />} />
-                <Route path="/" element={<HomePage />} />
-                <Route path="/about" element={<AboutPage />} />
-                <Route path="/help" element={<HelpPage />} />
-                <Route path="/users" element={<UsersPage />} />
-                <Route path="*" element={<NotFoundPage />} />
+                <Route index element={<HomeScreen />} />
+                <Route path="/" element={<HomeScreen />} />
+                <Route path="/about" element={<AboutScreen />} />
+                <Route path="/help" element={<HelpScreen />} />
               </Route>
             </Routes>
           </Suspense>
