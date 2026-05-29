@@ -64,7 +64,16 @@ Establish a **reference skeleton** for all React/Vite app projects in oneticket-
 
 - **Exclusive File Ownership** — The principle that no two parallel tasks modify the same file. Enforced by the skeleton's directory structure and naming conventions.
 
+- **Skill** — A reusable instructional module that provides domain-specific guidance, patterns, and workflows for a particular area of software engineering. Skills are identified by their `source:` origin (local or external).
+
+- **Local Skill** — A skill produced and maintained by oneticket-core. Identified by frontmatter `source: local`. Examples: `oneticket-appshell`, `oneticket-domain-analysis`, `oneticket-design-for-vite-react-primer`.
+
+- **External Skill (Wrapped)** — A skill whose content is adapted from an external source with complete traceability. Identified by frontmatter `source: external` + `source_url` + `source_skill` + `install_native`. Maintains attribution and links to original source.
+
 ## 7. Product Capabilities
+
+### Skill Traceability
+- **Skill traceability** — The `source:` field in the frontmatter of each skill identifies its origin (local or external wrapped). Supports attribution, version tracking, and dependency management across the skill catalog.
 
 ### Layout & Navigation
 - **AppLayout Component** — A shared wrapper providing Header (top), Outlet (main content), and Footer (bottom).
