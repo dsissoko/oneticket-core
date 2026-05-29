@@ -1,0 +1,60 @@
+{
+  "issue": 921,
+  "branch_base": "feature/issue-921",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-921-A",
+      "file": "apps/appshell/app/package.json",
+      "content": "Lis apps/appshell/docs/how/slices/slice-0-setup/slice.md. Implémente la slice 0 — Setup Skeleton : configure package.json avec React, Vite, TypeScript, Tailwind, PostCSS. Crée vite.config.ts, tsconfig.json (strict mode), tailwind.config.ts avec design tokens, postcss.config.js, .gitignore, src/index.tsx, src/main.css avec variables CSS pour theme light/dark, src/types/index.ts. Vérifie que npm install && npm run dev démarre le dev server sans erreurs, npm run build génère le bundle sans warnings TypeScript.",
+      "depends_on": [],
+      "role": "dev",
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-921-B",
+      "file": "apps/appshell/app/src/components/layout/AppLayout.tsx",
+      "content": "Lis apps/appshell/docs/how/slices/slice-1-layout/slice.md. Implémente la slice 1 — Layout Structure : crée AppLayout.tsx avec grid layout (header sticky top, outlet flex 1, footer sticky bottom), Header.tsx avec logo et nav links, Footer.tsx avec copyright et liens. Update App.tsx pour wrapper Routes avec AppLayout. Utilise Tailwind pour responsive design (mobile, tablet, desktop). Exporte depuis src/components/index.ts. Ajoute JSDoc comments. Marque components comme protected (code comments).",
+      "depends_on": ["A"],
+      "role": "dev",
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-921-C",
+      "file": "apps/appshell/app/src/App.tsx",
+      "content": "Lis apps/appshell/docs/how/slices/slice-2-routing/slice.md. Implémente la slice 2 — Routing Setup : configure React Router v6 avec BrowserRouter et Routes. Crée pages : HomePage (/) avec contenu bienvenue, AboutPage (/about) avec infos équipe/vision, HelpPage (/help) avec FAQ, NotFoundPage (404). Implémente ErrorBoundary qui catch render errors. Ajoute lazy loading avec React.lazy() et Suspense. Ajoute loading indicator. Teste navigation et 404 handling. Pas d'erreurs console pendant transitions.",
+      "depends_on": ["B"],
+      "role": "dev",
+      "status": "pending"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-921-D",
+      "file": "apps/appshell/app/src/hooks/useUsers.ts",
+      "content": "Lis apps/appshell/docs/how/slices/slice-3-data-fetching/slice.md. Implémente la slice 3 — Data Fetching Pattern : crée QueryClient et QueryClientProvider. Configure API types (User, GetUsersResponse, CreateUserRequest, etc.), endpoints.ts avec URLs, client.ts avec fetch wrapper. Crée hooks: useUsers(), useUser(id), useProfile(), useCreateUser(), useUpdateUser(), useDeleteUser(). Configure MSW handlers pour GET/POST/PUT/DELETE sur /api/users avec mock data (3-5 users). Crée UsersPage.tsx avec CRUD UI, loading spinners, error handling. Wrap app avec QueryClientProvider. Teste cache invalidation après mutations.",
+      "depends_on": ["C"],
+      "role": "dev",
+      "status": "pending"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-921-E",
+      "file": "apps/appshell/app/src/stores/appStore.ts",
+      "content": "Lis apps/appshell/docs/how/slices/slice-4-theme/slice.md. Implémente la slice 4 — Theme Toggle : crée Zustand store appStore.ts avec theme state (default 'system'). Crée useTheme hook. Crée ThemeToggle.tsx dropdown (System/Light/Dark). Update Header.tsx pour inclure ThemeToggle. Ajoute CSS variables dans main.css pour light/dark themes avec smooth transitions. Implémente system preference detection (prefers-color-scheme). Persiste en localStorage (app:theme). Test: localStorage visible dans DevTools, data-theme attribut sur HTML, CSS variables update, smooth theme switching, survit reload, HomePage affiche theme courant.",
+      "depends_on": ["B"],
+      "role": "dev",
+      "status": "pending"
+    },
+    {
+      "id": "F",
+      "branch": "task/issue-921-F",
+      "file": "apps/appshell/README.md",
+      "content": "Lis apps/appshell/docs/how/slices/slice-5-documentation/slice.md. Implémente la slice 5 — Documentation & Runbook : crée apps/appshell/README.md avec project overview, quick start (npm install, npm run dev), architecture overview, file structure, liens vers docs. Crée apps/appshell/docs/how/RUN-BOOK.md step-by-step pour reuse skeleton avec examples, troubleshooting. Crée .oneticket/runbooks/appshell-skeleton.md avec détails. Ajoute JSDoc comments sur AppLayout, Header, Footer, hooks (useUsers, useTheme, etc.). Ajoute inline comments dans vite.config.ts, tailwind.config.ts, tsconfig.json. Liens vers Vite, React Router, React Query, MSW docs. Vérifie que documentation est accurate.",
+      "depends_on": ["D", "E"],
+      "role": "dev",
+      "status": "pending"
+    }
+  ]
+}
