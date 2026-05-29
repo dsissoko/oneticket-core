@@ -1,43 +1,47 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './main.css';
-import { AppLayout } from './components';
+import { AppLayout, ErrorBoundary, LoadingIndicator } from './components';
 
-/**
- * Home Page Component
- *
- * Placeholder for the home page content.
- */
-function HomePage(): React.ReactElement {
-  return (
-    <div className="flex items-center justify-center flex-grow bg-background text-foreground py-12">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">AppShell</h1>
-        <p className="text-lg text-muted">Welcome to the foundation.</p>
-      </div>
-    </div>
-  );
-}
+// Lazy load page components
+const HomePage = lazy(() =>
+  import('./pages/HomePage').then((mod) => ({ default: mod.HomePage }))
+);
+const AboutPage = lazy(() =>
+  import('./pages/AboutPage').then((mod) => ({ default: mod.AboutPage }))
+);
+const HelpPage = lazy(() =>
+  import('./pages/HelpPage').then((mod) => ({ default: mod.HelpPage }))
+);
+const NotFoundPage = lazy(() =>
+  import('./pages/NotFoundPage').then((mod) => ({ default: mod.NotFoundPage }))
+);
 
 /**
  * App Component
  *
- * Root application component. Wraps Routes with AppLayout
- * to ensure consistent header, footer, and layout across all pages.
+ * Root application component. Wraps Routes with AppLayout and ErrorBoundary
+ * to ensure consistent header, footer, layout, and error handling across all pages.
+ * Uses lazy loading with Suspense for optimized code splitting.
  */
 function App(): React.ReactElement {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<AppLayout />}>
-          <Route index element={<HomePage />} />
-          <Route path="/" element={<HomePage />} />
-          <Route path="/about" element={<div className="flex-grow p-8"><h2 className="text-2xl font-bold">About</h2></div>} />
-          <Route path="/help" element={<div className="flex-grow p-8"><h2 className="text-2xl font-bold">Help</h2></div>} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <Suspense fallback={<LoadingIndicator />}>
+          <Routes>
+            <Route element={<AppLayout />}>
+              <Route index element={<HomePage />} />
+              <Route path="/" element={<HomePage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/help" element={<HelpPage />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Route>
+          </Routes>
+        </Suspense>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }
 
