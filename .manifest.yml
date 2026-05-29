@@ -1,0 +1,288 @@
+---
+version: 1.0.0
+issue: 852
+branch: feature/issue-852
+repo: dsissoko/oneticket-core
+
+mission: |
+  Initialize documentation for AppShell — the reference skeleton for all app projects.
+  AppShell is a Vite + React + TypeScript starter with Primer design system, MSW mocking,
+  and a strict file structure to eliminate merge errors through exclusive ownership per screen.
+
+tasks:
+  - id: task-0-product-spec
+    name: Generate product-spec.md for AppShell
+    description: |
+      Create product specification documenting AppShell as the reference skeleton for all
+      oneticket-core app projects. Include capabilities, target users, and reuse model.
+    role: analyst
+    artifact: apps/appshell/docs/what/product-spec.md
+    context: |
+      AppShell is a production-ready Vite + React skeleton that serves as the foundation
+      for all app projects in oneticket-core.
+      
+      Key capabilities:
+      1. Reference skeleton with proven file structure (zero merge errors through exclusive ownership)
+      2. Preconfigured stack: Vite + React 18 + TypeScript + Tailwind + shadcn/ui + React Query + MSW
+      3. Design tokens via CSS custom properties (light/dark theme switching without reload)
+      4. Example data flow: HomeScreen → useUsers → React Query → MSW → Card list
+      5. Example screens: Home (data fetching), About (project description), Help (quickstart)
+      
+      Constraints:
+      - No Next.js (Vite only)
+      - No state management in skeleton (Zustand available but unused)
+      - Shadcn components installed once, never modified in parallel
+      - One screen per file = exclusive ownership → zero merge conflicts
+      
+      Target users: Development teams building app projects based on oneticket-core
+      
+      Acceptance: Deliver `what/product-spec.md` with title, problem, capabilities, user personas,
+      constraints, and glossary.
+
+  - id: task-1-epic-0-mvp
+    name: Generate epic-0-mvp for AppShell
+    description: |
+      Create the MVP epic documenting AppShell's core capabilities. Include 5-6 user stories
+      covering skeleton delivery, theme system, and reuse model.
+    role: analyst
+    depends_on: [task-0-product-spec]
+    artifact: apps/appshell/docs/what/epics/epic-0-mvp/epic.md
+    context: |
+      Epic goal: Deliver a production-ready skeleton that eliminates merge errors through
+      exclusive file ownership and accelerates app project bootstrapping.
+      
+      User stories to cover:
+      1. US-001: Setup AppShell project structure (directory layout, package.json, config files)
+      2. US-002: Implement layout components (Header, Footer, AppLayout with theme toggle)
+      3. US-003: Create home screen with example data flow (React Query + MSW)
+      4. US-004: Implement About and Help screens with quickstart instructions
+      5. US-005: Configure design tokens and CSS variables for light/dark themes
+      6. US-006: Setup MSW mock API handlers for reusable example
+      
+      Acceptance: Deliver `epic-0-mvp/epic.md` with scope, acceptance criteria, and
+      dependency on product-spec.
+
+  - id: task-2-us-001
+    name: Generate US-001 for AppShell
+    description: Generate user story for AppShell project setup
+    role: analyst
+    depends_on: [task-1-epic-0-mvp]
+    artifact: apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-001-skeleton-setup.md
+    context: |
+      User: Developer bootstrapping a new app project
+      Goal: Copy AppShell, set environment, and prepare for feature development
+      
+      Acceptance criteria:
+      - [ ] Package.json includes all dependencies (Vite, React, TypeScript, Tailwind, shadcn, MSW, React Query, Zustand)
+      - [ ] vite.config.ts configured with base path support (VITE_BASE_PATH)
+      - [ ] .env.example includes VITE_APP_NAME placeholder
+      - [ ] TypeScript config enforces strict mode
+      - [ ] Directory structure matches convention (src/, components/, screens/, hooks/, etc.)
+
+  - id: task-3-us-002
+    name: Generate US-002 for AppShell
+    description: Generate user story for layout and theme system
+    role: analyst
+    depends_on: [task-1-epic-0-mvp]
+    artifact: apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-002-layout-and-theme.md
+    context: |
+      User: Developer implementing AppShell UI shell
+      Goal: Deliver Header, Footer, and ThemeToggle components with light/dark switching
+      
+      Acceptance criteria:
+      - [ ] Header displays app name (left), About/Help dropdown (right), theme toggle (far right)
+      - [ ] Clicking app name navigates to home
+      - [ ] Theme toggle offers system/light/dark options
+      - [ ] Theme switch is reactive (no page reload)
+      - [ ] CSS custom properties defined in globals.css for light/dark modes
+      - [ ] Footer component exists, ready to receive content
+
+  - id: task-4-us-003
+    name: Generate US-003 for AppShell
+    description: Generate user story for home screen data flow example
+    role: analyst
+    depends_on: [task-1-epic-0-mvp]
+    artifact: apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-003-home-screen-example.md
+    context: |
+      User: Developer understanding AppShell's data fetching pattern
+      Goal: Deliver HomeScreen with example data flow (React Query + MSW)
+      
+      Acceptance criteria:
+      - [ ] HomeScreen calls useUsers() hook
+      - [ ] useUsers() fetches from /api/users via React Query
+      - [ ] MSW intercepts in dev, returns mock users
+      - [ ] Users displayed as Card list
+      - [ ] Loading and error states handled
+
+  - id: task-5-us-004
+    name: Generate US-004 for AppShell
+    description: Generate user story for About and Help screens
+    role: analyst
+    depends_on: [task-1-epic-0-mvp]
+    artifact: apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-004-about-help-screens.md
+    context: |
+      User: Developer documenting AppShell purpose and reuse instructions
+      Goal: Deliver About and Help screens with quickstart and runbook link
+      
+      Acceptance criteria (About):
+      - [ ] "What AppShell is" — reference skeleton for app projects
+      - [ ] Link to GitHub repo
+      - [ ] Link to generated docs
+      
+      Acceptance criteria (Help):
+      - [ ] 7-step quickstart for reusing AppShell
+      - [ ] Link to runbook: .oneticket/docs/run/appshell-reuse.md
+
+  - id: task-6-us-005
+    name: Generate US-005 for AppShell
+    description: Generate user story for design tokens and CSS variables
+    role: analyst
+    depends_on: [task-1-epic-0-mvp]
+    artifact: apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-005-design-tokens.md
+    context: |
+      User: Developer managing AppShell's visual consistency
+      Goal: Define CSS custom properties for light/dark themes and Tailwind integration
+      
+      Acceptance criteria:
+      - [ ] globals.css defines CSS custom properties for colors, spacing, typography
+      - [ ] tailwind.config.ts consumes CSS variables
+      - [ ] Light and dark modes have distinct palettes
+      - [ ] All components use Tailwind classes referencing custom properties
+      - [ ] No hardcoded colors in component styles
+
+  - id: task-7-architecture
+    name: Generate architecture.md for AppShell
+    description: |
+      Create architecture document describing the tech stack, component structure,
+      data flow, and design conventions that prevent merge errors.
+    role: architect
+    depends_on: [task-0-product-spec, task-2-us-001, task-3-us-002, task-4-us-003, task-5-us-004, task-6-us-005]
+    artifact: apps/appshell/docs/how/architecture.md
+    context: |
+      Architecture layers:
+      1. **Build**: Vite 5 with TypeScript strict mode
+      2. **UI Framework**: React 18 + TypeScript
+      3. **Routing**: React Router DOM v6
+      4. **Styling**: Tailwind CSS 3 with design tokens (CSS custom properties)
+      5. **Components**: shadcn/ui (Radix UI primitives installed in repo)
+      6. **Forms**: React Hook Form + Zod
+      7. **Data Fetching**: @tanstack/react-query v5
+      8. **Mock API**: MSW v2 (dev-only)
+      9. **State**: Zustand v4 (available but unused in skeleton)
+      10. **Icons**: lucide-react
+      11. **Theme**: next-themes (Vite-adapted for light/dark)
+      12. **Testing**: Vitest + @testing-library/react
+      
+      Key design: File ownership per screen (one screen per file) eliminates merge conflicts.
+      Shadcn components installed once at task-0, never modified in parallel.
+      
+      Document the data flow pattern:
+      Screen → React Query hook → Fetch → MSW intercepts (dev) or real API (prod) → Cache → Render
+      
+      Acceptance: Deliver `how/architecture.md` with macro architecture, tech stack, data flow,
+      design conventions, and merge-error prevention strategy.
+
+  - id: task-8-c4-system-context
+    name: Generate C4 system context for AppShell
+    description: Generate C4 system context diagram
+    role: architect
+    depends_on: [task-7-architecture]
+    artifact: apps/appshell/docs/how/c4/system-context.md
+    context: |
+      Context: AppShell as a Vite + React SPA deployed on GitHub Pages
+      
+      External systems:
+      - Developer (modifies screens, hooks, handlers)
+      - npm registry (dependencies)
+      - GitHub (repo, Pages deployment)
+      - Optional backend API (production replaces MSW)
+      
+      Diagram should show AppShell SPA in the center with connections to developer,
+      GitHub Pages, and backend.
+
+  - id: task-9-c4-containers
+    name: Generate C4 containers for AppShell
+    description: Generate C4 containers diagram
+    role: architect
+    depends_on: [task-7-architecture]
+    artifact: apps/appshell/docs/how/c4/containers.md
+    context: |
+      Containers:
+      1. AppShell Vite (build, dev server, bundler)
+      2. React App (main SPA)
+      3. MSW Worker (intercepts HTTP in dev)
+      4. Tailwind CSS (design system)
+      5. Mock API (MSW handlers, returns test data)
+      
+      Relationships:
+      - React App communicates via React Query
+      - React Query calls fetch() which MSW intercepts (or real API in prod)
+      - Styling via Tailwind + CSS custom properties
+
+  - id: task-10-slices
+    name: Generate vertical slices for AppShell
+    description: |
+      Generate vertical implementation slices covering screen setup, layout/theme,
+      data fetching example, and screens (About, Help, Home).
+    role: architect
+    depends_on: [task-7-architecture, task-2-us-001, task-3-us-002, task-4-us-003, task-5-us-004, task-6-us-005]
+    artifacts:
+      - apps/appshell/docs/how/slices/slice-1-project-setup/slice.md
+      - apps/appshell/docs/how/slices/slice-2-layout-and-theme/slice.md
+      - apps/appshell/docs/how/slices/slice-3-data-fetching-example/slice.md
+      - apps/appshell/docs/how/slices/slice-4-screens/slice.md
+    context: |
+      Slices decompose AppShell implementation:
+      
+      **Slice 1: Project Setup** (Task 0 parallel)
+      - Copy skeleton, install deps, configure Vite/TypeScript/Tailwind
+      - No parallel tasks — sequential setup
+      
+      **Slice 2: Layout and Theme** (Task 1+ parallel)
+      - AppLayout, Header, Footer, ThemeToggle
+      - CSS custom properties, globals.css setup
+      - Exclusive ownership — zero merge conflicts
+      
+      **Slice 3: Data Fetching Example** (Task 2+ parallel)
+      - useUsers hook, React Query integration, MSW handlers
+      - Mock data, example flow
+      
+      **Slice 4: Screens** (Task 3+ parallel)
+      - HomeScreen (uses slice-3 hook)
+      - AboutScreen (static content)
+      - HelpScreen (quickstart + runbook link)
+      - Each screen = exclusive file ownership
+
+  - id: task-11-cross-references
+    name: Update cross-references in epic and user stories
+    description: |
+      Read all produced slice files and update epic.md and us-*.md with slice references,
+      then update each slice.md with epic and user story references.
+    role: architect
+    depends_on: [task-1-epic-0-mvp, task-2-us-001, task-3-us-002, task-4-us-003, task-5-us-004, task-6-us-005, task-10-slices]
+    context: |
+      After all slices are produced, create bidirectional references:
+      - epic.md → ## Related Slices (list all slices with relative links)
+      - Each us-*.md → ## Related Slices (link to relevant slice)
+      - Each slice.md → ## Related Epics and ## Related User Stories (bidirectional links)
+      
+      Use relative paths from the skill doc-structure cross-reference table:
+      - From epic: `../../../how/slices/slice-N-<name>/slice.md`
+      - From us: `../../../../how/slices/slice-N-<name>/slice.md`
+      - From slice: `../../../what/epics/epic-0-mvp/epic.md`
+      - From slice: `../../../what/epics/epic-0-mvp/user-stories/us-NNN-<name>.md`
+
+summary: |
+  Initialize AppShell documentation base:
+  - Product spec defining AppShell as reference skeleton
+  - Epic 0 MVP with 5 user stories
+  - Architecture document with tech stack and design principles
+  - C4 system context and containers
+  - 4 vertical slices covering full implementation
+  - Cross-references wiring everything together
+
+post_manifest: |
+  After all tasks complete:
+  1. Commit with message: `feat: initialize appshell documentation — issue #852`
+  2. Push to feature/issue-852
+  3. Pipeline validates docs build, then auto-closes issue
