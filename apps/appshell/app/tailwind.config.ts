@@ -29,34 +29,31 @@ const config: Config = {
     './src/**/*.{js,ts,jsx,tsx}',
   ],
 
-  darkMode: 'class',
-
   /**
-   * Theme configuration with extended design tokens
-   *
-   * "extend" mode allows us to add to Tailwind's defaults without replacing them
-   * (e.g., we add "primary" but keep all built-in colors like "blue-500")
-   */
+    * Theme configuration with extended design tokens
+    *
+    * "extend" mode allows us to add to Tailwind's defaults without replacing them
+    * (e.g., we add "primary" but keep all built-in colors like "blue-500")
+    */
   theme: {
     extend: {
       /**
-       * Color palette
-       *
-       * These colors are frozen and should not change mid-project.
-       * Inspired by GitHub's Primer design system and shadcn/ui.
-       *
-       * Usage:
-       * - text-primary, bg-primary, border-primary
-       * - text-secondary, bg-secondary, border-secondary
-       * - text-accent, bg-accent
-       * - text-destructive, bg-destructive (error/delete states)
-       * - text-muted, text-gray-400 (subtle/disabled text)
-       * - bg-background, text-foreground (base colors)
-       * - border, card, popover, ring (shadcn/ui components)
-       *
-       * Dark mode: Automatically inverted via next-themes
-       * (light mode uses #ffffff bg, dark mode uses #1c2128 or similar)
-       */
+        * Color palette
+        *
+        * These colors are frozen and should not change mid-project.
+        * Inspired by GitHub's Primer design system.
+        *
+        * Usage:
+        * - text-primary, bg-primary, border-primary
+        * - text-secondary, bg-secondary, border-secondary
+        * - text-accent, bg-accent
+        * - text-destructive, bg-destructive (error/delete states)
+        * - text-muted, text-gray-400 (subtle/disabled text)
+        * - bg-background, text-foreground (base colors)
+        *
+        * Dark mode: Automatically inverted via next-themes
+        * (light mode uses #ffffff bg, dark mode uses #1c2128 or similar)
+        */
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
@@ -91,11 +88,6 @@ const config: Config = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
-      },
-      borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
       },
 
       /**
@@ -135,25 +127,22 @@ const config: Config = {
   },
 
   /**
-    * Dark mode configuration
-    *
-    * Uses 'class' strategy: dark mode is enabled via .dark class on document root
-    * This is compatible with next-themes which manages the class dynamically
-    *
-    * @see {@link https://tailwindcss.com/docs/dark-mode Tailwind Dark Mode Docs}
-    */
-   darkMode: 'class',
+   * Dark mode strategy
+   *
+   * Using 'class' strategy to work with next-themes
+   */
+  darkMode: ['class'],
 
   /**
-    * Tailwind plugins
-    *
-    * Plugins extend Tailwind with custom utilities or component classes.
-    * Currently empty; add as needed (e.g., @tailwindcss/typography, @tailwindcss/forms)
-    *
-    * @example
-    * plugins: [require('@tailwindcss/typography'), require('@tailwindcss/forms')]
-    */
-   plugins: [],
- };
- 
- export default config;
+   * Tailwind plugins
+   *
+   * Plugins extend Tailwind with custom utilities or component classes.
+   * Currently empty; add as needed (e.g., @tailwindcss/typography, @tailwindcss/forms)
+   *
+   * @example
+   * plugins: [require('@tailwindcss/typography'), require('@tailwindcss/forms')]
+   */
+  plugins: [],
+};
+
+export default config;

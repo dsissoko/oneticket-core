@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Code, Globe, ExternalLink } from 'lucide-react';
 
 /**
  * FooterProps Interface
@@ -61,10 +62,35 @@ export function Footer({
         </div>
 
         {/* Divider */}
-        <div className="border-t border-gray-200 dark:border-gray-800 pt-8">
+        <div className="border-t border-gray-200 dark:border-gray-800 pt-8 mb-8">
           <p className="text-xs text-gray-500 dark:text-gray-500 text-center">
             AppShell — Foundation for OneTicket Applications
           </p>
+        </div>
+
+        {/* External links section */}
+        <div className="flex justify-center gap-4 pt-4">
+          <a
+            href="https://github.com"
+            aria-label="GitHub Repository"
+            className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
+          >
+            <Code className="h-5 w-5" />
+          </a>
+          <a
+            href="https://oneticket.dev"
+            aria-label="Project Website"
+            className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
+          >
+            <Globe className="h-5 w-5" />
+          </a>
+          <a
+            href="https://github.com/dsissoko/oneticket-core"
+            aria-label="External Link"
+            className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
+          >
+            <ExternalLink className="h-5 w-5" />
+          </a>
         </div>
       </div>
     </footer>
