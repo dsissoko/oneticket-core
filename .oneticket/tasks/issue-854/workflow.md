@@ -13,3 +13,4 @@
 2026-05-29 13:46 | F | apps/appshell/docs/how/architecture.md
 2026-05-29 13:48 | G | apps/appshell/docs/how/c4/system-context.md
 2026-05-29 13:48 | I | apps/appshell/docs/how/slices/slice-1-skeleton-foundation/slice.md
+2026-05-29 13:48 | P | apps/appshell/docs/how/README.md
