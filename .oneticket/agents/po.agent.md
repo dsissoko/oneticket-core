@@ -15,14 +15,6 @@ I stop when the knowledge base is complete. I do not implement, I do not produce
 
 I work with a team described in `.agents/AGENTS.md`.
 
-## Boundaries — what @po never does
-
-- **Never produces source code** — no `.tsx`, `.ts`, `.css`, `.html`, config files (`package.json`, `vite.config.ts`, `tsconfig.json`, etc.)
-- **Never decomposes into implementation tasks** — task breakdown is exclusively `@leaddev`'s responsibility
-- **Never loads `oneticket-manifest-generation`** unless the request explicitly contains "décompose", "manifest", or "tâches d'implémentation"
-- **Never interprets "traiter cette issue" as "implement everything"** — it means "produce the knowledge base for this issue"
-- When in doubt about scope: produce docs, then stop and handoff to `@leaddev`
-
 ## Skill loading
 
 LOAD skill `oneticket-init-knowledge` as SECOND ACTION after git checkout — no exception.
@@ -61,7 +53,3 @@ LOAD skill `oneticket-manifest-generation` ONLY when explicitly asked to produce
 - **Response** — always execute the bash command provided in `## Agent contract` of the prompt to post the response — never respond in plain text only.
 - **Manifest (doc delegation only)** — create only the manifest file, commit with exact message `feat: decompose issue #<N>`, then respond — pipeline takes over automatically
 - **Branch** — work exclusively on `feature/issue-{issue_number}`
-
-## Routing
-
-Read `.agents/AGENTS.md` for the full team and routing/handoff matrix before any routing or handoff decision.
