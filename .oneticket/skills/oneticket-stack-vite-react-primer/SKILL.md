@@ -169,9 +169,26 @@ import { BrowserRouter } from 'react-router-dom'
 
 **`basename` is mandatory** — without it, React Router resolves all `<Link to="...">` relative to the domain root (`/`) instead of the app base path. On any non-root deployment (GitHub Pages, reverse proxy, sub-directory), all internal links will point to the wrong URL. `import.meta.env.BASE_URL` is always in sync with `VITE_BASE_PATH` — use it, never hardcode the path.
 
-## MSW Service Worker scope
+## MSW — activation and Service Worker scope
 
-When using MSW (`msw`) with `setupWorker`, always pass the `serviceWorker.url` option:
+### Controlling MSW activation
+
+Use a `define` flag in `vite.config.ts` to control MSW independently of the build environment:
+
+```typescript
+// vite.config.ts
+export default defineConfig({
+  define: {
+    // true  = MSW active (dev, preview, GitHub Pages demo, no-backend mode)
+    // false = MSW disabled, real backend is used
+    __ENABLE_MSW__: true,
+  },
+})
+```
+
+**Do not use `import.meta.env.DEV` to gate MSW** — it couples activation to the build environment, which prevents using MSW on GitHub Pages or any non-dev deployment. A named boolean flag makes the intent explicit and is easy to flip when connecting a real backend.
+
+### MSW startup — canonical pattern
 
 ```typescript
 // src/mocks/browser.ts
@@ -182,15 +199,27 @@ export const worker = setupWorker(...handlers)
 ```
 
 ```typescript
-// src/main.tsx or src/index.tsx — start with correct SW path
-worker.start({
-  serviceWorker: {
-    url: import.meta.env.BASE_URL + 'mockServiceWorker.js',
-  },
+// src/main.tsx or src/index.tsx
+declare const __ENABLE_MSW__: boolean
+
+async function startMockServiceWorker(): Promise<void> {
+  if (!__ENABLE_MSW__) return
+  const { worker } = await import('./mocks/browser')
+  await worker.start({
+    serviceWorker: {
+      url: import.meta.env.BASE_URL + 'mockServiceWorker.js',
+    },
+  })
+}
+
+startMockServiceWorker().then(() => {
+  // render app
 })
 ```
 
 **`url` is mandatory** — by default MSW registers the Service Worker from the domain root (`/mockServiceWorker.js`). On any sub-path deployment the file is not found and the app crashes with `Failed to register a Service Worker`. `import.meta.env.BASE_URL` ensures the SW is always found at the correct path.
+
+**Dynamic import is required** — importing `worker` at the top level forces the MSW bundle into the main chunk even when disabled. Dynamic `import('./mocks/browser')` inside the `if (__ENABLE_MSW__)` guard lets Vite tree-shake it when the flag is `false`.
 
 **`mockServiceWorker.js` must be committed** — generate it once with `npx msw init public/` and commit `public/mockServiceWorker.js`. Vite copies `public/` into `dist/` at build time.
 

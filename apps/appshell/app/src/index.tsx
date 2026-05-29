@@ -5,7 +5,11 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import './main.css';
 import { AppLayout, ErrorBoundary, LoadingIndicator } from './components';
 import { queryClient } from './lib/queryClient';
-import { worker } from './mocks/browser';
+
+// __ENABLE_MSW__ is defined at build time in vite.config.ts → define block.
+// true  = MSW active (demo, preview, no-backend mode)
+// false = MSW disabled, real backend is used
+declare const __ENABLE_MSW__: boolean;
 
 // Lazy load page components
 const HomePage = lazy(() =>
@@ -54,13 +58,19 @@ function App(): React.ReactElement {
   );
 }
 
-// Initialize MSW worker before rendering the app
-// serviceWorker.url uses BASE_URL so the SW is found on any sub-path (GitHub Pages preview, prod)
-worker.start({
-  serviceWorker: {
-    url: import.meta.env.BASE_URL + 'mockServiceWorker.js',
-  },
-}).then(() => {
+// Start MSW conditionally — controlled by __ENABLE_MSW__ defined in vite.config.ts.
+// This is independent of dev/prod: MSW can be active on GitHub Pages for demo purposes.
+async function startMockServiceWorker(): Promise<void> {
+  if (!__ENABLE_MSW__) return;
+  const { worker } = await import('./mocks/browser');
+  await worker.start({
+    serviceWorker: {
+      url: import.meta.env.BASE_URL + 'mockServiceWorker.js',
+    },
+  });
+}
+
+startMockServiceWorker().then(() => {
   const root = document.getElementById('root');
   if (!root) {
     throw new Error('Root element not found');

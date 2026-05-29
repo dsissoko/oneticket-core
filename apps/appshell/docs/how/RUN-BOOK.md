@@ -331,7 +331,30 @@ export const handlers = [
 ];
 ```
 
-### Step 4.4 — Create Custom Hooks
+### Step 4.4 — Toggle MSW on/off
+
+MSW activation is controlled by a single boolean in `vite.config.ts`, independent of the build environment:
+
+```typescript
+// vite.config.ts
+define: {
+  __ENABLE_MSW__: true,  // ← set to false when connecting a real backend
+}
+```
+
+- `true` → MSW intercepts all API calls (demo, preview, GitHub Pages, no-backend mode)
+- `false` → requests go to the real backend, MSW bundle is tree-shaken out
+
+**Do not use `import.meta.env.DEV`** to gate MSW — it would disable mocks on GitHub Pages preview where there is no backend.
+
+To generate or update `mockServiceWorker.js` (required once, must be committed):
+
+```bash
+npx msw init public/
+git add public/mockServiceWorker.js
+```
+
+### Step 4.5 — Create Custom Hooks
 
 Create React Query hooks for your data:
 

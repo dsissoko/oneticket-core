@@ -12,10 +12,22 @@ import react from '@vitejs/plugin-react';
  * - Build output: Optimized JS/CSS/HTML to dist/
  * - Minification: Terser (faster than esbuild for large bundles)
  *
+ * MSW (Mock Service Worker):
+ * - __ENABLE_MSW__: true  → MSW active (dev, preview, GitHub Pages demo)
+ * - __ENABLE_MSW__: false → MSW disabled (real backend)
+ * Set to false when connecting to a real API.
+ *
  * @see {@link https://vitejs.dev/config/ Vite Config Documentation}
  */
 export default defineConfig({
   base: process.env.VITE_BASE_PATH ?? '/',
+
+  define: {
+    // Controls MSW activation — independent of dev/prod environment.
+    // true  = MSW intercepts all API calls (demo, preview, no-backend mode)
+    // false = real backend is used
+    __ENABLE_MSW__: true,
+  },
 
   /**
    * Vite plugins to extend build functionality
