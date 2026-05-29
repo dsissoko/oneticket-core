@@ -1,8 +1,11 @@
 import React, { Suspense, lazy } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { QueryClientProvider } from '@tanstack/react-query';
 import './main.css';
 import { AppLayout, ErrorBoundary, LoadingIndicator } from './components';
+import { queryClient } from './lib/queryClient';
+import { worker } from './mocks/browser';
 
 // Lazy load page components
 const HomePage = lazy(() =>
@@ -13,6 +16,9 @@ const AboutPage = lazy(() =>
 );
 const HelpPage = lazy(() =>
   import('./pages/HelpPage').then((mod) => ({ default: mod.HelpPage }))
+);
+const UsersPage = lazy(() =>
+  import('./pages/UsersPage').then((mod) => ({ default: mod.UsersPage }))
 );
 const NotFoundPage = lazy(() =>
   import('./pages/NotFoundPage').then((mod) => ({ default: mod.NotFoundPage }))
@@ -27,31 +33,37 @@ const NotFoundPage = lazy(() =>
  */
 function App(): React.ReactElement {
   return (
-    <ErrorBoundary>
-      <BrowserRouter>
-        <Suspense fallback={<LoadingIndicator />}>
-          <Routes>
-            <Route element={<AppLayout />}>
-              <Route index element={<HomePage />} />
-              <Route path="/" element={<HomePage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/help" element={<HelpPage />} />
-              <Route path="*" element={<NotFoundPage />} />
-            </Route>
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
-    </ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <ErrorBoundary>
+        <BrowserRouter>
+          <Suspense fallback={<LoadingIndicator />}>
+            <Routes>
+              <Route element={<AppLayout />}>
+                <Route index element={<HomePage />} />
+                <Route path="/" element={<HomePage />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/help" element={<HelpPage />} />
+                <Route path="/users" element={<UsersPage />} />
+                <Route path="*" element={<NotFoundPage />} />
+              </Route>
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
+      </ErrorBoundary>
+    </QueryClientProvider>
   );
 }
 
-const root = document.getElementById('root');
-if (!root) {
-  throw new Error('Root element not found');
-}
+// Initialize MSW worker before rendering the app
+worker.start().then(() => {
+  const root = document.getElementById('root');
+  if (!root) {
+    throw new Error('Root element not found');
+  }
 
-ReactDOM.createRoot(root).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-);
+  ReactDOM.createRoot(root).render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>,
+  );
+});
