@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+
+# Local env
+.env
+.env.local
+.env.*.local
+
+# Vite cache
+.vite/
+
+# Test coverage
+coverage/
+
+# Editor
+.DS_Store
+*.local
