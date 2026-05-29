@@ -1,0 +1,679 @@
+<!DOCTYPE html><html lang="en" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-bguv2lll"> <head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Slice 0 — AppShell Skeleton: structure, routing, theme, design tokens, MSW pattern | Appshell</title><link rel="canonical" href="https://dsissoko.github.io/oneticket-core/appshell/pr/850/docs/how/slices/slice-0-skeleton/slice/"/><link rel="sitemap" href="/oneticket-core/appshell/pr/850/docs/sitemap-index.xml"/><link rel="shortcut icon" href="/oneticket-core/appshell/pr/850/docs/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v5.18.1"/><meta name="generator" content="Starlight v0.34.8"/><meta property="og:title" content="Slice 0 — AppShell Skeleton: structure, routing, theme, design tokens, MSW pattern"/><meta property="og:type" content="article"/><meta property="og:url" content="https://dsissoko.github.io/oneticket-core/appshell/pr/850/docs/how/slices/slice-0-skeleton/slice/"/><meta property="og:locale" content="en"/><meta property="og:description" content="Reference skeleton for all app projects in oneticket-core. Eliminates merge errors and enforces design quality by constraint. (max 160 chars)"/><meta property="og:site_name" content="Appshell"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="Reference skeleton for all app projects in oneticket-core. Eliminates merge errors and enforces design quality by constraint. (max 160 chars)"/><script>
+	window.StarlightThemeProvider = (() => {
+		const storedTheme =
+			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
+		const theme =
+			storedTheme ||
+			(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+		return {
+			updatePickers(theme = storedTheme || 'auto') {
+				document.querySelectorAll('starlight-theme-select').forEach((picker) => {
+					const select = picker.querySelector('select');
+					if (select) select.value = theme;
+					/** @type {HTMLTemplateElement | null} */
+					const tmpl = document.querySelector(`#theme-icons`);
+					const newIcon = tmpl && tmpl.content.querySelector('.' + theme);
+					if (newIcon) {
+						const oldIcon = picker.querySelector('svg.label-icon');
+						if (oldIcon) {
+							oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+						}
+					}
+				});
+			},
+		};
+	})();
+</script><template id="theme-icons"><svg aria-hidden="true" class="light astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg><svg aria-hidden="true" class="dark astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg><svg aria-hidden="true" class="auto astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg></template><link rel="stylesheet" href="/oneticket-core/appshell/pr/850/docs/_astro/print.DNXP8c50.css" media="print"><link rel="stylesheet" href="/oneticket-core/appshell/pr/850/docs/_astro/index.DfIxps_E.css"><script type="module" src="/oneticket-core/appshell/pr/850/docs/_astro/page.B1D-nYk3.js"></script></head> <body class="astro-bguv2lll"> <a href="#_top" class="astro-7q3lir66">Skip to content</a>  <div class="page sl-flex astro-vrdttmbt"> <header class="header astro-vrdttmbt"><div class="header astro-kmkmnagf"> <div class="title-wrapper sl-flex astro-kmkmnagf"> <a href="/oneticket-core/appshell/pr/850/docs/" class="site-title sl-flex astro-m46x6ez3">  <span class="astro-m46x6ez3" translate="no"> Appshell </span> </a>  </div> <div class="sl-flex print:hidden astro-kmkmnagf"> <site-search class="astro-kmkmnagf astro-v37mnknz" data-translations="{&#34;placeholder&#34;:&#34;Search&#34;}"> <button data-open-modal disabled aria-label="Search" aria-keyshortcuts="Control+K" class="astro-v37mnknz"> <svg aria-hidden="true" class="astro-v37mnknz astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg> <span class="sl-hidden md:sl-block astro-v37mnknz" aria-hidden="true">Search</span> <kbd class="sl-hidden md:sl-flex astro-v37mnknz" style="display: none;"> <kbd class="astro-v37mnknz">Ctrl</kbd><kbd class="astro-v37mnknz">K</kbd> </kbd> </button> <dialog style="padding:0" aria-label="Search" class="astro-v37mnknz"> <div class="dialog-frame sl-flex astro-v37mnknz">  <button data-close-modal class="sl-flex md:sl-hidden astro-v37mnknz"> Cancel </button> <div class="search-container astro-v37mnknz"> <div id="starlight__search" class="astro-v37mnknz"></div> </div> </div> </dialog> </site-search>  <script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script> <script type="module" src="/oneticket-core/appshell/pr/850/docs/_astro/Search.astro_astro_type_script_index_0_lang.BMzPddwA.js"></script>   </div> <div class="sl-hidden md:sl-flex print:hidden right-group astro-kmkmnagf"> <div class="sl-flex social-icons astro-kmkmnagf"> <a href="https://github.com/dsissoko/oneticket-core" rel="me" class="sl-flex astro-wy4te6ga"><span class="sr-only astro-wy4te6ga">GitHub</span><svg aria-hidden="true" class="astro-wy4te6ga astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a> </div> <starlight-theme-select>  <label style="--sl-select-width: 6.25em" class="astro-4yphtoen"> <span class="sr-only astro-4yphtoen">Select theme</span> <svg aria-hidden="true" class="icon label-icon astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg> <select value="auto" autocomplete="off" class="astro-4yphtoen"> <option value="dark" class="astro-4yphtoen">Dark</option><option value="light" class="astro-4yphtoen">Light</option><option value="auto" selected class="astro-4yphtoen">Auto</option> </select> <svg aria-hidden="true" class="icon caret astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg> </label>  </starlight-theme-select>  <script>
+	StarlightThemeProvider.updatePickers();
+</script> <script type="module">const r="starlight-theme",o=e=>e==="auto"||e==="dark"||e==="light"?e:"auto",c=()=>o(typeof localStorage<"u"&&localStorage.getItem(r));function n(e){typeof localStorage<"u"&&localStorage.setItem(r,e==="light"||e==="dark"?e:"")}const l=()=>matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";function t(e){StarlightThemeProvider.updatePickers(e),document.documentElement.dataset.theme=e==="auto"?l():e,n(e)}matchMedia("(prefers-color-scheme: light)").addEventListener("change",()=>{c()==="auto"&&t("auto")});class s extends HTMLElement{constructor(){super(),t(c()),this.querySelector("select")?.addEventListener("change",a=>{a.currentTarget instanceof HTMLSelectElement&&t(o(a.currentTarget.value))})}}customElements.define("starlight-theme-select",s);</script> <script type="module">class s extends HTMLElement{constructor(){super();const e=this.querySelector("select");e&&(e.addEventListener("change",t=>{t.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=t.currentTarget.value)}),window.addEventListener("pageshow",t=>{if(!t.persisted)return;const n=e.querySelector("option[selected]")?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}}customElements.define("starlight-lang-select",s);</script> </div> </div> </header> <nav class="sidebar print:hidden astro-vrdttmbt" aria-label="Main"> <starlight-menu-button class="print:hidden astro-jif73yzw"> <button aria-expanded="false" aria-label="Menu" aria-controls="starlight__sidebar" class="sl-flex md:sl-hidden astro-jif73yzw"> <svg aria-hidden="true" class="open-menu astro-jif73yzw astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg> <svg aria-hidden="true" class="close-menu astro-jif73yzw astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"/></svg> </button> </starlight-menu-button> <script type="module">class s extends HTMLElement{constructor(){super(),this.btn=this.querySelector("button"),this.btn.addEventListener("click",()=>this.toggleExpanded());const t=this.closest("nav");t&&t.addEventListener("keyup",e=>this.closeOnEscape(e))}setExpanded(t){this.setAttribute("aria-expanded",String(t)),document.body.toggleAttribute("data-mobile-menu-expanded",t)}toggleExpanded(){this.setExpanded(this.getAttribute("aria-expanded")!=="true")}closeOnEscape(t){t.code==="Escape"&&(this.setExpanded(!1),this.btn.focus())}}customElements.define("starlight-menu-button",s);</script>   <div id="starlight__sidebar" class="sidebar-pane astro-vrdttmbt"> <div class="sidebar-content sl-flex astro-vrdttmbt"> <sl-sidebar-state-persist data-hash="0ejjqm6" class="astro-kku4brbg"> <script aria-hidden="true">
+		(() => {
+			try {
+				if (!matchMedia('(min-width: 50em)').matches) return;
+				/** @type {HTMLElement | null} */
+				const target = document.querySelector('sl-sidebar-state-persist');
+				const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
+				if (!target || !state || target.dataset.hash !== state.hash) return;
+				window._starlightScrollRestore = state.scroll;
+				customElements.define(
+					'sl-sidebar-restore',
+					class SidebarRestore extends HTMLElement {
+						connectedCallback() {
+							try {
+								const idx = parseInt(this.dataset.index || '');
+								const details = this.closest('details');
+								if (details && typeof state.open[idx] === 'boolean') details.open = state.open[idx];
+							} catch {}
+						}
+					}
+				);
+			} catch {}
+		})();
+	</script>  <ul class="top-level astro-3ii7xxms"> <li class="astro-3ii7xxms"> <details class="astro-3ii7xxms"> <sl-sidebar-restore data-index="0"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">What</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/oneticket-core/appshell/pr/850/docs/what/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">What — Product &amp; Requirements</span>  </a> </li><li class="astro-3ii7xxms"> <details class="astro-3ii7xxms"> <sl-sidebar-restore data-index="1"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">epics</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/oneticket-core/appshell/pr/850/docs/what/epics/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Epics</span>  </a> </li><li class="astro-3ii7xxms"> <details class="astro-3ii7xxms"> <sl-sidebar-restore data-index="2"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">epic-0-mvp</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/oneticket-core/appshell/pr/850/docs/what/epics/epic-0-mvp/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Epic 0 Mvp</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/appshell/pr/850/docs/what/epics/epic-0-mvp/epic/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Epic 0 — AppShell MVP: skeleton structure, routing, theme, data fetching</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/appshell/pr/850/docs/what/epics/epic-0-mvp/us-001/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">User Story 001: File structure and project setup</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/appshell/pr/850/docs/what/epics/epic-0-mvp/us-002/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">User Story 002: AppLayout, Header, Footer structure</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/appshell/pr/850/docs/what/epics/epic-0-mvp/us-003/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">User Story 003: React Router integration</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/appshell/pr/850/docs/what/epics/epic-0-mvp/us-004/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">User Story 004: ThemeToggle (light/dark/system)</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/appshell/pr/850/docs/what/epics/epic-0-mvp/us-005/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">User Story 005: Design tokens and tailwind.config.ts</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/appshell/pr/850/docs/what/epics/epic-0-mvp/us-006/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">User Story 006: MSW + React Query pattern</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/appshell/pr/850/docs/what/epics/epic-0-mvp/us-007/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">User Story 007: shadcn/ui components integration</span>  </a> </li> </ul>  </details> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/appshell/pr/850/docs/what/product-spec/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Product Specification — AppShell</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="3"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">How</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/oneticket-core/appshell/pr/850/docs/how/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">How — Architecture &amp; Implementation</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/appshell/pr/850/docs/how/architecture/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">AppShell Architecture — Vite + React + TypeScript</span>  </a> </li><li class="astro-3ii7xxms"> <details class="astro-3ii7xxms"> <sl-sidebar-restore data-index="4"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">c4</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/oneticket-core/appshell/pr/850/docs/how/c4/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">C4</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/appshell/pr/850/docs/how/c4/containers/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">AppShell — Containers (C4 Level 2)</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/appshell/pr/850/docs/how/c4/system-context/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">AppShell — System Context (C4 Level 1)</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="5"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">slices</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/oneticket-core/appshell/pr/850/docs/how/slices/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Slices</span>  </a> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="6"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">slice-0-skeleton</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/oneticket-core/appshell/pr/850/docs/how/slices/slice-0-skeleton/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Slice 0 Skeleton</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/appshell/pr/850/docs/how/slices/slice-0-skeleton/slice/" aria-current="page" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Slice 0 — AppShell Skeleton: structure, routing, theme, design tokens, MSW pattern</span>  </a> </li> </ul>  </details> </li> </ul>  </details> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details class="astro-3ii7xxms"> <sl-sidebar-restore data-index="7"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Run</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/oneticket-core/appshell/pr/850/docs/run/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Run — Operations &amp; Runbooks</span>  </a> </li> </ul>  </details> </li> </ul>   <script aria-hidden="true">
+		(() => {
+			const scroller = document.getElementById('starlight__sidebar');
+			if (!window._starlightScrollRestore || !scroller) return;
+			scroller.scrollTop = window._starlightScrollRestore;
+			delete window._starlightScrollRestore;
+		})();
+	</script> </sl-sidebar-state-persist>  <div class="md:sl-hidden"> <div class="mobile-preferences sl-flex astro-wu23bvmt"> <div class="social-icons astro-wu23bvmt"> <a href="https://github.com/dsissoko/oneticket-core" rel="me" class="sl-flex astro-wy4te6ga"><span class="sr-only astro-wy4te6ga">GitHub</span><svg aria-hidden="true" class="astro-wy4te6ga astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a> </div> <starlight-theme-select>  <label style="--sl-select-width: 6.25em" class="astro-4yphtoen"> <span class="sr-only astro-4yphtoen">Select theme</span> <svg aria-hidden="true" class="icon label-icon astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg> <select value="auto" autocomplete="off" class="astro-4yphtoen"> <option value="dark" class="astro-4yphtoen">Dark</option><option value="light" class="astro-4yphtoen">Light</option><option value="auto" selected class="astro-4yphtoen">Auto</option> </select> <svg aria-hidden="true" class="icon caret astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg> </label>  </starlight-theme-select>  <script>
+	StarlightThemeProvider.updatePickers();
+</script>   </div>  </div> </div> </div> </nav> <div class="main-frame astro-vrdttmbt">  <script type="module">const a=document.getElementById("starlight__sidebar"),n=a?.querySelector("sl-sidebar-state-persist"),o="sl-sidebar-state",i=()=>{let t=[];const e=n?.dataset.hash||"";try{const s=sessionStorage.getItem(o),r=JSON.parse(s||"{}");Array.isArray(r.open)&&r.hash===e&&(t=r.open)}catch{}return{hash:e,open:t,scroll:a?.scrollTop||0}},c=t=>{try{sessionStorage.setItem(o,JSON.stringify(t))}catch{}},d=()=>c(i()),l=(t,e)=>{const s=i();s.open[e]=t,c(s)};n?.addEventListener("click",t=>{if(!(t.target instanceof Element))return;const e=t.target.closest("summary")?.closest("details");if(!e)return;const s=e.querySelector("sl-sidebar-restore"),r=parseInt(s?.dataset.index||"");isNaN(r)||l(!e.open,r)});addEventListener("visibilitychange",()=>{document.visibilityState==="hidden"&&d()});addEventListener("pageHide",d);</script> <div class="lg:sl-flex astro-67yu43on"> <aside class="right-sidebar-container print:hidden astro-67yu43on"> <div class="right-sidebar astro-67yu43on"> <script type="module" src="/oneticket-core/appshell/pr/850/docs/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.C181hMzK.js"></script><script type="module" src="/oneticket-core/appshell/pr/850/docs/_astro/TableOfContents.astro_astro_type_script_index_0_lang.CKWWgpjV.js"></script><div class="lg:sl-hidden astro-pb3aqygn"><mobile-starlight-toc data-min-h="2" data-max-h="3" class="astro-doynk5tl"><nav aria-labelledby="starlight__on-this-page--mobile" class="astro-doynk5tl"><details id="starlight__mobile-toc" class="astro-doynk5tl"><summary id="starlight__on-this-page--mobile" class="sl-flex astro-doynk5tl"><div class="toggle sl-flex astro-doynk5tl">On this page<svg aria-hidden="true" class="caret astro-doynk5tl astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></div><span class="display-current astro-doynk5tl"></span></summary><div class="dropdown astro-doynk5tl"><ul class="isMobile astro-g2bywc46" style="--depth: 0;"> <li class="astro-g2bywc46" style="--depth: 0;"> <a href="#_top" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Overview</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#purpose" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Purpose</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#related-epics" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Related Epics</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#related-user-stories" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Related User Stories</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#implementation-steps" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Implementation Steps</span> </a> <ul class="isMobile astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#step-1-initialize-project-structure-and-configuration-files-us-001" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Step 1: Initialize project structure and configuration files (US-001)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#step-2-install-and-configure-shadcnui-components-us-007" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Step 2: Install and configure shadcn/ui components (US-007)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#step-3-create-design-tokens-css-variables--tailwind-us-005" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Step 3: Create design tokens (CSS variables + Tailwind) (US-005)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#step-4-create-layout-components-header-applayout-footer-us-002" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Step 4: Create layout components (Header, AppLayout, Footer) (US-002)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#step-5-configure-react-router-and-create-screen-placeholders-us-003" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Step 5: Configure React Router and create screen placeholders (US-003)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#step-6-implement-themetoggle-component-us-004" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Step 6: Implement ThemeToggle component (US-004)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#step-7-create-data-fetching-pattern-msw--react-query-us-006" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Step 7: Create data-fetching pattern (MSW + React Query) (US-006)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#step-8-update-homescreen-with-data-fetching-example-us-006" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Step 8: Update HomeScreen with data fetching example (US-006)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#step-9-create-utility-functions-and-environment-setup-us-001-us-002-us-007" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Step 9: Create utility functions and environment setup (US-001, US-002, US-007)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#step-10-verify-build-routing-and-overall-integration-all-us" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Step 10: Verify build, routing, and overall integration (All US)</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#related-slices" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Related Slices</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#success-criteria-task-g--full-acceptance" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Success Criteria (Task G — Full Acceptance)</span> </a> <ul class="isMobile astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#build--deployment" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Build &amp; Deployment</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#routes--navigation" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Routes &amp; Navigation</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#layout--components" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Layout &amp; Components</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#theme--styling" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Theme &amp; Styling</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#data-fetching--mocking" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Data Fetching &amp; Mocking</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#screen-content" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Screen Content</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#design-tokens" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Design Tokens</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#file-ownership" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">File Ownership</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#implementation-notes" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Implementation Notes</span> </a> <ul class="isMobile astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#design-decisions" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Design Decisions</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#known-constraints" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Known Constraints</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#future-extensions" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Future Extensions</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#testing-strategy" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Testing Strategy</span> </a> <ul class="isMobile astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#manual-testing-checklist" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Manual Testing Checklist</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#documentation-updates" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Documentation Updates</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#commit-strategy" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Commit Strategy</span> </a>  </li> </ul> </div></details></nav></mobile-starlight-toc></div><div class="right-sidebar-panel sl-hidden lg:sl-block astro-pb3aqygn"><div class="sl-container astro-pb3aqygn"><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">On this page</h2><ul class="astro-g2bywc46" style="--depth: 0;"> <li class="astro-g2bywc46" style="--depth: 0;"> <a href="#_top" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Overview</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#purpose" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Purpose</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#related-epics" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Related Epics</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#related-user-stories" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Related User Stories</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#implementation-steps" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Implementation Steps</span> </a> <ul class="astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#step-1-initialize-project-structure-and-configuration-files-us-001" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Step 1: Initialize project structure and configuration files (US-001)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#step-2-install-and-configure-shadcnui-components-us-007" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Step 2: Install and configure shadcn/ui components (US-007)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#step-3-create-design-tokens-css-variables--tailwind-us-005" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Step 3: Create design tokens (CSS variables + Tailwind) (US-005)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#step-4-create-layout-components-header-applayout-footer-us-002" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Step 4: Create layout components (Header, AppLayout, Footer) (US-002)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#step-5-configure-react-router-and-create-screen-placeholders-us-003" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Step 5: Configure React Router and create screen placeholders (US-003)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#step-6-implement-themetoggle-component-us-004" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Step 6: Implement ThemeToggle component (US-004)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#step-7-create-data-fetching-pattern-msw--react-query-us-006" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Step 7: Create data-fetching pattern (MSW + React Query) (US-006)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#step-8-update-homescreen-with-data-fetching-example-us-006" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Step 8: Update HomeScreen with data fetching example (US-006)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#step-9-create-utility-functions-and-environment-setup-us-001-us-002-us-007" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Step 9: Create utility functions and environment setup (US-001, US-002, US-007)</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#step-10-verify-build-routing-and-overall-integration-all-us" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Step 10: Verify build, routing, and overall integration (All US)</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#related-slices" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Related Slices</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#success-criteria-task-g--full-acceptance" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Success Criteria (Task G — Full Acceptance)</span> </a> <ul class="astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#build--deployment" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Build &amp; Deployment</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#routes--navigation" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Routes &amp; Navigation</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#layout--components" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Layout &amp; Components</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#theme--styling" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Theme &amp; Styling</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#data-fetching--mocking" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Data Fetching &amp; Mocking</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#screen-content" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Screen Content</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#design-tokens" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Design Tokens</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#file-ownership" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">File Ownership</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#implementation-notes" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Implementation Notes</span> </a> <ul class="astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#design-decisions" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Design Decisions</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#known-constraints" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Known Constraints</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#future-extensions" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Future Extensions</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#testing-strategy" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Testing Strategy</span> </a> <ul class="astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#manual-testing-checklist" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Manual Testing Checklist</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#documentation-updates" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Documentation Updates</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#commit-strategy" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Commit Strategy</span> </a>  </li> </ul> </nav></starlight-toc></div></div> </div> </aside> <div class="main-pane astro-67yu43on">  <main data-pagefind-body class="astro-bguv2lll" lang="en" dir="ltr">    <div class="content-panel astro-7nkwcw3z"> <div class="sl-container astro-7nkwcw3z"> <h1 id="_top" class="astro-j6tvhyss">Slice 0 — AppShell Skeleton: structure, routing, theme, design tokens, MSW pattern</h1>  </div> </div>  <div class="content-panel astro-7nkwcw3z"> <div class="sl-container astro-7nkwcw3z"> <div class="sl-markdown-content"> <div class="sl-heading-wrapper level-h2"><h2 id="purpose">Purpose</h2><a class="sl-anchor-link" href="#purpose"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Purpose”</span></a></div>
+<p>Establish the complete and fully functional skeleton for AppShell that all new projects will copy and adapt. This slice creates the reference architecture with exclusive file ownership, centralized design tokens, and data-fetching patterns that enable zero-conflict parallel development.</p>
+<p>At the end of this slice, developers will have a deployable, production-ready skeleton that demonstrates all key patterns: file ownership, responsive layout, theme switching, design tokens, React Router navigation, React Query data fetching, and MSW mocking. New projects simply copy <code dir="auto">apps/appshell/app/</code>, customize three files, and build on it.</p>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="related-epics">Related Epics</h2><a class="sl-anchor-link" href="#related-epics"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Related Epics”</span></a></div>
+<ul>
+<li><a href="/oneticket-core/appshell/pr/850/docs/how/what/epics/epic-0-mvp/epic/">Epic 0 — AppShell MVP</a></li>
+</ul>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="related-user-stories">Related User Stories</h2><a class="sl-anchor-link" href="#related-user-stories"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Related User Stories”</span></a></div>
+<ul>
+<li><a href="/oneticket-core/appshell/pr/850/docs/how/what/epics/epic-0-mvp/us-001/">US-001: File structure and project setup</a></li>
+<li><a href="/oneticket-core/appshell/pr/850/docs/how/what/epics/epic-0-mvp/us-002/">US-002: AppLayout, Header, Footer structure</a></li>
+<li><a href="/oneticket-core/appshell/pr/850/docs/how/what/epics/epic-0-mvp/us-003/">US-003: React Router integration</a></li>
+<li><a href="/oneticket-core/appshell/pr/850/docs/how/what/epics/epic-0-mvp/us-004/">US-004: ThemeToggle (light/dark/system)</a></li>
+<li><a href="/oneticket-core/appshell/pr/850/docs/how/what/epics/epic-0-mvp/us-005/">US-005: Design tokens and tailwind.config.ts</a></li>
+<li><a href="/oneticket-core/appshell/pr/850/docs/how/what/epics/epic-0-mvp/us-006/">US-006: MSW + React Query pattern</a></li>
+<li><a href="/oneticket-core/appshell/pr/850/docs/how/what/epics/epic-0-mvp/us-007/">US-007: shadcn/ui components integration</a></li>
+</ul>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="implementation-steps">Implementation Steps</h2><a class="sl-anchor-link" href="#implementation-steps"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Implementation Steps”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="step-1-initialize-project-structure-and-configuration-files-us-001">Step 1: Initialize project structure and configuration files (US-001)</h3><a class="sl-anchor-link" href="#step-1-initialize-project-structure-and-configuration-files-us-001"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Step 1: Initialize project structure and configuration files (US-001)”</span></a></div>
+<p><strong>Objective:</strong> Establish the complete directory structure with exclusive file ownership and configuration files.</p>
+<p><strong>Deliverables:</strong></p>
+<ul>
+<li>Create directory structure: <code dir="auto">src/</code>, <code dir="auto">src/screens/</code>, <code dir="auto">src/components/</code>, <code dir="auto">src/hooks/</code>, <code dir="auto">src/stores/</code>, <code dir="auto">src/mocks/</code>, <code dir="auto">src/lib/</code>, <code dir="auto">src/styles/</code></li>
+<li>Create config files: <code dir="auto">package.json</code>, <code dir="auto">tsconfig.json</code>, <code dir="auto">vite.config.ts</code>, <code dir="auto">vitest.config.ts</code>, <code dir="auto">vitest.setup.ts</code>, <code dir="auto">.env.example</code>, <code dir="auto">index.html</code>, <code dir="auto">tailwind.config.ts</code>, <code dir="auto">postcss.config.js</code></li>
+<li>Create <code dir="auto">.gitkeep</code> files in empty directories: <code dir="auto">src/stores/</code>, <code dir="auto">src/lib/schemas/</code></li>
+<li>Document file ownership in <code dir="auto">OWNERSHIP.md</code> (or inline comments in architecture.md)</li>
+</ul>
+<p><strong>Acceptance:</strong></p>
+<ul>
+<li>All directories exist</li>
+<li><code dir="auto">package.json</code> includes: vite, react, react-dom, react-router-dom, @tanstack/react-query, msw, tailwindcss, postcss, typescript, vitest, @testing-library/react, shadcn-ui, zod, react-hook-form, lucide-react</li>
+<li><code dir="auto">npm install</code> succeeds without errors</li>
+<li><code dir="auto">npm run dev</code> starts the Vite dev server (with missing screens, will show 404 initially)</li>
+</ul>
+<p><strong>Ownership:</strong> Task 0 (setup)</p>
+<hr>
+<div class="sl-heading-wrapper level-h3"><h3 id="step-2-install-and-configure-shadcnui-components-us-007">Step 2: Install and configure shadcn/ui components (US-007)</h3><a class="sl-anchor-link" href="#step-2-install-and-configure-shadcnui-components-us-007"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Step 2: Install and configure shadcn/ui components (US-007)”</span></a></div>
+<p><strong>Objective:</strong> Install shadcn/ui primitives that all screens will consume.</p>
+<p><strong>Deliverables:</strong></p>
+<ul>
+<li>Run shadcn CLI setup: <code dir="auto">npx shadcn-ui@latest init</code> (Vite config)</li>
+<li>Create/update <code dir="auto">components.json</code> with Vite settings</li>
+<li>Install components: <code dir="auto">button</code>, <code dir="auto">card</code>, <code dir="auto">dropdown-menu</code>, <code dir="auto">separator</code>, <code dir="auto">form</code>, <code dir="auto">input</code>, <code dir="auto">label</code></li>
+<li>Components appear in <code dir="auto">src/components/ui/</code></li>
+<li>Ensure React Hook Form and Zod are installed and integrated in <code dir="auto">form.tsx</code></li>
+</ul>
+<p><strong>Acceptance:</strong></p>
+<ul>
+<li><code dir="auto">src/components/ui/</code> directory contains: <code dir="auto">button.tsx</code>, <code dir="auto">card.tsx</code>, <code dir="auto">dropdown-menu.tsx</code>, <code dir="auto">separator.tsx</code>, <code dir="auto">form.tsx</code>, <code dir="auto">input.tsx</code>, <code dir="auto">label.tsx</code></li>
+<li>Components are importable without errors</li>
+<li>React Hook Form and Zod integration works in <code dir="auto">form.tsx</code></li>
+<li>TypeScript types are correct</li>
+</ul>
+<p><strong>Ownership:</strong> Task 0 (setup)</p>
+<hr>
+<div class="sl-heading-wrapper level-h3"><h3 id="step-3-create-design-tokens-css-variables--tailwind-us-005">Step 3: Create design tokens (CSS variables + Tailwind) (US-005)</h3><a class="sl-anchor-link" href="#step-3-create-design-tokens-css-variables--tailwind-us-005"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Step 3: Create design tokens (CSS variables + Tailwind) (US-005)”</span></a></div>
+<p><strong>Objective:</strong> Define centralized design tokens that enforce visual consistency across all screens.</p>
+<p><strong>Deliverables:</strong></p>
+<ul>
+<li>Create <code dir="auto">src/styles/globals.css</code> with:
+<ul>
+<li><code dir="auto">:root</code> block defining light mode colors (—background, —foreground, —accent, —border, —muted-background, —muted-foreground)</li>
+<li><code dir="auto">.dark</code> block defining dark mode colors</li>
+<li>Tailwind directives (@tailwind base, components, utilities)</li>
+<li>PostCSS imports if needed</li>
+</ul>
+</li>
+<li>Update <code dir="auto">tailwind.config.ts</code> to:
+<ul>
+<li>Consume CSS variables as color palette</li>
+<li>Define spacing scale (xs: 0.25rem, sm: 0.5rem, md: 1rem, lg: 1.5rem, xl: 2rem, 2xl: 3rem)</li>
+<li>Define typography scale (font sizes, weights, line heights)</li>
+<li>Enable dark mode via class strategy</li>
+</ul>
+</li>
+</ul>
+<p><strong>Acceptance:</strong></p>
+<ul>
+<li><code dir="auto">globals.css</code> includes <code dir="auto">:root</code> and <code dir="auto">.dark</code> blocks with at least 6 color variables</li>
+<li><code dir="auto">tailwind.config.ts</code> consumes CSS variables correctly</li>
+<li>No hardcoded color values in Tailwind config</li>
+<li>Dark mode uses class strategy (“dark” class on <code dir="auto">&#x3C;html></code>)</li>
+<li>All utility classes (bg-background, text-foreground, etc.) are available</li>
+<li>Build succeeds without CSS errors</li>
+</ul>
+<p><strong>Ownership:</strong> Task 0 (setup)</p>
+<hr>
+<div class="sl-heading-wrapper level-h3"><h3 id="step-4-create-layout-components-header-applayout-footer-us-002">Step 4: Create layout components (Header, AppLayout, Footer) (US-002)</h3><a class="sl-anchor-link" href="#step-4-create-layout-components-header-applayout-footer-us-002"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Step 4: Create layout components (Header, AppLayout, Footer) (US-002)”</span></a></div>
+<p><strong>Objective:</strong> Establish the shared layout wrapper that all screens use.</p>
+<p><strong>Deliverables:</strong></p>
+<ul>
+<li>
+<p>Create <code dir="auto">src/layouts/AppLayout.tsx</code>:</p>
+<ul>
+<li>Renders <code dir="auto">&#x3C;Header /></code> (top)</li>
+<li>Renders <code dir="auto">&#x3C;Outlet /></code> from React Router (main content)</li>
+<li>Renders <code dir="auto">&#x3C;Footer /></code> (bottom)</li>
+<li>Applies responsive Tailwind classes (full width, centered content)</li>
+<li>Accepts props from React Router (children, or layout pattern)</li>
+</ul>
+</li>
+<li>
+<p>Create <code dir="auto">src/components/Header.tsx</code>:</p>
+<ul>
+<li>Left: App name (<code dir="auto">VITE_APP_NAME</code> from <code dir="auto">.env</code>) — clickable → <code dir="auto">/</code></li>
+<li>Right: “About &#x26; Help” dropdown menu (shadcn DropdownMenu) with “About” → <code dir="auto">/about</code> and “Help” → <code dir="auto">/help</code></li>
+<li>Far right: ThemeToggle component</li>
+<li>Uses shadcn Button and DropdownMenu</li>
+<li>Responsive: header spans full width with appropriate padding</li>
+</ul>
+</li>
+<li>
+<p>Create <code dir="auto">src/components/Footer.tsx</code>:</p>
+<ul>
+<li>Structured but empty (no default content)</li>
+<li>Uses appropriate Tailwind classes for footer styling</li>
+<li>Ready for apps to add content later</li>
+<li>Full width, appropriate padding</li>
+</ul>
+</li>
+</ul>
+<p><strong>Acceptance:</strong></p>
+<ul>
+<li>All three components exist and are importable</li>
+<li>Header displays app name from <code dir="auto">.env</code> (VITE_APP_NAME)</li>
+<li>Header dropdown “About &#x26; Help” has correct links</li>
+<li>Footer is structured and empty</li>
+<li>Layout is responsive (no horizontal scrolling on mobile)</li>
+<li>Tailwind classes are used for styling</li>
+<li>TypeScript types are correct</li>
+</ul>
+<p><strong>Ownership:</strong> Task 0 (setup)</p>
+<hr>
+<div class="sl-heading-wrapper level-h3"><h3 id="step-5-configure-react-router-and-create-screen-placeholders-us-003">Step 5: Configure React Router and create screen placeholders (US-003)</h3><a class="sl-anchor-link" href="#step-5-configure-react-router-and-create-screen-placeholders-us-003"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Step 5: Configure React Router and create screen placeholders (US-003)”</span></a></div>
+<p><strong>Objective:</strong> Set up React Router with the three baseline routes and placeholder screens.</p>
+<p><strong>Deliverables:</strong></p>
+<ul>
+<li>
+<p>Update <code dir="auto">src/App.tsx</code>:</p>
+<ul>
+<li>Import Routes, Route, Outlet from react-router-dom</li>
+<li>Define route structure with AppLayout as parent</li>
+<li>Define three child routes: <code dir="auto">/</code> → HomeScreen, <code dir="auto">/about</code> → AboutScreen, <code dir="auto">/help</code> → HelpScreen</li>
+</ul>
+</li>
+<li>
+<p>Create <code dir="auto">src/screens/HomeScreen.tsx</code>:</p>
+<ul>
+<li>Placeholder: “Home Screen” heading + description</li>
+<li>Will be updated in Step 6 with useUsers() hook</li>
+</ul>
+</li>
+<li>
+<p>Create <code dir="auto">src/screens/AboutScreen.tsx</code>:</p>
+<ul>
+<li>Content: Describes AppShell and its purpose</li>
+<li>“AppShell is the reference skeleton for all React/Vite projects in oneticket-core.”</li>
+<li>Links to: generated docs (<a href="https://dsissoko.github.io/oneticket-core/appshell/docs/">https://dsissoko.github.io/oneticket-core/appshell/docs/</a>) and GitHub repo (<a href="https://github.com/dsissoko/oneticket-core">https://github.com/dsissoko/oneticket-core</a>)</li>
+</ul>
+</li>
+<li>
+<p>Create <code dir="auto">src/screens/HelpScreen.tsx</code>:</p>
+<ul>
+<li>Content: 7-step reuse quickstart</li>
+<li>Links to: runbook (<code dir="auto">.oneticket/docs/run/appshell-reuse.md</code>)</li>
+</ul>
+</li>
+<li>
+<p>Update <code dir="auto">src/main.tsx</code>:</p>
+<ul>
+<li>Import BrowserRouter and wrap app</li>
+<li>Configure basename if needed (GitHub Pages subdirectory)</li>
+</ul>
+</li>
+</ul>
+<p><strong>Acceptance:</strong></p>
+<ul>
+<li><code dir="auto">App.tsx</code> exports routes correctly</li>
+<li>All three screens exist and are importable</li>
+<li>Routes render without errors</li>
+<li>Navigation between routes works (no page reload)</li>
+<li>Header and Footer remain visible during navigation</li>
+<li>App name in header is clickable → navigates to <code dir="auto">/</code></li>
+<li>Dropdown links work: <code dir="auto">/about</code> and <code dir="auto">/help</code></li>
+<li>Page refresh on any route renders the correct screen</li>
+<li>TypeScript types are correct</li>
+</ul>
+<p><strong>Ownership:</strong> Task 0 (setup)</p>
+<hr>
+<div class="sl-heading-wrapper level-h3"><h3 id="step-6-implement-themetoggle-component-us-004">Step 6: Implement ThemeToggle component (US-004)</h3><a class="sl-anchor-link" href="#step-6-implement-themetoggle-component-us-004"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Step 6: Implement ThemeToggle component (US-004)”</span></a></div>
+<p><strong>Objective:</strong> Create reactive theme switching (system/light/dark) without page reload.</p>
+<p><strong>Deliverables:</strong></p>
+<ul>
+<li>
+<p>Create <code dir="auto">src/components/ThemeToggle.tsx</code>:</p>
+<ul>
+<li>Expose 3 options: “system” (OS preference), “light” (forced light), “dark” (forced dark)</li>
+<li>Reactive switching: update CSS class on <code dir="auto">&#x3C;html></code> element immediately (no page reload)</li>
+<li>Persistent: save preference to localStorage (key: “app-theme” or similar)</li>
+<li>On mount: restore preference from localStorage</li>
+<li>Uses shadcn Button or DropdownMenu for UI</li>
+<li>Uses lucide-react icons (Moon, Sun, Monitor for system)</li>
+<li>Supports next-themes or manual implementation with CSS class + localStorage</li>
+</ul>
+</li>
+<li>
+<p>Update <code dir="auto">src/main.tsx</code>:</p>
+<ul>
+<li>Initialize theme on app startup (read localStorage, apply class to <code dir="auto">&#x3C;html></code>)</li>
+<li>Ensure theme preference is restored on page load</li>
+</ul>
+</li>
+</ul>
+<p><strong>Acceptance:</strong></p>
+<ul>
+<li>ThemeToggle is importable and renders correctly</li>
+<li>Clicking theme option updates appearance immediately</li>
+<li>No page reload when switching themes</li>
+<li>Theme preference persists in localStorage</li>
+<li>On page reload, previous theme is restored</li>
+<li>CSS class “dark” is present/absent on <code dir="auto">&#x3C;html></code> element</li>
+<li>CSS variables update correctly for light/dark modes</li>
+<li>All components using design tokens reflect theme change</li>
+<li>Accessible: buttons are keyboard-navigable, labels are ARIA-compliant</li>
+<li>No console errors</li>
+</ul>
+<p><strong>Ownership:</strong> Task 0 (setup)</p>
+<hr>
+<div class="sl-heading-wrapper level-h3"><h3 id="step-7-create-data-fetching-pattern-msw--react-query-us-006">Step 7: Create data-fetching pattern (MSW + React Query) (US-006)</h3><a class="sl-anchor-link" href="#step-7-create-data-fetching-pattern-msw--react-query-us-006"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Step 7: Create data-fetching pattern (MSW + React Query) (US-006)”</span></a></div>
+<p><strong>Objective:</strong> Establish the dev-only mocking and data-fetching pattern.</p>
+<p><strong>Deliverables:</strong></p>
+<ul>
+<li>
+<p>Create <code dir="auto">src/lib/query-client.ts</code>:</p>
+<ul>
+<li>Export QueryClient singleton with default options (staleTime: 5min, gcTime: 10min)</li>
+</ul>
+</li>
+<li>
+<p>Create <code dir="auto">src/mocks/browser.ts</code>:</p>
+<ul>
+<li>Setup MSW service worker for browser environment</li>
+<li>Export <code dir="auto">worker</code> instance</li>
+</ul>
+</li>
+<li>
+<p>Create <code dir="auto">src/mocks/handlers.ts</code>:</p>
+<ul>
+<li>Define <code dir="auto">GET /api/users</code> handler returning mock user list</li>
+<li>Export <code dir="auto">handlers</code> array (extensible for future endpoints)</li>
+<li>Example response: <code dir="auto">[{ id: 1, name: "Alice" }, { id: 2, name: "Bob" }, ...]</code></li>
+</ul>
+</li>
+<li>
+<p>Create <code dir="auto">src/mocks/data/users.ts</code>:</p>
+<ul>
+<li>Export <code dir="auto">mockUsers</code> array with at least 3 users</li>
+<li>Each user: <code dir="auto">{ id: number, name: string }</code></li>
+</ul>
+</li>
+<li>
+<p>Create <code dir="auto">src/hooks/useUsers.ts</code>:</p>
+<ul>
+<li>Implement <code dir="auto">useUsers()</code> hook using React Query’s <code dir="auto">useQuery</code></li>
+<li>Fetch <code dir="auto">GET /api/users</code></li>
+<li>Return <code dir="auto">{ data, isLoading, error, isError }</code></li>
+<li>Use queryKey: <code dir="auto">['users']</code></li>
+</ul>
+</li>
+<li>
+<p>Update <code dir="auto">src/main.tsx</code>:</p>
+<ul>
+<li>Import and initialize MSW only when <code dir="auto">import.meta.env.DEV</code></li>
+<li>Wrap app in QueryClientProvider with queryClient from lib/query-client.ts</li>
+</ul>
+</li>
+</ul>
+<p><strong>Acceptance:</strong></p>
+<ul>
+<li>MSW handlers are defined and functional</li>
+<li><code dir="auto">useUsers()</code> hook fetches data via React Query</li>
+<li>In dev: MSW intercepts <code dir="auto">/api/users</code> and returns mock data</li>
+<li>In prod: MSW is tree-shaken, fetch goes to real API (or 404 if not available)</li>
+<li>React Query caches data automatically</li>
+<li>No console errors from unhandled requests</li>
+<li>Hook returns correct TypeScript types</li>
+<li>Data flow is transparent: screen → hook → React Query → fetch → MSW (dev) / real API (prod)</li>
+</ul>
+<p><strong>Ownership:</strong> Task 0 (setup)</p>
+<hr>
+<div class="sl-heading-wrapper level-h3"><h3 id="step-8-update-homescreen-with-data-fetching-example-us-006">Step 8: Update HomeScreen with data fetching example (US-006)</h3><a class="sl-anchor-link" href="#step-8-update-homescreen-with-data-fetching-example-us-006"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Step 8: Update HomeScreen with data fetching example (US-006)”</span></a></div>
+<p><strong>Objective:</strong> Demonstrate the MSW + React Query pattern in a real screen.</p>
+<p><strong>Deliverables:</strong></p>
+<ul>
+<li>Update <code dir="auto">src/screens/HomeScreen.tsx</code>:
+<ul>
+<li>Import <code dir="auto">useUsers()</code> hook</li>
+<li>Fetch and display users via React Query</li>
+<li>Show loading state (spinner, skeleton, or “Loading…” text)</li>
+<li>Show error state if fetch fails (error message)</li>
+<li>Render users in shadcn/ui Card components:
+<ul>
+<li>Each Card displays: <code dir="auto">id</code>, <code dir="auto">name</code></li>
+<li>Use proper Tailwind spacing and styling</li>
+</ul>
+</li>
+<li>Show empty state if no users</li>
+</ul>
+</li>
+</ul>
+<p><strong>Acceptance:</strong></p>
+<ul>
+<li>HomeScreen imports and uses <code dir="auto">useUsers()</code> correctly</li>
+<li>Loading state displays while fetching</li>
+<li>Users render in Cards with proper styling</li>
+<li>Error state displays if fetch fails</li>
+<li>Empty state shows if no users</li>
+<li>No console errors</li>
+<li>Tailwind classes used for styling (no inline styles)</li>
+<li>Component is responsive</li>
+<li>TypeScript types are correct</li>
+</ul>
+<p><strong>Ownership:</strong> Task 0 (setup)</p>
+<hr>
+<div class="sl-heading-wrapper level-h3"><h3 id="step-9-create-utility-functions-and-environment-setup-us-001-us-002-us-007">Step 9: Create utility functions and environment setup (US-001, US-002, US-007)</h3><a class="sl-anchor-link" href="#step-9-create-utility-functions-and-environment-setup-us-001-us-002-us-007"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Step 9: Create utility functions and environment setup (US-001, US-002, US-007)”</span></a></div>
+<p><strong>Objective:</strong> Provide helpers and configuration for all screens.</p>
+<p><strong>Deliverables:</strong></p>
+<ul>
+<li>
+<p>Create <code dir="auto">src/lib/utils.ts</code>:</p>
+<ul>
+<li>Export <code dir="auto">cn()</code> helper (clsx + tailwind-merge) for safe class composition</li>
+<li>Example: <code dir="auto">cn("p-2", condition &#x26;&#x26; "bg-red")</code> → prevents conflicting Tailwind classes</li>
+</ul>
+</li>
+<li>
+<p>Create/update <code dir="auto">src/styles/globals.css</code>:</p>
+<ul>
+<li>Include Tailwind directives</li>
+<li>Include CSS custom properties for light/dark modes</li>
+<li>Include base styles for HTML, body, default font settings</li>
+</ul>
+</li>
+<li>
+<p>Create <code dir="auto">.env.example</code>:</p>
+<ul>
+<li>Set <code dir="auto">VITE_APP_NAME=AppShell</code></li>
+<li>Ensure other build tools can read it (Vite convention: VITE_ prefix)</li>
+</ul>
+</li>
+</ul>
+<p><strong>Acceptance:</strong></p>
+<ul>
+<li><code dir="auto">cn()</code> utility is importable and works correctly</li>
+<li>CSS variables are available globally</li>
+<li><code dir="auto">.env.example</code> exists with <code dir="auto">VITE_APP_NAME</code></li>
+<li>Environment variable is used in Header component</li>
+<li>Build succeeds without errors</li>
+</ul>
+<p><strong>Ownership:</strong> Task 0 (setup)</p>
+<hr>
+<div class="sl-heading-wrapper level-h3"><h3 id="step-10-verify-build-routing-and-overall-integration-all-us">Step 10: Verify build, routing, and overall integration (All US)</h3><a class="sl-anchor-link" href="#step-10-verify-build-routing-and-overall-integration-all-us"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Step 10: Verify build, routing, and overall integration (All US)”</span></a></div>
+<p><strong>Objective:</strong> Comprehensive testing of the complete skeleton.</p>
+<p><strong>Acceptance Criteria:</strong></p>
+<p><strong>Build:</strong></p>
+<ul>
+<li>✅ <code dir="auto">npm run build</code> succeeds without errors or warnings</li>
+<li>✅ No artifacts in repo (<code dir="auto">dist/</code>, <code dir="auto">test-results/</code>, <code dir="auto">.tsbuildinfo</code>)</li>
+</ul>
+<p><strong>Routes &#x26; Navigation:</strong></p>
+<ul>
+<li>✅ Routes <code dir="auto">/</code>, <code dir="auto">/about</code>, <code dir="auto">/help</code> render without 404 errors</li>
+<li>✅ Clicking app name → <code dir="auto">/</code></li>
+<li>✅ “About” dropdown → <code dir="auto">/about</code></li>
+<li>✅ “Help” dropdown → <code dir="auto">/help</code></li>
+<li>✅ Page refresh on any route renders correct screen</li>
+<li>✅ Browser back button works</li>
+</ul>
+<p><strong>Layout &#x26; Responsive:</strong></p>
+<ul>
+<li>✅ Header spans full width, app name clickable (left), dropdown (right), theme toggle (far right)</li>
+<li>✅ Footer is present and structured</li>
+<li>✅ Content area is centered and readable</li>
+<li>✅ No horizontal scrolling on mobile/tablet</li>
+<li>✅ All three screens responsive</li>
+</ul>
+<p><strong>Theme Switching:</strong></p>
+<ul>
+<li>✅ ThemeToggle offers three options: system, light, dark</li>
+<li>✅ Switching theme is instant (no page reload)</li>
+<li>✅ Theme preference persists in localStorage</li>
+<li>✅ Page reload restores previous theme</li>
+<li>✅ CSS variables and Tailwind classes reflect theme change</li>
+</ul>
+<p><strong>Data Fetching &#x26; MSW:</strong></p>
+<ul>
+<li>✅ HomeScreen displays users from <code dir="auto">useUsers()</code> hook</li>
+<li>✅ Users render in Cards</li>
+<li>✅ MSW intercepts <code dir="auto">/api/users</code> in dev</li>
+<li>✅ React Query caches data</li>
+<li>✅ Loading state shows while fetching</li>
+<li>✅ No console errors from MSW or React Query</li>
+<li>✅ Production build has zero MSW overhead</li>
+</ul>
+<p><strong>Design Tokens:</strong></p>
+<ul>
+<li>✅ All colors from CSS variables (no hardcoded hex values)</li>
+<li>✅ Spacing uses Tailwind scale</li>
+<li>✅ Typography uses Tailwind scale</li>
+<li>✅ No hardcoded pixel values in components</li>
+</ul>
+<p><strong>File Ownership:</strong></p>
+<ul>
+<li>✅ Structure enables one-task-per-file for screens and hooks</li>
+<li>✅ No conflicts between files</li>
+<li>✅ Shared files (config, layout, tokens) are isolated in Task 0</li>
+</ul>
+<p><strong>Type Safety:</strong></p>
+<ul>
+<li>✅ No TypeScript errors</li>
+<li>✅ All components have proper types</li>
+</ul>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="related-slices">Related Slices</h2><a class="sl-anchor-link" href="#related-slices"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Related Slices”</span></a></div>
+<p>None — this is the initial slice. All future slices depend on Slice 0.</p>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="success-criteria-task-g--full-acceptance">Success Criteria (Task G — Full Acceptance)</h2><a class="sl-anchor-link" href="#success-criteria-task-g--full-acceptance"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Success Criteria (Task G — Full Acceptance)”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="build--deployment">Build &#x26; Deployment</h3><a class="sl-anchor-link" href="#build--deployment"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Build &#x26; Deployment”</span></a></div>
+<ul>
+<li>✅ <code dir="auto">npm run build</code> succeeds in <code dir="auto">apps/appshell/app/</code> without errors or warnings</li>
+<li>✅ No uncommitted artifacts</li>
+</ul>
+<div class="sl-heading-wrapper level-h3"><h3 id="routes--navigation">Routes &#x26; Navigation</h3><a class="sl-anchor-link" href="#routes--navigation"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Routes &#x26; Navigation”</span></a></div>
+<ul>
+<li>✅ <code dir="auto">/</code>, <code dir="auto">/about</code>, <code dir="auto">/help</code> render without errors</li>
+<li>✅ Navigation works correctly</li>
+<li>✅ Header app name is clickable → <code dir="auto">/</code></li>
+<li>✅ “About &#x26; Help” dropdown routes correctly</li>
+</ul>
+<div class="sl-heading-wrapper level-h3"><h3 id="layout--components">Layout &#x26; Components</h3><a class="sl-anchor-link" href="#layout--components"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Layout &#x26; Components”</span></a></div>
+<ul>
+<li>✅ Header: app name (left), “About &#x26; Help” dropdown (right), ThemeToggle (far right)</li>
+<li>✅ Footer: structured, empty, ready for content</li>
+<li>✅ Responsive: no horizontal scrolling on mobile</li>
+<li>✅ All shadcn components present and functional</li>
+</ul>
+<div class="sl-heading-wrapper level-h3"><h3 id="theme--styling">Theme &#x26; Styling</h3><a class="sl-anchor-link" href="#theme--styling"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Theme &#x26; Styling”</span></a></div>
+<ul>
+<li>✅ ThemeToggle switches between system/light/dark modes</li>
+<li>✅ Theme switching is reactive (no page reload)</li>
+<li>✅ Theme preference persists in localStorage</li>
+<li>✅ <code dir="auto">globals.css</code> defines CSS variables for light and dark modes</li>
+<li>✅ <code dir="auto">tailwind.config.ts</code> consumes CSS variables</li>
+<li>✅ All screens use Tailwind utility classes only</li>
+</ul>
+<div class="sl-heading-wrapper level-h3"><h3 id="data-fetching--mocking">Data Fetching &#x26; Mocking</h3><a class="sl-anchor-link" href="#data-fetching--mocking"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Data Fetching &#x26; Mocking”</span></a></div>
+<ul>
+<li>✅ HomeScreen uses <code dir="auto">useUsers()</code> hook to fetch user data</li>
+<li>✅ React Query caches and delivers user data</li>
+<li>✅ MSW intercepts <code dir="auto">/api/users</code> in dev and returns mock data</li>
+<li>✅ MSW is active in dev only (<code dir="auto">import.meta.env.DEV</code> guard)</li>
+<li>✅ Users rendered in Card components</li>
+</ul>
+<div class="sl-heading-wrapper level-h3"><h3 id="screen-content">Screen Content</h3><a class="sl-anchor-link" href="#screen-content"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Screen Content”</span></a></div>
+<ul>
+<li>✅ AboutScreen describes AppShell and links to docs and GitHub</li>
+<li>✅ HelpScreen contains 7-step reuse quickstart and links to runbook</li>
+</ul>
+<div class="sl-heading-wrapper level-h3"><h3 id="design-tokens">Design Tokens</h3><a class="sl-anchor-link" href="#design-tokens"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Design Tokens”</span></a></div>
+<ul>
+<li>✅ All colors defined in CSS variables</li>
+<li>✅ All spacing values defined in Tailwind scale</li>
+<li>✅ All typography values defined in Tailwind scale</li>
+<li>✅ No hardcoded color/spacing/font values</li>
+</ul>
+<div class="sl-heading-wrapper level-h3"><h3 id="file-ownership">File Ownership</h3><a class="sl-anchor-link" href="#file-ownership"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “File Ownership”</span></a></div>
+<ul>
+<li>✅ File structure enables exclusive ownership</li>
+<li>✅ <code dir="auto">screens/</code>, <code dir="auto">hooks/</code>, <code dir="auto">mocks/</code> directories support parallel tasks</li>
+</ul>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="implementation-notes">Implementation Notes</h2><a class="sl-anchor-link" href="#implementation-notes"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Implementation Notes”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="design-decisions">Design Decisions</h3><a class="sl-anchor-link" href="#design-decisions"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Design Decisions”</span></a></div>
+<ol>
+<li>
+<p><strong>Exclusive File Ownership Model</strong> — Achieved through directory structure. Each screen, hook, and mock handler is owned by one task. Shared infrastructure (config, layout, tokens) is centralized in Task 0 and never modified in parallel.</p>
+</li>
+<li>
+<p><strong>Design Tokens as CSS Variables</strong> — Colors are CSS custom properties, consumed by Tailwind config. This allows reactive theme switching without page reload and ensures consistency across all screens.</p>
+</li>
+<li>
+<p><strong>MSW for Dev-Only Mocking</strong> — MSW is guarded by <code dir="auto">import.meta.env.DEV</code>. In production, the code is tree-shaken, eliminating overhead. Screens use standard <code dir="auto">fetch()</code> calls; mocking is transparent.</p>
+</li>
+<li>
+<p><strong>React Query for Data Fetching</strong> — All async operations go through React Query. Automatic caching, invalidation, and DevTools support. No ad-hoc <code dir="auto">fetch()</code> calls outside React Query.</p>
+</li>
+<li>
+<p><strong>shadcn/ui for Components</strong> — Radix UI-based, accessible, customizable via Tailwind. One-time installation in Task 0; feature tasks never install new components.</p>
+</li>
+</ol>
+<div class="sl-heading-wrapper level-h3"><h3 id="known-constraints">Known Constraints</h3><a class="sl-anchor-link" href="#known-constraints"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Known Constraints”</span></a></div>
+<ol>
+<li>
+<p><strong>No Authentication</strong> — AppShell intentionally omits auth. Apps add it as needed.</p>
+</li>
+<li>
+<p><strong>No Advanced State Management</strong> — Zustand is available but not used in skeleton. Apps add it only if needed.</p>
+</li>
+<li>
+<p><strong>Limited shadcn Components</strong> — Only essential components (button, card, dropdown, separator, form, input, label) in skeleton. Apps request additional components through setup tasks.</p>
+</li>
+<li>
+<p><strong>No Error Boundary</strong> — Top-level error boundary could be added if requested by PO.</p>
+</li>
+<li>
+<p><strong>No 404 Route</strong> — No catch-all route for undefined paths. Apps add if needed.</p>
+</li>
+</ol>
+<div class="sl-heading-wrapper level-h3"><h3 id="future-extensions">Future Extensions</h3><a class="sl-anchor-link" href="#future-extensions"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Future Extensions”</span></a></div>
+<ol>
+<li><strong>Error Boundary</strong> — Add top-level error boundary to catch React rendering errors</li>
+<li><strong>404 Route</strong> — Add catch-all route → NotFoundScreen</li>
+<li><strong>Authentication</strong> — Add auth pattern/example</li>
+<li><strong>Advanced State</strong> — Example Zustand store</li>
+<li><strong>i18n</strong> — Internationalization foundation</li>
+</ol>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="testing-strategy">Testing Strategy</h2><a class="sl-anchor-link" href="#testing-strategy"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Testing Strategy”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="manual-testing-checklist">Manual Testing Checklist</h3><a class="sl-anchor-link" href="#manual-testing-checklist"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Manual Testing Checklist”</span></a></div>
+<ol>
+<li>
+<p><strong>Development Server</strong></p>
+<ul>
+<li>Run <code dir="auto">npm run dev</code></li>
+<li>Verify dev server starts on <code dir="auto">http://localhost:5173</code></li>
+<li>Verify HMR works (edit a file, page updates)</li>
+</ul>
+</li>
+<li>
+<p><strong>Routing</strong></p>
+<ul>
+<li>Navigate to <code dir="auto">/</code>, <code dir="auto">/about</code>, <code dir="auto">/help</code></li>
+<li>Verify each route shows correct screen</li>
+<li>Verify header and footer persist</li>
+</ul>
+</li>
+<li>
+<p><strong>Theme Switching</strong></p>
+<ul>
+<li>Click ThemeToggle</li>
+<li>Select light → colors change</li>
+<li>Select dark → colors change</li>
+<li>Select system → colors match OS preference</li>
+<li>Refresh page → theme persists</li>
+</ul>
+</li>
+<li>
+<p><strong>Data Fetching</strong></p>
+<ul>
+<li>Navigate to <code dir="auto">/</code> (HomeScreen)</li>
+<li>Verify loading state appears briefly</li>
+<li>Verify users list renders in Cards</li>
+<li>Open browser DevTools Console → no MSW warnings</li>
+</ul>
+</li>
+<li>
+<p><strong>Responsive Design</strong></p>
+<ul>
+<li>Open DevTools mobile view (375px width)</li>
+<li>Verify no horizontal scrolling</li>
+<li>Verify layout is readable</li>
+<li>Test on tablet (768px) and desktop (1920px)</li>
+</ul>
+</li>
+<li>
+<p><strong>Production Build</strong></p>
+<ul>
+<li>Run <code dir="auto">npm run build</code></li>
+<li>Verify build succeeds</li>
+<li>Run <code dir="auto">npm run preview</code></li>
+<li>Verify all routes work</li>
+<li>Verify no MSW errors in console</li>
+</ul>
+</li>
+</ol>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="documentation-updates">Documentation Updates</h2><a class="sl-anchor-link" href="#documentation-updates"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Documentation Updates”</span></a></div>
+<p>After completing this slice, update:</p>
+<ol>
+<li><strong>architecture.md</strong> — Should be complete; verify slices section references this slice</li>
+<li><strong>product-spec.md</strong> — Should be complete; verify success criteria align</li>
+<li><strong>epic.md</strong> — Mark as complete with reference to this slice</li>
+</ol>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="commit-strategy">Commit Strategy</h2><a class="sl-anchor-link" href="#commit-strategy"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Commit Strategy”</span></a></div>
+<p>This entire slice (all 10 steps) is committed as a single unit with message:</p>
+<div class="expressive-code"><link rel="stylesheet" href="/oneticket-core/appshell/pr/850/docs/_astro/ec.v4551.css"><script type="module" src="/oneticket-core/appshell/pr/850/docs/_astro/ec.0vx5m.js"></script><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">feat: complete task G - AppShell Skeleton slice (vertical slice 0)</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">Implements full skeleton with:</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">- File structure and exclusive ownership model</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">- Responsive layout (Header, AppLayout, Footer)</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">- React Router with 3 baseline routes</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">- Design tokens (CSS variables + Tailwind)</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">- Theme toggle (system/light/dark)</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">- MSW + React Query data fetching pattern</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">- shadcn/ui component integration</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">- Example HomeScreen with useUsers() hook</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">- AboutScreen and HelpScreen</span></div></div><div class="ec-line"><div class="code">
+</div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">All 7 user stories (US-001 through US-007) are satisfied.</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">Skeleton is deployable and ready for reuse in new projects.</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="feat: complete task G - AppShell Skeleton slice (vertical slice 0)Implements full skeleton with:- File structure and exclusive ownership model- Responsive layout (Header, AppLayout, Footer)- React Router with 3 baseline routes- Design tokens (CSS variables + Tailwind)- Theme toggle (system/light/dark)- MSW + React Query data fetching pattern- shadcn/ui component integration- Example HomeScreen with useUsers() hook- AboutScreen and HelpScreenAll 7 user stories (US-001 through US-007) are satisfied.Skeleton is deployable and ready for reuse in new projects."><div></div></button></div></figure></div>
+<hr>
+<p><strong>Last Updated:</strong> 2026-05-29<br>
+<strong>Status:</strong> Implementation Ready (Slice 0 — Initial Vertical Slice)<br>
+<strong>Depends On:</strong> None (initial slice)<br>
+<strong>Enables:</strong> All future slices (features built on this skeleton)</p> </div> <footer class="doc-footer astro-jtjyxvqf"> <div class="doc-footer-content astro-jtjyxvqf"> <span class="astro-jtjyxvqf">Branch: <code class="astro-jtjyxvqf">850/merge</code></span>  <span class="astro-jtjyxvqf">Build: <code class="astro-jtjyxvqf">#310</code></span> <span class="astro-jtjyxvqf">Commit: <code class="astro-jtjyxvqf">4d797ed</code></span> <span class="astro-jtjyxvqf">2026-05-29</span> <span class="astro-jtjyxvqf">App: <a href="https://dsissoko.github.io/oneticket-core/appshell/pr/850/app" class="astro-jtjyxvqf">https://dsissoko.github.io/oneticket-core/appshell/pr/850/app</a></span> </div> </footer>  </div> </div>   </main> </div> </div>  </div> </div>  </body></html>
