@@ -164,6 +164,22 @@ jobs:
           CONFIG=$(node src/generate-config.mjs "${{ inputs.role }}")
           echo "config=$CONFIG" >> $GITHUB_OUTPUT
 
+      # [DETERMINISTIC] Prepend pipeline directives to prompt — guaranteed regardless of dispatch path
+      # Covers both normal pipeline (agent-launcher) and manual dispatch (gh workflow run)
+      - name: Build full prompt
+        id: build-prompt
+        run: |
+          DIRECTIVES="## Pipeline directives — always apply
+- Do NOT push — the pipeline handles all git pushes deterministically.
+- Do NOT create a PR — the pipeline creates the final PR automatically.
+- If producing a manifest: write it to .oneticket/tasks/issue-${{ inputs.issue_number }}/manifest.json"
+          FULL_PROMPT="${DIRECTIVES}
+
+${{ inputs.prompt }}"
+          echo "full_prompt<<EOF" >> $GITHUB_OUTPUT
+          echo "$FULL_PROMPT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       # [AGENTIC] Invoke anomalyco with the full prompt
       # The prompt is built upstream by deterministic code (.mjs)
       # The agent does not push, does not create PRs — deterministic steps handle that
@@ -178,12 +194,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
           GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
           OPENCODE_CONFIG_CONTENT: ${{ steps.agent-config.outputs.config }}
-          PROMPT: ${{ inputs.prompt }}
+          PROMPT: ${{ steps.build-prompt.outputs.full_prompt }}
         with:
           model: ${{ inputs.model }}
           share: false
           use_github_token: true
-          prompt: ${{ inputs.prompt }}
+          prompt: ${{ steps.build-prompt.outputs.full_prompt }}
 
       # [RETRY] anomalyco failure → re-dispatch via retry-dispatch.mjs
       # Uses dispatchWorkflow() (GitHub JSON API) — same mechanism as first dispatch
@@ -200,7 +216,7 @@ jobs:
           BRANCH_BASE: ${{ inputs.branch_base }}
           ROLE: ${{ inputs.role }}
           MODEL: ${{ inputs.model }}
-          PROMPT: ${{ inputs.prompt }}
+          PROMPT: ${{ steps.build-prompt.outputs.full_prompt }}
         run: node src/retry-dispatch.mjs
 
       # [DETERMINISTIC] Final push

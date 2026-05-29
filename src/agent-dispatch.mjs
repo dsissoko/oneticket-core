@@ -182,6 +182,8 @@ function buildPrompt({ role, demande, branch, config, profile, contextBlock, doc
   lines.push(`## Agent contract`);
   lines.push(`- Prefix every response with: **[Agent: \`@${role}\`]**`);
   lines.push(`- ALWAYS respond at the end of every job — no exception.`);
+  lines.push(`- Do NOT push — the pipeline handles all git pushes deterministically.`);
+  lines.push(`- Do NOT create a PR — the pipeline creates the final PR automatically.`);
 
   if (originType === 'pull_request_review_comment') {
     lines.push(`- The exact command to respond (inline reply in the review thread):`);
