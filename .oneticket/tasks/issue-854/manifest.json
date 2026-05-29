@@ -210,7 +210,7 @@
       "role": "analyst",
       "content": "UPDATE EXISTING. Lis apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-005-agent-profile-skills.md (fichier existant dans le repo). Ajoute le critere d'acceptation: '—Given a skill wraps an external source, —Then its frontmatter must declare source: external, source_url, source_skill, and install_native.' Ce critere s'ajoute aux criteres existants pour clarifier la traçabilite des skills.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "U",
