@@ -30,38 +30,64 @@ const config: Config = {
   ],
 
   /**
-   * Theme configuration with extended design tokens
-   *
-   * "extend" mode allows us to add to Tailwind's defaults without replacing them
-   * (e.g., we add "primary" but keep all built-in colors like "blue-500")
-   */
+    * Theme configuration with extended design tokens
+    *
+    * "extend" mode allows us to add to Tailwind's defaults without replacing them
+    * (e.g., we add "primary" but keep all built-in colors like "blue-500")
+    */
   theme: {
     extend: {
       /**
-       * Color palette
-       *
-       * These colors are frozen and should not change mid-project.
-       * Inspired by GitHub's Primer design system.
-       *
-       * Usage:
-       * - text-primary, bg-primary, border-primary
-       * - text-secondary, bg-secondary, border-secondary
-       * - text-accent, bg-accent
-       * - text-destructive, bg-destructive (error/delete states)
-       * - text-muted, text-gray-400 (subtle/disabled text)
-       * - bg-background, text-foreground (base colors)
-       *
-       * Dark mode: Automatically inverted via next-themes
-       * (light mode uses #ffffff bg, dark mode uses #1c2128 or similar)
-       */
+        * Color palette
+        *
+        * These colors are frozen and should not change mid-project.
+        * Inspired by GitHub's Primer design system.
+        *
+        * Usage:
+        * - text-primary, bg-primary, border-primary
+        * - text-secondary, bg-secondary, border-secondary
+        * - text-accent, bg-accent
+        * - text-destructive, bg-destructive (error/delete states)
+        * - text-muted, text-gray-400 (subtle/disabled text)
+        * - bg-background, text-foreground (base colors)
+        *
+        * Dark mode: Automatically inverted via next-themes
+        * (light mode uses #ffffff bg, dark mode uses #1c2128 or similar)
+        */
       colors: {
-        primary: '#0366d6',        // GitHub primary blue (action buttons, links)
-        secondary: '#6f42c1',      // Purple (alternate actions, secondary buttons)
-        accent: '#28a745',         // Green (success, positive actions)
-        destructive: '#d73a49',    // Red (delete, error, danger)
-        muted: '#6a737d',          // Gray (disabled, secondary text)
-        background: '#ffffff',     // Light mode background
-        foreground: '#24292e',     // Light mode text color
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
+        },
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))',
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
+        },
+        accent: {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
+        },
+        popover: {
+          DEFAULT: 'hsl(var(--popover))',
+          foreground: 'hsl(var(--popover-foreground))',
+        },
+        card: {
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))',
+        },
       },
 
       /**
@@ -99,6 +125,13 @@ const config: Config = {
       },
     },
   },
+
+  /**
+   * Dark mode strategy
+   *
+   * Using 'class' strategy to work with next-themes
+   */
+  darkMode: ['class'],
 
   /**
    * Tailwind plugins
