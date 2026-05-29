@@ -101,6 +101,18 @@ A well-sized slice:
 
 If a slice feels too large — split it using the `oneticket-user-story-splitting` skill logic applied at the implementation level.
 
+## Slice Sequencing
+
+Slices are not all equal — they fall into two categories that determine how they are ordered and parallelized in the implementation manifest.
+
+**Foundation slice (Walking Skeleton):** The first slice is always a minimal skeleton crossing all technical layers — configuration, layout, routing, theme, shared setup. It does not deliver a user-facing feature but makes all subsequent slices possible. It is always sequential — all other slices depend on it.
+
+**Feature slices:** Each subsequent slice covers one end-to-end feature independently. They can be parallelized if their files are disjoint. They always depend on the foundation slice.
+
+This maps directly to how `@leaddev` should structure the manifest:
+- Task 0 = foundation slice → sequential, no `depends_on`
+- Tasks 1..N = feature slices → parallel when files are disjoint, all with `depends_on: [task-0]`
+
 ## Rules
 
 - Never overwrite an existing slice — check before writing
@@ -111,3 +123,4 @@ If a slice feels too large — split it using the `oneticket-user-story-splittin
 - A slice can cover multiple related user stories — some slices are transversal
 - A slice without any related user story is invalid
 - H1 must be descriptive: `# Slice N — <name>` — never use generic `# Slice`
+- Always produce at least 2 slices: one foundation slice + one or more feature slices — never group all user stories into a single slice
