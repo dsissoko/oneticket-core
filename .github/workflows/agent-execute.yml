@@ -168,14 +168,17 @@ jobs:
       # Covers both normal pipeline (agent-launcher) and manual dispatch (gh workflow run)
       - name: Build full prompt
         id: build-prompt
+        env:
+          INPUT_PROMPT: ${{ inputs.prompt }}
+          ISSUE_NUMBER: ${{ inputs.issue_number }}
         run: |
           DIRECTIVES="## Pipeline directives — always apply
 - Do NOT push — the pipeline handles all git pushes deterministically.
 - Do NOT create a PR — the pipeline creates the final PR automatically.
-- If producing a manifest: write it to .oneticket/tasks/issue-${{ inputs.issue_number }}/manifest.json"
+- If producing a manifest: write it to .oneticket/tasks/issue-${ISSUE_NUMBER}/manifest.json"
           FULL_PROMPT="${DIRECTIVES}
 
-${{ inputs.prompt }}"
+${INPUT_PROMPT}"
           echo "full_prompt<<EOF" >> $GITHUB_OUTPUT
           echo "$FULL_PROMPT" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
