@@ -35,7 +35,7 @@ function App(): React.ReactElement {
   return (
     <QueryClientProvider client={queryClient}>
       <ErrorBoundary>
-        <BrowserRouter>
+        <BrowserRouter basename={import.meta.env.BASE_URL}>
           <Suspense fallback={<LoadingIndicator />}>
             <Routes>
               <Route element={<AppLayout />}>
