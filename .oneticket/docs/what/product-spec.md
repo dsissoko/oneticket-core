@@ -92,7 +92,16 @@ The `@qa`, `@analyst`, and `@help` roles belong to the V1 trajectory.
 
 ---
 
-## 7. Product Capabilities
+## 7. Glossaire
+
+| Terme | Définition |
+|---|---|
+| **Local skill** | Produced and maintained by oneticket-core. source: `local` |
+| **External skill (wrapped)** | Content adapted from an external source with full traceability. source: `external` + `source_url` + `install_native` |
+
+---
+
+## 8. Product Capabilities
 
 | Capability | Description | Status |
 |---|---|---|
@@ -103,6 +112,7 @@ The `@qa`, `@analyst`, and `@help` roles belong to the V1 trajectory.
 | **Multi-trigger support** | Issue comments, PR comments, inline review comments | ✅ v0.1.0 |
 | **Documentation generation** | Structured docs covering product, architecture, epics, US, slices, C4, ship | ✅ v0.1.0 |
 | **Skill loading** | Agent profiles load domain-specific skills at runtime | ✅ v0.1.0 |
+| **Skill traceability** | Source: frontmatter field identifies origin of every skill | ✅ v0.1.0 |
 | **Routing and handoff** | Declared rules for agent-to-agent communication | 🔲 V1 |
 | **Autonomous mode** | Agent-to-agent chaining without human intervention | 🔲 V1 |
 | **Full-stack generation** | Backend, database, infrastructure generation via skills | 🔲 V1 |
@@ -111,7 +121,7 @@ The `@qa`, `@analyst`, and `@help` roles belong to the V1 trajectory.
 
 ---
 
-## 8. High-Level Workflows
+## 9. High-Level Workflows
 
 **Workflow 1 — Task execution**
 ```
@@ -170,7 +180,7 @@ by adding a corresponding workflow file.
 
 ---
 
-## 9. Business Rules
+## 10. Business Rules
 
 - Orchestration logic must live in deterministic code — LLMs never make control flow decisions
 - Every agent invocation must start from a GitHub issue or a GitHub event
@@ -188,7 +198,7 @@ by adding a corresponding workflow file.
 
 ---
 
-## 10. Success Criteria
+## 11. Success Criteria
 
 - `reply` test passes — agent responds to a direct question with a GitHub comment, no manifest produced
 - `manifest` test passes — injected manifest triggers FAN-OUT, all tasks execute, PR created
@@ -202,7 +212,7 @@ by adding a corresponding workflow file.
 
 ---
 
-## 11. Open Questions
+## 12. Open Questions
 
 | # | Question | Scope |
 |---|---|---|
@@ -220,7 +230,7 @@ by adding a corresponding workflow file.
 
 ---
 
-## 12. Roadmap
+## 13. Roadmap
 
 | Milestone | Epics | Goal |
 |---|---|---|
@@ -232,7 +242,7 @@ by adding a corresponding workflow file.
 
 ---
 
-## 13. Parallel Task Execution Contract
+## 14. Parallel Task Execution Contract
 
 OneTicket executes tasks in parallel via FAN-OUT — each task runs on its own isolated branch and produces files that are merged back into the feature branch by GATHER.
 
@@ -302,7 +312,7 @@ A manifest where parallel tasks produce the same file is invalid and will cause 
 
 ---
 
-## 14. Decomposition and Quality Trade-offs
+## 15. Decomposition and Quality Trade-offs
 
 Operating a multi-agent pipeline requires navigating two fundamental tensions. Understanding them allows conscious, deliberate configuration — not trial and error.
 
@@ -372,7 +382,7 @@ A game implementation decomposed into one task per JS module produced individual
 
 ---
 
-## 15. Merge Conflict Recovery
+## 16. Merge Conflict Recovery
 
 Merge conflicts are a **normal and expected** operational event in a FAN-OUT/GATHER pipeline — not an anomaly or a framework failure. They are the mechanical consequence of running parallel branches that share configuration files.
 
