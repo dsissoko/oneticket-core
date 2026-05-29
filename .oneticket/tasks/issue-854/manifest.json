@@ -141,7 +141,7 @@
       "role": "analyst",
       "content": "Produis le skill oneticket-appshell en utilisant le contenu de l'issue #854. Structure du skill: (1) Frontmatter avec name: oneticket-appshell, description claire, version, source: local (pas de source_url/install_native); (2) AppShell intent: skeleton de reference pour tous les projets, elimine les merge errors via structure exclusive des fichiers, force la qualite design via design tokens et primitives; (3) Conventions screens: one screen = one file = exclusive ownership → zero merge errors; (4) Conventions components: shadcn/ui installed once, never modified in parallel; (5) Design tokens et styling: globals.css + tailwind.config.ts comme single task, design tokens system; (6) Visual conventions: PageHeader au top de chaque screen, Card pour grouped content, EmptyState pour no data, jamais de styles inline, spacing avec Tailwind, typography dans l'echelle, lucide-react pour icons; (7) Available libraries table (shadcn/ui, React Hook Form + Zod, React Query, Zustand, lucide-react, MSW); (8) Comment @po commande un nouveau projet base sur AppShell; (9) Comment @leaddev decompose les taches (task 0 = skeleton, parallel screens). Assure toi que le frontmatter inclut les champs name, description, version, source (local).",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "N",
