@@ -20,6 +20,9 @@ autonomous_mode: false
 # CLI used in CI sandbox — determines which agent_config section to use
 cli: opencode
 
+# Maximum number of tasks in a manifest — agents must not exceed this limit
+max_tasks: 12
+
 # Maximum number of retries on anomalyco failure (Agent Execute)
 retry_max: 3
 

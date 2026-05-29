@@ -64,7 +64,8 @@ Le contenu doit être exactement ce JSON (pas de commentaires, pas de markdown a
 
 ## Règles du graphe de dépendances
 
-- **Maximiser le parallélisme** : toute tâche sans dépendance réelle doit avoir `depends_on: []`
+- **Nombre de tâches** : le manifest ne doit pas dépasser `max_tasks` tâches au total.
+- **Séquentiel vs parallèle** : privilégie les tâches séquentielles dépendantes les unes des autres en série si tu estimes qu'elles risquent de modifier des fichiers communs. Si certaines tâches sont à priori parallélisables car elles touchent des endroits différents et non communs, préfère les lancer en parallèle. Les tâches en parallèle peuvent toutefois avoir des dépendances en amont.
 - **Pas de cycle** : A ne peut pas dépendre de B si B dépend de A
 - **Ids référencés valides** : `depends_on` ne peut contenir que des ids définis dans `tasks`
 - **Granularité** : une tâche = un fichier produit — si une réalisation nécessite plusieurs fichiers, créer plusieurs tâches

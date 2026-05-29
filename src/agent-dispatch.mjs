@@ -169,6 +169,7 @@ function buildPrompt({ role, demande, branch, config, profile, contextBlock, doc
   lines.push(`docs_path: ${docsPath}`);
   if (appPath) lines.push(`app_path: ${appPath}`);
   lines.push(`current_project: ${currentProject}`);
+  if (config.max_tasks) lines.push(`max_tasks: ${config.max_tasks}`);
   lines.push('');
 
   // Agent contract — universal, injected deterministically for every agent and every trigger
