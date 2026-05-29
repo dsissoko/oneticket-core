@@ -205,8 +205,10 @@ export async function launchReadyTasks(manifest, repo, token) {
 
   // [FAN-OUT] Trigger one workflow per task — batched to avoid GitHub Actions concurrency cancellations
   // Max BATCH_SIZE dispatches at a time, with BATCH_DELAY_MS between batches
-  const BATCH_SIZE  = 4;
-  const BATCH_DELAY_MS = 3000;
+  // DISPATCH_DELAY_MS between individual dispatches to avoid simultaneous workflow cancellations
+  const BATCH_SIZE       = 4;
+  const BATCH_DELAY_MS   = 3000;
+  const DISPATCH_DELAY_MS = 2000;
 
   for (let i = 0; i < readyTasks.length; i += BATCH_SIZE) {
     const batch = readyTasks.slice(i, i + BATCH_SIZE);
@@ -238,6 +240,9 @@ export async function launchReadyTasks(manifest, repo, token) {
           retry_max:    String(config.retry_max),
         }, repo, token);
         console.log(`[agent-launcher] [FAN-OUT] Workflow triggered for task ${task.id}${task.role ? ` (role: ${task.role})` : ''}.`);
+
+        // [DISPATCH-DELAY] Avoid simultaneous workflow dispatches causing GitHub Actions cancellations
+        await new Promise(r => setTimeout(r, DISPATCH_DELAY_MS));
       } catch (err) {
         console.error(`[agent-launcher] Failed to trigger workflow for task ${task.id}: ${err.message}`);
       }
