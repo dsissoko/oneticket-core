@@ -432,7 +432,7 @@
       "file": ".oneticket/docs/what/epics/epic-0-mvp/user-stories/us-005-agent-profile-skills.md",
       "content": "Mettre à jour us-005-agent-profile-skills.md : ajouter critère d'acceptation : 'Given a skill wraps an external source, Then its frontmatter must declare source: external, source_url, source_skill, and install_native.' Lire le document existant avant modification.",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "analyst"
     },
     {
