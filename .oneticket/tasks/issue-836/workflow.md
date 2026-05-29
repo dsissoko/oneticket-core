@@ -9,3 +9,4 @@
 2026-05-29 09:30 | L | docs/what/epics/epic-0-mvp/user-stories/us-005-agent-profile-skills.md
 2026-05-29 09:31 | M | docs/what/product-spec.md
 2026-05-29 09:30 | F | apps/appshell/docs/how/c4/containers.md
+2026-05-29 09:31 | G | apps/appshell/docs/how/slices/slice-0-skeleton/slice.md
