@@ -414,7 +414,7 @@
       "file": ".oneticket/skills/oneticket-shadcn/SKILL.md",
       "content": "Créer la compétence oneticket-shadcn. Récupérer le contenu depuis shadcn/ui repo (https://github.com/shadcn/ui). Adapter pour Vite (pas Next.js). Ajouter frontmatter : source: external, source_url: https://github.com/shadcn/ui, source_skill: shadcn, install_native: npx skills add shadcn/ui --skill shadcn. Description : shadcn/ui components, theming, forms — conventions for projects using shadcn/ui with Vite (not Next.js).",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "analyst"
     },
     {
