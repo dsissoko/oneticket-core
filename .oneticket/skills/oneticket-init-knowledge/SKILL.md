@@ -46,8 +46,14 @@ Respect these dependencies when building the manifest:
    |---|---|---|
    | `what/epics/epic-N/epic.md` | `how/slices/slice-N/slice.md` | `../../../how/slices/slice-N-<name>/slice.md` |
    | `what/epics/epic-N/user-stories/us-NNN.md` | `how/slices/slice-N/slice.md` | `../../../../how/slices/slice-N-<name>/slice.md` |
-   | `how/slices/slice-N/slice.md` | `what/epics/epic-N/epic.md` | `../../what/epics/epic-N-<name>/epic.md` |
-   | `how/slices/slice-N/slice.md` | `what/epics/epic-N/user-stories/us-NNN.md` | `../../what/epics/epic-N-<name>/user-stories/us-NNN-<name>.md` |
+   | `how/slices/slice-N/slice.md` | `what/epics/epic-N/epic.md` | `../../../what/epics/epic-N-<name>/epic.md` |
+   | `how/slices/slice-N/slice.md` | `what/epics/epic-N/user-stories/us-NNN.md` | `../../../what/epics/epic-N-<name>/user-stories/us-NNN-<name>.md` |
+
+   **CRITICAL — Before writing any cross-reference link:**
+   1. Read the actual files produced in previous tasks — do not assume the structure
+   2. Verify the exact path of each file on disk (`git ls-files` or `find`)
+   3. Calculate the relative path from the actual file location — do not copy from examples without verifying
+   4. A link that resolves outside `docs_path` is always wrong — count the `../` levels carefully
 
 ---
 
