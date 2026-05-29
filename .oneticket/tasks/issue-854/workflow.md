@@ -16,3 +16,4 @@
 2026-05-29 13:48 | P | apps/appshell/docs/how/README.md
 2026-05-29 13:48 | L | apps/appshell/docs/how/slices/slice-4-theme-system/slice.md
 2026-05-29 13:48 | H | apps/appshell/docs/how/c4/containers.md
+2026-05-29 13:48 | J | apps/appshell/docs/how/slices/slice-2-home-screen-example/slice.md
