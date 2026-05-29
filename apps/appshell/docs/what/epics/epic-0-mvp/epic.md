@@ -416,9 +416,7 @@ The epic will be decomposed into user stories covering:
 
 ## Related Slices
 
-*To be populated by @architect after producing vertical slices*
-
-Implementation will be organized into sequential and parallel slices to maintain focus and prevent timeout.
+- [Slice 0 — AppShell Skeleton](../../../how/slices/slice-0-skeleton/slice.md)
 
 ---
 

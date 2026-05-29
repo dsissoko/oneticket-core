@@ -10,3 +10,4 @@
 2026-05-29 09:31 | M | docs/what/product-spec.md
 2026-05-29 09:30 | F | apps/appshell/docs/how/c4/containers.md
 2026-05-29 09:31 | G | apps/appshell/docs/how/slices/slice-0-skeleton/slice.md
+2026-05-29 09:35 | H | apps/appshell/docs/
