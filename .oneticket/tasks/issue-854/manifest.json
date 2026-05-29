@@ -150,7 +150,7 @@
       "role": "analyst",
       "content": "Produis le runbook appshell-reuse.md en utilisant le template .oneticket/templates/runbook.md et le contenu de l'issue #854. Titre: 'How to Reuse AppShell'. Steps: (1) Copy apps/appshell/app/ → apps/{project}/app/; (2) Set VITE_APP_NAME in .env.example; (3) Update current_project in .oneticket/config.yml; (4) Update AboutScreen with your project description; (5) Update HelpScreen with project-specific quickstart; (6) Add feature screens in screens/ — one screen per file, one task per screen in the manifest; (7) Deploy automatic — push to main triggers docs-site-github-pages.yml. Ajoute des notes sur les conventions d'ownership exclusif des screens et sur l'integration avec la strategie de parallelization de @leaddev. Assure toi que le frontmatter inclut le champ 'title'.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "O",
