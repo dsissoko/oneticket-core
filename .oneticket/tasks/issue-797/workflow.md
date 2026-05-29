@@ -15,3 +15,4 @@
 2026-05-29 08:40 | G | apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-004-data-fetching.md
 2026-05-29 08:40 | F | apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-003-screens.md
 2026-05-29 08:41 | AH | .oneticket/skills/oneticket-appshell/SKILL.md
+2026-05-29 08:42 | AX | cross-references
