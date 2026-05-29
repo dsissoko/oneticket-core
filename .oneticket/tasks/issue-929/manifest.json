@@ -85,7 +85,7 @@
       "depends_on": [
         "O"
       ],
-      "status": "in_progress",
+      "status": "done",
       "role": "dev"
     },
     {
