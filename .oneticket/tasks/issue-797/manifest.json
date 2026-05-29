@@ -101,7 +101,7 @@
         "G",
         "H"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "dev"
     },
     {
@@ -559,7 +559,7 @@
         "AR",
         "AT"
       ],
-      "status": "pending"
+      "status": "in_progress"
     }
   ]
 }
