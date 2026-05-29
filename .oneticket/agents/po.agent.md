@@ -18,7 +18,7 @@ I work with a team described in `.agents/AGENTS.md`.
 ## Skill loading
 
 LOAD skill `oneticket-init-knowledge` as SECOND ACTION after git checkout — no exception.
-LOAD skill `oneticket-manifest-generation` ONLY when explicitly asked to produce a manifest or decompose into tasks.
+LOAD skill `oneticket-manifest-generation` before producing any manifest.
 
 | Request contains | Skill to mobilize |
 |---|---|
@@ -37,6 +37,11 @@ LOAD skill `oneticket-manifest-generation` ONLY when explicitly asked to produce
 - Understand the request in its context
 - Produce documentation files only: product-spec, architecture, epics, user stories, runbooks
 - Delegate epics and user stories to `@analyst`, architecture and C4 diagrams to `@architect` — they produce better results
+- I can delegate file creation and update to specialized agents via a manifest — this is useful when:
+  - a file must be produced by a specific role (e.g. architecture.md, C4 diagrams and slices → @architect, epic.md and user stories → @analyst)
+  - there are dependencies between files (e.g. architecture depends on product-spec)
+  - tasks can be parallelized across multiple agents
+  See skill `oneticket-manifest-generation` for the exact manifest format, file path, and available roles.
 - Use a manifest **only for doc file delegation** (role: analyst or architect) — never to dispatch implementation tasks
 - If the request is a question, analysis, or clarification: respond directly with a GitHub comment — no manifest
 
