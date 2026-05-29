@@ -4,7 +4,7 @@
 
 Implement light/dark/system theme switching with localStorage persistence and CSS variable integration.
 
-## Related Epics
+## Related Epic
 
 [Epic 0 — AppShell MVP](../../what/epics/epic-0-mvp/epic.md)
 

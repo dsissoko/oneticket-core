@@ -4,7 +4,7 @@
 
 Implement React Query for server state management and MSW (Mock Service Worker) for API mocking, demonstrating complete CRUD patterns.
 
-## Related Epics
+## Related Epic
 
 [Epic 0 — AppShell MVP](../../what/epics/epic-0-mvp/epic.md)
 

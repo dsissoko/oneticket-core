@@ -28,4 +28,4 @@ En tant que développeur, je veux un skeleton prêt à copier afin de démarrer 
 
 ## Related Slices
 
-<!-- @architect fills this section after producing slices -->
+[Slice 0 — Setup Skeleton](../../../how/slices/slice-0-setup/slice.md)

@@ -29,4 +29,4 @@ En tant que développeur, je veux des routes de base (/, /about, /help) afin de 
 
 ## Related Slices
 
-<!-- @architect fills this section after producing slices -->
+[Slice 2 — Routing Setup](../../../how/slices/slice-2-routing/slice.md)
