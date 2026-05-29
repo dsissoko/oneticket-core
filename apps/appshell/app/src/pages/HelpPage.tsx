@@ -88,12 +88,12 @@ export function HelpPage(): React.ReactElement {
         </section>
 
         <div className="mt-8">
-          <a
-            href="/"
+          <Link
+            to="/"
             className="px-4 py-2 bg-primary text-primary-foreground rounded hover:opacity-90"
           >
             ← Back Home
-          </a>
+          </Link>
         </div>
       </div>
     </div>
