@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 /**
  * HomePage Component
@@ -13,24 +14,24 @@ export function HomePage(): React.ReactElement {
         <h1 className="text-4xl font-bold mb-4">AppShell</h1>
         <p className="text-lg text-muted mb-8">Welcome to the foundation.</p>
         <div className="grid grid-cols-3 gap-4 mt-8">
-          <a
-            href="/about"
+          <Link
+            to="/about"
             className="px-4 py-2 bg-primary text-primary-foreground rounded hover:opacity-90"
           >
             About Us
-          </a>
-          <a
-            href="/help"
+          </Link>
+          <Link
+            to="/help"
             className="px-4 py-2 bg-secondary text-secondary-foreground rounded hover:opacity-90"
           >
             Get Help
-          </a>
-          <a
-            href="/nonexistent"
+          </Link>
+          <Link
+            to="/nonexistent"
             className="px-4 py-2 bg-muted text-muted-foreground rounded hover:opacity-90"
           >
             Try 404
-          </a>
+          </Link>
         </div>
       </div>
     </div>

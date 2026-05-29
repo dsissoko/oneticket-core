@@ -169,6 +169,17 @@ import { BrowserRouter } from 'react-router-dom'
 
 **`basename` is mandatory** — without it, React Router resolves all `<Link to="...">` relative to the domain root (`/`) instead of the app base path. On any non-root deployment (GitHub Pages, reverse proxy, sub-directory), all internal links will point to the wrong URL. `import.meta.env.BASE_URL` is always in sync with `VITE_BASE_PATH` — use it, never hardcode the path.
 
+**NEVER use `<a href="...">` for internal navigation** — always use `<Link to="...">` from `react-router-dom`. A plain `<a href="/about">` bypasses React Router entirely and composes the URL from the domain root, ignoring `basename`. This breaks on any non-root deployment.
+
+```typescript
+// WRONG — bypasses React Router, breaks on sub-path deployments
+<a href="/about">About</a>
+
+// CORRECT — respects basename, works everywhere
+import { Link } from 'react-router-dom'
+<Link to="/about">About</Link>
+```
+
 ## MSW — activation and Service Worker scope
 
 ### Controlling MSW activation

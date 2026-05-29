@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 /**
  * HelpPage Component
@@ -72,14 +73,14 @@ export function HelpPage(): React.ReactElement {
           <h2 className="text-2xl font-bold mb-4">Quick Links</h2>
           <ul className="list-disc list-inside text-base text-muted space-y-2">
             <li>
-              <a href="/" className="text-primary hover:underline">
+              <Link to="/" className="text-primary hover:underline">
                 Home Page
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/about" className="text-primary hover:underline">
+              <Link to="/about" className="text-primary hover:underline">
                 About Us
-              </a>
+              </Link>
             </li>
             <li>Check the browser console for debugging information</li>
             <li>Test the 404 page by navigating to an invalid route</li>
