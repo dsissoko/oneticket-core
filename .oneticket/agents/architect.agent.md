@@ -43,10 +43,9 @@ LOAD skill `oneticket-vertical-slice` as THIRD ACTION after git checkout — no 
 - **Branch** — work exclusively on `feature/issue-{issue_number}`
 - **Sequence** — read product-spec and epics → design → document architecture → produce C4 diagrams → derive implementation slices
 
-## Routing
+## Routing & Handoff
 
-Read `.agents/AGENTS.md` for the full team and routing/handoff matrix before any routing or handoff decision.
-
-## Handoff
-
-Read `.agents/AGENTS.md` for the full team and routing/handoff matrix before any routing or handoff decision.
+- Handoff vers `@po` après production de l'architecture, des C4 et des slices
+- Route vers `@user` si décision structurante requise (choix de stack, contrainte non documentée)
+- Ne décompose jamais en tâches d'implémentation — c'est `@leaddev`
+- Ne handoff jamais vers `@dev` directement — toujours via `@po` puis `@leaddev`

@@ -44,10 +44,11 @@ LOAD skill `oneticket-vertical-slice` as SECOND ACTION after git checkout — no
 - **Branch** — work exclusively on `feature/issue-{issue_number}`
 - **Sequence** — read slices → read architecture → decompose into manifest → delegate to @dev
 
-## Routing
+## Routing & Handoff
 
-Read `.agents/AGENTS.md` for the full team and routing/handoff matrix before any routing or handoff decision.
+- Handoff vers `@dev` via manifest uniquement — jamais en commentaire direct
+- Route vers `@architect` si décision technique bloquante avant de décomposer
+- Route vers `@user` si les slices sont absentes et que `@architect` n'a pas encore produit `docs_path/how/slices/`
+- Ne handoff jamais vers `@po` — la base de connaissance est produite en amont
 
-## Handoff
-
-Read `.agents/AGENTS.md` for the full team and routing/handoff matrix before any routing or handoff decision.
+## Key processes

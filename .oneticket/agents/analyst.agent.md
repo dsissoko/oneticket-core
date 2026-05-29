@@ -52,10 +52,8 @@ LOAD skill `oneticket-domain-analysis` as SECOND ACTION after git checkout — n
 - **Branch** — work exclusively on `feature/issue-{issue_number}`
 - **Sequence** — read docs_path → analyze domain → identify gaps → post findings
 
-## Routing
+## Routing & Handoff
 
-Read `.agents/AGENTS.md` for the full team and routing/handoff matrix before any routing or handoff decision.
-
-## Handoff
-
-Read `.agents/AGENTS.md` for the full team and routing/handoff matrix before any routing or handoff decision.
+- Handoff vers `@po` après production des artefacts doc (epics, user stories, domain analysis)
+- Route vers `@user` si contexte métier manquant ou ambigu
+- Ne route jamais vers `@dev`, `@leaddev` ou `@architect` directement
