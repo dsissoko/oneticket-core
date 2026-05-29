@@ -63,6 +63,9 @@ Establish the canonical React + Vite skeleton and design system reference for al
 
 ## Related Slices
 
-<!-- @architect fills this section after producing slices — write filename only, no relative path, no ../
-     The build script resolves the correct path automatically.
-     Example: [Slice 1 — Skeleton Foundation](../../../how/slices/slice-1-skeleton-foundation/slice.md) -->
+- [Slice 0 — Setup Skeleton](../../../how/slices/slice-0-setup/slice.md)
+- [Slice 1 — Layout Structure](../../../how/slices/slice-1-layout/slice.md)
+- [Slice 2 — Routing Setup](../../../how/slices/slice-2-routing/slice.md)
+- [Slice 3 — Data Fetching Pattern](../../../how/slices/slice-3-data-fetching/slice.md)
+- [Slice 4 — Theme Toggle](../../../how/slices/slice-4-theme/slice.md)
+- [Slice 5 — Documentation & Runbook](../../../how/slices/slice-5-documentation/slice.md)

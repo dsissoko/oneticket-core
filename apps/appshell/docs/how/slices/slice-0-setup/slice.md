@@ -4,7 +4,7 @@
 
 Establish the foundational project skeleton with Vite, TypeScript, Tailwind CSS, and dependencies configured. This foundation slice provides the base configuration for all subsequent feature slices.
 
-## Related Epics
+## Related Epic
 
 [Epic 0 — AppShell MVP](../../what/epics/epic-0-mvp/epic.md)
 

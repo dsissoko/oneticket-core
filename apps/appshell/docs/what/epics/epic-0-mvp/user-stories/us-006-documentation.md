@@ -34,4 +34,4 @@ En tant que développeur, je veux un runbook pour réutiliser le skeleton afin d
 
 ## Related Slices
 
-<!-- @architect fills this section after producing slices -->
+[Slice 5 — Documentation & Runbook](../../../how/slices/slice-5-documentation/slice.md)

@@ -4,7 +4,7 @@
 
 Implement React Router v6 with core routes (home, about, help) and error boundaries for graceful error handling.
 
-## Related Epics
+## Related Epic
 
 [Epic 0 — AppShell MVP](../../what/epics/epic-0-mvp/epic.md)
 

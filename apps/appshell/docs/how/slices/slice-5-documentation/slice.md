@@ -4,7 +4,7 @@
 
 Provide comprehensive documentation and runbook for copying the AppShell skeleton to new projects, explaining patterns and configuration.
 
-## Related Epics
+## Related Epic
 
 [Epic 0 — AppShell MVP](../../what/epics/epic-0-mvp/epic.md)
 

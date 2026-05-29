@@ -31,4 +31,4 @@ En tant qu'utilisateur, je veux voir des données (users list) via React Query +
 
 ## Related Slices
 
-<!-- @architect fills this section after producing slices -->
+[Slice 3 — Data Fetching Pattern](../../../how/slices/slice-3-data-fetching/slice.md)

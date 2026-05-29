@@ -4,7 +4,7 @@
 
 Implement the core layout framework (AppLayout, Header, Footer) that wraps all pages and ensures consistent structure across the application.
 
-## Related Epics
+## Related Epic
 
 [Epic 0 — AppShell MVP](../../what/epics/epic-0-mvp/epic.md)
 

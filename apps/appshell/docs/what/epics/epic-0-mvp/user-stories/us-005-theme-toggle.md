@@ -32,4 +32,4 @@ En tant qu'utilisateur, je veux switcher entre system/light/dark themes afin de 
 
 ## Related Slices
 
-<!-- @architect fills this section after producing slices -->
+[Slice 4 — Theme Toggle](../../../how/slices/slice-4-theme/slice.md)

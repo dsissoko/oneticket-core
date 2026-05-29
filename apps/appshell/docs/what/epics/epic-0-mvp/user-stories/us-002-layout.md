@@ -30,4 +30,4 @@ En tant qu'utilisateur, je veux une structure de layout (Header + Outlet + Foote
 
 ## Related Slices
 
-<!-- @architect fills this section after producing slices -->
+[Slice 1 — Layout Structure](../../../how/slices/slice-1-layout/slice.md)

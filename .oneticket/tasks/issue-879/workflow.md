@@ -6,3 +6,4 @@
 2026-05-29 16:02 | E | apps/appshell/docs/how/c4/
 2026-05-29 16:03 | F | apps/appshell/docs/how/slices/
 2026-05-29 16:03 | H | .oneticket/skills/oneticket-appshell/SKILL.md
+2026-05-29 16:05 | I | apps/appshell/docs/what/epics/epic-0-mvp/epic.md
