@@ -122,12 +122,15 @@ coverage/
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["vite/client"]
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
 ```
+
+**`"types": ["vite/client"]` is mandatory** — without it, TypeScript does not know about `import.meta.env` and raises `Property 'env' does not exist on type 'ImportMeta'`. This applies to any project using `import.meta.env.BASE_URL`, `import.meta.env.DEV`, `import.meta.env.PROD`, etc.
 
 ## `vite.config.ts` canonical content
 
@@ -151,6 +154,85 @@ export default defineConfig({
 ```
 
 **`base` is mandatory** — `process.env.VITE_BASE_PATH || '/'` ensures the app loads assets from the correct path when deployed to a sub-path (GitHub Pages PR preview or production). Without it, assets resolve from `/` and the app renders blank on any non-root deployment.
+
+## React Router sub-path routing
+
+When using `react-router-dom`, **`BrowserRouter` must receive `basename`**:
+
+```typescript
+import { BrowserRouter } from 'react-router-dom'
+
+<BrowserRouter basename={import.meta.env.BASE_URL}>
+  {/* routes */}
+</BrowserRouter>
+```
+
+**`basename` is mandatory** — without it, React Router resolves all `<Link to="...">` relative to the domain root (`/`) instead of the app base path. On any non-root deployment (GitHub Pages, reverse proxy, sub-directory), all internal links will point to the wrong URL. `import.meta.env.BASE_URL` is always in sync with `VITE_BASE_PATH` — use it, never hardcode the path.
+
+**NEVER use `<a href="...">` for internal navigation** — always use `<Link to="...">` from `react-router-dom`. A plain `<a href="/about">` bypasses React Router entirely and composes the URL from the domain root, ignoring `basename`. This breaks on any non-root deployment.
+
+```typescript
+// WRONG — bypasses React Router, breaks on sub-path deployments
+<a href="/about">About</a>
+
+// CORRECT — respects basename, works everywhere
+import { Link } from 'react-router-dom'
+<Link to="/about">About</Link>
+```
+
+## MSW — activation and Service Worker scope
+
+### Controlling MSW activation
+
+Use a `define` flag in `vite.config.ts` to control MSW independently of the build environment:
+
+```typescript
+// vite.config.ts
+export default defineConfig({
+  define: {
+    // true  = MSW active (dev, preview, GitHub Pages demo, no-backend mode)
+    // false = MSW disabled, real backend is used
+    __ENABLE_MSW__: true,
+  },
+})
+```
+
+**Do not use `import.meta.env.DEV` to gate MSW** — it couples activation to the build environment, which prevents using MSW on GitHub Pages or any non-dev deployment. A named boolean flag makes the intent explicit and is easy to flip when connecting a real backend.
+
+### MSW startup — canonical pattern
+
+```typescript
+// src/mocks/browser.ts
+import { setupWorker } from 'msw/browser'
+import { handlers } from './handlers'
+
+export const worker = setupWorker(...handlers)
+```
+
+```typescript
+// src/main.tsx or src/index.tsx
+declare const __ENABLE_MSW__: boolean
+
+async function startMockServiceWorker(): Promise<void> {
+  if (!__ENABLE_MSW__) return
+  const { worker } = await import('./mocks/browser')
+  await worker.start({
+    serviceWorker: {
+      url: import.meta.env.BASE_URL + 'mockServiceWorker.js',
+    },
+  })
+}
+
+startMockServiceWorker().then(() => {
+  // render app
+})
+```
+
+**`url` is mandatory** — by default MSW registers the Service Worker from the domain root (`/mockServiceWorker.js`). On any sub-path deployment the file is not found and the app crashes with `Failed to register a Service Worker`. `import.meta.env.BASE_URL` ensures the SW is always found at the correct path.
+
+**Dynamic import is required** — importing `worker` at the top level forces the MSW bundle into the main chunk even when disabled. Dynamic `import('./mocks/browser')` inside the `if (__ENABLE_MSW__)` guard lets Vite tree-shake it when the flag is `false`.
+
+**`mockServiceWorker.js` must be committed** — generate it once with `npx msw init public/` and commit `public/mockServiceWorker.js`. Vite copies `public/` into `dist/` at build time.
 
 ## `src/test/setup.ts` canonical content
 
