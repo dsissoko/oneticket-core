@@ -54,10 +54,12 @@ Establish the canonical React + Vite skeleton and design system reference for al
 
 ## Related User Stories
 
-<!-- @analyst fills this section — write filename only, no relative path, no ../
-     US files are always in user-stories/ subfolder — never flat in the epic directory
-     The build script resolves the correct path automatically.
-     Example: [US-001 — Skeleton Setup](user-stories/us-001-skeleton-setup.md) -->
+- [US-001 — Skeleton Setup](user-stories/us-001-setup.md)
+- [US-002 — Layout Structure](user-stories/us-002-layout.md)
+- [US-003 — Routing Setup](user-stories/us-003-routing.md)
+- [US-004 — Data Fetching Pattern](user-stories/us-004-data-fetching.md)
+- [US-005 — Theme Toggle](user-stories/us-005-theme-toggle.md)
+- [US-006 — Documentation & Runbook](user-stories/us-006-documentation.md)
 
 ## Related Slices
 
