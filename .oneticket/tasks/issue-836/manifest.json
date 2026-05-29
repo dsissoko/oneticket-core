@@ -9,7 +9,7 @@
       "role": "analyst",
       "content": "Produis le document product-spec.md pour AppShell.\n\nContexte: AppShell est le skeleton de référence pour tous les projets app dans oneticket-core. Tout nouveau projet commence en copiant apps/appshell/app/ et en adaptant le contenu.\n\nObjectifs principaux:\n1. Éliminer les erreurs de fusion dans les pipelines FAN-OUT — la structure de propriété des fichiers empêche les tâches parallèles de toucher le même fichier\n2. Qualité de conception par contrainte — les design tokens, primitives shadcn et système de layout empêchent les agents de produire des résultats visuellement incohérents\n\nCONTENU REQUIS (adapte le template product-spec.md):\n- Nom: AppShell\n- Résumé: Le skeleton de référence pour les projets app dans oneticket-core. Élimine les erreurs de fusion et impose la qualité par contrainte de conception.\n- Problème résolu: Projets app mal structurés → fusion difficile, incohérence visuelle\n- Utilisateurs principaux: Product Owner, @leaddev, agents de développement (agents parallèles)\n- Capacités principales v1:\n  * Structure de fichiers avec propriété exclusive (zéro erreurs de fusion)\n  * Thème réactif light/dark/system sans rechargement\n  * Routing React Router avec AppLayout (Header + Outlet + Footer)\n  * Data fetching MSW → React Query (dev-only)\n  * Composants UI shadcn/ui + Tailwind CSS\n- Design tokens: couleurs CSS variables, espacement, typographie\n- Conventions d'agent: structure screens/, components/ui/, styles/, hooks/, mocks/\n- Stack: Vite 5, React 18, TypeScript, React Router 6, Tailwind CSS 3, shadcn/ui, React Hook Form, React Query, MSW, Zustand (disponible)\n\nLiens importants:\n- Repo GitHub: https://github.com/dsissoko/oneticket-core\n- Docs générées: https://dsissoko.github.io/oneticket-core/appshell/docs/",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
@@ -17,7 +17,9 @@
       "file": "apps/appshell/docs/what/epics/epic-0-mvp/epic.md",
       "role": "analyst",
       "content": "Produis l'epic MVP pour AppShell.\n\nContexte: Lis d'abord apps/appshell/docs/what/product-spec.md\n\nCONTENU REQUIS (adapte le template epic.md):\n- Titre: Epic 0 — AppShell MVP: skeleton structure, routing, theme, data fetching\n- But: Établir la structure complète et fonctionnelle du skeleton AppShell avec toutes les conventions d'agent, design tokens, et patterns de data fetching.\n- Scope MVP:\n  * File structure avec propriété exclusive de fichiers\n  * AppLayout (Header + Outlet + Footer)\n  * Routing: /, /about, /help\n  * ThemeToggle (system/light/dark)\n  * MSW + React Query pattern (dev-only)\n  * shadcn UI components setup\n  * design tokens (CSS variables + Tailwind)\n  * Skills pour agents (oneticket-appshell, oneticket-react-best-practices wrapper, oneticket-web-design-guidelines wrapper, oneticket-shadcn wrapper)\n  * Skill frontmatter governance standard\n  * Runbook appshell-reuse.md\n  * Mise à jour documentation (product-spec.md, us-005-agent-profile-skills.md)\n- Acceptance criteria: (liste complète fournie dans l'issue body)\n\nNe crée pas les user stories ici — ce sera fait dans la tâche C.",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending"
     },
     {
@@ -26,7 +28,9 @@
       "file": "apps/appshell/docs/what/epics/epic-0-mvp/user-stories/",
       "role": "analyst",
       "content": "Produis les user stories pour l'epic MVP AppShell.\n\nContexte: Lis d'abord:\n- apps/appshell/docs/what/product-spec.md\n- apps/appshell/docs/what/epics/epic-0-mvp/epic.md\n\nCRÉE LES 7 USER STORIES SUIVANTES (format Mike Cohn + Gherkin):\n\nUS-001: File structure and project setup\n- En tant que Product Owner, je veux une structure de fichiers avec propriété exclusive, afin que les tâches parallèles ne provoquent pas d'erreurs de fusion\n- Acceptance criteria:\n  * Répertoires créés: src/, screens/, components/ui/, hooks/, stores/, mocks/, lib/, styles/\n  * Propriété exclusive documentée\n  * .gitkeep pour dirs vides\n\nUS-002: AppLayout, Header, Footer structure\n- En tant que développeur, je veux un AppLayout avec Header, Outlet, Footer, afin de fournir une structure visuelle cohérente\n- Acceptance criteria:\n  * Header affiche nom app (clickable → /), About&Help dropdown, ThemeToggle\n  * Footer structuré mais vide\n  * Outlet prêt pour les screens\n\nUS-003: React Router integration\n- En tant que développeur, je veux React Router configuré avec 3 routes (/, /about, /help), afin que la navigation fonctionne\n- Acceptance criteria:\n  * Routes définies\n  * AppLayout appliqué à toutes les routes\n  * Liens fonctionnels\n\nUS-004: ThemeToggle (light/dark/system)\n- En tant qu'utilisateur, je veux switcher entre light/dark/system, afin de préférer mon thème\n- Acceptance criteria:\n  * 3 options: system/light/dark\n  * CSS variables appliquées en fonction du thème\n  * Pas de rechargement page\n  * Réactif immédiatement\n\nUS-005: Design tokens and tailwind.config.ts\n- En tant que Product Owner, je veux des design tokens définis en CSS variables et Tailwind, afin que tous les screens utilisent les mêmes couleurs/espacements/typo\n- Acceptance criteria:\n  * globals.css avec variables light/dark\n  * tailwind.config.ts consomme variables\n  * Espacement, typo, couleurs documentés\n\nUS-006: MSW + React Query pattern\n- En tant que développeur, je veux un pattern MSW → React Query fonctionnel (dev-only), afin de fetcher et cacher les données\n- Acceptance criteria:\n  * MSW actif en dev seulement (import.meta.env.DEV)\n  * GET /api/users mocké → JSON\n  * useUsers() hook React Query fonctionnel\n  * HomeScreen affiche liste users en Cards\n\nUS-007: shadcn/ui components integration\n- En tant que développeur, je veux shadcn/ui button, card, dropdown-menu, separator, form installés, afin de construire les screens\n- Acceptance criteria:\n  * Composants installés via shadcn CLI\n  * Importables depuis src/components/ui/\n  * Form intégré avec React Hook Form\n\nChaque US dans un fichier séparé: us-001.md, us-002.md, ... us-007.md",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -35,7 +39,9 @@
       "file": "apps/appshell/docs/how/architecture.md",
       "role": "architect",
       "content": "Produis le document architecture.md pour AppShell.\n\nContexte: Lis d'abord:\n- apps/appshell/docs/what/product-spec.md\n- Tous les fichiers user-stories (us-001.md à us-007.md)\n\nCONTENU REQUIS (adapte le template architecture.md):\n- Titre: AppShell Architecture — Vite + React + TypeScript\n- Stack technique détaillé:\n  * Bundler: Vite 5\n  * UI: React 18 + TypeScript 5\n  * Router: React Router DOM 6\n  * Styling: Tailwind CSS 3 + tailwind-merge + clsx + class-variance-authority\n  * Components: Radix UI via shadcn/ui\n  * Forms: React Hook Form 7 + Zod 3 + @hookform/resolvers\n  * Data fetching: @tanstack/react-query 5\n  * Mock API: MSW 2 (dev-only)\n  * State: Zustand 4 (available, unused in skeleton)\n  * Icons: lucide-react\n  * Theme: next-themes 0.3 (Vite-adapted)\n  * Testing: Vitest + @testing-library/react + jsdom\n  * NO Next.js — Vite only\n  * NO state management in skeleton\n\n- Composants principaux:\n  * AppLayout (Header + Outlet + Footer)\n  * Header (app name clickable, About&Help dropdown, ThemeToggle)\n  * Footer (empty, structured)\n  * ThemeToggle (system/light/dark)\n  * screens/ (HomeScreen, AboutScreen, HelpScreen)\n  * hooks/ (useUsers example)\n  * mocks/ (MSW handlers, data)\n  * components/ui/ (shadcn components)\n\n- Patterns clés:\n  * File ownership exclusivity → zero merge conflicts\n  * Design tokens (CSS variables) → consistent visuals\n  * MSW dev-only → production uses real API\n  * React Query caching → efficient data fetching\n  * One screen = one file = one task in parallel\n\n- Règles de décomposition (@leaddev):\n  * Task 0: skeleton setup (sequential, no dependencies)\n  * Tasks 1+: one screen per task (parallel, depends_on: [0])\n  * Final task: wire screens into App.tsx routes (sequential, depends_on: all screens)\n\n- Contraintes non-fonctionnelles:\n  * Zero merge conflicts in parallel tasks\n  * Consistent design across all screens\n  * Development velocity: agents can add features without touching shared files\n  * Zero production overhead from MSW (dev-only gate)\n\nStructure de fichiers complète fournie dans product-spec.md — inclus-la en annexe.",
-      "depends_on": ["C"],
+      "depends_on": [
+        "C"
+      ],
       "status": "pending"
     },
     {
@@ -44,7 +50,9 @@
       "file": "apps/appshell/docs/how/c4/system-context.md",
       "role": "architect",
       "content": "Produis le diagramme C4 System Context pour AppShell en utilisant Mermaid.\n\nContexte: Lis d'abord apps/appshell/docs/how/architecture.md\n\nCONTENU REQUIS (adapte le template C4):\n- Titre: AppShell — System Context (C4 Level 1)\n- Acteurs:\n  * Developer (utilise AppShell comme skeleton)\n  * User (accède à l'app déployée)\n- Système: AppShell (Vite + React)\n- Systèmes externes:\n  * GitHub (repo source)\n  * GitHub Pages (deployed docs)\n  * Browser (où l'app s'exécute)\n\nDiagramme Mermaid montrant AppShell interagissant avec ces systèmes.",
-      "depends_on": ["D"],
+      "depends_on": [
+        "D"
+      ],
       "status": "pending"
     },
     {
@@ -53,7 +61,9 @@
       "file": "apps/appshell/docs/how/c4/containers.md",
       "role": "architect",
       "content": "Produis le diagramme C4 Containers pour AppShell en utilisant Mermaid.\n\nContexte: Lis d'abord apps/appshell/docs/how/architecture.md\n\nCONTENU REQUIS (adapte le template C4):\n- Titre: AppShell — Containers (C4 Level 2)\n- Conteneurs:\n  * Browser (React app)\n  * Vite dev server (hot reload)\n  * MSW (mock API in dev)\n  * Tailwind CSS (styling)\n  * React Router (navigation)\n  * React Query (data fetching)\n  * Local storage (client-side data)\n\nDiagramme Mermaid montrant interactions entre conteneurs.",
-      "depends_on": ["D"],
+      "depends_on": [
+        "D"
+      ],
       "status": "pending"
     },
     {
@@ -62,7 +72,9 @@
       "file": "apps/appshell/docs/how/slices/slice-0-skeleton/slice.md",
       "role": "architect",
       "content": "Produis la slice verticale d'implémentation pour la structure skeleton AppShell.\n\nContexte: Lis d'abord:\n- apps/appshell/docs/what/product-spec.md\n- apps/appshell/docs/how/architecture.md\n- Toutes les user-stories (us-001.md à us-007.md)\n\nCONTENU REQUIS (adapte le template slice.md):\n- Titre: Slice 0 — AppShell Skeleton: structure, routing, theme, design tokens, MSW pattern\n- But: Établir la base entièrement fonctionnelle du skeleton AppShell que les nouveaux projets copieront\n- Related User Stories: US-001, US-002, US-003, US-004, US-005, US-006, US-007 (liens relatifs)\n- Étapes d'implémentation:\n  1. Initialiser structure de fichiers (src/, screens/, components/ui/, hooks/, mocks/, lib/, styles/)\n  2. Configurer Vite, React, TypeScript, Tailwind\n  3. Implémenter AppLayout (Header + Outlet + Footer)\n  4. Configurer React Router (/, /about, /help)\n  5. Implémenter ThemeToggle + globals.css + tailwind.config.ts\n  6. Installer shadcn/ui components\n  7. Configurer MSW (dev-only) + React Query\n  8. Créer HomeScreen avec useUsers() example\n  9. Créer AboutScreen et HelpScreen\n  10. Tester: npm run build, routes //, /about, /help, theme toggle\n- Acceptance criteria: (identiques à epic.md)\n- Related Slices: (aucune — c'est la slice initiale)\n\nNote: Les slices futures pour d'autres projets référenceront cette slice comme dépendance.",
-      "depends_on": ["D"],
+      "depends_on": [
+        "D"
+      ],
       "status": "pending"
     },
     {
@@ -71,7 +83,11 @@
       "file": "apps/appshell/docs/",
       "role": "architect",
       "content": "Produis les cross-references entre epic, user-stories et slices.\n\nContexte: Lis tous les fichiers produits par les tâches précédentes:\n- apps/appshell/docs/what/product-spec.md\n- apps/appshell/docs/what/epics/epic-0-mvp/epic.md\n- Toutes les user-stories (us-001.md à us-007.md)\n- apps/appshell/docs/how/architecture.md\n- apps/appshell/docs/how/c4/*.md\n- apps/appshell/docs/how/slices/slice-0-skeleton/slice.md\n\nTÂCHES:\n1. Mets à jour epic.md:\n   - Ajoute section \"## Related Slices\"\n   - Lien vers slice-0-skeleton/slice.md (chemin relatif: ../../../how/slices/slice-0-skeleton/slice.md)\n\n2. Mets à jour chaque us-*.md:\n   - Ajoute section \"## Related Slices\"\n   - Lien vers slice-0-skeleton/slice.md (chemin relatif: ../../../../how/slices/slice-0-skeleton/slice.md)\n\n3. Mets à jour slice-0-skeleton/slice.md:\n   - Ajoute section \"## Related Epics\"\n   - Lien vers epic.md (chemin relatif: ../../what/epics/epic-0-mvp/epic.md)\n   - Ajoute section \"## Related User Stories\"\n   - Liens vers chaque us-*.md (chemin relatif: ../../what/epics/epic-0-mvp/user-stories/us-NNN.md)\n\nCettâ tâche est la DERNIÈRE — elle ne produit pas de nouveau fichier, elle met à jour tous les fichiers existants pour créer le graphe de cross-references complet.",
-      "depends_on": ["E", "F", "G"],
+      "depends_on": [
+        "E",
+        "F",
+        "G"
+      ],
       "status": "pending"
     },
     {
@@ -80,7 +96,9 @@
       "file": "apps/appshell/docs/what/epics/epic-0-mvp/skills/",
       "role": "analyst",
       "content": "Produis les 4 skills AppShell requis dans .oneticket/skills/\n\n**SKILL 1: oneticket-appshell**\nFichier: .oneticket/skills/oneticket-appshell/SKILL.md\n\nFrontmatter YAML:\n```yaml\n---\nname: oneticket-appshell\ndescription: \"AppShell skeleton structure, screens convention, components/ui/, design tokens. Eliminate merge conflicts via file ownership. Enforce consistent design.\"\nversion: \"1.0.0\"\nsource: local\n---\n```\n\nContenu:\n- AppShell intent and structure\n- screens/ convention: one screen = one file = exclusive ownership → zero merge errors\n- components/ui/ convention: shadcn components, installed once, never modified in parallel\n- styles/globals.css + tailwind.config.ts: design tokens, single task\n- Visual conventions for agents:\n  * Always use PageHeader at screen top\n  * Always use Card for grouped content\n  * Always use EmptyState when no data\n  * Never inline styles\n  * Spacing: always Tailwind classes, never raw px\n  * Typography: always use defined scale\n  * Icons: always lucide-react, never emoji/text\n- Available libraries table:\n  | Library | Purpose | When |\n  | shadcn/ui | UI primitives | All UI |\n  | React Hook Form + Zod | Forms + validation | Form screens |\n  | React Query | Data fetching | Async data |\n  | Zustand | Global state | Cross-screen state |\n  | lucide-react | Icons | Any icon |\n  | MSW | Mock API | Dev data |\n- How @po commands new project based on AppShell\n- How @leaddev decomposes tasks (Task 0 = skeleton, then parallel screens)\n\n---\n\n**SKILL 2: oneticket-react-best-practices** (wrapper externe)\nFichier: .oneticket/skills/oneticket-react-best-practices/SKILL.md\n\nFrontmatter YAML:\n```yaml\n---\nname: oneticket-react-best-practices\ndescription: \"React optimization rules — 70 rules across 8 categories, prioritized by impact. From Vercel Engineering.\"\nversion: \"1.0.0\"\nsource: external\nsource_url: https://github.com/vercel-labs/agent-skills\nsource_skill: react-best-practices\ninstall_native: npx skills add vercel-labs/agent-skills --skill react-best-practices\n---\n```\n\nContenu: Fetch et adapte depuis https://github.com/vercel-labs/agent-skills/tree/main/skills/react-best-practices\n\n---\n\n**SKILL 3: oneticket-web-design-guidelines** (wrapper externe)\nFichier: .oneticket/skills/oneticket-web-design-guidelines/SKILL.md\n\nFrontmatter YAML:\n```yaml\n---\nname: oneticket-web-design-guidelines\ndescription: \"UI audit rules — 100+ rules covering accessibility, performance, UX. From Vercel Labs.\"\nversion: \"1.0.0\"\nsource: external\nsource_url: https://github.com/vercel-labs/agent-skills\nsource_skill: web-design-guidelines\ninstall_native: npx skills add vercel-labs/agent-skills --skill web-design-guidelines\n---\n```\n\nContenu: Fetch et adapte depuis https://github.com/vercel-labs/agent-skills/tree/main/skills/web-design-guidelines\n\n---\n\n**SKILL 4: oneticket-shadcn** (wrapper externe)\nFichier: .oneticket/skills/oneticket-shadcn/SKILL.md\n\nFrontmatter YAML:\n```yaml\n---\nname: oneticket-shadcn\ndescription: \"shadcn/ui components, theming, forms — conventions for Vite projects (not Next.js).\"\nversion: \"1.0.0\"\nsource: external\nsource_url: https://github.com/shadcn/ui\nsource_skill: shadcn\ninstall_native: npx skills add shadcn/ui --skill shadcn\n---\n```\n\nContenu: Fetch et adapte depuis shadcn/ui skill source — **IMPORTANT: Adapte pour Vite (pas Next.js)**\n\n---\n\nTous les skills doivent avoir le frontmatter YAML complet avec name, description, version, source, et pour les externes: source_url, source_skill, install_native.",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -89,7 +107,9 @@
       "file": ".oneticket/docs/run/appshell-reuse.md",
       "role": "analyst",
       "content": "Produis le runbook appshell-reuse.md expliquant comment réutiliser AppShell.\n\nFichier: .oneticket/docs/run/appshell-reuse.md\n\nTemplate: Utilise le template runbook.md de .oneticket/templates/\n\nContenu:\nTitre: \"AppShell Reuse — Creating a new app from the skeleton\"\n\nSteps:\n1. Copy skeleton\n   - Copie apps/appshell/app/ → apps/{project}/app/\n\n2. Environment setup\n   - Set VITE_APP_NAME in .env.example\n\n3. Update config\n   - Update current_project in .oneticket/config.yml\n\n4. Customize AboutScreen\n   - Replace AppShell description with your project description\n   - Link to generated doc for your project\n\n5. Customize HelpScreen\n   - Replace AppShell quickstart with your project-specific steps\n   - Create project-specific runbook\n\n6. Add feature screens\n   - One screen per file in screens/\n   - One task per screen in manifest (depends_on: [task-0])\n\n7. Wire screens into App.tsx\n   - Integration task (depends_on: all screen tasks)\n\n8. Deploy\n   - Push to main → GitHub Pages auto-deploy\n\nPreconditions:\n- Node.js 18+\n- Git\n- GitHub repo access\n\nExpected outcome:\n- New app running locally at http://localhost:5173\n- Deployed to GitHub Pages\n- Ready for feature development",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -98,7 +118,9 @@
       "file": "docs/what/product-spec.md",
       "role": "analyst",
       "content": "Mets à jour le product-spec.md global du projet oneticket-core.\n\nContexte: Lis apps/appshell/docs/what/product-spec.md\n\nMises à jour requises:\n1. Glossaire: Ajoute \"AppShell — Le skeleton de référence pour tous les projets app dans oneticket-core\"\n2. Capacités: Ajoute AppShell comme nouveau composant majeur\n3. Conventions: Référence les conventions AppShell (file ownership, design tokens, screens/)\n\nNe modifie pas le reste du document.",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending"
     },
     {
@@ -107,7 +129,9 @@
       "file": "docs/what/epics/epic-005-agent-profile-skills/user-stories/us-005-agent-profile-skills.md",
       "role": "analyst",
       "content": "Mets à jour la user-story us-005-agent-profile-skills.md.\n\nContexte: Lis apps/appshell/docs/what/epics/epic-0-mvp/epic.md (section sur skill frontmatter governance)\n\nMise à jour requise:\nAjoute un acceptance criterion:\n- **Given** a skill wraps an external source (\"wrapper\"), **Then** its frontmatter must declare: `source: external`, `source_url`, `source_skill`, et `install_native`.\n\nExemple accepté:\n```yaml\n---\nname: oneticket-react-best-practices\nsource: external\nsource_url: https://github.com/vercel-labs/agent-skills\nsource_skill: react-best-practices\ninstall_native: npx skills add vercel-labs/agent-skills --skill react-best-practices\n---\n```\n\nNe modifie pas le reste de la user-story.",
-      "depends_on": ["I"],
+      "depends_on": [
+        "I"
+      ],
       "status": "pending"
     },
     {
@@ -116,7 +140,9 @@
       "file": "docs/what/product-spec.md",
       "role": "analyst",
       "content": "Mets à jour le glossaire du product-spec.md global.\n\nContexte: Les skills AppShell introduisent une nouvelle distinction: local vs external (wrapped).\n\nMises à jour requises dans la section Glossaire:\n\n1. Ajoute \"Local skill\" — Skill produit et maintenu par oneticket-core. Frontmatter: `source: local`.\n\n2. Ajoute \"External skill (wrapped)\" — Skill dont le contenu est adapté d'une source externe avec traçabilité complète. Frontmatter: `source: external` + `source_url` + `source_skill` + `install_native`.\n\n3. Mise à jour section Capacités:\n   Ajoute: \"Skill traceability — Le champ `source:` dans le frontmatter de chaque skill identifie son origine (local ou external)\"\n\nNe modifie pas le reste du document.",
-      "depends_on": ["I"],
+      "depends_on": [
+        "I"
+      ],
       "status": "pending"
     }
   ]
