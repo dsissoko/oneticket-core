@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useTheme } from '../hooks/useTheme';
-import type { Theme } from '../stores/appStore';
+import { useTheme } from 'next-themes';
 
 /**
  * ThemeToggle Component
@@ -21,7 +20,7 @@ export function ThemeToggle(): React.ReactElement {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const themeOptions: { label: string; value: Theme }[] = [
+  const themeOptions: { label: string; value: string }[] = [
     { label: 'System', value: 'system' },
     { label: 'Light', value: 'light' },
     { label: 'Dark', value: 'dark' },
@@ -86,7 +85,7 @@ export function ThemeToggle(): React.ReactElement {
               <li key={option.value}>
                 <button
                   onClick={() => {
-                    setTheme(option.value);
+                    setTheme(option.value as string);
                     setIsOpen(false);
                   }}
                   className={`w-full text-left px-4 py-2 text-sm transition-colors ${
