@@ -12,3 +12,4 @@
 2026-05-29 08:40 | H | apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-005-styling-theme.md
 2026-05-29 08:40 | AT | apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-007-testing-setup.md
 2026-05-29 08:40 | AR | apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-006-shadcn-components.md
+2026-05-29 08:40 | G | apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-004-data-fetching.md
