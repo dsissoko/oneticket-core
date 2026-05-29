@@ -118,8 +118,9 @@ function transformMarkdown(content, srcFile) {
       }
       // Resolve relative path from source file location
       const absPath   = path.resolve(srcDir, mdPath);
-      // Make it relative to docSource root → Starlight URL prefixed with ASTRO_BASE
-      const fromRoot  = path.relative(docSource, absPath);
+      // Make it relative to destDir root (not docSource) → Starlight URL prefixed with ASTRO_BASE
+      // Files have already been copied to destDir — using docSource would produce wrong paths
+      const fromRoot  = path.relative(destDir, absPath);
       const urlPath   = astroBase + '/' + fromRoot.replace(/\.md$/, '/').replace(/\\/g, '/');
       return `[${text}](${urlPath}${anchor || ''})`;
     }
