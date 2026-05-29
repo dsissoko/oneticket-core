@@ -9,7 +9,7 @@
       "role": "analyst",
       "content": "Produis le document product-spec.md pour AppShell en utilisant le template .oneticket/templates/product-spec.md. AppShell est le skeleton de référence pour tous les projets app de oneticket-core. Contenu basé sur l'issue #854: (1) AppShell est le projet skeleton pour tous les projets; (2) eliminer les merge errors en FAN-OUT grace a la structure exclusive de propriete des fichiers; (3) qualite design par contrainte via design tokens, shadcn primitives et systeme de layout; (4) Stack: Vite ^5, React 18 + TypeScript, React Router ^6, Tailwind CSS ^3, shadcn/ui via Radix, React Hook Form, @tanstack/react-query ^5, MSW ^2, Zustand ^4, lucide-react, next-themes, Vitest; (5) Structure claire: src/screens/ (one screen = one file = exclusive ownership), src/components/ (shadcn setup once), src/hooks/ (React Query examples), src/mocks/ (MSW setup), src/stores/ (Zustand convention), src/lib/ (utilities, query-client, schemas). Remplace le placeholder SITE_DESCRIPTION par une description en une phrase max 160 caracteres. Assure toi que le frontmatter inclut le champ 'title'.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
@@ -17,7 +17,9 @@
       "file": "apps/appshell/docs/what/epics/epic-0-mvp/epic.md",
       "role": "analyst",
       "content": "Lis apps/appshell/docs/what/product-spec.md et produis epic-0-mvp/epic.md en utilisant le template .oneticket/templates/epic.md. L'epic couvre la creation du skeleton AppShell avec les capacites de reference: (1) Application skeleton avec layout, routing, theme system; (2) Exemples de data fetching avec React Query + MSW; (3) Design tokens et composants shadcn/ui; (4) Structure exclusive des fichiers pour eviter les merge errors. Assure toi que le frontmatter inclut le champ 'title' et que les placeholders pour les user stories sont inclus.",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending"
     },
     {
@@ -26,7 +28,9 @@
       "file": "apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-001-skeleton-setup.md",
       "role": "analyst",
       "content": "Lis apps/appshell/docs/what/product-spec.md et apps/appshell/docs/what/epics/epic-0-mvp/epic.md, puis produis us-001-skeleton-setup.md en utilisant le template .oneticket/templates/us.md. User story: En tant que developpeur, je veux copier le skeleton AppShell et l'adapter pour creer rapidement une nouvelle application, afin de beneficier d'une structure standard, de design tokens, et de conventions d'equipe. Criteres d'acceptation: (1) Structure complete copiee de apps/appshell/app/; (2) VITE_APP_NAME configurable en .env.example; (3) current_project mis a jour en .oneticket/config.yml; (4) AboutScreen et HelpScreen personnalisables. Assure toi que le frontmatter inclut le champ 'title' et ajoute le placeholder ## Related Slices.",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -35,7 +39,9 @@
       "file": "apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-002-design-tokens.md",
       "role": "analyst",
       "content": "Lis apps/appshell/docs/what/product-spec.md et epic.md, puis produis us-002-design-tokens.md en utilisant le template .oneticket/templates/us.md. User story: En tant que designer/developpeur, je veux utiliser des design tokens Tailwind centralises pour toutes les couleurs et proprietes, afin de garantir la coherence visuelle et d'empecher les variations. Criteres d'acceptation: (1) tailwind.config.ts definit colors, spacing, typography; (2) globals.css definit CSS custom properties pour light/dark modes; (3) ThemeToggle expose system/light/dark avec reactive switching sans reload. Assure toi que le frontmatter inclut le champ 'title' et ajoute le placeholder ## Related Slices.",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -44,7 +50,9 @@
       "file": "apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-003-exclusive-ownership.md",
       "role": "analyst",
       "content": "Lis apps/appshell/docs/what/product-spec.md et epic.md, puis produis us-003-exclusive-ownership.md en utilisant le template .oneticket/templates/us.md. User story: En tant que lead dev, je veux que chaque fichier screen et hook soit la propriete exclusive d'une seule tache de dev, afin d'eviter les merge errors lors du parallelisation. Criteres d'acceptation: (1) src/screens/ = one screen per file, one task per file; (2) src/hooks/ = one hook per file, one task per file; (3) Fichiers partages (vite.config, tsconfig, tailwind.config, layouts, Header, Footer) = une seule tache; (4) shadcn/ui components installes une fois en task-0; (5) Documentation claire de la convention dans le skill oneticket-appshell. Assure toi que le frontmatter inclut le champ 'title' et ajoute le placeholder ## Related Slices.",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -53,7 +61,11 @@
       "file": "apps/appshell/docs/how/architecture.md",
       "role": "architect",
       "content": "Lis apps/appshell/docs/what/product-spec.md et tous les fichiers user-stories (us-001, us-002, us-003), puis produis architecture.md en utilisant le template .oneticket/templates/architecture.md. Architecture technique pour AppShell: (1) Stack: Vite ^5 (bundler), React 18 + TypeScript (UI), React Router ^6 (routing), Tailwind CSS ^3 + shadcn/ui (styling/components), React Hook Form + Zod (forms), @tanstack/react-query ^5 (data fetching), MSW ^2 (mock API), Zustand ^4 (state), lucide-react (icons), next-themes (theme); (2) Layers: main.tsx (MSW init + QueryClientProvider + ThemeProvider + BrowserRouter), App.tsx (Routes), layouts/AppLayout.tsx (Header + Outlet + Footer), screens/* (feature screens), hooks/* (data/logic), mocks/* (MSW handlers), components/ui/* (shadcn), lib/* (utilities); (3) Data flow: HomeScreen → useUsers() → React Query → MSW (dev) / real API (prod) → caching/delivery → render; (4) Theme: CSS custom properties + tailwind.config + ThemeToggle; (5) Merge error prevention: exclusive file ownership per task. Assure toi que le frontmatter inclut le champ 'title'.",
-      "depends_on": ["C", "D", "E"],
+      "depends_on": [
+        "C",
+        "D",
+        "E"
+      ],
       "status": "pending"
     },
     {
@@ -62,7 +74,9 @@
       "file": "apps/appshell/docs/how/c4/system-context.md",
       "role": "architect",
       "content": "Lis apps/appshell/docs/how/architecture.md et produis un diagramme C4 System Context pour AppShell en utilisant Mermaid. Le diagramme doit montrer: (1) Centre: AppShell React Application (Vite, React 18, TypeScript); (2) Acteurs externes: User (interagit avec l'app); (3) Systemes externes: Real Backend API (prodution), MSW Mock API (dev); (4) Relations: User utilise AppShell; AppShell consomme l'API (via React Query + MSW). Retourner du Markdown avec le titre 'C4 System Context — AppShell' et le code Mermaid. Assure toi que le frontmatter inclut le champ 'title'.",
-      "depends_on": ["F"],
+      "depends_on": [
+        "F"
+      ],
       "status": "pending"
     },
     {
@@ -71,7 +85,9 @@
       "file": "apps/appshell/docs/how/c4/containers.md",
       "role": "architect",
       "content": "Lis apps/appshell/docs/how/architecture.md et produis un diagramme C4 Containers pour AppShell en utilisant Mermaid. Le diagramme doit montrer: (1) Browser/Client: React App Container (Vite bundle, React Router, Tailwind, shadcn/ui); (2) Frontend Layers: Header, Layout, Screens, Components, Hooks, Stores, Mocks/MSW; (3) Backend: API Container (REST endpoints - dev via MSW, prod via real backend); (4) External: Browser Local Storage (Zustand state persistence). Interactions: React App calls MSW/API via React Query; Theme Toggle affecte CSS custom properties; Navigation via React Router. Retourner du Markdown avec le titre 'C4 Containers — AppShell' et le code Mermaid. Assure toi que le frontmatter inclut le champ 'title'.",
-      "depends_on": ["F"],
+      "depends_on": [
+        "F"
+      ],
       "status": "pending"
     },
     {
@@ -80,7 +96,9 @@
       "file": "apps/appshell/docs/how/slices/slice-1-skeleton-foundation/slice.md",
       "role": "architect",
       "content": "Lis apps/appshell/docs/what/epics/epic-0-mvp/epic.md et us-001, us-002, us-003, puis produis slice-1-skeleton-foundation/slice.md en utilisant le template .oneticket/templates/slice.md. Cette slice couvre l'infrastructure de base du skeleton: (1) Vite configuration avec base path dynamique (VITE_BASE_PATH); (2) React + TypeScript setup avec router, Query Client, Theme Provider, MSW bootstrap; (3) tailwind.config.ts avec design tokens (colors, spacing, typography); (4) globals.css avec CSS custom properties light/dark; (5) Layout system: AppLayout.tsx, Header.tsx (app name + dropdown + theme toggle), Footer.tsx; (6) Routes de base: /, /about, /help; (7) shadcn/ui components setup (installer une fois). Fichiers produces: .env.example, package.json, vite.config.ts, tsconfig.json, tailwind.config.ts, postcss.config.js, vitest.config.ts, src/main.tsx, src/App.tsx, src/layouts/AppLayout.tsx, src/components/Header.tsx, src/components/Footer.tsx, src/components/ThemeToggle.tsx, src/styles/globals.css, src/lib/utils.ts, src/lib/query-client.ts, et composants shadcn/ui. Ajoute les sections ## Related User Stories et ## Related Epics avec les chemin relatifs corrects.",
-      "depends_on": ["F"],
+      "depends_on": [
+        "F"
+      ],
       "status": "pending"
     },
     {
@@ -89,7 +107,9 @@
       "file": "apps/appshell/docs/how/slices/slice-2-home-screen-example/slice.md",
       "role": "architect",
       "content": "Lis apps/appshell/docs/what/epics/epic-0-mvp/epic.md et us-001, us-002, us-003, puis produis slice-2-home-screen-example/slice.md en utilisant le template .oneticket/templates/slice.md. Cette slice couvre l'exemple de data fetching avec React Query + MSW sur la Home screen: (1) src/screens/HomeScreen.tsx = component affichant une liste de users via React Query; (2) src/hooks/useUsers.ts = custom hook avec React Query (fetch '/api/users', caching, error handling); (3) src/mocks/handlers.ts = MSW handler pour GET /api/users retournant mock data; (4) src/mocks/data/users.ts = mock data array [{ id, name }, ...]; (5) src/mocks/browser.ts = MSW worker setup avec setupWorker(handlers); (6) Integration en main.tsx avec MSW init (import.meta.env.DEV); (7) HomeScreen render Card list avec users, loading state, empty state. Ajoute les sections ## Related User Stories et ## Related Epics avec les chemins relatifs corrects.",
-      "depends_on": ["F"],
+      "depends_on": [
+        "F"
+      ],
       "status": "pending"
     },
     {
@@ -98,7 +118,9 @@
       "file": "apps/appshell/docs/how/slices/slice-3-about-help-screens/slice.md",
       "role": "architect",
       "content": "Lis apps/appshell/docs/what/epics/epic-0-mvp/epic.md et us-001, us-002, us-003, puis produis slice-3-about-help-screens/slice.md en utilisant le template .oneticket/templates/slice.md. Cette slice couvre les screens About et Help: (1) src/screens/AboutScreen.tsx = decrit AppShell (skeleton de reference), lien vers docs (https://dsissoko.github.io/oneticket-core/appshell/docs/), lien vers repo (https://github.com/dsissoko/oneticket-core); (2) src/screens/HelpScreen.tsx = quickstart pour reuser AppShell (7 etapes), lien vers runbook .oneticket/docs/run/appshell-reuse.md. Les deux screens utilisent Card et PageHeader avec Tailwind classes. Ajoute les sections ## Related User Stories et ## Related Epics avec les chemins relatifs corrects.",
-      "depends_on": ["F"],
+      "depends_on": [
+        "F"
+      ],
       "status": "pending"
     },
     {
@@ -107,7 +129,9 @@
       "file": "apps/appshell/docs/how/slices/slice-4-theme-system/slice.md",
       "role": "architect",
       "content": "Lis apps/appshell/docs/what/epics/epic-0-mvp/epic.md et us-002, puis produis slice-4-theme-system/slice.md en utilisant le template .oneticket/templates/slice.md. Cette slice couvre le systeme de theme light/dark/system: (1) src/styles/globals.css = CSS custom properties pour :root (light) et .dark (dark) avec colors (background, foreground, accent); (2) src/components/ThemeToggle.tsx = dropdown exposant system/light/dark, reactive sans reload (utilise next-themes); (3) tailwind.config.ts = extension colors pour consommer CSS custom properties (colors: { background: 'var(--background)', ...}); (4) main.tsx = ThemeProvider wrapping l'app; (5) Integration avec @headlessui et shadcn/ui pour reactivity. Ajoute les sections ## Related User Stories et ## Related Epics avec les chemins relatifs corrects.",
-      "depends_on": ["F"],
+      "depends_on": [
+        "F"
+      ],
       "status": "pending"
     },
     {
@@ -117,7 +141,7 @@
       "role": "analyst",
       "content": "Produis le skill oneticket-appshell en utilisant le contenu de l'issue #854. Structure du skill: (1) Frontmatter avec name: oneticket-appshell, description claire, version, source: local (pas de source_url/install_native); (2) AppShell intent: skeleton de reference pour tous les projets, elimine les merge errors via structure exclusive des fichiers, force la qualite design via design tokens et primitives; (3) Conventions screens: one screen = one file = exclusive ownership → zero merge errors; (4) Conventions components: shadcn/ui installed once, never modified in parallel; (5) Design tokens et styling: globals.css + tailwind.config.ts comme single task, design tokens system; (6) Visual conventions: PageHeader au top de chaque screen, Card pour grouped content, EmptyState pour no data, jamais de styles inline, spacing avec Tailwind, typography dans l'echelle, lucide-react pour icons; (7) Available libraries table (shadcn/ui, React Hook Form + Zod, React Query, Zustand, lucide-react, MSW); (8) Comment @po commande un nouveau projet base sur AppShell; (9) Comment @leaddev decompose les taches (task 0 = skeleton, parallel screens). Assure toi que le frontmatter inclut les champs name, description, version, source (local).",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "N",
@@ -126,7 +150,7 @@
       "role": "analyst",
       "content": "Produis le runbook appshell-reuse.md en utilisant le template .oneticket/templates/runbook.md et le contenu de l'issue #854. Titre: 'How to Reuse AppShell'. Steps: (1) Copy apps/appshell/app/ → apps/{project}/app/; (2) Set VITE_APP_NAME in .env.example; (3) Update current_project in .oneticket/config.yml; (4) Update AboutScreen with your project description; (5) Update HelpScreen with project-specific quickstart; (6) Add feature screens in screens/ — one screen per file, one task per screen in the manifest; (7) Deploy automatic — push to main triggers docs-site-github-pages.yml. Ajoute des notes sur les conventions d'ownership exclusif des screens et sur l'integration avec la strategie de parallelization de @leaddev. Assure toi que le frontmatter inclut le champ 'title'.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "O",
@@ -134,7 +158,9 @@
       "file": "apps/appshell/docs/what/README.md",
       "role": "analyst",
       "content": "Produis le fichier what/README.md en utilisant le template .oneticket/templates/docs/what/README.md. Ce fichier est une page d'accueil pour la section 'what' (besoins produit, epics, user stories). Contenu: breve description d'AppShell, lien vers product-spec.md, lien vers epics/epic-0-mvp/epic.md. Assure toi que le frontmatter inclut le champ 'title'.",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending"
     },
     {
@@ -143,7 +169,9 @@
       "file": "apps/appshell/docs/how/README.md",
       "role": "architect",
       "content": "Produis le fichier how/README.md en utilisant le template .oneticket/templates/docs/how/README.md. Ce fichier est une page d'accueil pour la section 'how' (architecture technique, C4 diagrams, slices). Contenu: breve description de l'architecture AppShell, lien vers architecture.md, lien vers c4/, lien vers slices/. Assure toi que le frontmatter inclut le champ 'title'.",
-      "depends_on": ["F"],
+      "depends_on": [
+        "F"
+      ],
       "status": "pending"
     },
     {
@@ -153,7 +181,7 @@
       "role": "analyst",
       "content": "Produis le fichier run/README.md en utilisant le template .oneticket/templates/docs/run/README.md. Ce fichier est une page d'accueil pour la section 'run' (operations, infrastructure, observability). Pour AppShell, contenu minimal: description du deployment automatique via docs-site-github-pages.yml, reference au runbook appshell-reuse.md. Assure toi que le frontmatter inclut le champ 'title'.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "R",
@@ -162,7 +190,7 @@
       "role": "analyst",
       "content": "Produis le fichier ship/README.md en utilisant le template .oneticket/templates/docs/ship/README.md. Ce fichier est une page d'accueil pour la section 'ship' (build, CI/CD, release pipelines). Pour AppShell, contenu minimal: description du build avec Vite, CI triggers sur main pour docs-site-github-pages.yml. Assure toi que le frontmatter inclut le champ 'title'.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "S",
@@ -170,7 +198,9 @@
       "file": "apps/appshell/docs/what/product-spec.md",
       "role": "analyst",
       "content": "UPDATE (task A complete). Lis apps/appshell/docs/what/product-spec.md (produce par task A). Ajoute a la section 'Glossary': definition de 'Local skill' (produced and maintained by oneticket-core, source: local) et 'External skill (wrapped)' (content adapted from external source, source: external + source_url + install_native). Ajoute a la section 'Capabilities': ligne 'Skill traceability — source: frontmatter field identifies origin of every skill'. Ces ajouts s'appliquent aussi aux product-spec.md des autres projets.",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending"
     },
     {
@@ -180,7 +210,7 @@
       "role": "analyst",
       "content": "UPDATE EXISTING. Lis apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-005-agent-profile-skills.md (fichier existant dans le repo). Ajoute le critere d'acceptation: '—Given a skill wraps an external source, —Then its frontmatter must declare source: external, source_url, source_skill, and install_native.' Ce critere s'ajoute aux criteres existants pour clarifier la traçabilite des skills.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "U",
@@ -188,7 +218,15 @@
       "file": "temp-cross-references",
       "role": "architect",
       "content": "CROSS-REFERENCES TASK (last step after all slices created). Lis ALL slices produced en tasks I, J, K, L (slice-1 a slice-4) et lis epic.md + user-stories (C, D, E). Mets a jour les cross-references: (1) Dans apps/appshell/docs/what/epics/epic-0-mvp/epic.md: ajoute/maj section ## Related Slices avec liens vers slice-1, slice-2, slice-3, slice-4 (chemins relatifs: ../../../how/slices/slice-N-*/slice.md); (2) Dans chaque user-story (C, D, E): ajoute/maj section ## Related Slices avec liens vers les slices pertinentes (chaque US referencie au moins une slice); (3) Dans chaque slice (I, J, K, L): ajoute/maj sections ## Related User Stories et ## Related Epics avec liens vers epic.md et user-stories pertinentes. Calcule les chemins relatifs exacts depuis chaque fichier. Lis les fichiers reels sur disque pour verifier la structure avant de creer les liens.",
-      "depends_on": ["C", "D", "E", "I", "J", "K", "L"],
+      "depends_on": [
+        "C",
+        "D",
+        "E",
+        "I",
+        "J",
+        "K",
+        "L"
+      ],
       "status": "pending"
     }
   ]
