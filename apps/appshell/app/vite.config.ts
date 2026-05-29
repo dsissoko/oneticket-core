@@ -15,6 +15,8 @@ import react from '@vitejs/plugin-react';
  * @see {@link https://vitejs.dev/config/ Vite Config Documentation}
  */
 export default defineConfig({
+  base: process.env.VITE_BASE_PATH ?? '/',
+
   /**
    * Vite plugins to extend build functionality
    *
