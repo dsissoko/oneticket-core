@@ -161,6 +161,11 @@ function buildPrompt({ role, demande, branch, config, profile, contextBlock, doc
   lines.push(`autonomous_mode: ${config.autonomous_mode}`);
   lines.push('');
 
+  lines.push(`## Response style`);
+  lines.push(`- Keep responses short and focused — 20 lines max`);
+  lines.push(`- ✅ done, ❌ error/failure, 🔀 routing, 🤝 handoff. For other cases where relevant, use other emojis.`);
+  lines.push('');
+
   // Project context — all values resolved deterministically, injected as-is
   // Use these values in gh commands and file paths — never resolve them yourself
   lines.push(`## Project context`);

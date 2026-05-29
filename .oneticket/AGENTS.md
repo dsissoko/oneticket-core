@@ -16,9 +16,9 @@
 
 ## Routing & Handoff
 
-**Handoff** : passer la main définitivement — l'agent destinataire prend la responsabilité complète, aucun retour attendu. S'arrêter après avoir posté le commentaire.
+**🤝 Handoff** : passer la main définitivement — l'agent destinataire prend la responsabilité complète, aucun retour attendu. S'arrêter après avoir posté le commentaire.
 
-**Routing** : sous-traiter une question — l'agent destinataire répond par commentaire uniquement, le demandeur garde la responsabilité.
+**🔀 Routing** : sous-traiter une question — l'agent destinataire répond par commentaire uniquement, le demandeur garde la responsabilité.
 
 Les règles concrètes de routing et handoff sont définies dans le profil de chaque agent — section `## Routing & Handoff`.
 

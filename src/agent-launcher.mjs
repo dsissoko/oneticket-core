@@ -123,6 +123,11 @@ function buildRoleTaskPrompt(task, manifest, config, repo) {
   lines.push(`autonomous_mode: ${config.autonomous_mode}`);
   lines.push('');
 
+  lines.push(`## Response style`);
+  lines.push(`- Keep responses short and focused — 20 lines max`);
+  lines.push(`- ✅ done, ❌ error/failure, 🔀 routing, 🤝 handoff. For other cases where relevant, use other emojis.`);
+  lines.push('');
+
   lines.push(`## Project context`);
   lines.push(`issue_number: ${manifest.issue}`);
   lines.push(`repo: ${repo}`);

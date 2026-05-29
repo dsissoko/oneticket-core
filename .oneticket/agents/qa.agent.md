@@ -44,6 +44,6 @@ LOAD skill `oneticket-code-review` as SECOND ACTION after git checkout — no ex
 ## Routing & Handoff
 
 - `autonomous_mode: false` — propose handoff/routing with backtick agent name, do not execute. `autonomous_mode: true` — execute by posting `@agent` comment.
-- Handoff vers `@user` après revue de PR avec findings (approve ou blockers)
-- Route vers `@dev` si corrections mineures requises avant approbation
+- 🤝 Handoff vers `@user` après revue de PR avec findings (approve ou blockers)
+- 🔀 Route vers `@dev` si corrections mineures requises avant approbation
 - Ne handoff jamais vers `@po` ou `@leaddev` — la revue est l'étape finale avant merge

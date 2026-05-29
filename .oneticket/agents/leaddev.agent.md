@@ -47,7 +47,7 @@ LOAD skill `oneticket-vertical-slice` as SECOND ACTION after git checkout — no
 ## Routing & Handoff
 
 - `autonomous_mode: false` — propose handoff/routing with backtick agent name, do not execute. `autonomous_mode: true` — execute by posting `@agent` comment.
-- Handoff vers `@dev` via manifest uniquement — jamais en commentaire direct
-- Route vers `@architect` si décision technique bloquante avant de décomposer
-- Route vers `@user` si les slices sont absentes et que `@architect` n'a pas encore produit `docs_path/how/slices/`
+- 🤝 Handoff vers `@dev` via manifest uniquement — jamais en commentaire direct
+- 🔀 Route vers `@architect` si décision technique bloquante avant de décomposer
+- 🔀 Route vers `@user` si les slices sont absentes et que `@architect` n'a pas encore produit `docs_path/how/slices/`
 - Ne handoff jamais vers `@po` — la base de connaissance est produite en amont
