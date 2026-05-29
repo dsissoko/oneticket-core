@@ -57,7 +57,26 @@ A development task is assigned exactly one file or directory. No two parallel ta
 ### Mock API
 MSW (Mock Service Worker) intercepts fetch calls in development and returns mock JSON. In production, the same code fetches from real endpoints without modification.
 
+### Local Skill
+A skill produced and maintained by oneticket-core, developed and versioned within the core repository. Identified by `source: local` in the skill frontmatter.
+
+### External Skill (Wrapped)
+A skill whose content is adapted from an external source (documentation, standard, or public specification). Includes `source: external`, the original `source_url`, and installation instructions via `install_native` in the skill frontmatter.
+
 ## 7. Product Capabilities
+
+| Capability | Implementation | Status |
+|---|---|---|
+| **Routing** | React Router v6 — nested layouts, dynamic segments | ✅ Exemplified |
+| **Styling** | Tailwind CSS + design tokens — no inline styles | ✅ Enforced |
+| **Components** | shadcn/ui via Radix — one-time setup, never parallel-modified | ✅ Included |
+| **Forms** | React Hook Form + Zod schema validation | ✅ Exemplified |
+| **Data Fetching** | @tanstack/react-query + MSW mocking | ✅ Exemplified |
+| **State Management** | Zustand convention — optional, not required in skeleton | ✅ Available |
+| **Icons** | lucide-react — SVG icons, no emoji | ✅ Included |
+| **Theme Toggle** | System/Light/Dark — reactive, no page reload | ✅ Exemplified |
+| **Testing** | Vitest + @testing-library — unit and integration | ✅ Setup ready |
+| **Skill Traceability** | Source: frontmatter field identifies origin of every skill (local or external) | ✅ Enforced |
 
 | Capability | Implementation | Status |
 |---|---|---|
