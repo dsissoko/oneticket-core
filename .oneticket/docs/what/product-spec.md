@@ -89,6 +89,7 @@ The `@qa`, `@analyst`, and `@help` roles belong to the V1 trajectory.
 | **current_project** | The active project name in `config.yml` — drives path resolution for documentation and source code |
 | **docs_path** | Resolved path to project documentation — `apps/<current_project>/docs` or `.oneticket/docs` for framework context |
 | **app_path** | Resolved path to project source code — `apps/<current_project>/app` — internal structure is skill-defined |
+| **AppShell** | The skeleton of reference for all app projects in oneticket-core — a minimal React/Vite application with routing, layout, theme, and data-fetching patterns designed for parallel task execution via exclusive file ownership |
 
 ---
 
@@ -103,6 +104,7 @@ The `@qa`, `@analyst`, and `@help` roles belong to the V1 trajectory.
 | **Multi-trigger support** | Issue comments, PR comments, inline review comments | ✅ v0.1.0 |
 | **Documentation generation** | Structured docs covering product, architecture, epics, US, slices, C4, ship | ✅ v0.1.0 |
 | **Skill loading** | Agent profiles load domain-specific skills at runtime | ✅ v0.1.0 |
+| **AppShell component** | Reference skeleton for parallel React/Vite apps with exclusive file ownership, routing, layout, theme, and MSW integration | ✅ v0.1.0 |
 | **Routing and handoff** | Declared rules for agent-to-agent communication | 🔲 V1 |
 | **Autonomous mode** | Agent-to-agent chaining without human intervention | 🔲 V1 |
 | **Full-stack generation** | Backend, database, infrastructure generation via skills | 🔲 V1 |
@@ -188,7 +190,29 @@ by adding a corresponding workflow file.
 
 ---
 
-## 10. Success Criteria
+## 10. AppShell Conventions
+
+AppShell defines a set of conventions and constraints for all React/Vite app projects in oneticket-core:
+
+- **File Ownership** — Exclusive ownership by task: each feature owns its screen file (`screens/FeatureScreen.tsx`), hook file (`hooks/useFeature.ts`), and mock handlers. Shared infrastructure (routing, layout, theme tokens) is owned by setup task only.
+
+- **Design Tokens** — Centralized in `globals.css` (CSS custom properties) and `tailwind.config.ts` (Tailwind configuration). All screens consume tokens; feature tasks never modify token definitions.
+
+- **Screens Directory** — One screen per file. Route definitions in `App.tsx` reference screens by name. Each feature task adds exactly one screen file and one route entry.
+
+- **Data Fetching Pattern** — React Query + MSW (dev-only). All async operations flow through `@tanstack/react-query`. MSW intercepts API calls in development; production uses real endpoints.
+
+- **Component Library** — shadcn/ui exclusively. Pre-installed and customizable via Tailwind. No ad-hoc inline components, no alternative libraries (Material-UI, ant design, etc.).
+
+- **Styling** — Tailwind CSS utility classes only. No inline styles, no CSS-in-JS, no CSS modules. Class composition via `clsx` and `tailwind-merge` utilities in `lib/utils.ts`.
+
+- **Icons** — lucide-react exclusively. Consistent icon set across all apps. No emoji, no text symbols, no custom SVGs unless exceptional.
+
+Reference: `apps/appshell/docs/what/product-spec.md` (AppShell project spec) and `apps/appshell/docs/how/conventions.md` (detailed conventions guide).
+
+---
+
+## 11. Success Criteria
 
 - `reply` test passes — agent responds to a direct question with a GitHub comment, no manifest produced
 - `manifest` test passes — injected manifest triggers FAN-OUT, all tasks execute, PR created
@@ -202,7 +226,7 @@ by adding a corresponding workflow file.
 
 ---
 
-## 11. Open Questions
+## 12. Open Questions
 
 | # | Question | Scope |
 |---|---|---|
@@ -220,7 +244,7 @@ by adding a corresponding workflow file.
 
 ---
 
-## 12. Roadmap
+## 13. Roadmap
 
 | Milestone | Epics | Goal |
 |---|---|---|
@@ -232,7 +256,7 @@ by adding a corresponding workflow file.
 
 ---
 
-## 13. Parallel Task Execution Contract
+## 14. Parallel Task Execution Contract
 
 OneTicket executes tasks in parallel via FAN-OUT — each task runs on its own isolated branch and produces files that are merged back into the feature branch by GATHER.
 
@@ -302,7 +326,7 @@ A manifest where parallel tasks produce the same file is invalid and will cause 
 
 ---
 
-## 14. Decomposition and Quality Trade-offs
+## 15. Decomposition and Quality Trade-offs
 
 Operating a multi-agent pipeline requires navigating two fundamental tensions. Understanding them allows conscious, deliberate configuration — not trial and error.
 
@@ -372,7 +396,7 @@ A game implementation decomposed into one task per JS module produced individual
 
 ---
 
-## 15. Merge Conflict Recovery
+## 16. Merge Conflict Recovery
 
 Merge conflicts are a **normal and expected** operational event in a FAN-OUT/GATHER pipeline — not an anomaly or a framework failure. They are the mechanical consequence of running parallel branches that share configuration files.
 
