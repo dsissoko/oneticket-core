@@ -1,0 +1,455 @@
+{
+  "issue": 797,
+  "branch_base": "feature/issue-797",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-797-A",
+      "file": "apps/appshell/docs/what/product-spec.md",
+      "content": "Créer le document product-spec.md pour AppShell. Voir la description complète de l'issue #797 pour le contenu requis. Le produit est : AppShell — squelette de référence réutilisable pour tous les projets app dans oneticket-core. Capacités principales : (1) structure React/Vite complète, (2) thème light/dark avec Tailwind, (3) exemple de data-fetching avec MSW + React Query. Inclure glossaire et règles métier si applicable.",
+      "depends_on": [],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-797-B",
+      "file": "apps/appshell/docs/how/architecture.md",
+      "content": "Créer le document architecture.md pour AppShell. Lire apps/appshell/docs/what/product-spec.md. Documenter : (1) stack technique (Vite, React 18, TypeScript, Tailwind, shadcn, React Query, MSW, Zustand, React Router), (2) composants principaux (AppShell skeleton, screens, components/ui, hooks, mocks), (3) interfaces de data-fetching (MSW en dev, API réelle en prod), (4) système de thème (CSS custom properties light/dark). Suivre le format architecture.md du template.",
+      "depends_on": ["A"],
+      "status": "pending",
+      "role": "architect"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-797-C",
+      "file": "apps/appshell/docs/what/epics/epic-0-mvp/epic.md",
+      "content": "Créer epic-0-mvp pour AppShell. Lire apps/appshell/docs/what/product-spec.md et apps/appshell/docs/how/architecture.md. L'épic doit couvrir la création du squelette complet : structure de répertoires, composants de base (Header, Footer, ThemeToggle), écrans d'exemple (HomeScreen, AboutScreen, HelpScreen), MSW setup, React Query setup, Tailwind + design tokens. Description : couvrir 100% du squelette AppShell décrit dans l'issue.",
+      "depends_on": ["A", "B"],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-797-D",
+      "file": "apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-001-skeleton-setup.md",
+      "content": "Créer user story us-001 : Configurer la structure du squelette AppShell. Contenu : initialiser package.json, vite.config.ts, tsconfig.json, tailwind.config.ts, postcss.config.js, .env.example, vitest.config.ts, vitest.setup.ts. Critères d'acceptation : npm run build passe sans erreurs, structure complète du répertoire src/ créée, tous les fichiers de configuration sont présents et valides.",
+      "depends_on": ["C"],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-797-E",
+      "file": "apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-002-layout-components.md",
+      "content": "Créer user story us-002 : Implémenter les composants de layout (AppLayout, Header, Footer, ThemeToggle). Contenu : AppLayout avec <Outlet/>, Header avec app name (left, clickable → /), About&Help dropdown (right), ThemeToggle. Footer vide mais structuré. ThemeToggle : system/light/dark switch, réactif sans reload. Critères : tous les composants se renderisent sans erreur, navigation fonctionnelle.",
+      "depends_on": ["C"],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "F",
+      "branch": "task/issue-797-F",
+      "file": "apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-003-screens.md",
+      "content": "Créer user story us-003 : Implémenter les trois écrans d'exemple (HomeScreen, AboutScreen, HelpScreen). HomeScreen : utilise useUsers() → React Query → MSW → affiche liste de users en Cards. AboutScreen : description AppShell + lien doc + lien GitHub. HelpScreen : 7-step quickstart + placeholder runbook. Routes : /, /about, /help.",
+      "depends_on": ["C"],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "G",
+      "branch": "task/issue-797-G",
+      "file": "apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-004-data-fetching.md",
+      "content": "Créer user story us-004 : Configurer data-fetching avec React Query + MSW. Contenu : QueryClient singleton, useUsers() hook, MSW worker setup, GET /api/users handler, mock data (users.ts avec [{ id: 1, name: 'Alice' }, ...]). MSW actif en dev uniquement (import.meta.env.DEV guard en main.tsx). Critères : HomeScreen affiche liste, MSW interception fonctionne, pas d'erreur console.",
+      "depends_on": ["C"],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "H",
+      "branch": "task/issue-797-H",
+      "file": "apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-005-styling-theme.md",
+      "content": "Créer user story us-005 : Configurer styling avec Tailwind + design tokens + thème light/dark. Contenu : globals.css avec CSS custom properties (--background, --foreground, --accent) pour :root et .dark. tailwind.config.ts consomme ces variables. shadcn components installés (button, card, dropdown-menu, separator, form). Design tokens pour spacing, typography, colors. Thème réactif sans reload via ThemeToggle.",
+      "depends_on": ["C"],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "I",
+      "branch": "task/issue-797-I",
+      "file": "apps/appshell/app/package.json",
+      "content": "Implémenter le package.json complet pour AppShell. Lire apps/appshell/docs/what/product-spec.md et apps/appshell/docs/what/epics/epic-0-mvp/epic.md. Inclure dépendances : react@18, react-dom@18, react-router-dom@6, vite@5, typescript@5, tailwind@3, @radix-ui/*, shadcn/ui, react-hook-form, zod, @hookform/resolvers, @tanstack/react-query@5, msw@2, zustand@4, lucide-react, next-themes, clsx, tailwind-merge, class-variance-authority. Dev : vitest, @testing-library/react, jsdom, etc. Scripts : dev, build, preview, test, lint. Spécifier les bonnes versions selon le stack décrit.",
+      "depends_on": ["D", "E", "F", "G", "H"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "J",
+      "branch": "task/issue-797-J",
+      "file": "apps/appshell/app/src/main.tsx",
+      "content": "Implémenter main.tsx pour AppShell. Contenu : QueryClientProvider, ThemeProvider (next-themes), BrowserRouter, MSW setup avec guard import.meta.env.DEV. Structure : mswWorker.start() (dev only) → createQueryClient() → <ThemeProvider> → <BrowserRouter> → <QueryClientProvider> → <App/>. Gestion des erreurs minimale. Lire apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-004-data-fetching.md et us-005-styling-theme.md.",
+      "depends_on": ["I"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "K",
+      "branch": "task/issue-797-K",
+      "file": "apps/appshell/app/src/App.tsx",
+      "content": "Implémenter App.tsx pour AppShell. Contenu : React Router Routes avec <AppLayout> en tant que root layout contenant <Outlet/>. Routes : HomeScreen (/) avec useUsers(), AboutScreen (/about), HelpScreen (/help). Gestion 404 optionnelle. Lire us-001 à us-005 pour comprendre la structure complète.",
+      "depends_on": ["I"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "L",
+      "branch": "task/issue-797-L",
+      "file": "apps/appshell/app/src/layouts/AppLayout.tsx",
+      "content": "Implémenter AppLayout.tsx pour AppShell. Contenu : <header> avec Header component, <main> avec <Outlet/>, <footer> avec Footer component. Layout structuré pour utilisation partout. Lire us-002-layout-components.md pour détails.",
+      "depends_on": ["K"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "M",
+      "branch": "task/issue-797-M",
+      "file": "apps/appshell/app/src/components/Header.tsx",
+      "content": "Implémenter Header.tsx pour AppShell. Contenu : left — app name (env VITE_APP_NAME), clickable → /. Right — dropdown menu 'About & Help' avec 2 entrées (→ /about, → /help) + ThemeToggle. Styles Tailwind, responsive. Lire us-002-layout-components.md.",
+      "depends_on": ["K"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "N",
+      "branch": "task/issue-797-N",
+      "file": "apps/appshell/app/src/components/Footer.tsx",
+      "content": "Implémenter Footer.tsx pour AppShell. Contenu : composant vide mais structuré avec div de base, prêt à recevoir du contenu. Styles Tailwind minimalistes. Lire us-002-layout-components.md.",
+      "depends_on": ["K"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "O",
+      "branch": "task/issue-797-O",
+      "file": "apps/appshell/app/src/components/ThemeToggle.tsx",
+      "content": "Implémenter ThemeToggle.tsx pour AppShell. Contenu : bouton/dropdown avec 3 options (system, light, dark). Utiliser next-themes.useTheme(). Réactif sans reload. Styles Tailwind + lucide-react pour icônes (Sun, Moon, Monitor). Lire us-005-styling-theme.md.",
+      "depends_on": ["K"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "P",
+      "branch": "task/issue-797-P",
+      "file": "apps/appshell/app/src/screens/HomeScreen.tsx",
+      "content": "Implémenter HomeScreen.tsx pour AppShell. Contenu : utilise useUsers() hook → React Query → affiche liste de users en Cards. Gestion loading/error. Structure : PageHeader (optionnel) + liste de Cards. Lire us-003-screens.md et us-004-data-fetching.md.",
+      "depends_on": ["L", "M", "N", "O"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "Q",
+      "branch": "task/issue-797-Q",
+      "file": "apps/appshell/app/src/screens/AboutScreen.tsx",
+      "content": "Implémenter AboutScreen.tsx pour AppShell. Contenu : description AppShell (text block) + lien 'https://dsissoko.github.io/oneticket-core/appshell/docs/' + lien 'https://github.com/dsissoko/oneticket-core'. Message clé : 'AppShell is the reference skeleton for all app projects in oneticket-core. Copy it, adapt it, build on it.' Styles Card-based. Lire us-003-screens.md.",
+      "depends_on": ["L", "M", "N", "O"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "R",
+      "branch": "task/issue-797-R",
+      "file": "apps/appshell/app/src/screens/HelpScreen.tsx",
+      "content": "Implémenter HelpScreen.tsx pour AppShell. Contenu : titre 'Quickstart' + 7 étapes numérotées (voir issue #797 pour les 7 étapes exactes) + lien placeholder '[Runbook: appshell-reuse.md]' (href='#'). Chaque étape en Card. Lire us-003-screens.md.",
+      "depends_on": ["L", "M", "N", "O"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "S",
+      "branch": "task/issue-797-S",
+      "file": "apps/appshell/app/src/hooks/useUsers.ts",
+      "content": "Implémenter useUsers.ts pour AppShell. Contenu : React Query hook useQuery pour GET /api/users. Retourne { data: User[], isLoading, error }. User type : { id: number, name: string }. Utilise queryClient défini en lib/query-client.ts. Lire us-004-data-fetching.md.",
+      "depends_on": ["I"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "T",
+      "branch": "task/issue-797-T",
+      "file": "apps/appshell/app/src/mocks/browser.ts",
+      "content": "Implémenter browser.ts pour MSW. Contenu : setupWorker(handlers) avec tous les handlers définis en mocks/handlers.ts. Exporter en tant que mswWorker. Lire us-004-data-fetching.md.",
+      "depends_on": ["S"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "U",
+      "branch": "task/issue-797-U",
+      "file": "apps/appshell/app/src/mocks/handlers.ts",
+      "content": "Implémenter handlers.ts pour MSW. Contenu : handler GET /api/users qui retourne mock data de mocks/data/users.ts. Format : [{ id: 1, name: 'Alice' }, { id: 2, name: 'Bob' }, ...]. Lire us-004-data-fetching.md.",
+      "depends_on": ["S"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "V",
+      "branch": "task/issue-797-V",
+      "file": "apps/appshell/app/src/mocks/data/users.ts",
+      "content": "Implémenter users.ts pour mock data. Contenu : export const mockUsers = [{ id: 1, name: 'Alice' }, { id: 2, name: 'Bob' }, { id: 3, name: 'Charlie' }]. Type User explicite. Lire us-004-data-fetching.md.",
+      "depends_on": ["S"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "W",
+      "branch": "task/issue-797-W",
+      "file": "apps/appshell/app/src/lib/query-client.ts",
+      "content": "Implémenter query-client.ts pour AppShell. Contenu : createQueryClient singleton utilisant QueryClient de @tanstack/react-query. Configuration standard (staleTime, cacheTime, retries). Exporter la fonction ou l'instance. Lire us-004-data-fetching.md.",
+      "depends_on": ["I"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "X",
+      "branch": "task/issue-797-X",
+      "file": "apps/appshell/app/src/lib/utils.ts",
+      "content": "Implémenter utils.ts pour AppShell. Contenu : fonction cn() utilisant clsx + tailwind-merge pour fusionner classes Tailwind de manière intelligente. Exemple : cn('px-2', 'px-4') → 'px-4' (dernière classe gagne). Lire us-005-styling-theme.md.",
+      "depends_on": ["I"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "Y",
+      "branch": "task/issue-797-Y",
+      "file": "apps/appshell/app/src/styles/globals.css",
+      "content": "Implémenter globals.css pour AppShell. Contenu : CSS custom properties pour light/dark theme (--background, --foreground, --accent, et autres tokens selon design). :root pour mode clair, .dark pour mode sombre. Directives Tailwind @tailwind base/components/utilities. Lire us-005-styling-theme.md.",
+      "depends_on": ["I"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "Z",
+      "branch": "task/issue-797-Z",
+      "file": "apps/appshell/app/tailwind.config.ts",
+      "content": "Implémenter tailwind.config.ts pour AppShell. Contenu : consomme CSS custom properties de globals.css. colors: { background: 'var(--background)', foreground: 'var(--foreground)', accent: 'var(--accent)' }. Inclut theme extensions pour spacing, typography selon shadcn conventions. Lire us-005-styling-theme.md.",
+      "depends_on": ["Y"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AA",
+      "branch": "task/issue-797-AA",
+      "file": "apps/appshell/app/vite.config.ts",
+      "content": "Implémenter vite.config.ts pour AppShell. Contenu : defineConfig avec react plugin, base: process.env.VITE_BASE_PATH || '/'. Optimisations build standard. Lire is-001-skeleton-setup.md.",
+      "depends_on": ["I"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AB",
+      "branch": "task/issue-797-AB",
+      "file": "apps/appshell/app/tsconfig.json",
+      "content": "Implémenter tsconfig.json pour AppShell. Contenu : target: ES2020, module: ESNext, jsx: react-jsx, lib: [ES2020, DOM, DOM.Iterable], strict: true. Paths aliases si besoin. Lire us-001-skeleton-setup.md.",
+      "depends_on": ["I"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AC",
+      "branch": "task/issue-797-AC",
+      "file": "apps/appshell/app/vitest.config.ts",
+      "content": "Implémenter vitest.config.ts pour AppShell. Contenu : globals: true, environment: jsdom, setupFiles: ['vitest.setup.ts']. Inclure préférence pour Vitest + Testing Library. Lire us-001-skeleton-setup.md.",
+      "depends_on": ["I"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AD",
+      "branch": "task/issue-797-AD",
+      "file": "apps/appshell/app/postcss.config.js",
+      "content": "Implémenter postcss.config.js pour AppShell. Contenu : ['tailwindcss', 'autoprefixer']. Minimal, standard. Lire us-001-skeleton-setup.md.",
+      "depends_on": ["I"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AE",
+      "branch": "task/issue-797-AE",
+      "file": "apps/appshell/app/.env.example",
+      "content": "Implémenter .env.example pour AppShell. Contenu : VITE_APP_NAME=AppShell. Commentaire : ce nom apparaît dans Header et navigations. Lire us-002-layout-components.md.",
+      "depends_on": ["I"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AF",
+      "branch": "task/issue-797-AF",
+      "file": "apps/appshell/app/index.html",
+      "content": "Implémenter index.html pour AppShell. Contenu : structure HTML minimale avec <div id='root'></div>, <script type='module' src='/src/main.tsx'></script>. Meta charset, viewport. Title : AppShell. Lire us-001-skeleton-setup.md.",
+      "depends_on": ["I"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AG",
+      "branch": "task/issue-797-AG",
+      "file": "apps/appshell/app/vitest.setup.ts",
+      "content": "Implémenter vitest.setup.ts pour AppShell. Contenu : import '@testing-library/jest-dom'. Configuration de base pour Testing Library. Lire us-001-skeleton-setup.md.",
+      "depends_on": ["I"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AH",
+      "branch": "task/issue-797-AH",
+      "file": ".oneticket/skills/oneticket-appshell/SKILL.md",
+      "content": "Créer la compétence oneticket-appshell. Contenu : description AppShell, structure des screens (convention une screen = un fichier = propriété exclusive), convention components/ui/ (shadcn, installé une fois), styles/globals.css + tailwind.config.ts (design tokens, une tâche), conventions visuelles pour agents (PageHeader, Card, EmptyState, Tailwind only, spacing/typography standardisés, lucide-react for icons). Tableau libraries (shadcn/ui, React Hook Form + Zod, React Query, Zustand, lucide-react, MSW). Instructions @po pour commander un nouveau projet. Instructions @leaddev pour décomposer (task 0 = skeleton, puis screens parallèles). Frontmatter : source: local.",
+      "depends_on": ["A", "B", "C"],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "AI",
+      "branch": "task/issue-797-AI",
+      "file": ".oneticket/skills/oneticket-react-best-practices/SKILL.md",
+      "content": "Créer la compétence oneticket-react-best-practices. Récupérer le contenu depuis https://github.com/vercel-labs/agent-skills (search pour react-best-practices skill). Adapter pour context oneticket. Ajouter frontmatter : source: external, source_url: https://github.com/vercel-labs/agent-skills, source_skill: react-best-practices, install_native: npx skills add vercel-labs/agent-skills --skill react-best-practices. Description : React optimization rules — 70 rules across 8 categories, prioritized by impact. From Vercel Engineering.",
+      "depends_on": [],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "AJ",
+      "branch": "task/issue-797-AJ",
+      "file": ".oneticket/skills/oneticket-web-design-guidelines/SKILL.md",
+      "content": "Créer la compétence oneticket-web-design-guidelines. Récupérer le contenu depuis https://github.com/vercel-labs/agent-skills (search pour web-design-guidelines skill). Adapter pour context oneticket. Ajouter frontmatter : source: external, source_url: https://github.com/vercel-labs/agent-skills, source_skill: web-design-guidelines, install_native: npx skills add vercel-labs/agent-skills --skill web-design-guidelines. Description : UI audit rules — 100+ rules covering accessibility, performance, UX. From Vercel Labs.",
+      "depends_on": [],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "AK",
+      "branch": "task/issue-797-AK",
+      "file": ".oneticket/skills/oneticket-shadcn/SKILL.md",
+      "content": "Créer la compétence oneticket-shadcn. Récupérer le contenu depuis shadcn/ui repo (https://github.com/shadcn/ui). Adapter pour Vite (pas Next.js). Ajouter frontmatter : source: external, source_url: https://github.com/shadcn/ui, source_skill: shadcn, install_native: npx skills add shadcn/ui --skill shadcn. Description : shadcn/ui components, theming, forms — conventions for projects using shadcn/ui with Vite (not Next.js).",
+      "depends_on": [],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "AL",
+      "branch": "task/issue-797-AL",
+      "file": ".oneticket/docs/what/product-spec.md",
+      "content": "Mettre à jour product-spec.md : ajouter à la section Glossaire les définitions : (1) Local skill — produced and maintained by oneticket-core. source: local. (2) External skill (wrapped) — content adapted from an external source with full traceability. source: external + source_url + install_native. Ajouter à la table Capabilities : 'Skill traceability — source: frontmatter field identifies origin of every skill'. Lire le document existant avant d'apporter des modifications.",
+      "depends_on": [],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "AM",
+      "branch": "task/issue-797-AM",
+      "file": ".oneticket/docs/what/epics/epic-0-mvp/user-stories/us-005-agent-profile-skills.md",
+      "content": "Mettre à jour us-005-agent-profile-skills.md : ajouter critère d'acceptation : 'Given a skill wraps an external source, Then its frontmatter must declare source: external, source_url, source_skill, and install_native.' Lire le document existant avant modification.",
+      "depends_on": [],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "AN",
+      "branch": "task/issue-797-AN",
+      "file": ".oneticket/docs/run/appshell-reuse.md",
+      "content": "Créer le runbook appshell-reuse.md. Utiliser le template .oneticket/templates/runbook.md. Contenu : 7 étapes pour réutiliser AppShell (voir issue #797 section HelpScreen). (1) Copy apps/appshell/app/ → apps/{project}/app/. (2) Set VITE_APP_NAME in .env.example. (3) Update current_project in .oneticket/config.yml. (4) Update AboutScreen with project description. (5) Update HelpScreen with project quickstart. (6) Add feature screens in screens/. (7) Deploy automatic via docs-site-github-pages.yml. Ajouter notes sur convention screens et task decomposition. Lire template avant création.",
+      "depends_on": [],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "AO",
+      "branch": "task/issue-797-AO",
+      "file": "apps/appshell/app/src/components/ui/.gitkeep",
+      "content": "Créer un fichier .gitkeep dans apps/appshell/app/src/components/ui/ pour indiquer que les composants shadcn seront installés ici via CLI. Contenu : vide (fichier .gitkeep standard).",
+      "depends_on": ["I"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AP",
+      "branch": "task/issue-797-AP",
+      "file": "apps/appshell/app/src/lib/schemas/.gitkeep",
+      "content": "Créer un fichier .gitkeep dans apps/appshell/app/src/lib/schemas/ pour indiquer que les schémas Zod seront ajoutés ultérieurement. Contenu : vide (fichier .gitkeep standard).",
+      "depends_on": ["I"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AQ",
+      "branch": "task/issue-797-AQ",
+      "file": "apps/appshell/app/src/stores/.gitkeep",
+      "content": "Créer un fichier .gitkeep dans apps/appshell/app/src/stores/ pour indiquer que les stores Zustand seront ajoutés ultérieurement. Contenu : vide (fichier .gitkeep standard).",
+      "depends_on": ["I"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AR",
+      "branch": "task/issue-797-AR",
+      "file": "apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-006-shadcn-components.md",
+      "content": "Créer user story us-006 : Installer et configurer shadcn/ui components. Composants requis : button, card, dropdown-menu, separator, form. Installation via CLI shadcn pour Vite. Chaque composant copié dans components/ui/. Critères : tous les composants importables, aucune erreur TypeScript, utilisables dans screens.",
+      "depends_on": ["C"],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "AS",
+      "branch": "task/issue-797-AS",
+      "file": "apps/appshell/app/postcss.config.ts",
+      "content": "Implémenter postcss.config.ts pour AppShell (alternative à .js). Contenu : export default { plugins: { tailwindcss: {}, autoprefixer: {} } }. Format TypeScript. Lire us-001-skeleton-setup.md.",
+      "depends_on": ["I"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AT",
+      "branch": "task/issue-797-AT",
+      "file": "apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-007-testing-setup.md",
+      "content": "Créer user story us-007 : Configurer infrastructure de test (Vitest + Testing Library + jsdom). Fichiers : vitest.config.ts, vitest.setup.ts, exemple de test (HomeScreen.test.tsx). Critères : npm run test passe sans erreurs, Testing Library importable, jsdom environment fonctionne.",
+      "depends_on": ["C"],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "AU",
+      "branch": "task/issue-797-AU",
+      "file": "apps/appshell/app/src/App.test.tsx",
+      "content": "Implémenter App.test.tsx pour AppShell. Contenu : test simple vérifiant que App se rend sans crash, teste que les routes de base existent (/,  /about, /help). Utiliser @testing-library/react. Lire us-007-testing-setup.md.",
+      "depends_on": ["K", "AC", "AG"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AV",
+      "branch": "task/issue-797-AV",
+      "file": "apps/appshell/.gitignore",
+      "content": "Créer .gitignore pour apps/appshell/. Contenu standard : node_modules/, dist/, .env, .env.local, *.tsbuildinfo, test-results/, .DS_Store. Lire convention du repo si applicable.",
+      "depends_on": ["I"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AW",
+      "branch": "task/issue-797-AW",
+      "file": "apps/appshell/app/README.md",
+      "content": "Créer README.md pour apps/appshell/app/. Contenu : titre 'AppShell', description du squelette, instructions quick-start (npm install, npm run dev, npm run build, npm run test), structure de répertoires principales, lien vers docs générées. Minimal mais informatif.",
+      "depends_on": ["I"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AX",
+      "branch": "task/issue-797-AX",
+      "file": "cross-references",
+      "content": "Mettre à jour les cross-références : (1) Ajouter ## Related Slices à epic-0-mvp/epic.md avec liens vers les slices générés. (2) Ajouter ## Related Slices à chaque user story (us-001 à us-007) avec liens vers slices. (3) Ajouter ## Related Epics et ## Related User Stories à chaque slice.md avec liens retour. Chemins relatifs : epic.md → slice : ../../../how/slices/<slice>/<name>/slice.md. us-*.md → slice : ../../../../how/slices/<slice>/<name>/slice.md. slice → epic : ../../what/epics/epic-<N>/<name>/epic.md. slice → us : ../../what/epics/epic-<N>/<name>/user-stories/us-*.md. Dépend de tous les slices produits (à découvrir durant exécution).",
+      "depends_on": ["D", "E", "F", "G", "H", "AR", "AT"],
+      "status": "pending"
+    }
+  ]
+}
