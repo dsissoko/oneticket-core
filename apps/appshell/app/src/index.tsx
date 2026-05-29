@@ -2,7 +2,7 @@ import React, { Suspense, lazy } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClientProvider } from '@tanstack/react-query';
-import './main.css';
+import './styles/globals.css';
 import { AppLayout, ErrorBoundary, LoadingIndicator } from './components';
 import { queryClient } from './lib/query-client';
 

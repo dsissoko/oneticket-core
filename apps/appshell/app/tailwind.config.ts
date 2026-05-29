@@ -29,6 +29,8 @@ const config: Config = {
     './src/**/*.{js,ts,jsx,tsx}',
   ],
 
+  darkMode: 'class',
+
   /**
    * Theme configuration with extended design tokens
    *
@@ -41,7 +43,7 @@ const config: Config = {
        * Color palette
        *
        * These colors are frozen and should not change mid-project.
-       * Inspired by GitHub's Primer design system.
+       * Inspired by GitHub's Primer design system and shadcn/ui.
        *
        * Usage:
        * - text-primary, bg-primary, border-primary
@@ -50,18 +52,50 @@ const config: Config = {
        * - text-destructive, bg-destructive (error/delete states)
        * - text-muted, text-gray-400 (subtle/disabled text)
        * - bg-background, text-foreground (base colors)
+       * - border, card, popover, ring (shadcn/ui components)
        *
        * Dark mode: Automatically inverted via next-themes
        * (light mode uses #ffffff bg, dark mode uses #1c2128 or similar)
        */
       colors: {
-        primary: '#0366d6',        // GitHub primary blue (action buttons, links)
-        secondary: '#6f42c1',      // Purple (alternate actions, secondary buttons)
-        accent: '#28a745',         // Green (success, positive actions)
-        destructive: '#d73a49',    // Red (delete, error, danger)
-        muted: '#6a737d',          // Gray (disabled, secondary text)
-        background: '#ffffff',     // Light mode background
-        foreground: '#24292e',     // Light mode text color
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
+        },
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))',
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
+        },
+        accent: {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
+        },
+        popover: {
+          DEFAULT: 'hsl(var(--popover))',
+          foreground: 'hsl(var(--popover-foreground))',
+        },
+        card: {
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))',
+        },
+      },
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
       },
 
       /**
