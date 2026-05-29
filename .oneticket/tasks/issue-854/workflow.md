@@ -8,3 +8,4 @@
 2026-05-29 13:42 | O | apps/appshell/docs/what/README.md
 2026-05-29 13:42 | S | apps/appshell/docs/what/product-spec.md
 2026-05-29 13:44 | C | apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-001-skeleton-setup.md
+2026-05-29 13:44 | D | apps/appshell/docs/what/epics/epic-0-mvp/user-stories/us-002-design-tokens.md
