@@ -423,7 +423,7 @@
       "file": ".oneticket/docs/what/product-spec.md",
       "content": "Mettre à jour product-spec.md : ajouter à la section Glossaire les définitions : (1) Local skill — produced and maintained by oneticket-core. source: local. (2) External skill (wrapped) — content adapted from an external source with full traceability. source: external + source_url + install_native. Ajouter à la table Capabilities : 'Skill traceability — source: frontmatter field identifies origin of every skill'. Lire le document existant avant d'apporter des modifications.",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "analyst"
     },
     {
