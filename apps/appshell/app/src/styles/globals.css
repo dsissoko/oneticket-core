@@ -1,0 +1,131 @@
+/* Tailwind CSS Directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS Custom Properties - Light Mode (Default) */
+:root {
+  /* Colors */
+  --background: #ffffff;
+  --foreground: #000000;
+  --accent: #0066cc;
+  --border: #e5e7eb;
+
+  /* Additional semantic colors */
+  --primary: #0066cc;
+  --secondary: #6b7280;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --info: #3b82f6;
+
+  /* Neutral scale for backgrounds and borders */
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+
+  /* Spacing (inherited from Tailwind, documented for reference) */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+
+  /* Typography */
+  --font-family-base: system-ui, -apple-system, sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+
+  color-scheme: light;
+}
+
+/* CSS Custom Properties - Dark Mode */
+.dark {
+  --background: #000000;
+  --foreground: #ffffff;
+  --accent: #66b3ff;
+  --border: #333333;
+
+  /* Additional semantic colors for dark mode */
+  --primary: #66b3ff;
+  --secondary: #d1d5db;
+  --success: #34d399;
+  --warning: #fbbf24;
+  --error: #f87171;
+  --info: #60a5fa;
+
+  /* Neutral scale for dark mode */
+  --gray-50: #0f172a;
+  --gray-100: #1e293b;
+  --gray-200: #334155;
+  --gray-300: #475569;
+  --gray-400: #64748b;
+  --gray-500: #94a3b8;
+  --gray-600: #cbd5e1;
+  --gray-700: #e2e8f0;
+  --gray-800: #f1f5f9;
+  --gray-900: #ffffff;
+
+  color-scheme: dark;
+}
+
+/* Base styles using CSS custom properties */
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-family-base);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Ensure smooth theme transitions */
+* {
+  transition-property: background-color, border-color, color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Disable transitions on initial load */
+html.no-transition * {
+  transition: none !important;
+}
+
+/* Ensure headings use foreground color */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--foreground);
+}
+
+/* Link styles */
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+a:hover {
+  opacity: 0.8;
+}
+
+/* Border color */
+hr {
+  border-color: var(--border);
+}
+
+/* Input and form element focus states */
+input:focus,
+button:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
