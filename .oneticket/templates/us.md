@@ -8,7 +8,7 @@
 
 ## Related Epic
 
-<!-- @analyst fills this section — link back to ../epic.md -->
+<!-- @analyst fills this section — link back to ../../epic.md -->
 
 ## Related Slices
 
