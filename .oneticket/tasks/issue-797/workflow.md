@@ -4,3 +4,4 @@
 2026-05-29 08:30 | AL | .oneticket/docs/what/product-spec.md
 2026-05-29 08:30 | AI | .oneticket/skills/oneticket-react-best-practices/SKILL.md
 2026-05-29 08:31 | AK | .oneticket/skills/oneticket-shadcn/SKILL.md
+2026-05-29 08:31 | A | apps/appshell/docs/what/product-spec.md
