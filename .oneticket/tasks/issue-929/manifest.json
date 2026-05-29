@@ -130,7 +130,7 @@
         "C",
         "H"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "dev"
     },
     {
@@ -141,7 +141,7 @@
       "depends_on": [
         "C"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "dev"
     },
     {
@@ -152,7 +152,7 @@
       "depends_on": [
         "C"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "dev"
     },
     {
