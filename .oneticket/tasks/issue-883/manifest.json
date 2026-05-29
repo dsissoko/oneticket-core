@@ -1,0 +1,54 @@
+{
+  "issue": 883,
+  "branch_base": "feature/issue-883",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-883-A",
+      "file": ".oneticket/tasks/issue-883/subtask-A.txt",
+      "content": "Crée le fichier .oneticket/tasks/issue-883/subtask-A.txt avec le contenu 'Subtask A completed'.",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-883-B",
+      "file": ".oneticket/tasks/issue-883/subtask-B.txt",
+      "content": "Crée le fichier .oneticket/tasks/issue-883/subtask-B.txt avec le contenu 'Subtask B completed'.",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-883-C",
+      "file": ".oneticket/tasks/issue-883/subtask-C.txt",
+      "content": "Crée le fichier .oneticket/tasks/issue-883/subtask-C.txt avec le contenu 'Subtask C completed'.",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-883-D",
+      "file": ".oneticket/tasks/issue-883/subtask-D.txt",
+      "content": "Attends que A et B soient complétées. Crée le fichier .oneticket/tasks/issue-883/subtask-D.txt avec le contenu 'Subtask D completed'.",
+      "depends_on": ["A", "B"],
+      "status": "pending"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-883-E",
+      "file": ".oneticket/tasks/issue-883/subtask-E.txt",
+      "content": "Attends que D soit complétée. Crée le fichier .oneticket/tasks/issue-883/subtask-E.txt avec le contenu 'Subtask E completed'.",
+      "depends_on": ["D"],
+      "status": "pending"
+    },
+    {
+      "id": "F",
+      "branch": "task/issue-883-F",
+      "file": ".oneticket/tasks/issue-883/subtask-F.txt",
+      "content": "Attends que C soit complétée. Crée le fichier .oneticket/tasks/issue-883/subtask-F.txt avec le contenu 'Subtask F completed'.",
+      "depends_on": ["C"],
+      "status": "pending"
+    }
+  ]
+}
