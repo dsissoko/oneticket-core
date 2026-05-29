@@ -11,3 +11,4 @@
 2026-05-29 21:13 | B | apps/appshell/app/src/styles/globals.css
 2026-05-29 21:13 | K | apps/appshell/app/src/hooks/useTheme.ts
 2026-05-29 21:13 | E | apps/appshell/app/src/screens/AboutScreen.tsx
+2026-05-29 21:14 | F | apps/appshell/app/src/screens/HelpScreen.tsx
