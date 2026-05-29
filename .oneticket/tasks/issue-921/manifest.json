@@ -9,7 +9,7 @@
       "content": "Lis apps/appshell/docs/how/slices/slice-0-setup/slice.md. Implémente la slice 0 — Setup Skeleton : configure package.json avec React, Vite, TypeScript, Tailwind, PostCSS. Crée vite.config.ts, tsconfig.json (strict mode), tailwind.config.ts avec design tokens, postcss.config.js, .gitignore, src/index.tsx, src/main.css avec variables CSS pour theme light/dark, src/types/index.ts. Vérifie que npm install && npm run dev démarre le dev server sans erreurs, npm run build génère le bundle sans warnings TypeScript.",
       "depends_on": [],
       "role": "dev",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
