@@ -122,12 +122,15 @@ coverage/
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["vite/client"]
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
 ```
+
+**`"types": ["vite/client"]` is mandatory** — without it, TypeScript does not know about `import.meta.env` and raises `Property 'env' does not exist on type 'ImportMeta'`. This applies to any project using `import.meta.env.BASE_URL`, `import.meta.env.DEV`, `import.meta.env.PROD`, etc.
 
 ## `vite.config.ts` canonical content
 
@@ -151,6 +154,45 @@ export default defineConfig({
 ```
 
 **`base` is mandatory** — `process.env.VITE_BASE_PATH || '/'` ensures the app loads assets from the correct path when deployed to a sub-path (GitHub Pages PR preview or production). Without it, assets resolve from `/` and the app renders blank on any non-root deployment.
+
+## React Router sub-path routing
+
+When using `react-router-dom`, **`BrowserRouter` must receive `basename`**:
+
+```typescript
+import { BrowserRouter } from 'react-router-dom'
+
+<BrowserRouter basename={import.meta.env.BASE_URL}>
+  {/* routes */}
+</BrowserRouter>
+```
+
+**`basename` is mandatory** — without it, React Router resolves all `<Link to="...">` relative to the domain root (`/`) instead of the app base path. On any non-root deployment (GitHub Pages, reverse proxy, sub-directory), all internal links will point to the wrong URL. `import.meta.env.BASE_URL` is always in sync with `VITE_BASE_PATH` — use it, never hardcode the path.
+
+## MSW Service Worker scope
+
+When using MSW (`msw`) with `setupWorker`, always pass the `serviceWorker.url` option:
+
+```typescript
+// src/mocks/browser.ts
+import { setupWorker } from 'msw/browser'
+import { handlers } from './handlers'
+
+export const worker = setupWorker(...handlers)
+```
+
+```typescript
+// src/main.tsx or src/index.tsx — start with correct SW path
+worker.start({
+  serviceWorker: {
+    url: import.meta.env.BASE_URL + 'mockServiceWorker.js',
+  },
+})
+```
+
+**`url` is mandatory** — by default MSW registers the Service Worker from the domain root (`/mockServiceWorker.js`). On any sub-path deployment the file is not found and the app crashes with `Failed to register a Service Worker`. `import.meta.env.BASE_URL` ensures the SW is always found at the correct path.
+
+**`mockServiceWorker.js` must be committed** — generate it once with `npx msw init public/` and commit `public/mockServiceWorker.js`. Vite copies `public/` into `dist/` at build time.
 
 ## `src/test/setup.ts` canonical content
 
