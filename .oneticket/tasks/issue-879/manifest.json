@@ -1,0 +1,109 @@
+{
+  "issue": 879,
+  "branch_base": "feature/issue-879",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-879-A",
+      "file": "apps/appshell/docs/what/product-spec.md",
+      "role": "analyst",
+      "content": "Tu dois créer le fichier product-spec.md pour AppShell. Contexte de l'issue 879:\n\nAppShell est le skeleton de référence pour tous les projets app de oneticket-core. Tout nouveau projet commence par copier apps/appshell/app/ et en adapter le contenu.\n\nObjectifs principaux:\n1. Éliminer les merge errors en FAN-OUT — la structure exclusive de fichiers empêche les tâches parallèles de se toucher\n2. Qualité design par contrainte — les design tokens et primitives shadcn empêchent les agents de produire des résultats visuellement incohérents\n\nStack technique (extrait du contexte):\n- Bundler: Vite ^5\n- UI: React 18 + TypeScript ^5\n- Router: React Router DOM ^6\n- Styling: Tailwind CSS + tailwind-merge + clsx + CVA\n- Components: Radix UI via shadcn/ui\n- Forms: React Hook Form + Zod\n- Data fetching: @tanstack/react-query ^5\n- Mock API: MSW ^2\n- State: Zustand ^4\n- Icons: lucide-react\n- Theme: next-themes (Vite-adapted) ^0.3\n- Testing: Vitest + Testing Library\n- No Next.js — Vite only\n\nCapacités principales de la V1:\n1. Skeleton modèle pour tous les nouveaux projets\n2. Design système établi via tokens CSS et Tailwind\n3. Démonstration de patterns: useUsers(), MSW handlers, React Query, form validation\n4. Layout standard: Header (clickable logo → /) + Outlet + Footer\n5. Routes: /, /about, /help\n6. Theme toggle: system/light/dark modes\n\nUtilisateurs principaux:\n- Développeurs OneTicket — copient le skeleton pour démarrer nouveaux projets\n- Agents IA — implémentent des écrans et des features en respectant la structure\n\nRègles métier clés:\n- Aucun fichier ne doit être modifié en parallèle par plusieurs agents\n- Chaque écran (screen) = 1 fichier exclusif = 1 tâche\n- Les composants de base (Header, Footer, AppLayout) sont verrouillés après setup\n- Les design tokens sont définis une fois dans tailwind.config.ts et globals.css — immutables\n\nPrésente le produit en maximum 160 caractères comme description de site (remplace <!-- SITE_DESCRIPTION -->).",
+      "depends_on": [],
+      "status": "done"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-879-B",
+      "file": "apps/appshell/docs/what/epics/epic-0-mvp/epic.md",
+      "role": "analyst",
+      "content": "Tu dois créer l'epic-0-mvp pour AppShell basé sur la product-spec.md produite en tâche A.\n\nL'epic décrit la vision MVP en ces termes:\n- Setup et déploiement du skeleton\n- Démonstration des patterns: routing, data fetching (MSW + React Query), forms, theme toggle\n- Documentation d'usage: comment copier et adapter le skeleton\n\nLit le fichier apps/appshell/docs/what/product-spec.md et produis apps/appshell/docs/what/epics/epic-0-mvp/epic.md en suivant le template .oneticket/templates/epic.md.",
+      "depends_on": [
+        "A"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-879-C",
+      "file": "apps/appshell/docs/what/epics/epic-0-mvp/user-stories/",
+      "role": "analyst",
+      "content": "Tu dois créer 6 user stories pour l'epic-0-mvp. Lit apps/appshell/docs/what/epics/epic-0-mvp/epic.md et produis:\n\n1. us-001-setup.md: En tant que développeur, je veux un skeleton prêt à copier afin de démarrer un nouveau projet rapidement\n2. us-002-layout.md: En tant qu'utilisateur, je veux une structure de layout (Header + Outlet + Footer) afin que tous les écrans soient cohérents\n3. us-003-routing.md: En tant que développeur, je veux des routes de base (/, /about, /help) afin de démontrer le routing\n4. us-004-data-fetching.md: En tant qu'utilisateur, je veux voir des données (users list) via React Query + MSW afin de comprendre le pattern\n5. us-005-theme-toggle.md: En tant qu'utilisateur, je veux switcher entre system/light/dark themes afin de tester la personnalisation\n6. us-006-documentation.md: En tant que développeur, je veux un runbook pour réutiliser le skeleton afin de créer rapidement des projets\n\nUtilise le template .oneticket/templates/us.md pour chaque fichier. Place tous les fichiers dans apps/appshell/docs/what/epics/epic-0-mvp/user-stories/",
+      "depends_on": [
+        "B"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-879-D",
+      "file": "apps/appshell/docs/how/architecture.md",
+      "role": "architect",
+      "content": "Tu dois créer l'architecture.md pour AppShell. Lit:\n- apps/appshell/docs/what/product-spec.md (tâche A)\n- apps/appshell/docs/what/epics/epic-0-mvp/epic.md (tâche B)\n- Toutes les user stories créées en tâche C\n\nL'architecture doit décrire:\n1. Stack technique détaillé (Vite, React, TypeScript, Tailwind, shadcn, React Query, MSW, etc.)\n2. File structure: apps/appshell/app/ avec src/, components/, screens/, hooks/, mocks/, lib/, styles/\n3. Principaux patterns:\n   - Data fetching: MSW (dev) → React Query → Component\n   - Forms: React Hook Form + Zod\n   - Routing: React Router v6\n   - Styling: Tailwind + CSS custom properties pour light/dark\n   - State: Zustand (disponible, non utilisé dans skeleton)\n4. Contraintes: aucun fichier partagé ne doit être modifié en parallèle\n5. Conventions agents: un écran = un fichier, propriété exclusive\n\nUtilise le template .oneticket/templates/architecture.md",
+      "depends_on": [
+        "A",
+        "B",
+        "C"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-879-E",
+      "file": "apps/appshell/docs/how/c4/",
+      "role": "architect",
+      "content": "Tu dois créer les diagrammes C4 pour AppShell. Lit apps/appshell/docs/how/architecture.md (tâche D) et produis:\n\n1. apps/appshell/docs/how/c4/system-context.md: Diagramme montrant AppShell comme conteneur central, développeurs comme utilisateurs, GitHub comme système externe\n2. apps/appshell/docs/how/c4/containers.md: Diagramme montrant les conteneurs internes: Vite App (React + Tailwind), MSW (mock API), React Query (cache), Router (navigation)\n\nCha que diagramme doit utiliser Mermaid syntax. Utilise la structure définie dans docs-site/.agents/skills/oneticket-c4/SKILL.md pour les conventions Mermaid.",
+      "depends_on": [
+        "D"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "F",
+      "branch": "task/issue-879-F",
+      "file": "apps/appshell/docs/how/slices/",
+      "role": "architect",
+      "content": "Tu dois créer les vertical slices pour AppShell. Lit:\n- apps/appshell/docs/how/architecture.md (tâche D)\n- Toutes les user stories de tâche C\n\nProduis 6 slices (un par US):\n\n1. apps/appshell/docs/how/slices/slice-0-setup/slice.md: Setup skeleton, install dependencies, Vite + Tailwind config\n2. apps/appshell/docs/how/slices/slice-1-layout/slice.md: Header + AppLayout + Footer composants\n3. apps/appshell/docs/how/slices/slice-2-routing/slice.md: React Router setup, /, /about, /help routes\n4. apps/appshell/docs/how/slices/slice-3-data-fetching/slice.md: MSW handlers, React Query, useUsers hook, HomeScreen\n5. apps/appshell/docs/how/slices/slice-4-theme/slice.md: CSS variables, Tailwind theme, ThemeToggle component\n6. apps/appshell/docs/how/slices/slice-5-documentation/slice.md: AboutScreen, HelpScreen, runbook\n\nChaque slice décrit: implementation tasks, affected files, dependencies, acceptance criteria.\nUtilise le template .oneticket/templates/slice.md",
+      "depends_on": [
+        "D"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "G",
+      "branch": "task/issue-879-G",
+      "file": "apps/appshell/docs/run/appshell-reuse.md",
+      "role": "analyst",
+      "content": "Tu dois créer le runbook appshell-reuse.md. Lit:\n- apps/appshell/docs/what/product-spec.md (tâche A)\n- apps/appshell/docs/how/architecture.md (tâche D)\n\nProduis un runbook détaillé en Markdown expliquant comment réutiliser le skeleton pour un nouveau projet.\n\nStruture recommandée:\n1. Objectif: copier le skeleton et l'adapter rapidement\n2. Prérequis: Node.js, npm, connaissance de React\n3. Étapes (7):\n   - Copier apps/appshell/app/ → apps/{projet}/app/\n   - Configurer VITE_APP_NAME dans .env.example\n   - Mettre à jour config.yml (current_project)\n   - Adapter AboutScreen avec description du projet\n   - Adapter HelpScreen avec quickstart du projet\n   - Ajouter des écrans dans screens/ (une tâche par écran)\n   - Déployer: push → CI automatique\n4. Conventions: un écran = un fichier = une tâche exclusive\n5. Ressources: lien vers cette doc, lien vers GitHub\n\nUtilise le template .oneticket/templates/runbook.md",
+      "depends_on": [
+        "A"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "H",
+      "branch": "task/issue-879-H",
+      "file": ".oneticket/skills/oneticket-appshell/SKILL.md",
+      "role": "analyst",
+      "content": "Tu dois créer le skill oneticket-appshell avec frontmatter APM conforme. Lis:\n- Toutes les docs produites en tâches A-G\n- Le format de frontmatter décrit en issue 879 (skills avec source: local/external, source_url, install_native)\n\nProduis .oneticket/skills/oneticket-appshell/SKILL.md avec:\n\n1. Frontmatter YAML (APM compatible):\n   ---\n   name: oneticket-appshell\n   description: \"AppShell skeleton reference for all oneticket app projects — design system, patterns, and parallel-safe file structure\"\n   version: \"1.0.0\"\n   source: local\n   ---\n\n2. Contenu du skill (sections):\n   - Intent: AppShell est le skeleton modèle, zéro merge errors via structure exclusive\n   - Screens convention: un écran = un fichier = propriété exclusive\n   - Components convention: shadcn components, single setup task\n   - Styles convention: globals.css + tailwind.config.ts pour design tokens\n   - Visual rules: PageHeader, Card, EmptyState patterns\n   - Available libraries: table complète (shadcn, React Hook Form, React Query, Zustand, lucide, MSW)\n   - How @po commands a new project based on AppShell\n   - How @leaddev decomposes tasks (0=skeleton, parallel screens, integration)\n\n3. Place le fichier dans .oneticket/skills/oneticket-appshell/SKILL.md",
+      "depends_on": [
+        "A",
+        "B",
+        "D"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "I",
+      "branch": "task/issue-879-I",
+      "file": "apps/appshell/docs/what/epics/epic-0-mvp/epic.md",
+      "role": "architect",
+      "content": "Tâche FINALE de cross-référençage. Lis TOUS les fichiers produits en tâches F (slices).\n\nMet à jour:\n1. epic.md (tâche B) — ajoute section '## Related Slices' avec liens vers les 6 slices (format: [Slice N — nom](slice-N-nom/slice.md))\n2. Chaque us-*.md (tâche C) — ajoute section '## Related Slices' avec liens aux slices correspondantes\n3. Chaque slice-N/slice.md (tâche F) — ajoute sections '## Related Epic' et '## Related User Stories' avec liens appropriés\n\nConvention de lien (filename only, pas de ../):\n- epic.md → slice: [Slice 0 — Setup](slice-0-setup/slice.md)\n- us-001.md → slice: [Slice 0 — Setup](slice-0-setup/slice.md)\n- slice-0-setup/slice.md → epic: [Epic 0 — MVP](epic-0-mvp/epic.md)\n- slice-0-setup/slice.md → us: [US-001 — Setup](us-001-setup.md)\n\nNe modifie PAS le contenu principal des fichiers — seulement les sections de cross-référence.",
+      "depends_on": [
+        "B",
+        "C",
+        "F"
+      ],
+      "status": "done"
+    }
+  ]
+}
