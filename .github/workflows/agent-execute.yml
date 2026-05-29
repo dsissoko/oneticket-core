@@ -173,12 +173,12 @@ jobs:
           ISSUE_NUMBER: ${{ inputs.issue_number }}
         run: |
           DIRECTIVES="## Pipeline directives — always apply
-- Do NOT push — the pipeline handles all git pushes deterministically.
-- Do NOT create a PR — the pipeline creates the final PR automatically.
-- If producing a manifest: write it to .oneticket/tasks/issue-${ISSUE_NUMBER}/manifest.json"
+          - Do NOT push — the pipeline handles all git pushes deterministically.
+          - Do NOT create a PR — the pipeline creates the final PR automatically.
+          - If producing a manifest: write it to .oneticket/tasks/issue-${ISSUE_NUMBER}/manifest.json"
           FULL_PROMPT="${DIRECTIVES}
 
-${INPUT_PROMPT}"
+          ${INPUT_PROMPT}"
           echo "full_prompt<<EOF" >> $GITHUB_OUTPUT
           echo "$FULL_PROMPT" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
