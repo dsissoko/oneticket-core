@@ -8,7 +8,7 @@
       "file": "apps/appshell/app/src/components/ui/button.tsx",
       "content": "Initialize shadcn/ui components. Read apps/appshell/docs/how/MIGRATION-v0.1-to-v2.md section 'Task O: shadcn/ui Init'. This is the sequential blocker task. Execute: `cd apps/appshell/app && npx shadcn-ui@latest init --defaults --tailwind ./tailwind.config.ts --utils ./src/lib/utils.ts --cwd . && npx shadcn-ui@latest add button card dropdown-menu separator form`. This creates src/lib/utils.ts with cn() helper and src/components/ui/ directory with 5 components. Verify: src/components/ui/button.tsx exists and exports Button component.",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "dev"
     },
     {
