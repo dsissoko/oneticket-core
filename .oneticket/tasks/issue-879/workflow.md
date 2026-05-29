@@ -3,3 +3,4 @@
 2026-05-29 15:55 | G | apps/appshell/docs/how/run/appshell-reuse.md
 2026-05-29 15:56 | C | apps/appshell/docs/what/epics/epic-0-mvp/user-stories/
 2026-05-29 15:59 | D | apps/appshell/docs/how/architecture.md
+2026-05-29 16:03 | F | apps/appshell/docs/how/slices/
