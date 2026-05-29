@@ -38,6 +38,9 @@ so that I can extend the framework with domain-specific behavior without modifyi
 **When** the agent produces a manifest,
 **Then** the manifest follows the exact JSON DAG format defined in the skill.
 
+**Given** a skill wraps an external source,
+**Then** its frontmatter must declare `source: external`, `source_url`, `source_skill`, and `install_native`.
+
 ## Related Slices
 
 - [Slice 1 — From GitHub comment to agent prompt](../../../how/slices/slice-1-dispatch.md)
