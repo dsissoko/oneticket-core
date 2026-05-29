@@ -8,15 +8,13 @@
 
 ## Related User Stories
 
-<!-- @analyst fills this section — relative path from what/epics/epic-N-<name>/epic.md to user-stories/us-NNN-<name>.md
+<!-- @analyst fills this section — write filename only, no relative path, no ../
      US files are always in user-stories/ subfolder — never flat in the epic directory
-     Relative path: ./user-stories/us-NNN-<name>.md -->
+     The build script resolves the correct path automatically.
+     Example: [US-001 — Skeleton Setup](us-001-skeleton-setup.md) -->
 
 ## Related Slices
 
-<!-- @architect fills this section after producing slices
-     Relative path from what/epics/epic-N-<name>/epic.md to how/slices/slice-N-<name>/slice.md
-     This file is at depth 3 under docs/ (what/epics/epic-N/epic.md)
-     To reach docs/ root: ../../../  (3 levels up)
-     Then: ../../../how/slices/slice-N-<name>/slice.md
-     Verify: path.resolve(thisFileDir, '../../../how/slices/...') must land inside docs_path -->
+<!-- @architect fills this section after producing slices — write filename only, no relative path, no ../
+     The build script resolves the correct path automatically.
+     Example: [Slice 1 — Skeleton Foundation](slice-1-skeleton-foundation/slice.md) -->

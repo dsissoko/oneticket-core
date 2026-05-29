@@ -8,16 +8,12 @@
 
 ## Related Epic
 
-<!-- @analyst fills this section — relative path from user-stories/us-NNN-<name>.md to epic.md
-     This file is at depth 4 under docs/ (what/epics/epic-N/user-stories/us-NNN.md)
-     To reach epic.md: ../epic.md  (1 level up, same epic directory)
-     Relative path: ../epic.md -->
+<!-- @analyst fills this section — write filename only, no relative path, no ../
+     The build script resolves the correct path automatically.
+     Example: [Epic 0 — AppShell MVP](epic-0-mvp/epic.md) -->
 
 ## Related Slices
 
-<!-- @architect fills this section after producing slices
-     Relative path from what/epics/epic-N-<name>/user-stories/us-NNN-<name>.md to how/slices/slice-N-<name>/slice.md
-     This file is at depth 4 under docs/ (what/epics/epic-N/user-stories/us-NNN.md)
-     To reach docs/ root: ../../../../  (4 levels up)
-     Then: ../../../../how/slices/slice-N-<name>/slice.md
-     Verify: path.resolve(thisFileDir, '../../../../how/slices/...') must land inside docs_path -->
+<!-- @architect fills this section after producing slices — write filename only, no relative path, no ../
+     The build script resolves the correct path automatically.
+     Example: [Slice 1 — Skeleton Foundation](slice-1-skeleton-foundation/slice.md) -->

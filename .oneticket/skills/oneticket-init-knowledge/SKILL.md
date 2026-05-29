@@ -40,20 +40,22 @@ Respect these dependencies when building the manifest:
 
    The `depends_on` list must include every slice task ID produced in step 7.
 
-   Cross-reference path table (relative links):
+   Cross-reference links — filename only convention:
 
-   | From file | To file | Relative path to use |
+   When writing `## Related Slices`, `## Related Epics`, `## Related User Stories` sections,
+   write the **filename only** — no relative path, no `../`.
+   The build script resolves the correct path automatically.
+
+   | From file | Link format | Example |
    |---|---|---|
-   | `what/epics/epic-N/epic.md` | `how/slices/slice-N/slice.md` | `../../../how/slices/slice-N-<name>/slice.md` |
-   | `what/epics/epic-N/user-stories/us-NNN.md` | `how/slices/slice-N/slice.md` | `../../../../how/slices/slice-N-<name>/slice.md` |
-   | `how/slices/slice-N/slice.md` | `what/epics/epic-N/epic.md` | `../../../what/epics/epic-N-<name>/epic.md` |
-   | `how/slices/slice-N/slice.md` | `what/epics/epic-N/user-stories/us-NNN.md` | `../../../what/epics/epic-N-<name>/user-stories/us-NNN-<name>.md` |
+   | `epic.md` → slice | `[Slice N — name](slice-N-name/slice.md)` | `[Slice 1 — Foundation](slice-1-foundation/slice.md)` |
+   | `epic.md` → us | `[US-NNN — name](us-NNN-name.md)` | `[US-001 — Setup](us-001-setup.md)` |
+   | `us-NNN.md` → slice | `[Slice N — name](slice-N-name/slice.md)` | `[Slice 1 — Foundation](slice-1-foundation/slice.md)` |
+   | `us-NNN.md` → epic | `[Epic N — name](epic-N-name/epic.md)` | `[Epic 0 — MVP](epic-0-mvp/epic.md)` |
+   | `slice.md` → epic | `[Epic N — name](epic-N-name/epic.md)` | `[Epic 0 — MVP](epic-0-mvp/epic.md)` |
+   | `slice.md` → us | `[US-NNN — name](us-NNN-name.md)` | `[US-001 — Setup](us-001-setup.md)` |
 
-   **CRITICAL — Before writing any cross-reference link:**
-   1. Read the actual files produced in previous tasks — do not assume the structure
-   2. Verify the exact path of each file on disk (`git ls-files` or `find`)
-   3. Calculate the relative path from the actual file location — do not copy from examples without verifying
-   4. A link that resolves outside `docs_path` is always wrong — count the `../` levels carefully
+   **CRITICAL — never write `../` in cross-reference links. Filename only.**
 
 ---
 
