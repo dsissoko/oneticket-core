@@ -8,7 +8,7 @@
       "file": "apps/appshell/docs/what/product-spec.md",
       "content": "Créer le document product-spec.md pour AppShell. Voir la description complète de l'issue #797 pour le contenu requis. Le produit est : AppShell — squelette de référence réutilisable pour tous les projets app dans oneticket-core. Capacités principales : (1) structure React/Vite complète, (2) thème light/dark avec Tailwind, (3) exemple de data-fetching avec MSW + React Query. Inclure glossaire et règles métier si applicable.",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "analyst"
     },
     {
