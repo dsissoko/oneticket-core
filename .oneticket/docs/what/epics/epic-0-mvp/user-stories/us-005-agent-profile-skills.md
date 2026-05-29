@@ -38,6 +38,20 @@ so that I can extend the framework with domain-specific behavior without modifyi
 **When** the agent produces a manifest,
 **Then** the manifest follows the exact JSON DAG format defined in the skill.
 
+**Given** a skill wraps an external source ("wrapper"),
+**Then** its frontmatter must declare: `source: external`, `source_url`, `source_skill`, and `install_native`.
+
+Example:
+```yaml
+---
+name: oneticket-react-best-practices
+source: external
+source_url: https://github.com/vercel-labs/agent-skills
+source_skill: react-best-practices
+install_native: npx skills add vercel-labs/agent-skills --skill react-best-practices
+---
+```
+
 ## Related Slices
 
 - [Slice 1 — From GitHub comment to agent prompt](../../../how/slices/slice-1-dispatch.md)
