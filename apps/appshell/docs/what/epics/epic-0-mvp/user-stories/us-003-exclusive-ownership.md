@@ -52,4 +52,5 @@ En tant que lead dev, je veux que chaque fichier screen et hook soit la proprié
 
 ## Related Slices
 
-<!-- @architect fills this section after producing slices -->
+- [../../../how/slices/slice-1-skeleton-foundation/slice.md](../../../how/slices/slice-1-skeleton-foundation/slice.md) — Shared files configuration (layout, routing, theme)
+- [../../../how/slices/slice-2-home-screen-example/slice.md](../../../how/slices/slice-2-home-screen-example/slice.md) — Exclusive ownership example for HomeScreen.tsx and useUsers.ts
