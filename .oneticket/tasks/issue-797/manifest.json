@@ -405,7 +405,7 @@
       "file": ".oneticket/skills/oneticket-web-design-guidelines/SKILL.md",
       "content": "Créer la compétence oneticket-web-design-guidelines. Récupérer le contenu depuis https://github.com/vercel-labs/agent-skills (search pour web-design-guidelines skill). Adapter pour context oneticket. Ajouter frontmatter : source: external, source_url: https://github.com/vercel-labs/agent-skills, source_skill: web-design-guidelines, install_native: npx skills add vercel-labs/agent-skills --skill web-design-guidelines. Description : UI audit rules — 100+ rules covering accessibility, performance, UX. From Vercel Labs.",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "analyst"
     },
     {
