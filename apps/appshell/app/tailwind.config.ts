@@ -62,6 +62,8 @@ const config: Config = {
         muted: '#6a737d',          // Gray (disabled, secondary text)
         background: '#ffffff',     // Light mode background
         foreground: '#24292e',     // Light mode text color
+        border: '#d0d7de',         // Light mode border color
+        ring: '#b6e3ff',           // Light mode focus ring color
       },
 
       /**
