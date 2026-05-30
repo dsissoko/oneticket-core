@@ -6,11 +6,20 @@ import { ThemeProvider } from 'next-themes';
 import './styles/globals.css';
 import { AppLayout, ErrorBoundary, LoadingIndicator } from './components';
 import { queryClient } from './lib/query-client';
+import { logger } from './lib/logger';
 
 // __ENABLE_MSW__ is defined at build time in vite.config.ts → define block.
 // true  = MSW active (demo, preview, GitHub Pages — no backend needed)
 // false = MSW disabled, real backend is used
 declare const __ENABLE_MSW__: boolean;
+
+// Global error boundary — catches anything outside React tree
+window.addEventListener('unhandledrejection', (event) => {
+  logger.error('[global] Unhandled promise rejection', event.reason);
+});
+window.addEventListener('error', (event) => {
+  logger.error('[global] Uncaught error', event.error);
+});
 
 // Lazy load screen components
 const HomeScreen = lazy(() =>
@@ -59,17 +68,33 @@ async function startMockServiceWorker(): Promise<void> {
     },
     onUnhandledRequest: 'bypass',
   });
+  logger.info('[msw] Mock Service Worker enabled');
 }
 
-startMockServiceWorker().then(() => {
-  const root = document.getElementById('root');
-  if (!root) throw new Error('Root element not found');
+async function main(): Promise<void> {
+  try {
+    await startMockServiceWorker();
+    logger.info('[app] Starting');
 
-  ReactDOM.createRoot(root).render(
-    <React.StrictMode>
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        <App />
-      </ThemeProvider>
-    </React.StrictMode>,
-  );
-});
+    const root = document.getElementById('root');
+    if (!root) throw new Error('Root element not found');
+
+    ReactDOM.createRoot(root).render(
+      <React.StrictMode>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <App />
+        </ThemeProvider>
+      </React.StrictMode>,
+    );
+
+    logger.info('[app] Started');
+  } catch (error) {
+    logger.error('[app] Failed to start', error);
+    const root = document.getElementById('root');
+    if (root) {
+      root.innerHTML = '<p style="padding:2rem;font-family:sans-serif">Application failed to start. Please refresh.</p>';
+    }
+  }
+}
+
+void main();

@@ -1,4 +1,6 @@
 import React, { ReactNode } from 'react';
+import { logger } from '@/lib/logger';
+import { Button } from '@/components/ui/button';
 
 export interface ErrorBoundaryProps {
   children: ReactNode;
@@ -31,9 +33,7 @@ export class ErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
-    // Log error for debugging
-    console.error('ErrorBoundary caught an error:', error);
-    console.error('Error info:', errorInfo);
+    logger.error('[ErrorBoundary] Caught render error', error, errorInfo);
   }
 
   render(): ReactNode {
@@ -45,18 +45,18 @@ export class ErrorBoundary extends React.Component<
               <h1 className="text-2xl font-bold mb-4 text-destructive">
                 Something went wrong
               </h1>
-              <p className="text-muted mb-4">
+              <p className="text-muted-foreground mb-4">
                 {this.state.error?.message || 'An unexpected error occurred'}
               </p>
-              <button
+              <Button
+                variant="outline"
                 onClick={() => {
                   this.setState({ hasError: false, error: null });
                   window.location.href = '/';
                 }}
-                className="px-4 py-2 bg-primary text-primary-foreground rounded hover:opacity-90"
               >
                 Return Home
-              </button>
+              </Button>
             </div>
           </div>
         )
