@@ -155,6 +155,43 @@ export default defineConfig({
 
 **`base` is mandatory** — `process.env.VITE_BASE_PATH || '/'` ensures the app loads assets from the correct path when deployed to a sub-path (GitHub Pages PR preview or production). Without it, assets resolve from `/` and the app renders blank on any non-root deployment.
 
+## `@/` path alias — mandatory when using shadcn/ui
+
+When using shadcn/ui components (`@/components/ui/...`), the `@/` alias must be configured in **both** `tsconfig.json` and `vite.config.ts`. TypeScript resolves it via `tsconfig.json` but Vite/Rollup resolves it independently at build time — missing it in `vite.config.ts` causes a build failure even if `tsc` passes.
+
+```typescript
+// vite.config.ts
+import path from 'path'
+
+export default defineConfig({
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
+})
+```
+
+```json
+// tsconfig.json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
+```
+
+**`@types/node` is required** — add it to `devDependencies` so `path` and `__dirname` are typed:
+
+```json
+"devDependencies": {
+  "@types/node": "^20.0.0"
+}
+```
+
 ## React Router sub-path routing
 
 When using `react-router-dom`, **`BrowserRouter` must receive `basename`**:

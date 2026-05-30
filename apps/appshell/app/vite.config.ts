@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import path from 'path';
 
 /**
  * Vite Configuration — React SPA
@@ -38,6 +39,12 @@ export default defineConfig({
    * - Uses SWC for faster compilation than Babel
    */
   plugins: [react()],
+
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
 
   /**
    * Development server configuration
