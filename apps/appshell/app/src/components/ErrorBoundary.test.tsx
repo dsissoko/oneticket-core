@@ -1,10 +1,11 @@
 import React from 'react';
+
 import { screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { renderWithProviders } from '../test/utils';
 import { ErrorBoundary } from './ErrorBoundary';
 
-function BrokenComponent() {
+function BrokenComponent(): React.ReactElement {
   throw new Error('Test render error');
 }
 

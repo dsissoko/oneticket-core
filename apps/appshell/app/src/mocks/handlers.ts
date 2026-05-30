@@ -58,4 +58,38 @@ export const handlers = [
     users.splice(index, 1);
     return HttpResponse.json({}, { status: 204 });
   }),
+
+  // GET /api/stream — SSE long-running process simulation
+  // ?steps=N      — number of steps (default: 300 = 5 minutes at 1s/step)
+  // ?interval=ms  — delay between steps in ms (default: 1000)
+  http.get('/api/stream', ({ request }) => {
+    const url = new URL(request.url);
+    const total = parseInt(url.searchParams.get('steps') ?? '300', 10);
+    const interval = parseInt(url.searchParams.get('interval') ?? '1000', 10);
+
+    const stream = new ReadableStream({
+      async start(controller) {
+        const enc = (s: string) => new TextEncoder().encode(s);
+
+        for (let step = 1; step <= total; step++) {
+          await new Promise(r => setTimeout(r, interval));
+          const pct = Math.round((step / total) * 100);
+          const msg = JSON.stringify({ step, total, pct, message: `Processing step ${step}/${total}…` });
+          controller.enqueue(enc(`event: progress\ndata: ${msg}\n\n`));
+        }
+
+        const done = JSON.stringify({ total, duration: `${(total * interval / 1000).toFixed(1)}s` });
+        controller.enqueue(enc(`event: done\ndata: ${done}\n\n`));
+        controller.close();
+      },
+    });
+
+    return new HttpResponse(stream, {
+      headers: {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+      },
+    });
+  }),
 ];

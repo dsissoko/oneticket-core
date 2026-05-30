@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { useUsers } from '@/hooks/useUsers';
+import { useEventSource } from '@/hooks/useEventSource';
 import { useCreateUser } from '@/hooks/useCreateUser';
 import { useUpdateUser } from '@/hooks/useUpdateUser';
 import { useDeleteUser } from '@/hooks/useDeleteUser';
@@ -245,6 +246,103 @@ function ThemeTab() {
   );
 }
 
+// ─── RealtimeTab ─────────────────────────────────────────────────────────────
+
+const SPEED_OPTIONS = [
+  { label: '100ms', value: 100 },
+  { label: '250ms', value: 250 },
+  { label: '500ms', value: 500 },
+  { label: '1s', value: 1000 },
+  { label: '2s', value: 2000 },
+];
+
+const TOTAL_STEPS = 300; // 5 minutes at 1s/step
+
+function RealtimeTab() {
+  const [interval, setIntervalMs] = useState(1000);
+  const url = `/api/stream?steps=${TOTAL_STEPS}&interval=${interval}`;
+  const { events, status, start, stop, reset } = useEventSource(url, ['progress', 'done']);
+
+  const progressEvent = events.find(e => e.type === 'progress');
+  const doneEvent = events.find(e => e.type === 'done');
+  const pct = progressEvent ? (JSON.parse(progressEvent.data) as { pct: number }).pct : 0;
+  const currentStep = progressEvent ? (JSON.parse(progressEvent.data) as { step: number }).step : 0;
+  const isRunning = status === 'open' || status === 'connecting';
+  const isDone = status === 'closed' && doneEvent !== undefined;
+
+  return (
+    <div className="space-y-6">
+      {/* Controls */}
+      <div className="flex items-center gap-3 flex-wrap">
+        <Button variant="default" size="sm" onClick={start} disabled={isRunning}>
+          ▶ Start
+        </Button>
+        <Button variant="outline" size="sm" onClick={stop} disabled={!isRunning}>
+          ■ Stop
+        </Button>
+        <Button variant="ghost" size="sm" onClick={reset} disabled={isRunning}>
+          ↺ Reset
+        </Button>
+        <div className="flex items-center gap-2 ml-auto">
+          <span className="text-xs text-muted-foreground">Speed:</span>
+          <Select
+            value={String(interval)}
+            onValueChange={v => setIntervalMs(Number(v))}
+          >
+            <SelectTrigger className="w-24 h-7 text-xs">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {SPEED_OPTIONS.map(o => (
+                <SelectItem key={o.value} value={String(o.value)}>{o.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {/* Progress bar */}
+      <div className="space-y-2">
+        <div className="flex justify-between text-xs text-muted-foreground">
+          <span>
+            {isDone
+              ? `✓ Done — ${(JSON.parse(doneEvent!.data) as { duration: string }).duration}`
+              : isRunning
+              ? `Step ${currentStep} / ${TOTAL_STEPS}`
+              : status === 'idle' ? 'Ready' : `Step ${currentStep} / ${TOTAL_STEPS}`}
+          </span>
+          <span>{pct}%</span>
+        </div>
+        <div className="h-3 w-full rounded-full bg-muted overflow-hidden">
+          <div
+            className="h-full rounded-full bg-primary transition-all duration-200"
+            style={{ width: `${isDone ? 100 : pct}%` }}
+          />
+        </div>
+        <p className="text-xs text-muted-foreground italic">simulated via MSW · {TOTAL_STEPS} steps · configurable speed</p>
+      </div>
+
+      <Separator />
+
+      {/* Live event log */}
+      {events.length > 0 && (
+        <div className="space-y-1 max-h-48 overflow-y-auto">
+          {events.slice(0, 20).map((e, i) => {
+            const d = JSON.parse(e.data) as Record<string, unknown>;
+            return (
+              <p key={i} className="text-xs text-muted-foreground font-mono">
+                {e.type === 'done'
+                  ? `✓ done in ${d.duration as string}`
+                  : `→ ${d.message as string}`}
+              </p>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── AuthTab ─────────────────────────────────────────────────────────────────
 
 function AuthTab() {
@@ -290,6 +388,7 @@ export function DemoScreen(): React.ReactElement {
             <TabsTrigger value="users">Users</TabsTrigger>
             <TabsTrigger value="logger">Logger</TabsTrigger>
             <TabsTrigger value="theme">Theme</TabsTrigger>
+            <TabsTrigger value="realtime">Realtime</TabsTrigger>
             <TabsTrigger value="auth">Auth</TabsTrigger>
           </TabsList>
 
@@ -311,6 +410,10 @@ export function DemoScreen(): React.ReactElement {
 
           <TabsContent value="theme">
             <ThemeTab />
+          </TabsContent>
+
+          <TabsContent value="realtime">
+            <RealtimeTab />
           </TabsContent>
 
           <TabsContent value="auth">
