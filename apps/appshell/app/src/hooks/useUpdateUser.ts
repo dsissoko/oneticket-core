@@ -3,9 +3,9 @@ import {
   UseMutationResult,
   useQueryClient,
 } from '@tanstack/react-query';
-import type { User } from '../api/types';
-import { apiClient } from '../api/client';
-import { endpoints } from '../api/endpoints';
+import type { User } from '@/api/types';
+import { apiClient } from '@/api/client';
+import { endpoints } from '@/api/endpoints';
 
 export interface UpdateUserInput {
   id: string;

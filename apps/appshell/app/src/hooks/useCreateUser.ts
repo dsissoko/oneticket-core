@@ -3,9 +3,9 @@ import {
   UseMutationResult,
   useQueryClient,
 } from '@tanstack/react-query';
-import type { CreateUserRequest, User } from '../api/types';
-import { apiClient } from '../api/client';
-import { endpoints } from '../api/endpoints';
+import type { CreateUserRequest, User } from '@/api/types';
+import { apiClient } from '@/api/client';
+import { endpoints } from '@/api/endpoints';
 
 export function useCreateUser(): UseMutationResult<
   User,
