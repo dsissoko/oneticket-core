@@ -267,12 +267,17 @@ async function startMockServiceWorker(): Promise<void> {
     serviceWorker: {
       url: import.meta.env.BASE_URL + 'mockServiceWorker.js',
     },
+    onUnhandledRequest(request, print) {
+      // MSW should only intercept API calls — never navigation or static assets.
+      // Navigation requests are SPA routes handled by React Router, not the network.
+      // Static assets are served directly by the hosting platform.
+      if (request.destination === 'document' || request.mode === 'navigate') return
+      if (new URL(request.url).pathname.match(/\.(js|css|png|svg|ico|woff2?|ttf)$/)) return
+      // Warn on unhandled API calls — useful for debugging missing handlers
+      print.warning()
+    },
   })
 }
-
-startMockServiceWorker().then(() => {
-  // render app
-})
 ```
 
 **`url` is mandatory** — by default MSW registers the Service Worker from the domain root (`/mockServiceWorker.js`). On any sub-path deployment the file is not found and the app crashes with `Failed to register a Service Worker`. `import.meta.env.BASE_URL` ensures the SW is always found at the correct path.
