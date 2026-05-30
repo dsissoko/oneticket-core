@@ -10,10 +10,11 @@
  *   logger.error('Something failed', error)
  */
 import log from 'loglevel';
-
-// loglevel-plugin-remote has no official types — minimal declaration
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const remote = (await import('loglevel-plugin-remote')).default as any;
+// Synchronous import — loglevel-plugin-remote is a runtime dependency always available.
+// Dynamic import (await import(...)) would be cleaner but requires top-level await,
+// which is only supported from ES2022. Current target is ES2020 (tsconfig.json).
+// To use dynamic import: bump target to "ES2022" in tsconfig.json and vite.config.ts build.target.
+import remote from 'loglevel-plugin-remote';
 
 const endpoint = import.meta.env.VITE_OTLP_ENDPOINT as string | undefined;
 
