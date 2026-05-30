@@ -19,7 +19,7 @@
       "depends_on": [
         "O"
       ],
-      "status": "merge-failed",
+      "status": "done",
       "role": "dev"
     },
     {
@@ -198,7 +198,7 @@
       "depends_on": [
         "O"
       ],
-      "status": "merge-failed",
+      "status": "done",
       "role": "dev"
     },
     {
@@ -209,7 +209,7 @@
       "depends_on": [
         "O"
       ],
-      "status": "merge-failed",
+      "status": "done",
       "role": "dev"
     }
   ]
