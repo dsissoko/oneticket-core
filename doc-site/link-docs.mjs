@@ -37,10 +37,12 @@ const astroBase = (process.env.ASTRO_BASE || '').replace(/\/$/, '');
 // (epic-0, epic-1, us-001, us-002) so they sort correctly without explicit order.
 const SIDEBAR_ORDERS = {
   // Level 1 sections: what → how → ship → run
-  'what/index.md':             1,
-  'how/index.md':              2,
-  'ship/index.md':             3,
-  'run/index.md':              4,
+  // Note: section group order is controlled by buildSidebar in astro.config.mjs (ORDER array)
+  // sidebar.order on index.md controls position WITHIN the group (0 = first)
+  'what/index.md':             0,  // TOC first in what/
+  'how/index.md':              0,  // TOC first in how/
+  'ship/index.md':             0,  // TOC first in ship/
+  'run/index.md':              0,  // TOC first in run/
   // what/ level 2: product-spec first, then epics
   'what/product-spec.md':      1,
   'what/epics/index.md':       2,
