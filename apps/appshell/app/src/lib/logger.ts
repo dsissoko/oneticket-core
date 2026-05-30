@@ -17,18 +17,6 @@ const remote = (await import('loglevel-plugin-remote')).default as any;
 
 const endpoint = import.meta.env.VITE_OTLP_ENDPOINT as string | undefined;
 
-if (endpoint) {
-  remote.apply(log, {
-    url: endpoint,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    format: remote.json,
-    level: 'debug',
-    interval: 1000,
-    capacity: 500,
-  });
-}
-
 const configuredLevel = import.meta.env.VITE_LOG_LEVEL as log.LogLevelDesc | undefined;
 const effectiveLevel: log.LogLevelDesc = configuredLevel || 'debug';
 
@@ -38,5 +26,17 @@ if (!configuredLevel) {
 }
 
 log.setLevel(effectiveLevel);
+
+if (endpoint) {
+  remote.apply(log, {
+    url: endpoint,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    format: remote.json,
+    level: effectiveLevel,
+    interval: 1000,
+    capacity: 500,
+  });
+}
 
 export const logger = log;
