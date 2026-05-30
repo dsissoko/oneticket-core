@@ -19,7 +19,7 @@ export function HomeScreen(): React.ReactElement {
         <CardContent className="space-y-8">
           <p className="text-center text-lg text-muted-foreground">Welcome to the foundation.</p>
           <div className="grid grid-cols-3 gap-4">
-            <Button variant="default"><Link to="/demo">Explore patterns</Link></Button>
+            <Button variant="outline"><Link to="/demo">Explore patterns</Link></Button>
             <Button variant="outline"><Link to="/about">About Us</Link></Button>
             <Button variant="outline"><Link to="/nonexistent">Test 404 →</Link></Button>
           </div>
