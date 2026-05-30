@@ -365,6 +365,12 @@ Each task's exclusive file ownership guarantees merge-safe delivery.
 
 ---
 
+## Tests
+
+AppShell ships with a test suite (`src/**/*.test.tsx`, `src/**/*.test.ts`) covering core components, routing, hooks, and patterns.
+
+Existing tests are a starting point and may evolve or disappear as the app evolves. They are not a constraint — they reflect the current expected behavior.
+
 ## Summary
 
 AppShell enforces **exclusive file ownership**, **design by constraint**, and **proven patterns** to enable parallel-safe, high-quality application development. By following these conventions, teams and AI agents can:

@@ -47,6 +47,7 @@ LOAD skill `oneticket-error-handling-patterns` as SECOND ACTION after git checko
   1. **Build** — run the project build command — blocking. Fix before continuing.
   2. **Test** — run the test suite — blocking. Fix before continuing.
   3. **Smoke** — verify the app starts without crash — recommended, non-blocking.
+  > Existing tests are a starting point and may evolve or disappear as the app evolves.
 
 ## Routing & Handoff
 
