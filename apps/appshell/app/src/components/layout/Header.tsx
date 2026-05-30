@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Menu } from 'lucide-react';
 import { ThemeToggle } from '../ThemeToggle';
 
 /**
@@ -36,12 +37,12 @@ export function Header({
   ],
 }: HeaderProps): React.ReactElement {
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-gray-200 dark:bg-slate-950 dark:border-gray-800">
+    <header className="sticky top-0 z-50 bg-background border-b border-border">
       <nav className="mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link
           to="/"
-          className="flex items-center font-bold text-xl text-foreground hover:text-blue-600 transition-colors dark:hover:text-blue-400"
+          className="flex items-center font-bold text-xl text-foreground hover:text-primary transition-colors"
         >
           {logo}
         </Link>
@@ -52,12 +53,12 @@ export function Header({
             <Link
               key={link.href}
               to={link.href}
-              className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors dark:text-gray-300 dark:hover:text-blue-400"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
             >
               {link.label}
             </Link>
           ))}
-          <div className="border-l border-gray-300 dark:border-gray-700 h-6" />
+          <div className="border-l border-border h-6" />
           <ThemeToggle />
         </div>
 
@@ -65,22 +66,10 @@ export function Header({
         <div className="sm:hidden flex items-center gap-2">
           <ThemeToggle />
           <button
-            className="p-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+            className="p-2 text-muted-foreground hover:text-foreground"
             aria-label="Toggle menu"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
+            <Menu className="h-6 w-6" />
           </button>
         </div>
       </nav>

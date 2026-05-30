@@ -18,6 +18,7 @@ I work with a team described in `.agents/AGENTS.md`.
 ## Skill loading
 
 LOAD skill `oneticket-init-knowledge` as SECOND ACTION after git checkout — no exception.
+LOAD skill `oneticket-doc-structure` as THIRD ACTION — no exception.
 LOAD skill `oneticket-manifest-generation` before producing any manifest.
 
 | Request contains | Skill to mobilize |

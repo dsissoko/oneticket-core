@@ -7,11 +7,9 @@ title: "Merge Conflict Recovery"
 
 ## General principle
 
-Merge conflicts in a FAN-OUT/GATHER pipeline are **normal and expected** — not a framework failure. They occur when parallel task branches independently modify shared configuration files (`package.json`, `tsconfig.json`, `vite.config.ts`, test setup files).
+Merge conflicts in a FAN-OUT/GATHER pipeline are **normal and expected** — not a framework failure. They occur when parallel task branches independently modify shared files (`package.json`, `tsconfig.json`, `vite.config.ts`, test setup files).
 
-The recovery procedure is always the same: **verify the manifest against the actual branch state, resolve conflicts manually in order of lag, correct the manifest, and resume via Workflow Gather.**
-
-> **Reference:** [product-spec §15](../what/product-spec.md#15-merge-conflict-recovery) for the structural explanation.
+When a task fails to merge, the pipeline stalls. Recovery means **doing the work of the failed tasks yourself**, then resuming the pipeline correctly.
 
 ---
 
@@ -42,35 +40,9 @@ Identify all tasks in `merge-failed`, `in_progress`, and `pending` states.
 
 ---
 
-## Step 2 — Check branch lag
+## Step 2 — Check build artifacts
 
-For each `merge-failed` task, check how far behind it is:
-
-```bash
-gh api "repos/{owner}/{repo}/compare/feature/issue-{N}...task/issue-{N}-{ID}" \
-  --jq '{ahead: .ahead_by, behind: .behind_by, files: [.files[].filename]}'
-```
-
-Note:
-- `behind` — how many commits the task branch lags behind the feature branch. Merge **least behind first**.
-- `files` — look for `package.json`, `tsconfig.json`, `vite.config.ts`, `dist/`, `test-results/`
-
-**Also check for phantom branches** — branches marked `in_progress` in the manifest with `ahead: 0, behind: 0` are empty and were never executed. Reset them to `pending`.
-
----
-
-## Step 3 — Checkout locally
-
-```bash
-git fetch origin
-git checkout -b feature/issue-{N} origin/feature/issue-{N}
-```
-
----
-
-## Step 4 — Remove build artifacts
-
-Check first:
+Before anything else, check that agents haven't committed build artifacts:
 
 ```bash
 git ls-files apps/{app}/dist/
@@ -84,54 +56,56 @@ Remove if present:
 git rm -r apps/{app}/dist/ apps/{app}/test-results/ 2>/dev/null || true
 git rm apps/{app}/vite.config.js apps/{app}/vite.config.d.ts 2>/dev/null || true
 git commit -m "chore: remove build artifacts — should never have been committed"
+git push origin feature/issue-{N}
 ```
 
-> Root cause: incomplete `.gitignore` + agent used `git add -A`. Fix `.gitignore` before resuming (see issue #785 — `oneticket-gitignore` skill).
+> Root cause: incomplete `.gitignore` + agent used `git add -A`.
 
 ---
 
-## Step 5 — Merge task branches in order
+## Step 3 — Apply the failed tasks manually
 
-Merge from **least behind** to **most behind**.
+Recovery = substituting yourself for the failed tasks. You apply their work directly on `feature/issue-{N}`.
 
 ```bash
-git merge --no-ff origin/task/issue-{N}-{ID} -m "chore: merge task {ID} into feature/issue-{N}"
+git fetch origin
+git checkout feature/issue-{N}
+git pull origin feature/issue-{N}
 ```
 
-**On conflict with shared config files** — always take `--ours` (feature branch is authoritative):
+For each `merge-failed` task, inspect what the task branch contains:
 
 ```bash
-git checkout --ours apps/{app}/package.json
-git checkout --ours apps/{app}/package-lock.json
-git checkout --ours apps/{app}/tsconfig.json
-git checkout --ours apps/{app}/vitest.config.ts
-git add -A
-git commit -m "chore: merge task {ID} into feature/issue-{N}"
+git diff origin/feature/issue-{N}...origin/task/issue-{N}-{ID} --name-only
 ```
 
-**On conflict with test setup files** (e.g. `vitest.setup.ts`) — inspect both versions and keep the most complete:
+Then either cherry-pick the task branch content or apply the changes manually. Commit with a clear message:
 
 ```bash
-git diff apps/{app}/vitest.setup.ts  # inspect conflict markers
-# Manually resolve, then:
-git add apps/{app}/vitest.setup.ts
-git commit -m "chore: merge task {ID} into feature/issue-{N}"
+git commit -m "fix: apply task {ID} manually — merge-failed recovery"
 ```
 
-**Abort if needed:**
+Repeat for each failed task. Then push:
 
 ```bash
-git merge --abort
-git reset --hard origin/feature/issue-{N}
+git push origin feature/issue-{N}
 ```
 
 ---
 
-## Step 6 — Fix the manifest
+## Step 4 — Update the manifest
 
-After all merges, correct any status inconsistencies.
+Mark all substituted tasks as `done`:
 
-**Reset phantom `in_progress` tasks to `pending`:**
+```bash
+# Edit .oneticket/tasks/issue-{N}/manifest.json
+# Change "status": "merge-failed" → "status": "done" for each substituted task
+git add .oneticket/tasks/issue-{N}/manifest.json
+git commit -m "chore: mark tasks {IDs} as done — manual recovery"
+git push origin feature/issue-{N}
+```
+
+Also reset any phantom `in_progress` tasks (empty branches, never executed) to `pending`:
 
 ```bash
 node -e "
@@ -145,43 +119,33 @@ fs.writeFileSync(path, JSON.stringify(m, null, 2) + '\n');
 console.log('manifest updated');
 "
 git add .oneticket/tasks/issue-{N}/manifest.json
-git commit -m "fix: correct manifest status after manual merge recovery"
-```
-
----
-
-## Step 7 — Push
-
-```bash
+git commit -m "fix: reset phantom in_progress tasks to pending"
 git push origin feature/issue-{N}
 ```
 
 ---
 
-## Step 8 — Clean up stale branches and PRs
+## Step 5 — Clean up stale branches and PRs
 
-Close and unlabel PRs of tasks now merged:
-
-```bash
-for pr in {PR_NUMBERS}; do
-  gh pr edit $pr --repo {owner}/{repo} --remove-label "merge error"
-  gh pr close $pr --repo {owner}/{repo}
-done
-```
-
-Delete stale branches:
+Close the PRs of failed tasks and delete their branches — they have no value now:
 
 ```bash
-for id in {TASK_IDS}; do
-  gh api repos/{owner}/{repo}/git/refs/heads/task/issue-{N}-$id -X DELETE
+for task in {TASK_IDS}; do
+  PR=$(gh pr list --repo {owner}/{repo} --head "task/issue-{N}-$task" --json number --jq '.[0].number')
+  [ -n "$PR" ] && gh pr close $PR --repo {owner}/{repo}
+  gh api repos/{owner}/{repo}/git/refs/heads/task/issue-{N}-$task -X DELETE
 done
 ```
 
 ---
 
-## Step 9 — Resume the pipeline
+## Step 6 — Resume the pipeline
 
-Trigger **Workflow Gather** from the GitHub Actions UI or CLI:
+Two cases depending on what remains after recovery.
+
+### Case A — No tasks remaining (substituted tasks were the last ones)
+
+The pipeline is complete. Trigger the final PR directly:
 
 ```bash
 gh workflow run on-gather.yml \
@@ -190,17 +154,41 @@ gh workflow run on-gather.yml \
   --field branch_base=feature/issue-{N}
 ```
 
-Use any task already marked `done` — `orchestrate.mjs` detects idempotence, skips the merge, reads the manifest, identifies ready tasks, and dispatches them automatically.
+The orchestrator detects idempotence (all tasks `done`), skips merges, and creates the final PR.
 
-> **Important:** if `orchestrate.mjs` exits on idempotence without dispatching (no ready tasks found), verify the manifest `depends_on` chains — all blockers of the pending tasks must be `done`.
+### Case B — Dependent tasks still need to run (general case)
+
+The substituted tasks have dependents that are still `pending`. The orchestrator must traverse the dependency graph to unblock them.
+
+**First**, temporarily set the substituted tasks back to `pending` in the manifest (the task branches were deleted in Step 5 — recreate minimal ones):
+
+```bash
+for task in {SUBSTITUTED_IDS}; do
+  git checkout -b task/issue-{N}-$task origin/feature/issue-{N}
+  git push origin task/issue-{N}-$task
+done
+```
+
+**Then** trigger one `on-gather` per substituted task, in dependency order:
+
+```bash
+gh workflow run on-gather.yml \
+  --repo {owner}/{repo} \
+  --field task_branch=task/issue-{N}-{ID} \
+  --field branch_base=feature/issue-{N}
+```
+
+The orchestrator merges the (now empty) task branch, marks it `done`, and dispatches the dependent tasks. Repeat for each substituted task.
+
+> **How to choose Case A vs Case B:** After applying the failed tasks manually, check the manifest. If no task has `status: pending` or `status: in_progress` → Case A. Otherwise → Case B.
 
 ---
 
 ## What not to do
 
-- **Never ask an agent to execute the recovery** — agents cannot run git commands on the remote. They will simulate the execution and produce a false success report, corrupting the manifest.
-- **Never push directly on `feature/issue-N`** — this triggers `agent-execute` with an incoherent context (3 retries, spurious `blocked` label). The guard in `agent-execute.yml` (PR #784) now rejects non-`task/*` branches.
-- **Never trust an agent's "done" report without verifying** — always confirm with `gh api compare` that the branch is actually merged (ahead: 0 or branch deleted).
+- **Never ask an agent to execute the recovery** — agents cannot run git commands on the remote. They will simulate and produce a false success report, corrupting the manifest.
+- **Never push directly on `feature/issue-N` without updating the manifest** — the pipeline will not resume automatically. A push on `feature/*` does not trigger `on-gather.yml`.
+- **Never trust an agent's "done" report without verifying** — confirm with `gh api compare` that the branch is actually merged (ahead: 0 or branch deleted).
 
 ---
 
@@ -208,20 +196,25 @@ Use any task already marked `done` — `orchestrate.mjs` detects idempotence, sk
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| Pipeline stalls after idempotence — no FAN-OUT | Ready tasks not detected after idempotence exit | Verify manifest: all `depends_on` of pending tasks must be `done` |
-| `agent-execute` triggered after manual push on `feature/*` | Agent pushed on feature branch, not task branch | Guard in `agent-execute.yml` rejects invalid branches (PR #784) |
+| Pipeline stalls after idempotence — no FAN-OUT | Orchestrator exits early, dependent tasks not dispatched | Case B: recreate minimal task branches, trigger on-gather per substituted task |
+| `agent-execute` triggered after manual push on `feature/*` | Push on feature branch triggers wrong workflow | Guard in `agent-execute.yml` rejects non-`task/*` branches |
 | Manifest says `done` but branch still open | Agent updated manifest text without running git | Verify with `compare` API — merge manually and close PR |
-| Build artifacts in repo (`dist/`, `test-results/`) | Incomplete `.gitignore` + `git add -A` | Remove with `git rm`, complete `.gitignore` (issue #785) |
+| Build artifacts in repo (`dist/`, `test-results/`) | Incomplete `.gitignore` + `git add -A` | Remove with `git rm`, complete `.gitignore` |
 | Duplicate config files (`vite.config.js`, `vite.config.d.ts`) | TypeScript compiled config files committed | Remove with `git rm`, add to `.gitignore` |
 
 ---
 
-## Canonical example
+## Canonical examples
 
-Issue #766 — monjournal implementation (May 2026)
-
-- 5 tasks in `merge-failed` (E, I, J, O, S) — all conflicting on `package.json`, `package-lock.json`, `vite.config.ts`
+**Issue #766 — monjournal (May 2026) — Case B**
+- 5 tasks `merge-failed` (E, I, J, O, S) — conflicts on `package.json`, `package-lock.json`, `vite.config.ts`
 - Tasks J and O committed `dist/` artifacts
 - Task I was never actually merged despite being marked `done` by an agent
-- Tasks F and K were marked `in_progress` with empty branches (never executed)
-- Recovery: artifacts removed, task I merged manually, manifest corrected, pipeline resumed via Workflow Gather
+- Tasks F and K were `in_progress` with empty branches (never executed)
+- Recovery: artifacts removed, tasks merged manually, manifest corrected, pipeline resumed via Workflow Gather
+
+**Issue #929 — AppShell v2 (May 2026) — Case A**
+- 3 tasks `merge-failed` (A, M, N) — last tasks of the pipeline, no dependents
+- Applied manually on `feature/issue-929`, manifest updated to `done`
+- Task branches closed and deleted
+- Final PR created via `on-gather` on any already-done task (idempotence → `allDone` → PR)

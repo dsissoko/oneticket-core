@@ -100,6 +100,8 @@ Copy the template content and fill in the sections — never create a document f
 | C4 components | `<docs_path>/how/c4/components.md` |
 | C4 deployment | `<docs_path>/how/c4/deployment.md` |
 | Slice | `<docs_path>/how/slices/slice-N-<name>/slice.md` |
+| CI/CD, build pipeline, deployment config | `<docs_path>/ship/<name>.md` |
+| Operational runbook, infrastructure, observability | `<docs_path>/run/<name>.md` |
 
 ---
 

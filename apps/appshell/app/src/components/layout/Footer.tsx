@@ -1,71 +1,76 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { GitFork, Star } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Separator } from '@/components/ui/separator';
 
-/**
- * FooterProps Interface
- *
- * @interface
- * @property {string} [copyright] - Copyright text (default: "© 2026 AppShell")
- * @property {Array<{label: string; href: string}>} [links] - Footer links array
- */
 interface FooterProps {
   copyright?: string;
   links?: Array<{ label: string; href: string }>;
 }
 
-/**
- * Footer Component
- *
- * Protected: Application footer - do not modify without review
- *
- * Displays the application footer with copyright notice and documentation/project links.
- * Uses Tailwind for responsive design with appropriate padding for mobile, tablet, and desktop.
- *
- * @component
- * @param {FooterProps} props - Component props
- * @example
- * return <Footer copyright="© 2026 Company" links={[{ label: "Docs", href: "#" }]} />
- */
 export function Footer({
   copyright = '© 2026 AppShell',
   links = [
-    { label: 'Documentation', href: 'https://github.com' },
-    { label: 'Project', href: 'https://github.com' },
-    { label: 'Issues', href: 'https://github.com' },
+    { label: 'Documentation', href: 'https://dsissoko.github.io/oneticket-core/appshell/docs/' },
+    { label: 'Project', href: 'https://github.com/dsissoko/oneticket-core' },
+    { label: 'Issues', href: 'https://github.com/dsissoko/oneticket-core/issues' },
   ],
 }: FooterProps): React.ReactElement {
   return (
-    <footer className="bg-gray-50 border-t border-gray-200 dark:bg-slate-900 dark:border-gray-800">
-      <div className="mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        {/* Footer content grid - responsive */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-8">
-          {/* Copyright section */}
-          <div>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              {copyright}
-            </p>
-          </div>
+    <footer className="bg-muted/30 border-t border-border">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
-          {/* Links section */}
-          <div className="flex flex-wrap gap-6 sm:justify-end">
+        {/* N1 — copyright + links */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-sm text-muted-foreground">{copyright}</p>
+          <div className="flex gap-6">
             {links.map((link) => (
-              <Link
+              <a
                 key={link.href}
-                to={link.href}
-                className="text-sm text-gray-600 hover:text-blue-600 transition-colors dark:text-gray-400 dark:hover:text-blue-400"
+                href={link.href}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 {link.label}
-              </Link>
+              </a>
             ))}
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="border-t border-gray-200 dark:border-gray-800 pt-8">
-          <p className="text-xs text-gray-500 dark:text-gray-500 text-center">
-            AppShell — Foundation for OneTicket Applications
-          </p>
+        {/* Separator */}
+        <Separator className="my-4" />
+
+        {/* N2 — social icons */}
+        <div className="flex justify-center items-center gap-6">
+          <a
+            href="https://github.com"
+            aria-label="GitHub"
+            title="GitHub"
+            className="text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <GitFork className="h-5 w-5" />
+          </a>
+          <a
+            href="https://github.com/dsissoko"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Profil GitHub"
+            title="Profil GitHub @dsissoko"
+          >
+            <Avatar className="h-5 w-5">
+              <AvatarImage src="https://avatars.githubusercontent.com/dsissoko" alt="dsissoko" />
+              <AvatarFallback>DS</AvatarFallback>
+            </Avatar>
+          </a>
+          <a
+            href="https://github.com/dsissoko/oneticket-core/stargazers"
+            aria-label="Stargazers"
+            title="Star ce projet"
+            className="text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <Star className="h-5 w-5" />
+          </a>
         </div>
+
       </div>
     </footer>
   );

@@ -1,37 +1,25 @@
-# US-006 — Documentation & Runbook
+# US-006 — Documentation
 
 ## Story
 
-En tant que développeur, je veux un runbook pour réutiliser le skeleton afin de créer rapidement des projets.
+As a developer, I want clear documentation so that I understand AppShell's purpose and how to adapt it for a new project.
 
 ## Expected Behavior
 
-- Un README.md explique le but du AppShell et la vision OneTicket
-- Une section "Getting Started" liste les étapes pour copier le skeleton
-- Un runbook détail les étapes d'adaptation pour un nouveau projet
-- Les fichiers importants sont commentés avec explications
-- Les fonctions publiques ont des JSDoc avec types TypeScript
-- Les patterns non-évidents (ownership model, state management, etc.) sont documentés
+- `apps/appshell/README.md` explains the project purpose and quick start
+- `docs/how/architecture.md` describes the full technical architecture aligned with delivered code
+- `docs/what/product-spec.md` describes the product vision, capabilities, and roadmap
+- `docs/what/epics/` contains all epics with user stories and acceptance criteria
+- Documentation site deployed at `https://dsissoko.github.io/oneticket-core/appshell/docs/`
+- `AboutScreen` describes AppShell intent and links to docs
+- `HelpScreen` provides quick links and FAQ for developers
 
 ## Acceptance Criteria
 
-- [ ] README.md au racine `apps/appshell/` explique le projet
-- [ ] Section "Quick Start" décrit les commandes npm (dev, build, preview, test)
-- [ ] Section "Copy to New Project" liste les étapes :
-  -   Copier `apps/appshell/app/` vers le nouveau projet
-  -   Mettre à jour `package.json` (nom, version)
-  -   Adapter les imports du projet racine
-  -   Configurer les routes spécifiques au projet
-  -   Adapter les design tokens si nécessaire
-- [ ] Runbook (.oneticket/runbooks/appshell-skeleton.md) documente chaque étape avec exemples
-- [ ] Composants clés (AppLayout, Header, Footer, useUsers) ont JSDoc
-- [ ] Les patterns patterns importants sont expliqués : ownership model, exclusive file ownership, state management avec Zustand
-- [ ] Liens vers la documentation Vite, React Router, React Query, MSW, next-themes
-
-## Related Epic
-
-[Epic 0 — AppShell MVP](epic-0-mvp/epic.md)
-
-## Related Slices
-
-[Slice 5 — Documentation & Runbook](../../../how/slices/slice-5-documentation/slice.md)
+- [x] `apps/appshell/README.md` exists with project overview and quick start
+- [x] `docs/how/architecture.md` reflects delivered AppShell v1.0 stack — no outdated references
+- [x] `docs/what/product-spec.md` describes delivered capabilities and roadmap epics
+- [x] Documentation site accessible at production URL
+- [x] `AboutScreen` displays AppShell tagline and description
+- [x] `HelpScreen` has Quick Links section with working internal navigation links
+- [x] No broken cross-references in documentation

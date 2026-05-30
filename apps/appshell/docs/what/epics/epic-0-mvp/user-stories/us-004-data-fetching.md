@@ -2,33 +2,25 @@
 
 ## Story
 
-En tant qu'utilisateur, je veux voir des données (users list) via React Query + MSW afin de comprendre le pattern.
+As a developer, I want to see React Query + MSW working together so that I understand the data fetching pattern for derived projects.
 
 ## Expected Behavior
 
-- React Query est configuré avec un QueryClient et provider
-- Un endpoint /api/users retourne une liste d'utilisateurs (mockée avec MSW)
-- Un hook `useUsers()` encapsule la logique de fetch
-- Les données sont affichées dans une page dédiée avec loading et error states
-- MSW intercepte les appels API et retourne des données mockées
-- Les mutations CRUD sont démontrées (createUser, updateUser, deleteUser)
+- `QueryClient` configured with `QueryCache.onError` and `MutationCache.onError` logging errors via `logger.error`
+- MSW intercepts all `/api/users` calls — no real backend needed
+- Six hooks available: `useUsers`, `useUser`, `useProfile`, `useCreateUser`, `useUpdateUser`, `useDeleteUser`
+- Hooks use `@/api/` imports (never relative `../`)
+- Mock data: 5 realistic users (Alice, Bob, Charlie, Diana, Eve) in `mocks/data/users.ts`
+- MSW always active via `__ENABLE_MSW__: true` — works in dev, preview, and GitHub Pages
 
 ## Acceptance Criteria
 
-- [ ] QueryClient est créé et wrappé avec QueryClientProvider
-- [ ] Endpoint /api/users est défini dans MSW avec handler GET
-- [ ] Hook `useUsers()` utilise useQuery avec clé unique 'users'
-- [ ] Hook `useUser(id)` est implémenté pour fetcher un utilisateur spécifique
-- [ ] Hook `useProfile()` démontre une query authentifiée
-- [ ] Mutation hooks existent : `useCreateUser()`, `useUpdateUser()`, `useDeleteUser()`
-- [ ] Page /users affiche la liste avec loading spinner et error message
-- [ ] MSW handlers pour GET, POST, PUT, DELETE sont implémentés
-- [ ] Les données mockées contiennent des utilisateurs d'exemple réalistes
-
-## Related Epic
-
-[Epic 0 — AppShell MVP](epic-0-mvp/epic.md)
-
-## Related Slices
-
-[Slice 3 — Data Fetching Pattern](../../../how/slices/slice-3-data-fetching/slice.md)
+- [x] `QueryClient` created in `lib/query-client.ts` with error logging
+- [x] MSW worker starts with `onUnhandledRequest: 'bypass'`
+- [x] `GET /api/users` returns list of 5 mock users
+- [x] `GET /api/users/:id` returns single user or 404
+- [x] `GET /api/users/profile` returns first admin user
+- [x] `POST /api/users` creates user and invalidates cache
+- [x] `PUT /api/users/:id` updates user and invalidates cache
+- [x] `DELETE /api/users/:id` removes user and invalidates cache
+- [x] MSW active on GitHub Pages preview — no console errors about unhandled requests

@@ -4,53 +4,48 @@
 
 Establish the canonical React + Vite skeleton and design system reference for all OneTicket applications, enabling parallel-safe development through exclusive file ownership and design constraint.
 
+## Status
+
+✅ Delivered — AppShell v1.0 is live at https://dsissoko.github.io/oneticket-core/appshell/app/
+
 ## Business Value
 
-- **Eliminate merge conflicts** in FAN-OUT parallel development (6+ agents working simultaneously)
-- **Quality design by constraint** — enforce visual consistency through design tokens and Radix UI primitives without manual review
-- **Accelerate onboarding** — new projects copy AppShell skeleton in <10 minutes and have working patterns from day one
-- **Enable AI-safe architecture** — exclusive file ownership prevents conflicts when multiple agents implement features in parallel
+- **Eliminate merge conflicts** in FAN-OUT parallel development — exclusive file ownership prevents conflicts when multiple agents implement features in parallel
+- **Quality design by constraint** — enforce visual consistency through HSL design tokens and shadcn/ui primitives without manual review
+- **Accelerate onboarding** — new projects copy AppShell skeleton and have working patterns from day one
+- **Observable by default** — loglevel + optional OTLP remote dispatch built in from the start
 
-## Scope
+## Scope — Delivered
 
-### Setup & Deployment of Skeleton
-- Directory structure with exclusive file ownership model (one component = one file, one page = one file)
-- Vite configuration with dev server, build, and preview modes
-- TypeScript strict mode enabled with proper tsconfig
-- Header, Footer, AppLayout locked components
-- Three demo routes: `/`, `/about`, `/help`
+### Skeleton & Layout
+- Directory structure with exclusive file ownership model (one screen = one file, one component = one file)
+- Vite + TypeScript strict mode, `@/` path alias, `vite/client` types
+- `main.tsx` entry point with global error boundary, ThemeProvider, QueryClientProvider, BrowserRouter with `basename`
+- Header, Footer, AppLayout locked components — shadcn tokens only, no hardcoded colors
+- Four screens: `/` (Home), `/about` (About), `/help` (Help), `*` (404)
 
 ### Pattern Demonstrations
-- **Routing:** React Router v6 setup with lazy route loading and 404 error boundary
-- **Data Fetching:** React Query integration + MSW (Mock Service Worker) for API mocking
-  - Query hooks: `useUsers()`, `useUser(id)`, `useProfile()`
-  - Mutation hooks: `useCreateUser()`, `useUpdateUser()`, `useDeleteUser()`
-  - MSW handlers for GET/POST/PUT/DELETE endpoints
-- **Forms:** React Hook Form + Zod validation with FormField component wrapper
-- **Theme Toggle:** next-themes integration with light/dark/system modes, localStorage persistence
-- **State Management:** Zustand stores for `useAuthStore` and `useAppStore`
-- **Authentication:** Mock login endpoint with JWT-like token, ProtectedRoute wrapper
+- **Routing:** React Router v6 with lazy loading, Suspense, 404 fallback, `basename` for sub-path deployments
+- **Data Fetching:** React Query v5 + MSW — `useUsers`, `useUser`, `useProfile`, `useCreateUser`, `useUpdateUser`, `useDeleteUser`
+- **Theme:** next-themes with system/light/dark, `.dark` CSS class, HSL tokens, persisted to localStorage
+- **Observability:** loglevel with configurable level + optional remote dispatch (OTLP-compatible)
 
-### Design System & Tokens
-- Tailwind CSS configuration with custom color palette (primary, secondary, accent, destructive, muted, background, foreground)
-- Typography scale, spacing (4px baseline), border radius, shadows, transitions
-- shadcn/ui primitives (Button, Input, Card, Badge, Alert, etc.)
-- Global styles with CSS variables for theme switching
-- Accessibility baseline (focus states, color contrast ≥4.5:1)
+### Design System
+- Tailwind CSS with frozen HSL design tokens — all colors via `hsl(var(--token))`
+- shadcn/ui components: Button, Card, DropdownMenu, Separator, Form, Avatar
+- lucide-react icons, Geist Variable font, tw-animate-css
+- `cn()` helper (clsx + tailwind-merge)
 
-### Testing Foundation
-- Vitest setup with React Testing Library
-- Component unit tests for Header, Footer, AppLayout
-- Integration tests for routes and authentication
-- MSW handlers in test mode
-- Snapshot tests for design tokens
+### MSW Strategy
+- `__ENABLE_MSW__: true` — always active, independent of build environment
+- `onUnhandledRequest: 'bypass'` — external requests not intercepted
+- Canonical structure: `mocks/browser.ts` + `mocks/handlers.ts` + `mocks/data/users.ts`
 
-### Documentation of Usage
-- README.md explaining purpose and OneTicket vision
-- Step-by-step guide: how to copy `apps/appshell/app/` to new projects
-- Adaptation instructions: updating package.json, routes, theme tokens
-- Code comments explaining non-obvious patterns
-- TypeScript JSDoc on public functions
+### Sub-path Deployment (GitHub Pages)
+- `VITE_BASE_PATH` injected by CI
+- `BrowserRouter basename={import.meta.env.BASE_URL}`
+- MSW SW url using `import.meta.env.BASE_URL`
+- `mockServiceWorker.js` committed in `public/`
 
 ## Related User Stories
 
@@ -59,13 +54,5 @@ Establish the canonical React + Vite skeleton and design system reference for al
 - [US-003 — Routing Setup](user-stories/us-003-routing.md)
 - [US-004 — Data Fetching Pattern](user-stories/us-004-data-fetching.md)
 - [US-005 — Theme Toggle](user-stories/us-005-theme-toggle.md)
-- [US-006 — Documentation & Runbook](user-stories/us-006-documentation.md)
-
-## Related Slices
-
-- [Slice 0 — Setup Skeleton](../../../how/slices/slice-0-setup/slice.md)
-- [Slice 1 — Layout Structure](../../../how/slices/slice-1-layout/slice.md)
-- [Slice 2 — Routing Setup](../../../how/slices/slice-2-routing/slice.md)
-- [Slice 3 — Data Fetching Pattern](../../../how/slices/slice-3-data-fetching/slice.md)
-- [Slice 4 — Theme Toggle](../../../how/slices/slice-4-theme/slice.md)
-- [Slice 5 — Documentation & Runbook](../../../how/slices/slice-5-documentation/slice.md)
+- [US-006 — Documentation](user-stories/us-006-documentation.md)
+- [US-007 — Observability](user-stories/us-007-observability.md)

@@ -43,6 +43,7 @@ LOAD skill `oneticket-vertical-slice` as SECOND ACTION after git checkout — no
 - **Manifest** — create only the manifest file, commit with exact message `chore(apps): decompose issue #<N>`, then respond — pipeline takes over automatically
 - **Branch** — work exclusively on `feature/issue-{issue_number}`
 - **Sequence** — read slices → read architecture → decompose into manifest → delegate to @dev
+- **Tests** — existing tests are a starting point and may evolve or disappear as the app evolves. Do not create tasks specifically to preserve tests.
 
 ## Routing & Handoff
 

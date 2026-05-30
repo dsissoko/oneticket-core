@@ -2,32 +2,25 @@
 
 ## Story
 
-En tant qu'utilisateur, je veux une structure de layout (Header + Outlet + Footer) afin que tous les écrans soient cohérents.
+As a user, I want a consistent layout (Header + content + Footer) so that all screens share the same visual structure.
 
 ## Expected Behavior
 
-- Un composant `AppLayout` global qui enveloppe tous les écrans
-- Le layout contient un Header sticky en haut avec logo et navigation
-- Un Outlet central où les routes affichent leur contenu
-- Un Footer sticky en bas avec informations légales et liens
-- Le layout est responsive et respecte une grille cohérente
-- Le theme (light/dark) s'applique uniformément à tous les éléments
+- `AppLayout` wraps all screens via React Router `<Outlet />`
+- CSS Grid layout: `grid-rows-[auto_1fr_auto]` — sticky header, flexible content, sticky footer
+- Header: logo linking to `/`, navigation links (Home, About, Help), ThemeToggle, responsive mobile menu
+- Footer N1: copyright left + text links right (Documentation, Project, Issues)
+- Footer N2: social icon links (GitHub, author profile with Avatar, Stargazers)
+- All colors use shadcn design tokens — no hardcoded color values
+- Navigation changes logged via `logger.info('[nav]', pathname)`
 
 ## Acceptance Criteria
 
-- [ ] Composant `AppLayout` crée le layout global (Header + Outlet + Footer)
-- [ ] Header affiche le logo AppShell et des liens de navigation (/, /about, /help)
-- [ ] Footer affiche copyright, lien vers documentation, statut du projet
-- [ ] Layout utilise CSS Grid ou Flexbox pour une grille cohérente
-- [ ] Layout est responsive (mobile, tablet, desktop)
-- [ ] Classes de style sont centralisées et utilisent les design tokens
-- [ ] Composant est documenté avec JSDoc
-- [ ] Design tokens (couleurs, espacements, typographie) sont appliqués de manière cohérente
-
-## Related Epic
-
-[Epic 0 — AppShell MVP](epic-0-mvp/epic.md)
-
-## Related Slices
-
-[Slice 1 — Layout Structure](../../../how/slices/slice-1-layout/slice.md)
+- [x] `AppLayout` renders Header + Outlet + Footer on all routes
+- [x] Header logo links to `/` and is clickable
+- [x] Navigation links use `<Link to>` (never `<a href>`) for internal routes
+- [x] ThemeToggle visible in Header — system/light/dark options
+- [x] Footer N1 renders copyright and text links
+- [x] Footer N2 renders social icons with Avatar (GitHub profile photo)
+- [x] No hardcoded colors — all Tailwind classes use design tokens
+- [x] Navigation logged to console on each route change

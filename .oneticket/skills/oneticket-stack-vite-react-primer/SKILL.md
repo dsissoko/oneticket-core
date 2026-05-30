@@ -123,7 +123,11 @@ coverage/
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
-    "types": ["vite/client"]
+    "types": ["vite/client"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
@@ -137,10 +141,16 @@ coverage/
 ```typescript
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import path from 'path'
 
 export default defineConfig({
   base: process.env.VITE_BASE_PATH || '/',
   plugins: [react()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
   test: {
     globals: true,
     environment: 'jsdom',
@@ -154,6 +164,43 @@ export default defineConfig({
 ```
 
 **`base` is mandatory** — `process.env.VITE_BASE_PATH || '/'` ensures the app loads assets from the correct path when deployed to a sub-path (GitHub Pages PR preview or production). Without it, assets resolve from `/` and the app renders blank on any non-root deployment.
+
+## `@/` path alias — mandatory when using shadcn/ui
+
+When using shadcn/ui components (`@/components/ui/...`), the `@/` alias must be configured in **both** `tsconfig.json` and `vite.config.ts`. TypeScript resolves it via `tsconfig.json` but Vite/Rollup resolves it independently at build time — missing it in `vite.config.ts` causes a build failure even if `tsc` passes.
+
+```typescript
+// vite.config.ts
+import path from 'path'
+
+export default defineConfig({
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
+})
+```
+
+```json
+// tsconfig.json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
+```
+
+**`@types/node` is required** — add it to `devDependencies` so `path` and `__dirname` are typed:
+
+```json
+"devDependencies": {
+  "@types/node": "^20.0.0"
+}
+```
 
 ## React Router sub-path routing
 
@@ -220,12 +267,17 @@ async function startMockServiceWorker(): Promise<void> {
     serviceWorker: {
       url: import.meta.env.BASE_URL + 'mockServiceWorker.js',
     },
+    onUnhandledRequest(request, print) {
+      // MSW should only intercept API calls — never navigation or static assets.
+      // Navigation requests are SPA routes handled by React Router, not the network.
+      // Static assets are served directly by the hosting platform.
+      if (request.destination === 'document' || request.mode === 'navigate') return
+      if (new URL(request.url).pathname.match(/\.(js|css|png|svg|ico|woff2?|ttf)$/)) return
+      // Warn on unhandled API calls — useful for debugging missing handlers
+      print.warning()
+    },
   })
 }
-
-startMockServiceWorker().then(() => {
-  // render app
-})
 ```
 
 **`url` is mandatory** — by default MSW registers the Service Worker from the domain root (`/mockServiceWorker.js`). On any sub-path deployment the file is not found and the app crashes with `Failed to register a Service Worker`. `import.meta.env.BASE_URL` ensures the SW is always found at the correct path.

@@ -1,7 +1,7 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import type { User } from '../api/types';
-import { apiClient } from '../api/client';
-import { endpoints } from '../api/endpoints';
+import type { User } from '@/api/types';
+import { apiClient } from '@/api/client';
+import { endpoints } from '@/api/endpoints';
 
 /**
  * Custom hook for fetching all users from the API
