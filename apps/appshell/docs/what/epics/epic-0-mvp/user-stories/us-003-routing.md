@@ -2,31 +2,23 @@
 
 ## Story
 
-En tant que développeur, je veux des routes de base (/, /about, /help) afin de démontrer le routing.
+As a developer, I want pre-configured routes so that I can see how React Router v6 is set up with lazy loading and error handling.
 
 ## Expected Behavior
 
-- React Router v6 est configuré avec routes principales
-- Chaque route charge un composant de page distinct
-- Les routes sont lazy-loaded pour optimiser le bundle
-- Une page 404 (Not Found) est présente pour les routes invalides
-- Une Error Boundary enveloppe les routes pour capturer les erreurs de rendu
+- React Router v6 configured with `BrowserRouter` and `basename={import.meta.env.BASE_URL}`
+- Four routes: `/` (HomeScreen), `/about` (AboutScreen), `/help` (HelpScreen), `*` (NotFoundScreen)
+- All screens are lazy-loaded with `React.lazy()` and `Suspense`
+- `ErrorBoundary` wraps all routes — render errors display graceful fallback with logger
+- 404 screen offers navigation back to Home
 
 ## Acceptance Criteria
 
-- [ ] React Router v6 est importé et configuré dans l'application
-- [ ] Route `/` charge une page d'accueil (Home)
-- [ ] Route `/about` charge une page À propos avec informations sur le projet
-- [ ] Route `/help` charge une page d'aide avec documentation basique
-- [ ] Routes inutilisées affichent une page 404 styled
-- [ ] Error Boundary enveloppe les routes et affiche un message d'erreur gracieux
-- [ ] Lazy loading est implémenté avec React.lazy() et Suspense
-- [ ] Navigation entre les routes est testable (liens dans Header)
-
-## Related Epic
-
-[Epic 0 — AppShell MVP](epic-0-mvp/epic.md)
-
-## Related Slices
-
-[Slice 2 — Routing Setup](../../../how/slices/slice-2-routing/slice.md)
+- [x] Route `/` renders `HomeScreen`
+- [x] Route `/about` renders `AboutScreen` with Back Home button
+- [x] Route `/help` renders `HelpScreen` with FAQ, Quick Links, Back Home button
+- [x] Route `*` renders `NotFoundScreen` with Go Home button
+- [x] All routes lazy-loaded — separate JS chunks in `dist/`
+- [x] `basename` set correctly — links work on GitHub Pages sub-path
+- [x] `ErrorBoundary` catches render errors and logs via `logger.error`
+- [x] `NotFoundScreen` "Try 404" button in HomeScreen links to `/nonexistent`

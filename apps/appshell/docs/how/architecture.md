@@ -1,72 +1,47 @@
-# Architecture
+# Architecture — AppShell
 
 ## 1. Architecture Principles
 
 ### Exclusive File Ownership
 - **One component = One file** — each UI component owns its own `.tsx` file exclusively
-- **One page = One file** — each route/page owns one `.tsx` file with no shared modification
-- **Shared components locked** — `Header`, `Footer`, and `AppLayout` are locked after v1 setup; modifications require review
-- **Parallel-safe development** — multiple agents work simultaneously on different files with zero merge conflicts
+- **One screen = One file** — each route owns one `.tsx` file with no shared modification
+- **Shared components locked** — `Header`, `Footer`, and `AppLayout` are locked after setup; modifications require review
+- **Parallel-safe development** — multiple developers or agents work simultaneously on different files with zero merge conflicts
 
 ### Design by Constraint
-- **Design tokens immutable** — all colors, spacing, typography defined in `tailwind.config.ts` and `globals.css`
-- **Radix UI + shadcn/ui only** — approved primitives enforce visual consistency automatically
+- **Design tokens immutable** — all colors, spacing, typography defined in `tailwind.config.ts` and `styles/globals.css`
+- **shadcn/ui only** — approved primitives built on `@base-ui/react` enforce visual consistency automatically
 - **No inline styles** — all styling uses Tailwind classes and design tokens
 - **No magic numbers** — all dimensions, colors, and transitions derive from frozen tokens
 
 ### Single Responsibility
 - **API layer** — `api/client.ts` and `api/endpoints.ts` centralize all HTTP communication
-- **State management** — Zustand stores encapsulate domain state; React Query encapsulates server state
-- **Hooks isolation** — each hook manages one concern (auth, users, etc.)
-- **Route isolation** — each page component manages its own features without importing from other pages
-- **Theme isolation** — next-themes (v2.0+) manages all theme state; no Zustand theme logic
-
----
-
-## 1.5 V2.0 Migration Highlights
-
-**AppShell v2.0** (this issue, #929) adds the complete UI stack alignment:
-
-| Aspect | v0.1 Status | v2.0 Status | Key Change |
-|---|---|---|---|
-| UI components | Minimal | shadcn/ui (5+ core components) | `components/ui/` via shadcn CLI |
-| Theme system | Zustand custom | next-themes | Replaces `appStore.ts` theme logic entirely |
-| Icons | Inline SVGs | lucide-react | Replace all `<svg>` with lucide imports |
-| Form library | None | React Hook Form + Zod | New `schemas/` directory for validation |
-| Helper utilities | None | `cn()` from shadcn | `lib/utils.ts` for Tailwind class composition |
-| File structure | `pages/` + `main.css` | `screens/` + `styles/globals.css` | Alignment with brief naming conventions |
-| Testing setup | Vitest basic | Vitest + setup files | `vitest.config.ts` + `vitest.setup.ts` + MSW in tests |
-| Environment config | None | `.env.example` | Document required env vars |
-
-**Migration path:**
-1. Task 0 (shadcn/ui init) — sequential blocker
-2. Rename entry point & CSS file (main.tsx, globals.css)
-3. Rename directory (pages/ → screens/)
-4. Delete theme Zustand logic, install next-themes
-5. Rewrite ThemeToggle, replace SVGs with lucide icons
-6. Add form libraries and Vitest config
-
-See `MIGRATION-v0.1-to-v2.md` for detailed file-by-file breakdown and `SHADCN-NEXT-THEMES-INTEGRATION.md` for theme integration specifics.
+- **Server state** — React Query hooks encapsulate all async data fetching and caching
+- **Hooks isolation** — each hook manages one concern (`useUsers`, `useCreateUser`, etc.)
+- **Screen isolation** — each screen component manages its own features without importing from other screens
+- **Theme isolation** — `next-themes` manages all theme state via context — no manual CSS class toggling
 
 ---
 
 ## 2. System Overview
 
-**AppShell** is a canonical React + Vite single-page application (SPA) that serves as a reference implementation and scaffolding template for all OneTicket projects.
+**AppShell** is a canonical React + Vite single-page application (SPA) that serves as a reference skeleton and template for all OneTicket projects.
 
 The system consists of:
 
-1. **Frontend SPA** — React 19 + TypeScript, running in browser
-2. **Mock API** — MSW (Mock Service Worker) intercepting HTTP calls in dev/test
-3. **State Layer** — Zustand for local app state, React Query for server state
+1. **Frontend SPA** — React 18 + TypeScript, running entirely in the browser
+2. **Mock API** — MSW (Mock Service Worker) intercepting HTTP calls in all environments (dev, preview, production demo)
+3. **Server State** — React Query managing all async data fetching, caching, and synchronization
 4. **Design System** — Tailwind CSS with frozen design tokens and shadcn/ui components
-5. **Testing Layer** — Vitest + React Testing Library with MSW in test mode
+5. **Theme System** — `next-themes` managing light/dark/system preference
+6. **Observability** — `loglevel` with optional remote dispatch via `VITE_OTLP_ENDPOINT`
+7. **Testing Infrastructure** — Vitest + React Testing Library + MSW in test mode
 
-**Key Insight:** There is no backend server. AppShell is entirely frontend-driven with API calls mocked via MSW. This allows developers to:
+**Key Insight:** There is no backend server. AppShell is entirely frontend-driven with API calls intercepted by MSW. This allows developers to:
 - Work completely offline
-- Design APIs before backend exists
+- Design APIs before the backend exists
 - Test with realistic data without server dependency
-- Parallelize development across multiple agents safely
+- Parallelize development safely
 
 ---
 
@@ -75,23 +50,25 @@ The system consists of:
 **Single-Page Application (SPA) with Client-Side Routing**
 
 - **Client-side routing** via React Router v6 — all navigation happens in-browser without page reload
-- **Lazy-loaded routes** — each page is a separate JavaScript chunk, loaded on demand with `React.lazy()` and `Suspense`
-- **Error boundary** — top-level error boundary catches render errors and displays graceful fallback
-- **Component-driven architecture** — UI is composed of small, testable, reusable components
+- **Lazy-loaded routes** — each screen is a separate JavaScript chunk, loaded on demand via `React.lazy()` and `Suspense`
+- **Global error boundary** — top-level `ErrorBoundary` catches render errors and displays a graceful fallback
+- **Global error listeners** — `window.onerror` and `unhandledrejection` captured in `main.tsx`
+- **Component-driven architecture** — UI composed of small, testable, reusable components
 
 **Data flow:**
+
 ```
 User Action
   ↓
 React Component
   ↓
-Zustand Store (app state) OR React Query Hook (server state)
+React Query Hook (server state) OR next-themes (theme state)
   ↓
-API Client (fetch/axios)
+API Client (fetch wrapper)
   ↓
-MSW Interceptor (dev/test) or Real HTTP (production)
+MSW Interceptor → mock response
   ↓
-Response to Component
+React Query caches + delivers to component
   ↓
 Re-render
 ```
@@ -101,148 +78,155 @@ Re-render
 ## 4. Main Technical Boundaries
 
 ### Frontend Boundary (Browser)
-- **React components** — UI rendering and state management
-- **React Router** — client-side routing and navigation
-- **Zustand stores** — local app state (auth, theme, sidebar, etc.)
+- **React screens** — UI rendering at `src/screens/`
+- **React Router** — client-side routing with `basename` for sub-path deployments
 - **React Query** — server state caching and synchronization
-- **Hooks** — custom logic extraction (useAuth, useUsers, useTheme)
+- **next-themes** — theme preference (system/light/dark), persisted to localStorage
+- **Hooks** — custom logic at `src/hooks/` (`useUsers`, `useUser`, `useProfile`, `useCreateUser`, `useUpdateUser`, `useDeleteUser`)
 
 ### API Boundary
-- **Centralized API client** (`api/client.ts`) — single HTTP wrapper for all requests
-- **Endpoint definitions** (`api/endpoints.ts`) — URLs and request/response shapes
-- **Type definitions** (`api/types.ts`) — Request/Response DTOs in TypeScript
-- **MSW handlers** (`api/mocks.ts`) — mock implementations of API endpoints
+- **Centralized API client** (`api/client.ts`) — single fetch wrapper for all requests
+- **Endpoint definitions** (`api/endpoints.ts`) — URLs and request shapes
+- **Type definitions** (`api/types.ts`) — request/response TypeScript interfaces
+- **MSW handlers** (`mocks/handlers.ts`) — mock implementations of API endpoints
+- **Mock data** (`mocks/data/users.ts`) — realistic seed data for development and demo
 
 ### Design System Boundary
-- **Tailwind configuration** (`tailwind.config.ts`) — frozen design tokens (colors, spacing, typography)
-- **Global styles** (`styles/globals.css`) — CSS variables for light/dark theme switching
-- **shadcn/ui primitives** — Button, Input, Card, Dialog, etc. — pre-styled and ready to use
-- **Lucide icons** — 300+ consistent SVG icons
+- **Tailwind configuration** (`tailwind.config.ts`) — frozen HSL design tokens (colors, spacing, typography)
+- **Global styles** (`styles/globals.css`) — CSS custom properties for light/dark theme, Tailwind directives
+- **shadcn/ui components** (`components/ui/`) — Button, Card, DropdownMenu, Separator, Form, Avatar — installed in repo, not from node_modules
+- **Lucide icons** — consistent SVG icon library
+- **`cn()` helper** (`lib/utils.ts`) — Tailwind class composition via `clsx` + `tailwind-merge`
 
 ### State Boundary
-- **Zustand stores** — synchronous, local-first state (auth status, UI state, sidebar, etc.) — **NOT theme** (v2.0+)
-- **next-themes** (v2.0+) — all theme/dark mode management via context (replaces Zustand theme logic)
-- **React Query** — async server state (user data, lists, etc.) with automatic caching and synchronization
+- **React Query** — all async server state (users list, single user, profile, mutations)
+- **next-themes** — theme state (persisted to localStorage, applied via `.dark` CSS class)
+- **React local state** — UI-only ephemeral state (`useState` in components)
+- **No global client state store** — Zustand intentionally excluded; add if a derived app requires cross-screen client state
+
+### Observability Boundary
+- **`logger`** (`lib/logger.ts`) — `loglevel` wrapper with configurable level via `VITE_LOG_LEVEL`
+- **Remote dispatch** — optional, activated by `VITE_OTLP_ENDPOINT`; fire-and-forget, never blocks rendering
+- **Auto-instrumented** — navigation changes logged in `AppLayout`, React Query errors in `QueryCache.onError`, render errors in `ErrorBoundary.componentDidCatch`
 
 ---
 
-## 5. Key Components
+## 5. File Structure
+
+```
+apps/appshell/app/
+├── .env.example                     ← VITE_APP_NAME, VITE_LOG_LEVEL, VITE_OTLP_ENDPOINT
+├── index.html
+├── package.json
+├── tailwind.config.ts               ← frozen design tokens
+├── postcss.config.js
+├── tsconfig.json                    ← ES2020, strict, vite/client types, @/ alias
+├── vite.config.ts                   ← VITE_BASE_PATH, __ENABLE_MSW__, resolve.alias
+├── vitest.config.ts                 ← jsdom, @/ alias, vitest.setup.ts
+├── vitest.setup.ts                  ← Testing Library + MSW server setup
+└── src/
+    ├── main.tsx                     ← MSW init + ThemeProvider + QueryClientProvider + BrowserRouter
+    ├── styles/
+    │   └── globals.css              ← Tailwind directives + HSL CSS vars (light/dark)
+    ├── components/
+    │   ├── layout/
+    │   │   ├── AppLayout.tsx        ← Header + Outlet + Footer (locked)
+    │   │   ├── Header.tsx           ← logo + nav + ThemeToggle (locked)
+    │   │   └── Footer.tsx           ← N1 copyright+links / N2 social icons (locked)
+    │   ├── ui/                      ← shadcn components (button, card, dropdown-menu, separator, form, avatar)
+    │   ├── ThemeToggle.tsx          ← next-themes dropdown (system/light/dark)
+    │   ├── ErrorBoundary.tsx        ← React render error boundary
+    │   └── LoadingIndicator.tsx     ← Suspense fallback
+    ├── screens/
+    │   ├── HomeScreen.tsx           ← landing page (/)
+    │   ├── AboutScreen.tsx          ← about (/about)
+    │   ├── HelpScreen.tsx           ← help & FAQ (/help)
+    │   └── NotFoundScreen.tsx       ← 404 fallback
+    ├── hooks/
+    │   ├── useUsers.ts              ← GET /api/users
+    │   ├── useUser.ts               ← GET /api/users/:id
+    │   ├── useProfile.ts            ← GET /api/users/profile
+    │   ├── useCreateUser.ts         ← POST /api/users
+    │   ├── useUpdateUser.ts         ← PUT /api/users/:id
+    │   └── useDeleteUser.ts         ← DELETE /api/users/:id
+    ├── api/
+    │   ├── client.ts                ← fetch wrapper
+    │   ├── endpoints.ts             ← URL definitions
+    │   └── types.ts                 ← User, CreateUserRequest, etc.
+    ├── mocks/
+    │   ├── browser.ts               ← MSW worker setup
+    │   ├── handlers.ts              ← REST handlers (GET/POST/PUT/DELETE /api/users)
+    │   └── data/
+    │       └── users.ts             ← seed data (Alice, Bob, Charlie, Diana, Eve)
+    ├── lib/
+    │   ├── utils.ts                 ← cn() helper (clsx + tailwind-merge)
+    │   ├── query-client.ts          ← QueryClient with QueryCache.onError + MutationCache.onError
+    │   ├── logger.ts                ← loglevel + optional remote dispatch
+    │   └── schemas/
+    │       └── .gitkeep             ← Zod schemas — empty, ready for epic-3-demo forms
+    └── types/
+        └── loglevel-plugin-remote.d.ts  ← module declaration (no official types)
+```
+
+---
+
+## 6. Key Components
 
 ### Layout Components (Locked)
 
-**AppLayout** (`src/components/AppLayout.tsx`)
-- Root layout wrapping all pages
-- Contains sticky Header, central Outlet (page content), and sticky Footer
-- Manages responsive breakpoints (mobile, tablet, desktop)
-- Applies global theme and spacing
+**AppLayout** (`src/components/layout/AppLayout.tsx`)
+- Root layout wrapping all screens
+- CSS Grid: `grid-rows-[auto_1fr_auto]` — sticky header, flexible content, sticky footer
+- Logs navigation changes via `useLocation` + `logger.info`
 
-**Header** (`src/components/Header.tsx`)
-- Sticky header at top of page
-- Contains logo (clickable, links to `/`)
-- Navigation links (`/`, `/about`, `/help`)
-- ThemeToggle component (right side)
-- Responsive mobile menu (optional, if nav grows)
+**Header** (`src/components/layout/Header.tsx`)
+- Sticky top header using `bg-background border-border` tokens
+- Logo (clickable → `/`), navigation links, ThemeToggle
+- Responsive mobile menu button (Menu icon from lucide-react)
 
-**Footer** (`src/components/Footer.tsx`)
-- Sticky footer at bottom of page
-- Links to documentation, help, About
-- Copyright and version info
+**Footer** (`src/components/layout/Footer.tsx`)
+- N1: copyright left + text links right (Documentation, Project, Issues)
+- Separator
+- N2: social icons (GitFork → github.com, Avatar → github.com/dsissoko, Star → stargazers)
+- All colors use shadcn tokens — no hardcoded values
 
-### Page Components (Exclusive Files)
-
-**HomeScreen** (`src/screens/HomeScreen.tsx`)
-- Landing/welcome page at `/`
-- Introduces AppShell vision and capabilities
-- Displays current theme
-- Uses shadcn/ui `Card` component for layout
-- Links to other sections
-
-**AboutScreen** (`src/screens/AboutScreen.tsx`)
-- About AppShell at `/about`
-- OneTicket team, vision, tech stack
-- Product metrics and design principles
-
-**HelpScreen** (`src/screens/HelpScreen.tsx`)
-- FAQ and documentation at `/help`
-- Links to GitHub, docs, discussions
-- Common troubleshooting
-
-### Core Feature Components
+### Core Components
 
 **ThemeToggle** (`src/components/ThemeToggle.tsx`)
-- Dropdown menu to select system/light/dark theme preference
-- Uses `useTheme()` hook from next-themes (v2.0+)
-- Automatically persists to localStorage and applies `.dark` class
-- Includes lucide-react icons (Sun, Moon, Monitor)
-
-**ProtectedRoute** (`src/components/ProtectedRoute.tsx`)
-- Wrapper component for authenticated pages
-- Redirects to login if user not authenticated
-- Checks `useAuthStore` for current user
+- shadcn DropdownMenu with lucide icons (Sun, Moon, Monitor)
+- `useTheme()` from `next-themes` — persists to localStorage, applies `.dark` class
 
 **ErrorBoundary** (`src/components/ErrorBoundary.tsx`)
 - Catches React render errors
-- Displays fallback UI instead of white screen
-- Logs errors for debugging
+- Logs via `logger.error`
+- Displays graceful fallback with shadcn Button
 
 ---
 
-## 6. Key Interfaces
-
-### API Shape (MSW Handlers)
+## 7. API Shape (MSW Handlers)
 
 ```typescript
-// GET /api/users — fetch all users
-interface GetUsersResponse {
-  data: User[];
-  total: number;
-}
+// GET /api/users
+{ data: User[]; total: number }
 
-// GET /api/users/:id — fetch single user
-interface GetUserResponse {
-  data: User;
-}
+// GET /api/users/:id
+{ data: User }
 
-// POST /api/users — create user
-interface CreateUserRequest {
-  email: string;
-  name: string;
-  role: 'admin' | 'user';
-}
+// GET /api/users/profile
+{ data: User }
 
-interface CreateUserResponse {
-  data: User;
-}
+// POST /api/users
+body: { email: string; name: string; role: 'admin' | 'user' }
+response: { data: User }  // 201
 
-// PUT /api/users/:id — update user
-interface UpdateUserRequest {
-  name?: string;
-  role?: 'admin' | 'user';
-}
+// PUT /api/users/:id
+body: Partial<User>
+response: { data: User }
 
-interface UpdateUserResponse {
-  data: User;
-}
+// DELETE /api/users/:id
+response: {}  // 204
 
-// DELETE /api/users/:id — delete user
-interface DeleteUserResponse {
-  success: true;
-}
-
-// POST /api/auth/login — mock login
-interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-interface LoginResponse {
-  data: {
-    token: string;
-    user: User;
-  };
-}
-
-// Domain Models
+// Domain Model
 interface User {
   id: string;
   email: string;
@@ -250,252 +234,137 @@ interface User {
   role: 'admin' | 'user';
   createdAt: string;
 }
-
-interface Session {
-  id: string;
-  userId: string;
-  token: string;
-  expiresAt: string;
-}
-```
-
-### React Query Hooks
-
-```typescript
-// Queries
-useUsers(): UseQueryResult<User[]>
-useUser(id: string): UseQueryResult<User>
-useProfile(): UseQueryResult<User>  // authenticated
-
-// Mutations
-useCreateUser(): UseMutationResult<User, Error, CreateUserRequest>
-useUpdateUser(): UseMutationResult<User, Error, UpdateUserRequest>
-useDeleteUser(): UseMutationResult<void, Error, string>
-```
-
-### Zustand Stores
-
-```typescript
-// useAuthStore
-interface AuthState {
-  user: User | null;
-  token: string | null;
-  isLoading: boolean;
-  login(email: string, password: string): Promise<void>;
-  logout(): void;
-  setUser(user: User | null): void;
-  isAuthenticated(): boolean;
-}
-
-// useAppStore
-interface AppState {
-  theme: 'system' | 'light' | 'dark';
-  sidebarCollapsed: boolean;
-  setTheme(theme: 'system' | 'light' | 'dark'): void;
-  toggleSidebar(): void;
-}
 ```
 
 ---
 
-## 7. Data Architecture
+## 8. MSW Strategy
 
-### State Management Strategy
+MSW is **always active** — controlled by `__ENABLE_MSW__: true` in `vite.config.ts`, independent of the build environment.
 
-**Zustand Stores** (Local App State)
-- User session (`authStore`) — persisted to localStorage, survives page reload
-- UI state (`appStore`) — theme preference, sidebar collapse state, etc.
-- Synchronous, single source of truth per store
-- No async logic in stores; async handled by hooks/mutations
+- `true` → MSW intercepts all `/api/*` calls (dev, preview, GitHub Pages demo)
+- `false` → MSW disabled, real backend is used (set when connecting a real API)
 
-**React Query** (Server State)
-- Fetches and caches user data, lists, etc. from API
-- Automatic background refetching and stale-while-revalidate
-- Centralizes cache invalidation logic
-- Integrates with React hooks for simple component integration
+**Service Worker scope:** `worker.start({ serviceWorker: { url: import.meta.env.BASE_URL + 'mockServiceWorker.js' } })` — ensures the SW is found on any sub-path deployment.
 
-### Data Flow: User Fetching Example
-
-```
-Component mounts
-  ↓
-useUsers() hook called
-  ↓
-React Query checks cache
-  ↓
-If cached (and fresh): return cached data immediately
-If stale or missing: trigger fetch
-  ↓
-API client calls GET /api/users
-  ↓
-MSW intercepts (in dev/test) or real HTTP (production)
-  ↓
-Response returned
-  ↓
-React Query caches and invalidates related queries
-  ↓
-Component re-renders with fresh data
-```
-
-### Caching Layers
-
-1. **React Query cache** — automatic, time-based (staleTime configurable, default 0)
-2. **Browser localStorage** — app state (auth token, theme preference)
-3. **HTTP caching** — not used in MSW (no browser caching needed for mocks)
+**Unhandled requests:** `onUnhandledRequest: 'bypass'` — external requests (avatar images, fonts, etc.) are never intercepted.
 
 ---
 
-## 8. Security Architecture
+## 9. Theme System
 
-### Authentication
-- **Mock login endpoint** (`POST /api/auth/login`) — takes email/password, returns JWT-like token
-- **Token storage** — `localStorage.auth_token` — persisted across sessions
-- **Token validation** — checked on app startup; auto-logout if expired
-- **Protected routes** — `<ProtectedRoute>` wrapper checks `useAuthStore.user` before rendering
+`next-themes` manages all theme state:
 
-### Authorization
-- **User roles** — `admin` or `user` (future: RBAC via roles array)
-- **Role checking** — available but not enforced in v1 (preparation for v1.1)
-
-### Data Protection
-- **HTTPS only** (in production) — Vite dev server uses HTTP (acceptable for dev)
-- **No sensitive data in localStorage** — token only; user ID and permissions can be read from JWT
-- **CORS** — configured via MSW handlers in dev; real API handles CORS headers
-
-### Secrets Management
-- **No hardcoded secrets** — MSW provides mock responses without auth logic
-- **API endpoint URLs** — defined in `api/endpoints.ts`; no secrets in code
+- `ThemeProvider attribute="class"` in `main.tsx` — applies `.dark` class on `<html>`
+- `defaultTheme="system"` — follows OS preference by default
+- CSS custom properties in `styles/globals.css` — HSL values for `:root` (light) and `.dark`
+- `tailwind.config.ts` — consumes CSS vars via `hsl(var(--token))` for all color tokens
+- `darkMode: ['class']` — Tailwind dark variants activated by `.dark` class
 
 ---
 
-## 9. Deployment Strategy
+## 10. Observability
 
-### Development
-- **`npm run dev`** — Vite dev server on `http://localhost:5173`
-- **MSW enabled** — `setupWorker()` in `src/index.tsx`
-- **Hot module reload** — code changes reload instantly in browser
+### Logger (`lib/logger.ts`)
 
-### Testing
-- **`npm run test`** — Vitest with React Testing Library
-- **MSW in test mode** — `setupServer()` intercepts API calls
-- **Coverage** — Jest coverage reporter
+- **Library:** `loglevel` + `loglevel-plugin-remote`
+- **Level:** controlled by `VITE_LOG_LEVEL` env var (default: `debug`)
+- **Remote:** activated by `VITE_OTLP_ENDPOINT` — JSON format, 1s batch, 500 message queue
+- **Fire-and-forget** — remote dispatch never blocks rendering
 
-### Production Build
-- **`npm run build`** — Webpack/Vite bundler output to `dist/`
-- **Tree-shaking** — unused code removed automatically
-- **Code splitting** — routes lazy-loaded, separate `.js` chunks per route
-- **Minification** — JavaScript, CSS minified by Vite
-- **MSW disabled** — no mock API in production (real API used instead)
+### Auto-instrumented points
 
-### Deployment Target
-- **Static hosting** — AppShell is entirely static, deployable to Netlify, Vercel, GitHub Pages, AWS S3
-- **Environment variables** — `VITE_API_URL` can be configured per deployment
-- **Baseline requirement** — any HTTP server capable of serving static files
+| Point | Mechanism | Log level |
+|---|---|---|
+| App start | `main.tsx` | `info` |
+| MSW enabled | `main.tsx` | `info` |
+| Navigation | `AppLayout` `useEffect` on `location.pathname` | `info` |
+| React Query fetch error | `QueryCache.onError` | `error` |
+| React Query mutation error | `MutationCache.onError` | `error` |
+| React render error | `ErrorBoundary.componentDidCatch` | `error` |
+| Uncaught JS error | `window.onerror` | `error` |
+| Unhandled promise rejection | `window.unhandledrejection` | `error` |
 
 ---
 
-## 10. Observability Strategy
+## 11. Deployment
 
-### Logging
-- **Console logs** — development-only, no production telemetry
-- **Error boundary logs** — errors caught at root level are logged
-- **MSW request/response logs** — available in dev tools console (Network tab)
+### GitHub Pages (current)
 
-### Debugging
-- **React DevTools** — browser extension for inspecting component tree and props
-- **Zustand DevTools** — stores exposed for inspection (optional Redux DevTools integration)
-- **Network tab** — MSW requests visible in browser DevTools
-- **Source maps** — generated for dev/test (not in production build)
+| Environment | URL | `VITE_BASE_PATH` |
+|---|---|---|
+| PR preview | `https://dsissoko.github.io/oneticket-core/appshell/pr/{N}/app/` | `/oneticket-core/appshell/pr/{N}/app/` |
+| Production | `https://dsissoko.github.io/oneticket-core/appshell/app/` | `/oneticket-core/appshell/app/` |
 
-### Performance Monitoring (Future)
-- **Lighthouse CI** — automated performance scoring
-- **Bundle analysis** — webpack-bundle-analyzer or similar for code splitting audit
-- **React Profiler** — built-in React profiler for render analysis
+**Critical configuration for sub-path deployments:**
+- `vite.config.ts` — `base: process.env.VITE_BASE_PATH ?? '/'`
+- `BrowserRouter` — `basename={import.meta.env.BASE_URL}`
+- MSW — `url: import.meta.env.BASE_URL + 'mockServiceWorker.js'`
+- `tsconfig.json` — `"types": ["vite/client"]` for `import.meta.env`
+- `vite.config.ts` — `resolve.alias: { '@': path.resolve(__dirname, './src') }`
 
----
+### Environment Variables
 
-## 11. Related C4 Views
-
-- [System Context](../c4/system-context.md) — user and system interactions
-- [Containers](../c4/containers.md) — SPA, design system, API mocking layer
-- [Components](../c4/components.md) — React components and their relationships
-- [Deployment](../c4/deployment.md) — static hosting infrastructure
+| Variable | Default | Description |
+|---|---|---|
+| `VITE_APP_NAME` | `AppShell` | Application name |
+| `VITE_BASE_PATH` | `/` | Base path — injected by CI |
+| `VITE_LOG_LEVEL` | `debug` | Logger level: `debug \| info \| warn \| error \| silent` |
+| `VITE_OTLP_ENDPOINT` | _(empty)_ | Remote log endpoint — empty = console only |
 
 ---
 
-## 12. Related Implementation Slices
+## 12. Tech Stack
 
-See [how/slices/](../slices/) for all implementation slices derived from this architecture.
+| Layer | Library | Version |
+|---|---|---|
+| Bundler | Vite | ^5 |
+| UI | React + TypeScript | ^18, ^5 |
+| Router | React Router DOM | ^6 |
+| Styling | Tailwind CSS | ^3 |
+| Components | shadcn/ui via @base-ui/react | latest |
+| Utilities | clsx + tailwind-merge + class-variance-authority | latest |
+| Icons | lucide-react | latest |
+| Font | @fontsource-variable/geist | latest |
+| Animations | tw-animate-css | latest |
+| Data fetching | @tanstack/react-query | ^5 |
+| Mock API | MSW | ^2 |
+| Theme | next-themes | ^0.3 |
+| Logging | loglevel + loglevel-plugin-remote | ^1.9, ^0.6 |
+| Testing | Vitest + @testing-library/react + jsdom | ^1 |
 
 ---
 
 ## 13. Technical Constraints
 
-### Tech Stack (Locked)
-- **React** 19.x — component library
-- **Vite** — build tool and dev server
-- **TypeScript** — strict mode required (`strict: true`)
-- **Tailwind CSS** — utility-first styling
-- **shadcn/ui** — component library primitives
-- **React Router** v6 — client-side routing
-- **React Query** v5 — server state management
-- **Zustand** v4 — local state management
-- **next-themes** v0.3 — theme switching
-- **React Hook Form** — form state management
-- **Zod** — schema validation
-- **Mock Service Worker** v2 — API mocking
-- **Vitest** — test runner
-- **React Testing Library** — component testing
-
-### File Structure Rules (Hard Constraints)
+### Hard Constraints
 - **No file sharing** — two features never modify the same file
-- **One component = One file** — `Button.tsx` is not shared; each page imports shadcn/ui Button directly
-- **One page = One file** — `UsersPage.tsx` is exclusive to `/users` route
-- **Locked components** — `Header.tsx`, `Footer.tsx`, `AppLayout.tsx` are protected; changes require architectural review
-
-### Code Quality Rules
-- **TypeScript strict** — no `any` types allowed
-- **No console.log in production** — dev-only via `process.env.DEV`
-- **Accessibility (WCAG AA)** — all interactive elements keyboard-navigable; color contrast ≥ 4.5:1
-- **Testing required** — all new components and pages must have unit or integration tests
-- **No external CSS frameworks** — Tailwind + shadcn/ui only; no Bootstrap, Material-UI, etc.
+- **One screen = One file** — `HomeScreen.tsx` is exclusive to `/` route
+- **Locked components** — `Header.tsx`, `Footer.tsx`, `AppLayout.tsx` — changes require architectural review
+- **shadcn/ui only** — no other UI component libraries
+- **No inline styles** — Tailwind classes only
+- **No hardcoded colors** — always use design tokens (`bg-background`, `text-foreground`, etc.)
+- **TypeScript strict** — `strict: true` in `tsconfig.json`
+- **`@/` alias** — always use `@/` imports, never relative `../` for cross-directory imports
 
 ### Browser Support
-- **Modern browsers only** — Chrome, Firefox, Safari, Edge (last 2 versions)
-- **ES2020 target** — TypeScript compiled to ES2020; no IE11 support
+- Modern browsers only — Chrome, Firefox, Safari, Edge (last 2 versions)
+- ES2020 target
 
 ---
 
-## 14. Open Questions
+## 14. Roadmap
 
-1. **Real Backend Integration (v1.1)** — How should the API client switch from MSW mocks to real HTTP calls?
-   - Planned: Environment variables (`VITE_API_URL`)
-   - Alternative: Feature flags via Zustand store
-
-2. **Advanced Authentication (v1.1)** — Should OAuth/social login be added?
-   - Planned: Optional, separate handler in MSW
-   - Decision deferred until user research
-
-3. **Permission Model (v1.1+)** — How should role-based access control (RBAC) scale?
-   - Current: Simple `user.role` string
-   - Future: Role-based permissions array, feature flags
-
-4. **State Management Scale (v2.0)** — Will Zustand scale for complex app state?
-   - Current: Simple stores, no middleware
-   - Future: Consider Redux or Zustand middleware if state tree grows
-
-5. **Performance Optimization (v2.0)** — Should code splitting be more aggressive?
-   - Current: One chunk per route
-   - Future: Component-level code splitting if bundle exceeds 500KB
+| Epic | Subject | Status |
+|---|---|---|
+| `epic-0-mvp` | Skeleton foundation | ✅ Delivered |
+| `epic-1-auth0` | Auth0 authentication | 🔲 Planned |
+| `epic-2-testing` | Test coverage | 🔲 Planned |
+| `epic-3-demo` | Demo screen with tabbed patterns | 🔲 Planned |
 
 ---
 
-## Summary
+## 15. Related C4 Views
 
-**AppShell** is a parallel-safe, design-constrained React SPA template that enables 6+ developers to work simultaneously without merge conflicts. It establishes exclusive file ownership, frozen design tokens, and proven patterns for routing, state management, API integration, and testing. The architecture prioritizes simplicity and clarity over flexibility, making it ideal for agent-driven development and rapid project scaffolding.
-
-**Core principles:**
-- **Exclusive ownership** — one file, one feature
-- **Design by constraint** — design tokens locked, approved primitives only
-- **Single responsibility** — API layer, state layer, UI layer clearly separated
-- **Parallel-safe** — zero merge conflicts by design
+- [System Context](c4/system-context.md)
+- [Containers](c4/containers.md)

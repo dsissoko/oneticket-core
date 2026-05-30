@@ -2,30 +2,25 @@
 
 ## Story
 
-En tant que développeur, je veux un skeleton prêt à copier afin de démarrer un nouveau projet rapidement.
+As a developer, I want a ready-to-copy skeleton so that I can start a new project immediately with proven patterns.
 
 ## Expected Behavior
 
-- Le répertoire `apps/appshell/app/` contient une structure de projet React + Vite complète
-- La structure suit un modèle d'ownership exclusif : une composante = un fichier, une page = un fichier
-- Vite est configuré avec dev server, build et preview modes
-- TypeScript est en mode strict avec une `tsconfig.json` appropriée
-- Les composants `Header`, `Footer`, et `AppLayout` sont verrouillés (locked)
-- Le projet est immédiatement copiable vers une nouvelle structure de projet
+- `apps/appshell/app/` contains a complete React + Vite + TypeScript project
+- Exclusive file ownership model enforced: one screen = one file, one component = one file
+- Vite configured with dev server, build, and preview modes
+- TypeScript strict mode with `vite/client` types and `@/` path alias
+- `main.tsx` as entry point with global error boundary, ThemeProvider, QueryClientProvider, BrowserRouter
+- `__ENABLE_MSW__` flag in `vite.config.ts` controls MSW activation independently of build environment
+- `VITE_BASE_PATH` support for sub-path deployments (GitHub Pages)
+- `.env.example` documents all required environment variables
 
 ## Acceptance Criteria
 
-- [ ] `apps/appshell/app/` existe avec `package.json`, `vite.config.ts`, et `tsconfig.json`
-- [ ] `npm install && npm run dev` démarre le serveur Vite sans erreurs
-- [ ] `npm run build` génère un bundle de production sans warnings TypeScript
-- [ ] Structure de répertoires reflète l'ownership model (src/components/, src/pages/, src/hooks/, src/stores/)
-- [ ] Header, Footer, AppLayout sont des composants verrouillés dans src/components/layout/
-- [ ] Documentation explique comment copier ce skeleton vers un nouveau projet
-
-## Related Epic
-
-[Epic 0 — AppShell MVP](epic-0-mvp/epic.md)
-
-## Related Slices
-
-[Slice 0 — Setup Skeleton](../../../how/slices/slice-0-setup/slice.md)
+- [x] `apps/appshell/app/` exists with `package.json`, `vite.config.ts`, `tsconfig.json`
+- [x] `npm install && npm run dev` starts Vite dev server without errors
+- [x] `npm run build` produces `dist/` with no TypeScript errors
+- [x] App deployed and accessible on GitHub Pages PR preview and production
+- [x] `import.meta.env.BASE_URL` correctly resolves in all environments
+- [x] `@/` alias resolves in both TypeScript and Vite build
+- [x] Global error listeners active (`window.onerror`, `unhandledrejection`)
