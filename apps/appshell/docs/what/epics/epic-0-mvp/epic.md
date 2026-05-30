@@ -55,3 +55,4 @@ Establish the canonical React + Vite skeleton and design system reference for al
 - [US-004 — Data Fetching Pattern](user-stories/us-004-data-fetching.md)
 - [US-005 — Theme Toggle](user-stories/us-005-theme-toggle.md)
 - [US-006 — Documentation](user-stories/us-006-documentation.md)
+- [US-007 — Observability](user-stories/us-007-observability.md)

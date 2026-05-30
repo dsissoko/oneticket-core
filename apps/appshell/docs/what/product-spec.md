@@ -199,6 +199,6 @@ When using AI agents (OneTicket FAN-OUT pipeline) to develop screens:
 - [x] Theme switch (system/light/dark) reactive without page reload
 - [x] React Query hooks for users CRUD available
 - [x] MSW active in all environments — no backend required
-- [x] Logger with configurable level and optional remote dispatch
-- [x] Global error boundary — no silent failures
-- [x] `NotFoundScreen` for unmatched routes
+- [x] Logger with configurable level (`VITE_LOG_LEVEL`) and optional remote dispatch (`VITE_OTLP_ENDPOINT`)
+- [x] Global error boundary — no silent failures (`window.onerror`, `unhandledrejection`, `ErrorBoundary`)
+- [x] Auto-instrumented: navigation, React Query errors, render errors
