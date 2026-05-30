@@ -25,6 +25,14 @@ if (endpoint) {
   });
 }
 
-log.setLevel((import.meta.env.VITE_LOG_LEVEL || 'debug') as log.LogLevelDesc);
+const configuredLevel = import.meta.env.VITE_LOG_LEVEL as log.LogLevelDesc | undefined;
+const effectiveLevel: log.LogLevelDesc = configuredLevel || 'debug';
+
+if (!configuredLevel) {
+  // eslint-disable-next-line no-console
+  console.warn('[logger] VITE_LOG_LEVEL not set — falling back to "debug"');
+}
+
+log.setLevel(effectiveLevel);
 
 export const logger = log;
