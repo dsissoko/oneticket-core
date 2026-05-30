@@ -67,14 +67,12 @@ async function startMockServiceWorker(): Promise<void> {
       url: import.meta.env.BASE_URL + 'mockServiceWorker.js',
     },
     onUnhandledRequest(request, print) {
-      // Ignore navigation requests (HTML document fetches) — these are SPA routes,
-      // not API calls. Passing them through on GitHub Pages causes network errors
-      // because there is no server to respond to sub-path HTML requests.
-      const url = new URL(request.url);
+      // MSW should only intercept API calls — never navigation or static assets.
+      // Navigation requests are SPA routes handled by React Router, not the network.
+      // Static assets are served directly by the hosting platform.
       if (request.destination === 'document' || request.mode === 'navigate') return;
-      // Ignore static assets
-      if (url.pathname.match(/\.(js|css|png|svg|ico|woff2?|ttf)$/)) return;
-      // Warn on unhandled API calls
+      if (new URL(request.url).pathname.match(/\.(js|css|png|svg|ico|woff2?|ttf)$/)) return;
+      // Warn on unhandled API calls — useful for debugging missing handlers
       print.warning();
     },
   });
