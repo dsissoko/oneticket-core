@@ -184,6 +184,7 @@ When using AI agents (OneTicket FAN-OUT pipeline) to develop screens:
 | [epic-1-auth0](epics/epic-1-auth0/epic.md) | Auth0 authentication | 🔲 Planned |
 | [epic-2-testing](epics/epic-2-testing/epic.md) | Test coverage | 🔲 Planned |
 | [epic-3-demo](epics/epic-3-demo/epic.md) | Demo screen with tabbed patterns | 🔲 Planned |
+| [epic-4-appshell-reuse](epics/epic-4-appshell-reuse/epic.md) | AppShell reuse — new project init | 🔲 Planned |
 
 ---
 

@@ -361,6 +361,7 @@ MSW is **always active** — controlled by `__ENABLE_MSW__: true` in `vite.confi
 | `epic-1-auth0` | Auth0 authentication | 🔲 Planned |
 | `epic-2-testing` | Test coverage | 🔲 Planned |
 | `epic-3-demo` | Demo screen with tabbed patterns | 🔲 Planned |
+| `epic-4-appshell-reuse` | AppShell reuse — new project init | 🔲 Planned |
 
 ---
 
