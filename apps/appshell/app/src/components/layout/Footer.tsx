@@ -36,13 +36,13 @@ export function Footer({
   ],
 }: FooterProps): React.ReactElement {
   return (
-    <footer className="bg-gray-50 border-t border-gray-200 dark:bg-slate-900 dark:border-gray-800">
+    <footer className="bg-muted/30 border-t border-border">
       <div className="mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Footer content grid - responsive */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-8">
           {/* Copyright section */}
           <div>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-muted-foreground">
               {copyright}
             </p>
           </div>
@@ -53,7 +53,7 @@ export function Footer({
               <Link
                 key={link.href}
                 to={link.href}
-                className="text-sm text-gray-600 hover:text-blue-600 transition-colors dark:text-gray-400 dark:hover:text-blue-400"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 {link.label}
               </Link>
@@ -62,8 +62,8 @@ export function Footer({
         </div>
 
         {/* Divider */}
-        <div className="border-t border-gray-200 dark:border-gray-800 pt-8 mb-8">
-          <p className="text-xs text-gray-500 dark:text-gray-500 text-center">
+        <div className="border-t border-border pt-8 mb-8">
+          <p className="text-xs text-muted-foreground text-center">
             AppShell — Foundation for OneTicket Applications
           </p>
         </div>
@@ -73,21 +73,21 @@ export function Footer({
           <a
             href="https://github.com"
             aria-label="GitHub Repository"
-            className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
+            className="text-muted-foreground hover:text-foreground transition-colors"
           >
             <Code className="h-5 w-5" />
           </a>
           <a
             href="https://oneticket.dev"
             aria-label="Project Website"
-            className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
+            className="text-muted-foreground hover:text-foreground transition-colors"
           >
             <Globe className="h-5 w-5" />
           </a>
           <a
             href="https://github.com/dsissoko/oneticket-core"
             aria-label="External Link"
-            className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
+            className="text-muted-foreground hover:text-foreground transition-colors"
           >
             <ExternalLink className="h-5 w-5" />
           </a>
