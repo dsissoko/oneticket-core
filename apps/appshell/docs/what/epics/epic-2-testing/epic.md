@@ -34,3 +34,4 @@ Ensure AppShell is a trustworthy foundation by providing meaningful test coverag
 - [US-002 — Routing Tests](user-stories/us-002-routing-tests.md)
 - [US-003 — Data Fetching Tests](user-stories/us-003-data-fetching-tests.md)
 - [US-004 — Theme Tests](user-stories/us-004-theme-tests.md)
+- [US-005 — End-to-End Tests (Playwright)](user-stories/us-005-e2e-tests.md)
