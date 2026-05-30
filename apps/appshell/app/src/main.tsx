@@ -57,6 +57,7 @@ async function startMockServiceWorker(): Promise<void> {
     serviceWorker: {
       url: import.meta.env.BASE_URL + 'mockServiceWorker.js',
     },
+    onUnhandledRequest: 'bypass',
   });
 }
 
