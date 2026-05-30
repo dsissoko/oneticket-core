@@ -54,6 +54,8 @@ const SIDEBAR_ORDERS = {
   'how/c4/deployment.md':      4,
   // run/ content
   'run/appshell-reuse.md':     1,
+  // ship/ content
+  'ship/ci-cd.md':             1,
 };
 
 // Build a map of all .md files indexed by all path suffixes (most specific first)
