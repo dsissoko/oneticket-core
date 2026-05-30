@@ -1,21 +1,24 @@
-# AppShell — Ship
+# Ship
 
-This section describes how AppShell is built, packaged, and delivered.
+The `ship/` section describes how software artifacts are built, packaged, validated, and delivered.
 
-## CI/CD
+It defines:
+- build pipelines,
+- CI/CD workflows,
+- packaging strategies,
+- release processes,
+- artifact repositories,
+- promotion flows,
+- deployment automation.
 
-AppShell is built and deployed automatically via GitHub Actions:
+This section focuses on moving software from source code to deployable artifacts.
 
-- **`docs-site-github-pages.yml`** — builds the app and deploys to GitHub Pages on every PR and push to `main`
-- **Build:** `tsc && vite build` with `VITE_BASE_PATH` injected by CI
-- **Preview:** `https://dsissoko.github.io/oneticket-core/appshell/pr/{PR}/app/`
-- **Production:** `https://dsissoko.github.io/oneticket-core/appshell/app/`
+Typical artifacts may include:
+- GitHub Actions workflows,
+- Docker build strategies,
+- release pipelines,
+- registry publishing rules,
+- versioning conventions,
+- quality gates.
 
-## Environment variables
-
-| Variable | Default | Description |
-|---|---|---|
-| `VITE_BASE_PATH` | `/` | Base path for GitHub Pages sub-directory deployment |
-| `VITE_LOG_LEVEL` | `debug` | Logger level — `debug \| info \| warn \| error \| silent` |
-| `VITE_OTLP_ENDPOINT` | _(empty)_ | Remote log endpoint — empty = console only |
-| `VITE_APP_NAME` | `AppShell` | Application name |
+The `ship/` section is concerned with software delivery, not runtime execution.
