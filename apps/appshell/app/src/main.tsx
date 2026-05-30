@@ -22,6 +22,9 @@ const AboutScreen = lazy(() =>
 const HelpScreen = lazy(() =>
   import('./screens/HelpScreen').then((mod) => ({ default: mod.HelpScreen }))
 );
+const NotFoundScreen = lazy(() =>
+  import('./screens/NotFoundScreen').then((mod) => ({ default: mod.NotFoundScreen }))
+);
 
 function App(): React.ReactElement {
   return (
@@ -35,6 +38,7 @@ function App(): React.ReactElement {
                 <Route path="/" element={<HomeScreen />} />
                 <Route path="/about" element={<AboutScreen />} />
                 <Route path="/help" element={<HelpScreen />} />
+                <Route path="*" element={<NotFoundScreen />} />
               </Route>
             </Routes>
           </Suspense>
