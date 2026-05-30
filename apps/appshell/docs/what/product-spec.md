@@ -182,10 +182,10 @@ When using AI agents (OneTicket FAN-OUT pipeline) to develop screens:
 |---|---|---|
 | [epic-0-mvp](epics/epic-0-mvp/epic.md) | Skeleton foundation | ✅ Delivered |
 | [epic-1-auth0](epics/epic-1-auth0/epic.md) | Auth0 authentication | 🔲 Planned |
-| [epic-2-testing](epics/epic-2-testing/epic.md) | Test coverage | 🔲 Planned |
+| [epic-2-testing](epics/epic-2-testing/epic.md) | Test coverage | ✅ Delivered |
 | [epic-3-demo](epics/epic-3-demo/epic.md) | Demo screen with tabbed patterns | ✅ Delivered |
 | [epic-4-appshell-reuse](epics/epic-4-appshell-reuse/epic.md) | AppShell reuse — new project init | 🔲 Planned |
-| [epic-5-realtime](epics/epic-5-realtime/epic.md) | SSE streaming pattern | 🔲 Planned |
+| [epic-5-realtime](epics/epic-5-realtime/epic.md) | SSE streaming pattern | ✅ Delivered |
 
 ---
 

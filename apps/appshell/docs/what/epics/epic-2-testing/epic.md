@@ -6,7 +6,7 @@ Ensure AppShell is a trustworthy foundation by providing meaningful test coverag
 
 ## Status
 
-🔲 Planned
+✅ Delivered — 32 tests passing (Vitest + RTL + MSW)
 
 ## Business Value
 

@@ -6,7 +6,7 @@ Demonstrate server-sent events (SSE) in AppShell so that derived projects have a
 
 ## Status
 
-🔲 Planned
+✅ Delivered — useEventSource hook + MSW SSE handler + Realtime tab in DemoScreen
 
 ## Business Value
 
