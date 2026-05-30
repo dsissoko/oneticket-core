@@ -12,9 +12,14 @@
     "coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@base-ui/react": "^1.5.0",
     "@fontsource-variable/geist": "^5.2.9",
     "@hookform/resolvers": "^5.4.0",
+    "@radix-ui/react-avatar": "^1.1.11",
+    "@radix-ui/react-dropdown-menu": "^2.1.16",
+    "@radix-ui/react-select": "^2.2.6",
+    "@radix-ui/react-separator": "^1.1.8",
+    "@radix-ui/react-slot": "^1.2.4",
+    "@radix-ui/react-tabs": "^1.1.13",
     "@tanstack/react-query": "^5.28.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

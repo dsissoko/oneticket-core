@@ -56,7 +56,7 @@ export function Footer({
             aria-label="Profil GitHub"
             title="Profil GitHub @dsissoko"
           >
-            <Avatar size="sm">
+            <Avatar className="h-5 w-5">
               <AvatarImage src="https://avatars.githubusercontent.com/dsissoko" alt="dsissoko" />
               <AvatarFallback>DS</AvatarFallback>
             </Avatar>
