@@ -46,17 +46,3 @@ npm run build
 VITE_BASE_PATH=/ npm run build
 ```
 
----
-
-## Critical Configuration for Sub-path Deployments
-
-Any app derived from AppShell deployed to a sub-path (GitHub Pages, reverse proxy) must have:
-
-| File | Setting | Why |
-|---|---|---|
-| `vite.config.ts` | `base: process.env.VITE_BASE_PATH ?? '/'` | Assets resolve correctly |
-| `vite.config.ts` | `resolve.alias: { '@': path.resolve(__dirname, './src') }` | `@/` imports work at build time |
-| `main.tsx` | `<BrowserRouter basename={import.meta.env.BASE_URL}>` | Internal links resolve correctly |
-| `main.tsx` | `url: import.meta.env.BASE_URL + 'mockServiceWorker.js'` | MSW SW found at correct path |
-| `tsconfig.json` | `"types": ["vite/client"]` | `import.meta.env` typed |
-| `public/` | `mockServiceWorker.js` committed | MSW SW available at build time |

@@ -2,7 +2,11 @@
 
 ## Purpose
 
-This runbook describes how to create a new application from the AppShell skeleton. It is the operational reference for the intent described in [epic-4-appshell-reuse](../what/epics/epic-4-appshell-reuse/epic.md).
+This runbook describes how to create a new application from the AppShell skeleton.
+
+> **This is not a ship procedure.** It is an operational usage guide — how to reuse AppShell as a template to bootstrap a new project. The ship procedure for AppShell itself (CI/CD, deployment URLs, environment variables) is documented in [ship/ci-cd.md](../ship/ci-cd.md). Each derived project will define its own `ship/` section independently.
+
+This runbook is the operational reference for the intent described in [epic-4-appshell-reuse](../what/epics/epic-4-appshell-reuse/epic.md).
 
 > **Note:** The tooling that automates these steps is defined in epic-4-appshell-reuse US-004. Until that tooling is built, follow the manual steps below.
 
@@ -148,3 +152,20 @@ The CI workflow will automatically:
 | MSW crashes on GitHub Pages | Missing `mockServiceWorker.js` in `public/` | Run `npx msw init public/` |
 | Links point to wrong URL | `BrowserRouter` missing `basename` | Add `basename={import.meta.env.BASE_URL}` |
 | App blank on GitHub Pages | Missing `VITE_BASE_PATH` in `vite.config.ts` | Add `base: process.env.VITE_BASE_PATH ?? '/'` |
+
+---
+
+## Sub-path Deployment — Required Configuration
+
+Any app derived from AppShell deployed to a sub-path (GitHub Pages, reverse proxy, sub-directory) must have all of the following configured:
+
+| File | Setting | Why |
+|---|---|---|
+| `vite.config.ts` | `base: process.env.VITE_BASE_PATH ?? '/'` | Assets resolve correctly on any sub-path |
+| `vite.config.ts` | `resolve.alias: { '@': path.resolve(__dirname, './src') }` | `@/` imports work at Vite build time |
+| `main.tsx` | `<BrowserRouter basename={import.meta.env.BASE_URL}>` | Internal links respect the base path |
+| `main.tsx` | `url: import.meta.env.BASE_URL + 'mockServiceWorker.js'` | MSW Service Worker found at correct path |
+| `tsconfig.json` | `"types": ["vite/client"]` | `import.meta.env` correctly typed |
+| `public/` | `mockServiceWorker.js` committed | MSW SW available after `vite build` |
+
+All of these are already in place in AppShell — they are preserved when copying the skeleton.
