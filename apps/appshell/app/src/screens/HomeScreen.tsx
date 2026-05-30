@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 /**
  * HomeScreen Component
@@ -19,39 +19,9 @@ export function HomeScreen(): React.ReactElement {
         <CardContent className="space-y-8">
           <p className="text-center text-lg text-muted-foreground">Welcome to the foundation.</p>
           <div className="grid grid-cols-3 gap-4">
-            <Link
-              to="/about"
-              className={cn(
-                'inline-flex items-center justify-center',
-                'px-4 py-2 rounded-md',
-                'bg-primary text-primary-foreground',
-                'hover:opacity-90 transition-opacity'
-              )}
-            >
-              About Us
-            </Link>
-            <Link
-              to="/help"
-              className={cn(
-                'inline-flex items-center justify-center',
-                'px-4 py-2 rounded-md',
-                'bg-secondary text-secondary-foreground',
-                'hover:opacity-90 transition-opacity'
-              )}
-            >
-              Get Help
-            </Link>
-            <Link
-              to="/nonexistent"
-              className={cn(
-                'inline-flex items-center justify-center',
-                'px-4 py-2 rounded-md',
-                'bg-muted text-muted-foreground',
-                'hover:opacity-90 transition-opacity'
-              )}
-            >
-              Try 404
-            </Link>
+            <Button variant="outline"><Link to="/about">About Us</Link></Button>
+            <Button variant="outline"><Link to="/help">Get Help</Link></Button>
+            <Button variant="outline"><Link to="/nonexistent">Try 404</Link></Button>
           </div>
         </CardContent>
       </Card>
