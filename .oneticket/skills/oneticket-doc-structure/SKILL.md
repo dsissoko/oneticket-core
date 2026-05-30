@@ -103,10 +103,6 @@ Copy the template content and fill in the sections — never create a document f
 | CI/CD, build pipeline, deployment config | `<docs_path>/ship/<name>.md` |
 | Operational runbook, infrastructure, observability | `<docs_path>/run/<name>.md` |
 
-**CRITICAL — `ship/` and `run/` are top-level sections, never nested inside `how/`:**
-- ✅ `<docs_path>/run/my-runbook.md`
-- ❌ `<docs_path>/how/run/my-runbook.md` ← wrong
-
 ---
 
 ## Naming Conventions
