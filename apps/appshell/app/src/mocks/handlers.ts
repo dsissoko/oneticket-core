@@ -1,116 +1,61 @@
 import { http, HttpResponse } from 'msw';
-import type { User, CreateUserRequest, GetUsersResponse } from '../api/types';
+import type { CreateUserRequest, GetUsersResponse, User } from '@/api/types';
+import { mockUsers as initialUsers } from './data/users';
 
-// Mock user data
-let mockUsers: User[] = [
-  {
-    id: '1',
-    email: 'alice@example.com',
-    name: 'Alice Johnson',
-    role: 'admin',
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '2',
-    email: 'bob@example.com',
-    name: 'Bob Smith',
-    role: 'user',
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '3',
-    email: 'charlie@example.com',
-    name: 'Charlie Brown',
-    role: 'user',
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '4',
-    email: 'diana@example.com',
-    name: 'Diana Prince',
-    role: 'admin',
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '5',
-    email: 'eve@example.com',
-    name: 'Eve Wilson',
-    role: 'user',
-    createdAt: new Date().toISOString(),
-  },
-];
+/**
+ * MSW request handlers — simulate a real REST API for /api/users.
+ * Adapt these handlers to match your own backend API when connecting a real server.
+ */
 
-export default [
+// In-memory store — resets on page reload (MSW runs in the browser)
+let users: User[] = [...initialUsers];
+
+export const handlers = [
   // GET /api/users
   http.get('/api/users', () => {
-    const response: GetUsersResponse = {
-      data: mockUsers,
-      total: mockUsers.length,
-    };
+    const response: GetUsersResponse = { data: users, total: users.length };
     return HttpResponse.json(response);
-  }),
-
-  // GET /api/users/:id
-  http.get('/api/users/:id', ({ params }) => {
-    const { id } = params;
-    const user = mockUsers.find((u) => u.id === id);
-    if (!user) {
-      return HttpResponse.json(
-        { error: 'User not found' },
-        { status: 404 },
-      );
-    }
-    return HttpResponse.json({ data: user });
   }),
 
   // GET /api/users/profile
   http.get('/api/users/profile', () => {
-    // Return first admin as the authenticated user profile
-    const user = mockUsers[0];
+    const user = users[0];
+    return HttpResponse.json({ data: user });
+  }),
+
+  // GET /api/users/:id
+  http.get('/api/users/:id', ({ params }) => {
+    const user = users.find((u) => u.id === params.id);
+    if (!user) return HttpResponse.json({ error: 'User not found' }, { status: 404 });
     return HttpResponse.json({ data: user });
   }),
 
   // POST /api/users
-  http.post('/api/users', async (req) => {
-    const body = await req.request.json() as CreateUserRequest;
+  http.post('/api/users', async ({ request }) => {
+    const body = await request.json() as CreateUserRequest;
     const newUser: User = {
-      id: String(mockUsers.length + 1),
+      id: String(users.length + 1),
       ...body,
       createdAt: new Date().toISOString(),
     };
-    mockUsers.push(newUser);
+    users.push(newUser);
     return HttpResponse.json({ data: newUser }, { status: 201 });
   }),
 
   // PUT /api/users/:id
-  http.put('/api/users/:id', async (req) => {
-    const { id } = req.params;
-    const body = await req.request.json() as Partial<User>;
-    const userIndex = mockUsers.findIndex((u) => u.id === id);
-    if (userIndex === -1) {
-      return HttpResponse.json(
-        { error: 'User not found' },
-        { status: 404 },
-      );
-    }
-    mockUsers[userIndex] = {
-      ...mockUsers[userIndex],
-      ...body,
-    };
-    return HttpResponse.json({ data: mockUsers[userIndex] });
+  http.put('/api/users/:id', async ({ params, request }) => {
+    const body = await request.json() as Partial<User>;
+    const index = users.findIndex((u) => u.id === params.id);
+    if (index === -1) return HttpResponse.json({ error: 'User not found' }, { status: 404 });
+    users[index] = { ...users[index], ...body };
+    return HttpResponse.json({ data: users[index] });
   }),
 
   // DELETE /api/users/:id
   http.delete('/api/users/:id', ({ params }) => {
-    const { id } = params;
-    const userIndex = mockUsers.findIndex((u) => u.id === id);
-    if (userIndex === -1) {
-      return HttpResponse.json(
-        { error: 'User not found' },
-        { status: 404 },
-      );
-    }
-    mockUsers.splice(userIndex, 1);
+    const index = users.findIndex((u) => u.id === params.id);
+    if (index === -1) return HttpResponse.json({ error: 'User not found' }, { status: 404 });
+    users.splice(index, 1);
     return HttpResponse.json({}, { status: 204 });
   }),
 ];
