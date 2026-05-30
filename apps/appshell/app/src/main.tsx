@@ -66,7 +66,17 @@ async function startMockServiceWorker(): Promise<void> {
     serviceWorker: {
       url: import.meta.env.BASE_URL + 'mockServiceWorker.js',
     },
-    onUnhandledRequest: 'bypass',
+    onUnhandledRequest(request, print) {
+      // Ignore navigation requests (HTML document fetches) — these are SPA routes,
+      // not API calls. Passing them through on GitHub Pages causes network errors
+      // because there is no server to respond to sub-path HTML requests.
+      const url = new URL(request.url);
+      if (request.destination === 'document' || request.mode === 'navigate') return;
+      // Ignore static assets
+      if (url.pathname.match(/\.(js|css|png|svg|ico|woff2?|ttf)$/)) return;
+      // Warn on unhandled API calls
+      print.warning();
+    },
   });
   logger.info('[msw] Mock Service Worker enabled');
 }
