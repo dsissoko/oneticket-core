@@ -22,6 +22,10 @@ if (endpoint) {
     url: endpoint,
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
+    format: remote.json,
+    level: 'debug',
+    interval: 1000,
+    capacity: 500,
   });
 }
 
