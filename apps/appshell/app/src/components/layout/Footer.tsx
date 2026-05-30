@@ -1,6 +1,7 @@
 import React from 'react';
 import { GitFork, Star } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Separator } from '@/components/ui/separator';
 
 interface FooterProps {
   copyright?: string;
@@ -36,7 +37,7 @@ export function Footer({
         </div>
 
         {/* Separator */}
-        <div className="border-t border-border my-4" />
+        <Separator className="my-4" />
 
         {/* N2 — social icons */}
         <div className="flex justify-center items-center gap-6">
