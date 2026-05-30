@@ -29,7 +29,7 @@ export function ThemeToggle() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon">
+        <Button variant="outline" size="icon" aria-label="Toggle theme">
           {theme === 'system' && <Monitor className="h-4 w-4" />}
           {theme === 'light' && <Sun className="h-4 w-4" />}
           {theme === 'dark' && <Moon className="h-4 w-4" />}
