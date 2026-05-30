@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 /**
  * HelpScreen Component
@@ -18,7 +19,7 @@ export function HelpScreen(): React.ReactElement {
             <summary className="font-bold text-lg hover:text-primary">
               How do I navigate between pages?
             </summary>
-            <p className="text-muted text-base mt-4">
+            <p className="text-muted-foreground text-base mt-4">
               Click the navigation links in the header or use the links on the home
               page. All navigation is handled client-side by React Router, providing a
               fast, seamless experience.
@@ -29,7 +30,7 @@ export function HelpScreen(): React.ReactElement {
             <summary className="font-bold text-lg hover:text-primary">
               What happens if I encounter an error?
             </summary>
-            <p className="text-muted text-base mt-4">
+            <p className="text-muted-foreground text-base mt-4">
               Our error boundary catches render errors and displays a graceful fallback
               UI. You can return to the home page and continue using the application.
               Errors are logged for debugging.
@@ -40,7 +41,7 @@ export function HelpScreen(): React.ReactElement {
             <summary className="font-bold text-lg hover:text-primary">
               Is my data persisted?
             </summary>
-            <p className="text-muted text-base mt-4">
+            <p className="text-muted-foreground text-base mt-4">
               AppShell uses localStorage for client-side storage and React Query for
               server state management. All API calls are mocked with MSW during
               development.
@@ -51,7 +52,7 @@ export function HelpScreen(): React.ReactElement {
             <summary className="font-bold text-lg hover:text-primary">
               How do I report a bug?
             </summary>
-            <p className="text-muted text-base mt-4">
+            <p className="text-muted-foreground text-base mt-4">
               Check the browser console for error messages. Visit the project repository
               on GitHub to report issues or contribute improvements.
             </p>
@@ -61,7 +62,7 @@ export function HelpScreen(): React.ReactElement {
             <summary className="font-bold text-lg hover:text-primary">
               Can I customize the design?
             </summary>
-            <p className="text-muted text-base mt-4">
+            <p className="text-muted-foreground text-base mt-4">
               Yes! The design system uses Tailwind CSS with frozen design tokens in
               tailwind.config.ts. Modify colors, spacing, and typography there to
               customize the entire application.
@@ -71,7 +72,7 @@ export function HelpScreen(): React.ReactElement {
 
         <section className="mb-8">
           <h2 className="text-2xl font-bold mb-4">Quick Links</h2>
-          <ul className="list-disc list-inside text-base text-muted space-y-2">
+          <ul className="list-disc list-inside text-base text-muted-foreground space-y-2">
             <li>
               <Link to="/" className="text-primary hover:underline">
                 Home Page
@@ -83,17 +84,16 @@ export function HelpScreen(): React.ReactElement {
               </Link>
             </li>
             <li>Check the browser console for debugging information</li>
-            <li>Test the 404 page by navigating to an invalid route</li>
+            <li>
+              <Link to="/nonexistent" className="text-primary hover:underline">
+                Test the 404 page
+              </Link>
+            </li>
           </ul>
         </section>
 
         <div className="mt-8">
-          <Link
-            to="/"
-            className="px-4 py-2 bg-primary text-primary-foreground rounded hover:opacity-90"
-          >
-            ← Back Home
-          </Link>
+          <Button variant="outline"><Link to="/">← Back Home</Link></Button>
         </div>
       </div>
     </div>
