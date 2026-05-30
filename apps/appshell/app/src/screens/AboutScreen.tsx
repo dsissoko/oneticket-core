@@ -12,7 +12,8 @@ export function AboutScreen(): React.ReactElement {
   return (
     <div className="flex-grow bg-background text-foreground py-12 px-8">
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8">About Us</h1>
+        <h1 className="text-4xl font-bold mb-2">About Us</h1>
+        <p className="text-muted-foreground mb-8">AppShell — Foundation for OneTicket Applications</p>
 
         <section className="mb-8">
           <h2 className="text-2xl font-bold mb-4">Our Vision</h2>
