@@ -25,6 +25,6 @@ if (endpoint) {
   });
 }
 
-log.setLevel((import.meta.env.VITE_LOG_LEVEL as log.LogLevelDesc | undefined) ?? 'debug');
+log.setLevel((import.meta.env.VITE_LOG_LEVEL || 'debug') as log.LogLevelDesc);
 
 export const logger = log;
