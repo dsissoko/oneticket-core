@@ -1,7 +1,8 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 import { Header } from './Header';
 import { Footer } from './Footer';
+import { logger } from '@/lib/logger';
 
 /**
  * AppLayout Component
@@ -17,6 +18,12 @@ import { Footer } from './Footer';
  * return <AppLayout />
  */
 export function AppLayout(): React.ReactElement {
+  const location = useLocation();
+
+  useEffect(() => {
+    logger.info('[nav]', location.pathname);
+  }, [location.pathname]);
+
   return (
     <div className="min-h-screen grid grid-rows-[auto_1fr_auto] bg-background text-foreground">
       {/* Header - sticky top */}
