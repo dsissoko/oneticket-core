@@ -26,11 +26,11 @@
     "allowImportingTsExtensions": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "types": ["vite/client"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "types": ["vite/client", "vitest/globals"]
   },
   "include": ["src"],
   "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/test/**/*", "vitest.setup.ts"],
