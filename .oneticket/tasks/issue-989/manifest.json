@@ -9,7 +9,7 @@
       "role": "analyst",
       "content": "Tu es @analyst. Produis le document product-spec.md pour MonJournal.\n\nContexte issue #989:\n- MonJournal est une application de journal personnel simple et jolie\n- Gère des entrées datées de pensées personnelles\n- Affiche le fil de pensées du plus récent au plus ancien\n- Une pensée: formulaire texte markdown, max 200 caractères\n- Capacités: créer, éditer, supprimer, tagger, filtrer par tag, rechercher par mot-clé, bouton surprise (pensée aléatoire)\n- Une seule page pour gérer et afficher les pensées avec filtres\n- Stack: appshell\n\nRemplis les 11 sections du template product-spec.md avec ces informations.\nSite description (max 160 chars): 'Un journal personnel simple et jolie pour gérer vos pensées datées'",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
