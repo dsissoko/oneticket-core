@@ -9,7 +9,7 @@
       "content": "Crée src/types/index.ts avec l'interface GameState importée par GameCanvas.tsx. Lis apps/breakout/app/src/components/GameCanvas.tsx pour voir la structure GameState attendue : Ball (x, y, vx, vy, r), Paddle (x, w, h), Brick (x, y, w, h, alive), game phase (menu/playing/gameOver/victory), lives (nombre), speedMultiplier (0.5–2.0). Exporte GameState pour que GameCanvas compile sans erreur.",
       "role": "dev",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
