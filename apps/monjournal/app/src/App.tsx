@@ -1,5 +1,6 @@
-import { Box, Stack, Heading } from '@primer/react'
+import { Box, Stack, Heading, Text } from '@primer/react'
 import { useThoughts } from './hooks/useThoughts'
+import { useFilters } from './hooks/useFilters'
 import { ThoughtForm } from './components/ThoughtForm'
 import { ThoughtStream } from './components/ThoughtStream'
 import { SearchBar } from './components/SearchBar'
@@ -14,6 +15,16 @@ export function App() {
     editingId,
     setEditingId,
   } = useThoughts()
+
+  const {
+    searchQuery,
+    setSearchQuery,
+    selectedTags,
+    toggleTag,
+    availableTags,
+    filteredThoughts,
+    clearFilters,
+  } = useFilters(thoughts)
 
   const editingThought = thoughts.find(t => t.id === editingId)
 
@@ -41,9 +52,17 @@ export function App() {
             MonJournal
           </Heading>
           <Stack direction="horizontal" gap="normal">
-            <SearchBar />
+            <SearchBar
+              value={searchQuery}
+              onChange={setSearchQuery}
+            />
           </Stack>
-          <FilterBar />
+          <FilterBar
+            availableTags={availableTags}
+            selectedTags={selectedTags}
+            onToggleTag={toggleTag}
+            onClearFilters={clearFilters}
+          />
         </Stack>
       </Box>
 
@@ -70,8 +89,15 @@ export function App() {
             initialTags={editingThought?.tags}
             isEditing={!!editingId}
           />
+          
+          {(selectedTags.length > 0 || searchQuery) && (
+            <Box sx={{ fontSize: 0, color: 'fg.muted' }}>
+              Showing {filteredThoughts.length} of {thoughts.length} thoughts
+            </Box>
+          )}
+
           <ThoughtStream
-            thoughts={thoughts}
+            thoughts={filteredThoughts}
             onEdit={setEditingId}
             onDelete={deleteThought}
           />
