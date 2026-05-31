@@ -35,6 +35,8 @@ Deliver a fully playable Breakout game with authentic arcade mechanics, responsi
 
 ## Related User Stories
 
+- [US-004 — Ball Speed Settings](user-stories/us-004-speed-settings.md)
+
 <!-- @analyst fills this section — write filename only, no relative path, no ../
      US files are always in user-stories/ subfolder — never flat in the epic directory
      The build script resolves the correct path automatically.
@@ -42,7 +44,6 @@ Deliver a fully playable Breakout game with authentic arcade mechanics, responsi
      - [US-001 — Game Engine Setup](us-001-game-engine-setup.md)
      - [US-002 — Paddle Control & Input](us-002-paddle-control-input.md)
      - [US-003 — Ball Physics & Collision Detection](us-003-ball-physics-collision.md)
-     - [US-004 — Brick Destruction & Game State](us-004-brick-destruction-game-state.md)
      - [US-005 — Menu & Game Flow](us-005-menu-game-flow.md)
 -->
 
