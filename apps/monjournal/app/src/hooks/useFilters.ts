@@ -1,35 +1,58 @@
-import { useState } from 'react'
+import { useState, useMemo, useCallback } from 'react'
+import type { Thought } from '../types/thought'
 
-interface Filters {
-  tags: string[]
-  searchQuery: string
-}
+export function useFilters(thoughts: Thought[]) {
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedTags, setSelectedTags] = useState<string[]>([])
 
-export function useFilters() {
-  const [filters, setFilters] = useState<Filters>({
-    tags: [],
-    searchQuery: '',
-  })
+  // Calculate available tags from all thoughts
+  const availableTags = useMemo(() => {
+    const tagSet = new Set<string>()
+    thoughts.forEach((t) => t.tags.forEach((tag) => tagSet.add(tag)))
+    return Array.from(tagSet).sort()
+  }, [thoughts])
 
-  const setTags = (tags: string[]): void => {
-    setFilters((prev) => ({ ...prev, tags }))
-  }
+  // Filter thoughts by search and selected tags
+  const filteredThoughts = useMemo(() => {
+    return thoughts.filter((thought) => {
+      // Search filter: match keyword in text
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase()
+        if (!thought.text.toLowerCase().includes(query)) {
+          return false
+        }
+      }
 
-  const setSearchQuery = (query: string): void => {
-    setFilters((prev) => ({ ...prev, searchQuery: query }))
-  }
+      // Tag filter: AND logic (thought must have ALL selected tags)
+      if (selectedTags.length > 0) {
+        const hasAllTags = selectedTags.every((tag) => thought.tags.includes(tag))
+        if (!hasAllTags) {
+          return false
+        }
+      }
 
-  const clearFilters = (): void => {
-    setFilters({
-      tags: [],
-      searchQuery: '',
+      return true
     })
-  }
+  }, [thoughts, searchQuery, selectedTags])
+
+  const toggleTag = useCallback((tag: string) => {
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    )
+  }, [])
+
+  const clearFilters = useCallback(() => {
+    setSearchQuery('')
+    setSelectedTags([])
+  }, [])
 
   return {
-    filters,
-    setTags,
+    searchQuery,
     setSearchQuery,
+    selectedTags,
+    toggleTag,
+    availableTags,
+    filteredThoughts,
     clearFilters,
   }
 }
