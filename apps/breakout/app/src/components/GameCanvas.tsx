@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { GameState } from '../types';
+import { checkCircleAABB, resolveBallCollision } from '../utils/collision';
 
 // Canvas configuration constants
 const CANVAS_BG_COLOR = '#f5f5f5';
@@ -141,6 +142,7 @@ export const GameCanvas: React.FC = () => {
 
     // Game loop
     let animationFrameId: number;
+    let collisionCount = 0;
 
     const gameLoop = (currentTime: number) => {
       frameCountRef.current++;
@@ -154,14 +156,69 @@ export const GameCanvas: React.FC = () => {
 
       // Log frame info in development
       if (frameCountRef.current % 60 === 0) {
-        console.log(`Frame: ${frameCountRef.current}, DeltaTime: ${deltaTime.toFixed(3)}s`);
+        console.log(`Frame: ${frameCountRef.current}, DeltaTime: ${deltaTime.toFixed(3)}s, Collisions: ${collisionCount}`);
+        collisionCount = 0;
       }
 
       const state = gameStateRef.current;
       if (state) {
-        // Update ball physics
+        // 2a. Update ball position: x += vx * dt, y += vy * dt
         state.ball.x += state.ball.vx * deltaTime;
         state.ball.y += state.ball.vy * deltaTime;
+
+        // 2b. Clamp ball position to canvas bounds (no pass-through)
+        const ballDiameter = state.ball.radius * 2;
+        state.ball.x = Math.max(0, Math.min(state.ball.x, canvas.width - ballDiameter));
+        state.ball.y = Math.max(0, Math.min(state.ball.y, canvas.height - ballDiameter));
+
+        // 3. Collision Detection Phase
+        // 3a. Check walls (left, right, top) → resolve vx or vy
+        const leftWallRect = { x: -10, y: 0, width: 10, height: canvas.height };
+        const rightWallRect = { x: canvas.width, y: 0, width: 10, height: canvas.height };
+        const topWallRect = { x: 0, y: -10, width: canvas.width, height: 10 };
+
+        if (checkCircleAABB(state.ball, leftWallRect)) {
+          const resolution = resolveBallCollision(state.ball, leftWallRect);
+          state.ball.vx = resolution.vx;
+          state.ball.vy = resolution.vy;
+          collisionCount++;
+        }
+
+        if (checkCircleAABB(state.ball, rightWallRect)) {
+          const resolution = resolveBallCollision(state.ball, rightWallRect);
+          state.ball.vx = resolution.vx;
+          state.ball.vy = resolution.vy;
+          collisionCount++;
+        }
+
+        if (checkCircleAABB(state.ball, topWallRect)) {
+          const resolution = resolveBallCollision(state.ball, topWallRect);
+          state.ball.vx = resolution.vx;
+          state.ball.vy = resolution.vy;
+          collisionCount++;
+        }
+
+        // 3b. Check paddle (bottom area) → resolve vy
+        if (checkCircleAABB(state.ball, state.paddle)) {
+          const resolution = resolveBallCollision(state.ball, state.paddle);
+          state.ball.vx = resolution.vx;
+          state.ball.vy = resolution.vy;
+          collisionCount++;
+        }
+
+        // 3c. Check all bricks → resolve velocity and mark brick for removal
+        state.bricks.forEach((brick) => {
+          if (brick.alive && checkCircleAABB(state.ball, brick)) {
+            const resolution = resolveBallCollision(state.ball, brick);
+            state.ball.vx = resolution.vx * state.speedMultiplier;
+            state.ball.vy = resolution.vy * state.speedMultiplier;
+            brick.alive = false;
+            collisionCount++;
+          }
+        });
+
+        // 4a & 4b. Remove destroyed bricks
+        state.bricks = state.bricks.filter((brick) => brick.alive);
 
         // Render current frame
         renderFrame(state);
