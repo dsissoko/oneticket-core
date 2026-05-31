@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { GameState } from '../types';
 import { checkCircleAABB, resolveBallCollision } from '../utils/collision';
 
@@ -17,12 +17,17 @@ const BRICK_OFFSET_TOP = 40;
 const BRICK_OFFSET_LEFT = 20;
 const TEXT_COLOR = '#333333';
 const TEXT_FONT = '14px Arial';
+const OVERLAY_BG = 'rgba(0, 0, 0, 0.6)';
+const BUTTON_COLOR = '#2563eb';
+const BUTTON_TEXT_COLOR = '#ffffff';
 
 export const GameCanvas: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameStateRef = useRef<GameState | null>(null);
   const lastTimeRef = useRef<number>(0);
   const frameCountRef = useRef<number>(0);
+  const [speedMultiplier, setSpeedMultiplier] = useState(1.0);
+  const [gameStarted, setGameStarted] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -64,30 +69,34 @@ export const GameCanvas: React.FC = () => {
       return bricks;
     };
 
-    const paddleX = canvas.width / 2 - PADDLE_WIDTH / 2;
-    const paddleY = canvas.height - PADDLE_HEIGHT - PADDLE_MARGIN;
-    const ballX = paddleX + PADDLE_WIDTH / 2;
-    const ballY = paddleY - BALL_RADIUS;
+    const createInitialState = (): GameState => {
+      const paddleX = canvas.width / 2 - PADDLE_WIDTH / 2;
+      const paddleY = canvas.height - PADDLE_HEIGHT - PADDLE_MARGIN;
+      const ballX = paddleX + PADDLE_WIDTH / 2;
+      const ballY = paddleY - BALL_RADIUS;
 
-    gameStateRef.current = {
-      phase: 'playing',
-      ball: {
-        x: ballX,
-        y: ballY,
-        radius: BALL_RADIUS,
-        vx: 0,
-        vy: 0,
-      },
-      paddle: {
-        x: paddleX,
-        y: paddleY,
-        width: PADDLE_WIDTH,
-        height: PADDLE_HEIGHT,
-      },
-      bricks: createInitialBricks(),
-      lives: 3,
-      speedMultiplier: 1.0,
+      return {
+        phase: 'menu',
+        ball: {
+          x: ballX,
+          y: ballY,
+          radius: BALL_RADIUS,
+          vx: 0,
+          vy: 0,
+        },
+        paddle: {
+          x: paddleX,
+          y: paddleY,
+          width: PADDLE_WIDTH,
+          height: PADDLE_HEIGHT,
+        },
+        bricks: createInitialBricks(),
+        lives: 3,
+        speedMultiplier: 1.0,
+      };
     };
+
+    gameStateRef.current = createInitialState();
 
     // Rendering functions
     const renderPaddle = (state: GameState) => {
@@ -126,18 +135,217 @@ export const GameCanvas: React.FC = () => {
       ctx.fillText(`Speed: ${state.speedMultiplier.toFixed(1)}x`, canvas.width - 20, 25);
     };
 
+    const renderMenuOverlay = () => {
+      // Semi-transparent overlay
+      ctx.fillStyle = OVERLAY_BG;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Menu title
+      ctx.fillStyle = BUTTON_TEXT_COLOR;
+      ctx.font = 'bold 48px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('BREAKOUT', canvas.width / 2, canvas.height / 2 - 100);
+
+      // Speed slider label
+      ctx.font = 'bold 20px Arial';
+      ctx.fillText('Game Speed', canvas.width / 2, canvas.height / 2 - 20);
+
+      // Speed slider visualization
+      const sliderY = canvas.height / 2 + 20;
+      const sliderWidth = 200;
+      const sliderX = canvas.width / 2 - sliderWidth / 2;
+
+      ctx.strokeStyle = BUTTON_TEXT_COLOR;
+      ctx.lineWidth = 2;
+      ctx.strokeRect(sliderX, sliderY, sliderWidth, 20);
+
+      const sliderProgress = (speedMultiplier - 0.5) / 1.5;
+      ctx.fillStyle = BUTTON_COLOR;
+      ctx.fillRect(sliderX, sliderY, sliderWidth * sliderProgress, 20);
+
+      // Speed text
+      ctx.fillStyle = BUTTON_TEXT_COLOR;
+      ctx.font = '16px Arial';
+      ctx.fillText(`${speedMultiplier.toFixed(1)}x`, canvas.width / 2, sliderY + 50);
+
+      // Start button
+      const buttonY = canvas.height / 2 + 120;
+      const buttonWidth = 150;
+      const buttonHeight = 50;
+      const buttonX = canvas.width / 2 - buttonWidth / 2;
+
+      ctx.fillStyle = BUTTON_COLOR;
+      ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+      ctx.fillStyle = BUTTON_TEXT_COLOR;
+      ctx.font = 'bold 18px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('START', canvas.width / 2, buttonY + 32);
+    };
+
+    const renderGameOverOverlay = () => {
+      // Semi-transparent overlay
+      ctx.fillStyle = OVERLAY_BG;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Game Over title
+      ctx.fillStyle = BUTTON_TEXT_COLOR;
+      ctx.font = 'bold 48px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 50);
+
+      // Restart button
+      const buttonY = canvas.height / 2 + 50;
+      const buttonWidth = 150;
+      const buttonHeight = 50;
+      const buttonX = canvas.width / 2 - buttonWidth / 2;
+
+      ctx.fillStyle = BUTTON_COLOR;
+      ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+      ctx.fillStyle = BUTTON_TEXT_COLOR;
+      ctx.font = 'bold 18px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('RESTART', canvas.width / 2, buttonY + 32);
+    };
+
+    const renderVictoryOverlay = () => {
+      // Semi-transparent overlay
+      ctx.fillStyle = OVERLAY_BG;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Victory title
+      ctx.fillStyle = BUTTON_TEXT_COLOR;
+      ctx.font = 'bold 48px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('VICTORY!', canvas.width / 2, canvas.height / 2 - 50);
+
+      // Congratulations message
+      ctx.font = '20px Arial';
+      ctx.fillText('You destroyed all bricks!', canvas.width / 2, canvas.height / 2 + 20);
+
+      // Restart button
+      const buttonY = canvas.height / 2 + 100;
+      const buttonWidth = 150;
+      const buttonHeight = 50;
+      const buttonX = canvas.width / 2 - buttonWidth / 2;
+
+      ctx.fillStyle = BUTTON_COLOR;
+      ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+      ctx.fillStyle = BUTTON_TEXT_COLOR;
+      ctx.font = 'bold 18px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('RESTART', canvas.width / 2, buttonY + 32);
+    };
+
     const renderFrame = (state: GameState) => {
       // Clear canvas
       ctx.fillStyle = CANVAS_BG_COLOR;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Render game objects
-      renderBricks(state);
-      renderPaddle(state);
-      renderBall(state);
+      // Render game objects only during playing phase
+      if (state.phase === 'playing') {
+        renderBricks(state);
+        renderPaddle(state);
+        renderBall(state);
+        renderUI(state);
+      } else if (state.phase === 'menu') {
+        renderMenuOverlay();
+      } else if (state.phase === 'gameOver') {
+        renderGameOverOverlay();
+      } else if (state.phase === 'victory') {
+        renderVictoryOverlay();
+      }
+    };
 
-      // Render UI text
-      renderUI(state);
+    // Restart game function
+    const restartGame = () => {
+      const state = gameStateRef.current;
+      if (state) {
+        const newState = createInitialState();
+        gameStateRef.current = newState;
+        setGameStarted(false);
+        console.log('Phase: gameOver/victory → menu');
+        console.log('Lives: reset to 3');
+      }
+    };
+
+    // Start game function
+    const startGame = () => {
+      const state = gameStateRef.current;
+      if (state) {
+        const oldPhase = state.phase;
+        state.phase = 'playing';
+        state.ball.vx = 300;
+        state.ball.vy = -300;
+        setGameStarted(true);
+        console.log(`Phase: ${oldPhase} → playing`);
+      }
+    };
+
+    // Mouse click handler for buttons and slider
+    const handleCanvasClick = (event: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      const state = gameStateRef.current;
+      if (!state) return;
+
+      if (state.phase === 'menu') {
+        // Check slider click (horizontal drag handling simplified for click)
+        const sliderY = canvas.height / 2 + 20;
+        const sliderWidth = 200;
+        const sliderX = canvas.width / 2 - sliderWidth / 2;
+
+        if (y >= sliderY && y <= sliderY + 20 && x >= sliderX && x <= sliderX + sliderWidth) {
+          const sliderProgress = (x - sliderX) / sliderWidth;
+          const newMultiplier = Math.max(0.5, Math.min(2.0, 0.5 + sliderProgress * 1.5));
+          setSpeedMultiplier(newMultiplier);
+          state.speedMultiplier = newMultiplier;
+          console.log(`Speed Multiplier: ${(newMultiplier - 0.1).toFixed(1)}x → ${newMultiplier.toFixed(1)}x`);
+          return;
+        }
+
+        // Check start button
+        const buttonY = canvas.height / 2 + 120;
+        const buttonWidth = 150;
+        const buttonHeight = 50;
+        const buttonX = canvas.width / 2 - buttonWidth / 2;
+
+        if (x >= buttonX && x <= buttonX + buttonWidth && y >= buttonY && y <= buttonY + buttonHeight) {
+          startGame();
+        }
+      } else if (state.phase === 'gameOver' || state.phase === 'victory') {
+        // Check restart button
+        const buttonY = canvas.height / 2 + (state.phase === 'gameOver' ? 50 : 100);
+        const buttonWidth = 150;
+        const buttonHeight = 50;
+        const buttonX = canvas.width / 2 - buttonWidth / 2;
+
+        if (x >= buttonX && x <= buttonX + buttonWidth && y >= buttonY && y <= buttonY + buttonHeight) {
+          restartGame();
+        }
+      }
+    };
+
+    // Mouse move handler for speed slider in menu (smooth dragging)
+    const handleCanvasMouseMove = (event: MouseEvent) => {
+      const state = gameStateRef.current;
+      if (!state || state.phase !== 'menu') return;
+
+      const rect = canvas.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      const sliderY = canvas.height / 2 + 20;
+      const sliderWidth = 200;
+      const sliderX = canvas.width / 2 - sliderWidth / 2;
+
+      if (y >= sliderY && y <= sliderY + 20 && x >= sliderX && x <= sliderX + sliderWidth) {
+        const sliderProgress = (x - sliderX) / sliderWidth;
+        const newMultiplier = Math.max(0.5, Math.min(2.0, 0.5 + sliderProgress * 1.5));
+        setSpeedMultiplier(newMultiplier);
+        state.speedMultiplier = newMultiplier;
+      }
     };
 
     // Game loop
@@ -161,18 +369,36 @@ export const GameCanvas: React.FC = () => {
       }
 
       const state = gameStateRef.current;
-      if (state) {
-        // 2a. Update ball position: x += vx * dt, y += vy * dt
-        state.ball.x += state.ball.vx * deltaTime;
-        state.ball.y += state.ball.vy * deltaTime;
+      if (state && state.phase === 'playing') {
+        // Update ball position: x += vx * dt, y += vy * dt
+        state.ball.x += state.ball.vx * deltaTime * state.speedMultiplier;
+        state.ball.y += state.ball.vy * deltaTime * state.speedMultiplier;
 
-        // 2b. Clamp ball position to canvas bounds (no pass-through)
+        // Clamp ball position to canvas bounds (no pass-through)
         const ballDiameter = state.ball.radius * 2;
         state.ball.x = Math.max(0, Math.min(state.ball.x, canvas.width - ballDiameter));
         state.ball.y = Math.max(0, Math.min(state.ball.y, canvas.height - ballDiameter));
 
-        // 3. Collision Detection Phase
-        // 3a. Check walls (left, right, top) → resolve vx or vy
+        // Check if ball is at bottom (lost)
+        if (state.ball.y + state.ball.radius >= canvas.height) {
+          const oldLives = state.lives;
+          state.lives--;
+          console.log(`Lives: ${oldLives} → ${state.lives}`);
+
+          if (state.lives === 0) {
+            state.phase = 'gameOver';
+            console.log('Phase: playing → gameOver');
+          } else {
+            // Reset ball position
+            state.ball.x = state.paddle.x + state.paddle.width / 2;
+            state.ball.y = state.paddle.y - state.ball.radius;
+            state.ball.vx = 300;
+            state.ball.vy = -300;
+          }
+        }
+
+        // Collision Detection Phase
+        // Check walls (left, right, top) → resolve vx or vy
         const leftWallRect = { x: -10, y: 0, width: 10, height: canvas.height };
         const rightWallRect = { x: canvas.width, y: 0, width: 10, height: canvas.height };
         const topWallRect = { x: 0, y: -10, width: canvas.width, height: 10 };
@@ -198,7 +424,7 @@ export const GameCanvas: React.FC = () => {
           collisionCount++;
         }
 
-        // 3b. Check paddle (bottom area) → resolve vy
+        // Check paddle (bottom area) → resolve vy
         if (checkCircleAABB(state.ball, state.paddle)) {
           const resolution = resolveBallCollision(state.ball, state.paddle);
           state.ball.vx = resolution.vx;
@@ -206,21 +432,29 @@ export const GameCanvas: React.FC = () => {
           collisionCount++;
         }
 
-        // 3c. Check all bricks → resolve velocity and mark brick for removal
+        // Check all bricks → resolve velocity and mark brick for removal
         state.bricks.forEach((brick) => {
           if (brick.alive && checkCircleAABB(state.ball, brick)) {
             const resolution = resolveBallCollision(state.ball, brick);
-            state.ball.vx = resolution.vx * state.speedMultiplier;
-            state.ball.vy = resolution.vy * state.speedMultiplier;
+            state.ball.vx = resolution.vx;
+            state.ball.vy = resolution.vy;
             brick.alive = false;
             collisionCount++;
           }
         });
 
-        // 4a & 4b. Remove destroyed bricks
+        // Remove destroyed bricks
         state.bricks = state.bricks.filter((brick) => brick.alive);
 
-        // Render current frame
+        // Check victory condition (all bricks destroyed)
+        if (state.bricks.length === 0) {
+          state.phase = 'victory';
+          console.log('Phase: playing → victory');
+        }
+      }
+
+      // Render current frame
+      if (state) {
         renderFrame(state);
       }
 
@@ -231,12 +465,18 @@ export const GameCanvas: React.FC = () => {
     // Start the game loop
     animationFrameId = requestAnimationFrame(gameLoop);
 
+    // Add event listeners
+    canvas.addEventListener('click', handleCanvasClick);
+    canvas.addEventListener('mousemove', handleCanvasMouseMove);
+
     // Cleanup
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', updateCanvasSize);
+      canvas.removeEventListener('click', handleCanvasClick);
+      canvas.removeEventListener('mousemove', handleCanvasMouseMove);
     };
-  }, []);
+  }, [speedMultiplier, gameStarted]);
 
   return (
     <canvas
@@ -247,6 +487,7 @@ export const GameCanvas: React.FC = () => {
         height: '100vh',
         margin: 0,
         padding: 0,
+        cursor: 'pointer',
       }}
     />
   );
