@@ -16,14 +16,12 @@ export function HomeScreen(): React.ReactElement {
          <CardHeader>
            <CardTitle className="text-center text-4xl">Breakout</CardTitle>
          </CardHeader>
-         <CardContent className="space-y-8">
-           <p className="text-center text-lg text-muted-foreground">Welcome to Breakout Game.</p>
-          <div className="grid grid-cols-3 gap-4">
-            <Button variant="outline"><Link to="/demo">Explore patterns</Link></Button>
-            <Button variant="outline"><Link to="/about">About Us</Link></Button>
-            <Button variant="outline"><Link to="/nonexistent">Test 404 →</Link></Button>
-          </div>
-        </CardContent>
+          <CardContent className="space-y-8">
+            <p className="text-center text-lg text-muted-foreground">Welcome to Breakout Game.</p>
+           <div className="flex justify-center">
+             <Button size="lg"><Link to="/game">Play Breakout</Link></Button>
+           </div>
+         </CardContent>
       </Card>
     </div>
   );

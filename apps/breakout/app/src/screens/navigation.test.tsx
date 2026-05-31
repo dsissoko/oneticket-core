@@ -14,7 +14,7 @@ function LocationDisplay() {
 }
 
 describe('Internal Navigation', () => {
-  it('clicking About Us navigates to /about', () => {
+  it('clicking Play Breakout navigates to /game', () => {
     renderWithProviders(
       <>
         <Routes>
@@ -27,8 +27,8 @@ describe('Internal Navigation', () => {
       </>
     );
 
-    fireEvent.click(screen.getByText('About Us'));
-    expect(screen.getByTestId('location').textContent).toBe('/about');
+    fireEvent.click(screen.getByText('Play Breakout'));
+    expect(screen.getByTestId('location').textContent).toBe('/game');
   });
 
   it('all internal links use Link not <a href>', () => {
