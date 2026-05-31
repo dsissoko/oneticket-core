@@ -40,7 +40,7 @@
       "content": "Adapte HomeScreen.tsx : remplace les 3 boutons actuels (/demo, /about, /nonexistent) par un seul bouton \"Play Breakout\" qui pointe vers /game. Modifie la grille grid-cols-3 en un seul élément centré, ou adapte la layout. Conserve le design Card et l'accueil 'Breakout'.",
       "role": "dev",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "merge-failed"
     },
     {
       "id": "E",
