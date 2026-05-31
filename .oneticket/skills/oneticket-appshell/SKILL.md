@@ -27,13 +27,13 @@ All route screens follow strict exclusive ownership:
 - **Each route** owns one `.tsx` file in `src/screens/` (or `src/pages/`)
 - **No two tasks modify the same screen file** — parallel safety guaranteed
 - **Screen naming**: `<FeatureName>Screen.tsx` or `<FeatureName>Page.tsx` (e.g., `HomeScreen.tsx`, `UsersPage.tsx`, `SettingsPage.tsx`)
-- **Route registration** in `App.tsx` is centralized — all screens import from their exclusive files
+- **Route registration** in `main.tsx` is centralized — all screens import from their exclusive files
 
 **Example parallel task decomposition:**
 - Task 1: Create `src/screens/HomeScreen.tsx` (depends: skeleton setup)
 - Task 2: Create `src/screens/AboutScreen.tsx` (depends: skeleton setup)
 - Task 3: Create `src/screens/UsersPage.tsx` (depends: skeleton setup, data fetching pattern)
-- Task 4: Integration — wire screens into `App.tsx` routes (depends: tasks 1-3)
+- Task 4: Integration — wire screens into `main.tsx` routes (depends: tasks 1-3)
 
 **Zero merge conflicts** because each task creates a new file; no shared file modification.
 
@@ -252,7 +252,7 @@ When a product manager (`@po`) wants to create a new app project:
   - Agent 1: Builds OverviewScreen.tsx
   - Agent 2: Builds UsersScreen.tsx
   - Agent 3: Builds ReportsScreen.tsx
-  - Agent 4: Wires into App.tsx routes (after agents 1-3 complete)
+  - Agent 4: Wires into `main.tsx` routes (after agents 1-3 complete)
 ```
 
 ---
@@ -281,8 +281,10 @@ Task X: Create FeatureScreen
 ├─ Depends: Task 0 (skeleton)
 ├─ Creates: src/screens/FeatureScreen.tsx (exclusive file)
 ├─ Optional: Create `src/hooks/useFeatureData.ts` if data fetching needed
-├─ Optional: Extend `src/mocks/handlers.ts` if new API endpoint needed
-├─ Updates: App.tsx route definition (single line: `path: '/feature', element: <FeatureScreen />`)
+├─ Optional: Append to `src/mocks/handlers.ts` if new API endpoint needed
+│            — add handlers in a dedicated commented block: // <FeatureName> handlers
+│            — never modify existing handlers
+├─ Updates: main.tsx lazy import + route (single addition each, done in integration task)
 └─ Tests: Unit test in `src/__tests__/screens/FeatureScreen.test.tsx`
 ```
 
@@ -300,7 +302,8 @@ Task X: Implement Data Layer
 ```
 Task N+1: Integration & Final Wiring
 ├─ Depends: All screen/feature tasks (1-N)
-├─ Updates: src/App.tsx route array (consolidates all routes)
+├─ Updates: src/main.tsx — lazy imports + route array (consolidates all screens)
+├─ Updates: src/screens/routing.test.tsx — add route assertions for new screens
 ├─ Verification: `npm run dev` renders all screens without errors
 ├─ Testing: `npm run test` passes all tests
 └─ Output: Fully integrated, tested app ready for deployment
@@ -312,8 +315,9 @@ Task N+1: Integration & Final Wiring
 |-----------|-------|-----------|-------|
 | `src/screens/FeatureScreen.tsx` | Task X | ✅ YES | Each screen = new file |
 | `src/hooks/useFeature.ts` | Task X | ✅ YES | Each hook = new file |
-| `src/App.tsx` | Integration Task | ❌ NO | Single route registry |
-| `src/mocks/handlers.ts` | Multiple tasks | ⚠️ APPEND ONLY | No modification of existing handlers |
+| `src/main.tsx` | Integration Task | ❌ NO | Lazy imports + route registry — touch only in task N+1 |
+| `src/mocks/handlers.ts` | Multiple tasks | ⚠️ APPEND ONLY | Each task adds a `// <FeatureName> handlers` block — never modifies existing handlers |
+| `src/screens/routing.test.tsx` | Integration Task | ❌ NO | Route assertions consolidated in task N+1 |
 | `src/mocks/data/*.ts` | Multiple tasks | ⚠️ APPEND ONLY | Add new entities, don't modify existing |
 | `src/components/Header.tsx` | Task 0 | ❌ NO | Locked after setup |
 | `src/components/Footer.tsx` | Task 0 | ❌ NO | Locked after setup |
@@ -346,7 +350,8 @@ Task 1: OverviewScreen (depends: Task 0)
     └─ Add MSW handlers for /api/reports
 
 Task 4: Integration (depends: Tasks 1, 2, 3)
-  ├─ Wire all screens into App.tsx
+  ├─ Wire all screens into main.tsx (lazy imports + routes)
+  ├─ Update routing.test.tsx with new route assertions
   ├─ Run full test suite
   └─ Verify all routes work
 
@@ -359,7 +364,7 @@ Result: 3 agents work in parallel on tasks 1-3 (ZERO merge conflicts)
 - **Task 1 creates** `src/screens/OverviewScreen.tsx` — **unique file, only Task 1 modifies**
 - **Task 2 creates** `src/screens/UsersScreen.tsx` — **unique file, only Task 2 modifies**
 - **Task 3 creates** `src/screens/ReportsScreen.tsx` — **unique file, only Task 3 modifies**
-- **Task 4 updates** `src/App.tsx` routes — **happens AFTER all parallel tasks, no conflicts**
+- **Task 4 updates** `src/main.tsx` routes + `routing.test.tsx` — **happens AFTER all parallel tasks, no conflicts**
 
 Each task's exclusive file ownership guarantees merge-safe delivery.
 
