@@ -1,23 +1,35 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import type { Thought } from '../types/thought'
 
-export function useSurprise() {
+export function useSurprise(filteredThoughts: Thought[]) {
+  const [showSurprise, setShowSurprise] = useState(false)
   const [surpriseThought, setSurpriseThought] = useState<Thought | null>(null)
-  const [isOpen, setIsOpen] = useState(false)
 
-  const pickSurprise = (thoughts: Thought[]): void => {
-    // Placeholder implementation
-  }
+  const pickSurprise = useCallback(() => {
+    if (filteredThoughts.length === 0) {
+      return
+    }
 
-  const closeSurprise = (): void => {
-    setIsOpen(false)
+    const randomIndex = Math.floor(Math.random() * filteredThoughts.length)
+    const thought = filteredThoughts[randomIndex]
+    setSurpriseThought(thought)
+    setShowSurprise(true)
+  }, [filteredThoughts])
+
+  const closeSurprise = useCallback(() => {
+    setShowSurprise(false)
     setSurpriseThought(null)
-  }
+  }, [])
+
+  const nextSurprise = useCallback(() => {
+    pickSurprise()
+  }, [pickSurprise])
 
   return {
+    showSurprise,
     surpriseThought,
-    isOpen,
     pickSurprise,
     closeSurprise,
+    nextSurprise,
   }
 }

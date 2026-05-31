@@ -1,10 +1,13 @@
 import { Box, Stack, Heading, Text } from '@primer/react'
 import { useThoughts } from './hooks/useThoughts'
 import { useFilters } from './hooks/useFilters'
+import { useSurprise } from './hooks/useSurprise'
 import { ThoughtForm } from './components/ThoughtForm'
 import { ThoughtStream } from './components/ThoughtStream'
 import { SearchBar } from './components/SearchBar'
 import { FilterBar } from './components/FilterBar'
+import { SurpriseButton } from './components/SurpriseButton'
+import { SurpriseModal } from './components/SurpriseModal'
 
 export function App() {
   const {
@@ -25,6 +28,14 @@ export function App() {
     filteredThoughts,
     clearFilters,
   } = useFilters(thoughts)
+
+  const {
+    showSurprise,
+    surpriseThought,
+    pickSurprise,
+    closeSurprise,
+    nextSurprise,
+  } = useSurprise(filteredThoughts)
 
   const editingThought = thoughts.find(t => t.id === editingId)
 
@@ -48,15 +59,19 @@ export function App() {
         }}
       >
         <Stack direction="vertical" gap="spacious">
-          <Heading as="h1" sx={{ fontSize: 6 }}>
-            MonJournal
-          </Heading>
-          <Stack direction="horizontal" gap="normal">
-            <SearchBar
-              value={searchQuery}
-              onChange={setSearchQuery}
-            />
-          </Stack>
+           <Heading as="h1" sx={{ fontSize: 6 }}>
+             MonJournal
+           </Heading>
+           <Stack direction="horizontal" gap="normal">
+             <SearchBar
+               value={searchQuery}
+               onChange={setSearchQuery}
+             />
+             <SurpriseButton
+               onClick={pickSurprise}
+               disabled={filteredThoughts.length === 0}
+             />
+           </Stack>
           <FilterBar
             availableTags={availableTags}
             selectedTags={selectedTags}
@@ -90,17 +105,26 @@ export function App() {
             isEditing={!!editingId}
           />
           
-          {(selectedTags.length > 0 || searchQuery) && (
-            <Box sx={{ fontSize: 0, color: 'fg.muted' }}>
-              Showing {filteredThoughts.length} of {thoughts.length} thoughts
-            </Box>
-          )}
+           {(selectedTags.length > 0 || searchQuery) && (
+             <Box sx={{ fontSize: 0, color: 'fg.muted' }}>
+               Showing {filteredThoughts.length} of {thoughts.length} thoughts
+             </Box>
+           )}
 
-          <ThoughtStream
-            thoughts={filteredThoughts}
-            onEdit={setEditingId}
-            onDelete={deleteThought}
-          />
+           {!showSurprise && (
+             <ThoughtStream
+               thoughts={filteredThoughts}
+               onEdit={setEditingId}
+               onDelete={deleteThought}
+             />
+           )}
+
+           <SurpriseModal
+             show={showSurprise}
+             thought={surpriseThought}
+             onClose={closeSurprise}
+             onNext={nextSurprise}
+           />
         </Stack>
       </Box>
     </Box>
