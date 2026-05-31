@@ -25,6 +25,7 @@ export const GameCanvas: React.FC = () => {
   const gameStateRef = useRef<GameState | null>(null);
   const lastTimeRef = useRef<number>(0);
   const frameCountRef = useRef<number>(0);
+  const keysRef = useRef<{ left: boolean; right: boolean }>({ left: false, right: false });
   const [speedMultiplier, setSpeedMultiplier] = useState(1.0);
   const [gameStarted, setGameStarted] = useState(false);
 
@@ -329,34 +330,36 @@ export const GameCanvas: React.FC = () => {
       }
     };
 
-    // Mouse move handler — paddle control during play, slider during menu
+    // Mouse move handler — slider during menu only
     const handleCanvasMouseMove = (event: MouseEvent) => {
       const state = gameStateRef.current;
-      if (!state) return;
+      if (!state || state.phase !== 'menu') return;
 
       const rect = canvas.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
 
-      if (state.phase === 'playing') {
-        // Move paddle horizontally — constrained to canvas bounds
-        const paddleHalfWidth = state.paddle.width / 2;
-        state.paddle.x = Math.max(0, Math.min(x - paddleHalfWidth, canvas.width - state.paddle.width));
-        return;
-      }
+      const sliderY = canvas.height / 2 + 20;
+      const sliderWidth = 200;
+      const sliderX = canvas.width / 2 - sliderWidth / 2;
 
-      if (state.phase === 'menu') {
-        const sliderY = canvas.height / 2 + 20;
-        const sliderWidth = 200;
-        const sliderX = canvas.width / 2 - sliderWidth / 2;
-
-        if (y >= sliderY && y <= sliderY + 20 && x >= sliderX && x <= sliderX + sliderWidth) {
-          const sliderProgress = (x - sliderX) / sliderWidth;
-          const newMultiplier = Math.max(0.5, Math.min(2.0, 0.5 + sliderProgress * 1.5));
-          setSpeedMultiplier(newMultiplier);
-          state.speedMultiplier = newMultiplier;
-        }
+      if (y >= sliderY && y <= sliderY + 20 && x >= sliderX && x <= sliderX + sliderWidth) {
+        const sliderProgress = (x - sliderX) / sliderWidth;
+        const newMultiplier = Math.max(0.5, Math.min(2.0, 0.5 + sliderProgress * 1.5));
+        setSpeedMultiplier(newMultiplier);
+        state.speedMultiplier = newMultiplier;
       }
+    };
+
+    // Keyboard handlers — paddle moves with arrow keys
+    const PADDLE_SPEED = 400; // pixels per second
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowLeft')  keysRef.current.left  = true;
+      if (event.key === 'ArrowRight') keysRef.current.right = true;
+    };
+    const handleKeyUp = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowLeft')  keysRef.current.left  = false;
+      if (event.key === 'ArrowRight') keysRef.current.right = false;
     };
 
     // Game loop
@@ -381,17 +384,24 @@ export const GameCanvas: React.FC = () => {
 
       const state = gameStateRef.current;
       if (state && state.phase === 'playing') {
-        // Update ball position: x += vx * dt, y += vy * dt
+        // Move paddle with arrow keys
+        if (keysRef.current.left) {
+          state.paddle.x = Math.max(0, state.paddle.x - PADDLE_SPEED * deltaTime);
+        }
+        if (keysRef.current.right) {
+          state.paddle.x = Math.min(canvas.width - state.paddle.width, state.paddle.x + PADDLE_SPEED * deltaTime);
+        }
+
+        // Update ball position
         state.ball.x += state.ball.vx * deltaTime * state.speedMultiplier;
         state.ball.y += state.ball.vy * deltaTime * state.speedMultiplier;
 
-        // Clamp ball position to canvas bounds (no pass-through)
+        // Clamp ball horizontally only
         const ballDiameter = state.ball.radius * 2;
         state.ball.x = Math.max(0, Math.min(state.ball.x, canvas.width - ballDiameter));
-        state.ball.y = Math.max(0, Math.min(state.ball.y, canvas.height - ballDiameter));
 
-        // Check if ball is at bottom (lost)
-        if (state.ball.y + state.ball.radius >= canvas.height) {
+        // Ball passed below the paddle — lose a life
+        if (state.ball.y - state.ball.radius > state.paddle.y + state.paddle.height) {
           const oldLives = state.lives;
           state.lives--;
           console.log(`Lives: ${oldLives} → ${state.lives}`);
@@ -400,7 +410,7 @@ export const GameCanvas: React.FC = () => {
             state.phase = 'gameOver';
             console.log('Phase: playing → gameOver');
           } else {
-            // Reset ball position
+            // Reset ball on paddle
             state.ball.x = state.paddle.x + state.paddle.width / 2;
             state.ball.y = state.paddle.y - state.ball.radius;
             state.ball.vx = 300;
@@ -479,6 +489,8 @@ export const GameCanvas: React.FC = () => {
     // Add event listeners
     canvas.addEventListener('click', handleCanvasClick);
     canvas.addEventListener('mousemove', handleCanvasMouseMove);
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
 
     // Cleanup
     return () => {
@@ -486,6 +498,8 @@ export const GameCanvas: React.FC = () => {
       window.removeEventListener('resize', updateCanvasSize);
       canvas.removeEventListener('click', handleCanvasClick);
       canvas.removeEventListener('mousemove', handleCanvasMouseMove);
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
     };
   }, [speedMultiplier, gameStarted]);
 
