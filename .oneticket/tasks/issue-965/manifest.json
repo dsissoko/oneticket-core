@@ -9,7 +9,7 @@
       "content": "Bootstrap Breakout game app from AppShell reference at apps/appshell/app/. Copy the entire apps/appshell/app/ directory to apps/breakout/app/, then update package.json name to '@breakout/frontend', update index.html page title to 'Breakout Game', update HomeScreen.tsx card title to 'Breakout' and welcome text, update AboutScreen.tsx subtitle to 'About Breakout Game'. Verify build and dev scripts work. See apps/breakout/docs/how/architecture.md for full context.",
       "role": "dev",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
