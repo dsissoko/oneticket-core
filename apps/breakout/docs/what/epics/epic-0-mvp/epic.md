@@ -10,7 +10,7 @@ Establish a solid foundation for the Breakout arcade game with all essential mec
 
 ## Scope
 
-Jeu Breakout jouable avec gameplay complet (briques, collision, vies, vitesse réglable)
+Playable Breakout game with complete gameplay (bricks, collision, lives, adjustable speed).
 
 ### Core Features
 - Canvas initialization and game loop setup

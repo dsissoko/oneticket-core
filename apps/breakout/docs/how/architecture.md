@@ -136,9 +136,9 @@ See [how/slices/](../slices/) for all implementation slices derived from this ar
 
 **Cross-references to User Stories:**
 - [US-001 — Initialize Canvas and Game Loop](../../what/epics/epic-0-mvp/user-stories/us-001-initialize-canvas.md)
-- [US-002 — Détection collision AABB et gameplay](../../what/epics/epic-0-mvp/user-stories/us-002-collision.md)
-- [US-003 — Gestion des vies et fin de partie](../../what/epics/epic-0-mvp/user-stories/us-003-lives.md)
-- [US-004 — Menu et slider vitesse de la balle](../../what/epics/epic-0-mvp/user-stories/us-004-speed.md)
+- [US-002 — Implement Collision Detection and Brick Destruction](../../what/epics/epic-0-mvp/user-stories/us-002-collision-detection.md)
+- [US-003 — Implement Lives System and Game Over Detection](../../what/epics/epic-0-mvp/user-stories/us-003-lives-system.md)
+- [US-004 — Add Paddle Speed Control Slider](../../what/epics/epic-0-mvp/user-stories/us-004-paddle-speed-slider.md)
 
 ## 13. Technical Constraints
 
