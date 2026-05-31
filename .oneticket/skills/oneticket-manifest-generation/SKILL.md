@@ -158,3 +158,4 @@ Ce message est le signal technique qui déclenche le pipeline d'exécution autom
 - **Ne jamais créer de PR** — la PR est créée automatiquement en fin de pipeline
 - **Un seul fichier à produire** : `.oneticket/tasks/issue-{N}/manifest.json`
 - **JSON valide** : vérifier la syntaxe avant de commiter
+- **React+Vite apps — AppShell prerequisite**: for React+Vite projects, the manifest builds on an AppShell foundation in `apps/<current_project>/app/`. Ensuring this foundation is in place is a distinct step that comes before decomposition.

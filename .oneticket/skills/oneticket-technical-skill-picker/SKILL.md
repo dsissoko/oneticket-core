@@ -44,6 +44,8 @@ A stack is mentioned in the request or in `architecture.md`, or can be inferred 
 → Select the closest semantic match and load it.
 → If multiple sets match, load all of them.
 → Report which set was selected and why.
+→ For React+Vite projects, also load `oneticket-init-appshell`. This skill describes AppShell's
+  role in the project lifecycle and must be considered before any technical work begins.
 
 **Case B — No stack mentioned**
 
