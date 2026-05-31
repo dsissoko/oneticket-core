@@ -9,7 +9,7 @@
       "content": "Lis apps/monjournal/docs/how/slices/slice-0-foundation/slice.md. Initialise l'application MonJournal selon la stack React + Vite + Primer + TypeScript. Met en place le projet selon la structure décrite : vite.config.ts, tsconfig.json, package.json, src/App.tsx, src/main.tsx, index.html. Configure tous les dépendances (React, Vite, Primer, react-markdown). Crée les fichiers stub: components/, hooks/, types/, domain/, storage/ avec les placeholders décrits dans la slice. Vérifie que npm install fonctionne et npm run dev lance le serveur dev sans erreurs. Aucun code métier n'est implémenté; il s'agit d'une fondation technique pure.",
       "role": "dev",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
