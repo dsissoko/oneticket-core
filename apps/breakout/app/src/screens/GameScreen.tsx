@@ -10,7 +10,7 @@ import { GameCanvas } from '../components';
  */
 export function GameScreen(): React.ReactElement {
   return (
-    <div className="w-full h-screen bg-gray-100">
+    <div style={{ width: '100vw', height: '100vh', overflow: 'hidden', background: '#f5f5f5' }}>
       <GameCanvas />
     </div>
   );

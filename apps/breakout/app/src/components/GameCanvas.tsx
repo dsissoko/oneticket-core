@@ -14,7 +14,6 @@ const BRICK_WIDTH = 70;
 const BRICK_HEIGHT = 15;
 const BRICK_PADDING = 10;
 const BRICK_OFFSET_TOP = 40;
-const BRICK_OFFSET_LEFT = 20;
 const TEXT_COLOR = '#333333';
 const TEXT_FONT = '14px Arial';
 const OVERLAY_BG = 'rgba(0, 0, 0, 0.6)';
@@ -36,10 +35,11 @@ export const GameCanvas: React.FC = () => {
       return;
     }
 
-    // Set canvas size to window dimensions
+    // Set canvas size to parent container dimensions
     const updateCanvasSize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const parent = canvas.parentElement;
+      canvas.width = parent ? parent.clientWidth : window.innerWidth;
+      canvas.height = parent ? parent.clientHeight : window.innerHeight;
     };
 
     updateCanvasSize();
@@ -55,10 +55,12 @@ export const GameCanvas: React.FC = () => {
     // Initialize game state
     const createInitialBricks = (): GameState['bricks'] => {
       const bricks: GameState['bricks'] = [];
+      const totalBricksWidth = BRICK_COLS * BRICK_WIDTH + (BRICK_COLS - 1) * BRICK_PADDING;
+      const offsetLeft = (canvas.width - totalBricksWidth) / 2;
       for (let row = 0; row < BRICK_ROWS; row++) {
         for (let col = 0; col < BRICK_COLS; col++) {
           bricks.push({
-            x: BRICK_OFFSET_LEFT + col * (BRICK_WIDTH + BRICK_PADDING),
+            x: offsetLeft + col * (BRICK_WIDTH + BRICK_PADDING),
             y: BRICK_OFFSET_TOP + row * (BRICK_HEIGHT + BRICK_PADDING),
             width: BRICK_WIDTH,
             height: BRICK_HEIGHT,
@@ -327,24 +329,33 @@ export const GameCanvas: React.FC = () => {
       }
     };
 
-    // Mouse move handler for speed slider in menu (smooth dragging)
+    // Mouse move handler — paddle control during play, slider during menu
     const handleCanvasMouseMove = (event: MouseEvent) => {
       const state = gameStateRef.current;
-      if (!state || state.phase !== 'menu') return;
+      if (!state) return;
 
       const rect = canvas.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
 
-      const sliderY = canvas.height / 2 + 20;
-      const sliderWidth = 200;
-      const sliderX = canvas.width / 2 - sliderWidth / 2;
+      if (state.phase === 'playing') {
+        // Move paddle horizontally — constrained to canvas bounds
+        const paddleHalfWidth = state.paddle.width / 2;
+        state.paddle.x = Math.max(0, Math.min(x - paddleHalfWidth, canvas.width - state.paddle.width));
+        return;
+      }
 
-      if (y >= sliderY && y <= sliderY + 20 && x >= sliderX && x <= sliderX + sliderWidth) {
-        const sliderProgress = (x - sliderX) / sliderWidth;
-        const newMultiplier = Math.max(0.5, Math.min(2.0, 0.5 + sliderProgress * 1.5));
-        setSpeedMultiplier(newMultiplier);
-        state.speedMultiplier = newMultiplier;
+      if (state.phase === 'menu') {
+        const sliderY = canvas.height / 2 + 20;
+        const sliderWidth = 200;
+        const sliderX = canvas.width / 2 - sliderWidth / 2;
+
+        if (y >= sliderY && y <= sliderY + 20 && x >= sliderX && x <= sliderX + sliderWidth) {
+          const sliderProgress = (x - sliderX) / sliderWidth;
+          const newMultiplier = Math.max(0.5, Math.min(2.0, 0.5 + sliderProgress * 1.5));
+          setSpeedMultiplier(newMultiplier);
+          state.speedMultiplier = newMultiplier;
+        }
       }
     };
 
