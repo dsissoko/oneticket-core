@@ -9,7 +9,7 @@
       "content": "Crée src/types/index.ts avec l'interface GameState importée par GameCanvas.tsx. Lis apps/breakout/app/src/components/GameCanvas.tsx pour voir la structure GameState attendue : Ball (x, y, vx, vy, r), Paddle (x, w, h), Brick (x, y, w, h, alive), game phase (menu/playing/gameOver/victory), lives (nombre), speedMultiplier (0.5–2.0). Exporte GameState pour que GameCanvas compile sans erreur.",
       "role": "dev",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
@@ -17,7 +17,9 @@
       "file": "apps/breakout/app/src/screens/GameScreen.tsx",
       "content": "Crée src/screens/GameScreen.tsx qui importe et monte le composant GameCanvas. Le screen doit être lazy-loadable dans main.tsx via import('./screens/GameScreen'). Dépend de la tâche A (GameState) et de GameCanvas (apps/breakout/app/src/components/GameCanvas.tsx).",
       "role": "dev",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending"
     },
     {
@@ -26,7 +28,9 @@
       "file": "apps/breakout/app/src/main.tsx",
       "content": "Ajoute la route /game dans main.tsx. Après la ligne 36 (DemoScreen lazy load), ajoute une lazy import pour GameScreen : const GameScreen = lazy(() => import('./screens/GameScreen').then((mod) => ({ default: mod.GameScreen }))). Puis ajoute une route <Route path=\"/game\" element={<GameScreen />} /> dans la section Routes (avant le catch-all *). Dépend de la tâche B.",
       "role": "dev",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -36,7 +40,7 @@
       "content": "Adapte HomeScreen.tsx : remplace les 3 boutons actuels (/demo, /about, /nonexistent) par un seul bouton \"Play Breakout\" qui pointe vers /game. Modifie la grille grid-cols-3 en un seul élément centré, ou adapte la layout. Conserve le design Card et l'accueil 'Breakout'.",
       "role": "dev",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "E",
@@ -45,7 +49,7 @@
       "content": "Crée apps/breakout/app/.gitignore avec le contenu standard d'un projet Vite+React : dist/, node_modules/, .env.local, .DS_Store, *.log. Supprime le dossier dist/ du repo après commit du .gitignore.",
       "role": "dev",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     }
   ]
 }
