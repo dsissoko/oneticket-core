@@ -51,7 +51,7 @@ Rules:
 
 ---
 
-## Response Channel
+## Question and response Channel
 
 Always use the command provided in `## Agent contract` of the prompt — it is already set to the correct channel for the current `origin_type`.
 
@@ -63,10 +63,11 @@ Always use the command provided in `## Agent contract` of the prompt — it is a
 
 ---
 
-## Response Style
+## Question and response Style
 
 Keep responses **short and focused** — the comment history is visible to all agents and accumulates fast.
 
+- Questions and answers must always be posted  as comments in the origin channel
 - Answer the specific question asked — do not repeat context already in the thread
 - No summaries of what you just did unless explicitly asked
 - No lists of files you created unless they are the direct answer
