@@ -20,7 +20,12 @@ const OVERLAY_BG = 'rgba(0, 0, 0, 0.6)';
 const BUTTON_COLOR = '#2563eb';
 const BUTTON_TEXT_COLOR = '#ffffff';
 
-export const GameCanvas: React.FC = () => {
+interface GameCanvasProps {
+  onSpeedMultiplierChange?: (multiplier: number) => void;
+  speedMultiplier?: number;
+}
+
+export const GameCanvas: React.FC<GameCanvasProps> = ({ onSpeedMultiplierChange, speedMultiplier: externalSpeedMultiplier }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameStateRef = useRef<GameState | null>(null);
   const lastTimeRef = useRef<number>(0);
@@ -300,14 +305,15 @@ export const GameCanvas: React.FC = () => {
         const sliderWidth = 200;
         const sliderX = canvas.width / 2 - sliderWidth / 2;
 
-         if (y >= sliderY && y <= sliderY + 20 && x >= sliderX && x <= sliderX + sliderWidth) {
-           const sliderProgress = (x - sliderX) / sliderWidth;
-           const newMultiplier = Math.max(0.5, Math.min(2.0, 0.5 + sliderProgress * 1.5));
-           speedMultiplierRef.current = newMultiplier;
-           state.speedMultiplier = newMultiplier;
-           console.log(`Speed Multiplier: ${(newMultiplier - 0.1).toFixed(1)}x → ${newMultiplier.toFixed(1)}x`);
-           return;
-         }
+          if (y >= sliderY && y <= sliderY + 20 && x >= sliderX && x <= sliderX + sliderWidth) {
+            const sliderProgress = (x - sliderX) / sliderWidth;
+            const newMultiplier = Math.max(0.5, Math.min(2.0, 0.5 + sliderProgress * 1.5));
+            speedMultiplierRef.current = newMultiplier;
+            state.speedMultiplier = newMultiplier;
+            if (onSpeedMultiplierChange) onSpeedMultiplierChange(newMultiplier);
+            console.log(`Speed Multiplier: ${(newMultiplier - 0.1).toFixed(1)}x → ${newMultiplier.toFixed(1)}x`);
+            return;
+          }
 
         // Check start button
         const buttonY = canvas.height / 2 + 120;
@@ -345,11 +351,12 @@ export const GameCanvas: React.FC = () => {
       const sliderX = canvas.width / 2 - sliderWidth / 2;
 
        if (y >= sliderY && y <= sliderY + 20 && x >= sliderX && x <= sliderX + sliderWidth) {
-         const sliderProgress = (x - sliderX) / sliderWidth;
-         const newMultiplier = Math.max(0.5, Math.min(2.0, 0.5 + sliderProgress * 1.5));
-         speedMultiplierRef.current = newMultiplier;
-         state.speedMultiplier = newMultiplier;
-       }
+          const sliderProgress = (x - sliderX) / sliderWidth;
+          const newMultiplier = Math.max(0.5, Math.min(2.0, 0.5 + sliderProgress * 1.5));
+          speedMultiplierRef.current = newMultiplier;
+          state.speedMultiplier = newMultiplier;
+          if (onSpeedMultiplierChange) onSpeedMultiplierChange(newMultiplier);
+        }
     };
 
     // Keyboard handlers — paddle moves with arrow keys
@@ -423,9 +430,9 @@ export const GameCanvas: React.FC = () => {
            touchRef.current.startX = touchRef.current.currentX;
          }
 
-        // Update ball position
-        state.ball.x += state.ball.vx * deltaTime * state.speedMultiplier;
-        state.ball.y += state.ball.vy * deltaTime * state.speedMultiplier;
+         // Update ball position with speed multiplier applied
+         state.ball.x += state.ball.vx * deltaTime * state.speedMultiplier;
+         state.ball.y += state.ball.vy * deltaTime * state.speedMultiplier;
 
         // Clamp ball horizontally only
         const ballDiameter = state.ball.radius * 2;
@@ -450,35 +457,35 @@ export const GameCanvas: React.FC = () => {
         }
 
         // Collision Detection — walls, paddle, bricks
-        const leftWallRect   = { x: -10,         y: 0, width: 10,          height: canvas.height };
-        const rightWallRect  = { x: canvas.width, y: 0, width: 10,          height: canvas.height };
-        const topWallRect    = { x: 0,            y: -10, width: canvas.width, height: 10 };
+         const leftWallRect   = { x: -10,         y: 0, width: 10,          height: canvas.height };
+         const rightWallRect  = { x: canvas.width, y: 0, width: 10,          height: canvas.height };
+         const topWallRect    = { x: 0,            y: -10, width: canvas.width, height: 10 };
 
-        for (const obstacle of [leftWallRect, rightWallRect, topWallRect, state.paddle]) {
-          const r = resolveCollision(state.ball, obstacle);
-          if (r.hit) {
-            state.ball.vx = r.vx;
-            state.ball.vy = r.vy;
-            state.ball.x  = r.nx;
-            state.ball.y  = r.ny;
-            collisionCount++;
-          }
-        }
+         for (const obstacle of [leftWallRect, rightWallRect, topWallRect, state.paddle]) {
+           const r = resolveCollision(state.ball, obstacle);
+           if (r.hit) {
+             state.ball.vx = r.vx;
+             state.ball.vy = r.vy;
+             state.ball.x  = r.nx;
+             state.ball.y  = r.ny;
+             collisionCount++;
+           }
+         }
 
-        // Brick collisions — only first hit per frame to avoid tunneling
-        for (const brick of state.bricks) {
-          if (!brick.alive) continue;
-          const r = resolveCollision(state.ball, brick);
-          if (r.hit) {
-            state.ball.vx = r.vx;
-            state.ball.vy = r.vy;
-            state.ball.x  = r.nx;
-            state.ball.y  = r.ny;
-            brick.alive = false;
-            collisionCount++;
-            break; // one brick per frame
-          }
-        }
+         // Brick collisions — only first hit per frame to avoid tunneling
+         for (const brick of state.bricks) {
+           if (!brick.alive) continue;
+           const r = resolveCollision(state.ball, brick);
+           if (r.hit) {
+             state.ball.vx = r.vx;
+             state.ball.vy = r.vy;
+             state.ball.x  = r.nx;
+             state.ball.y  = r.ny;
+             brick.alive = false;
+             collisionCount++;
+             break; // one brick per frame
+           }
+         }
 
         // Remove destroyed bricks
         state.bricks = state.bricks.filter((brick) => brick.alive);
@@ -524,6 +531,17 @@ export const GameCanvas: React.FC = () => {
       window.removeEventListener('keyup', handleKeyUp);
     };
   }, [gameStarted]);
+
+  // Update speed multiplier from external prop (e.g., from parent slider)
+  useEffect(() => {
+    if (externalSpeedMultiplier !== undefined) {
+      speedMultiplierRef.current = externalSpeedMultiplier;
+      if (gameStateRef.current) {
+        gameStateRef.current.speedMultiplier = externalSpeedMultiplier;
+        console.log(`Speed multiplier updated: ${externalSpeedMultiplier.toFixed(1)}x`);
+      }
+    }
+  }, [externalSpeedMultiplier]);
 
   return (
     <canvas
