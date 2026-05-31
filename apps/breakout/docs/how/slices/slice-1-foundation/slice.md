@@ -4,7 +4,7 @@
 
 Establish the core technical foundation of the Breakout game by implementing a 60 FPS game loop with Canvas 2D rendering and initializing all foundational game objects (paddle, ball, brick grid).
 
-## Related Epics
+## Related Epic
 
 [Epic 0 — MVP Breakout](epic-0-mvp/epic.md)
 

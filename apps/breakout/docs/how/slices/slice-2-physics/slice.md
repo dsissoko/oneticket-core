@@ -4,13 +4,13 @@
 
 Implement AABB collision detection and physics resolution for ball interactions with game obstacles (walls, ceiling, paddle, and bricks), enabling realistic bouncing and brick destruction mechanics.
 
-## Related Epics
+## Related Epic
 
-[Epic 0 — MVP](epic-0-mvp/epic.md)
+[Epic 0 — MVP Breakout](epic-0-mvp/epic.md)
 
 ## Related User Stories
 
-[US-002 — Collision](us-002-collision.md)
+[US-002 — Implement Collision Detection and Brick Destruction](us-002-collision-detection.md)
 
 ## Impacted Components
 

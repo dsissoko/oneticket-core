@@ -41,4 +41,8 @@ Jeu Breakout jouable avec gameplay complet (briques, collision, vies, vitesse r�
 
 ## Related Slices
 
-<!-- @architect fills this section after producing slices -->
+[Slice 1 — Foundation (Canvas & Game Loop)](slice-1-foundation/slice.md)
+
+[Slice 2 — Physics (Collision & Rebounds)](slice-2-physics/slice.md)
+
+[Slice 3 — Game States & Lives](slice-3-game-states/slice.md)

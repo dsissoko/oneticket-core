@@ -17,3 +17,7 @@ Detect collisions between the ball and game entities (paddle, bricks, walls) and
 ## Business Value
 
 Collision detection is the core mechanic of Breakout. Accurate physics and brick destruction create the engaging gameplay loop that defines the player experience.
+
+## Related Slices
+
+[Slice 2 — Physics (Collision & Rebounds)](../../../how/slices/slice-2-physics/slice.md)

@@ -16,3 +16,7 @@ Set up the HTML5 Canvas foundation and establish a 60 FPS game loop with proper 
 ## Business Value
 
 Provides the technical foundation required for all subsequent gameplay mechanics. Without a stable game loop and canvas setup, collision detection and rendering cannot function.
+
+## Related Slices
+
+[Slice 1 — Foundation (Canvas & Game Loop)](../../../how/slices/slice-1-foundation/slice.md)
