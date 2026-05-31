@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { GameState } from '../types';
-import { checkCircleAABB, resolveBallCollision } from '../utils/collision';
+import { resolveCollision } from '../utils/collision';
 
 // Canvas configuration constants
 const CANVAS_BG_COLOR = '#f5f5f5';
@@ -418,51 +418,36 @@ export const GameCanvas: React.FC = () => {
           }
         }
 
-        // Collision Detection Phase
-        // Check walls (left, right, top) → resolve vx or vy
-        const leftWallRect = { x: -10, y: 0, width: 10, height: canvas.height };
-        const rightWallRect = { x: canvas.width, y: 0, width: 10, height: canvas.height };
-        const topWallRect = { x: 0, y: -10, width: canvas.width, height: 10 };
+        // Collision Detection — walls, paddle, bricks
+        const leftWallRect   = { x: -10,         y: 0, width: 10,          height: canvas.height };
+        const rightWallRect  = { x: canvas.width, y: 0, width: 10,          height: canvas.height };
+        const topWallRect    = { x: 0,            y: -10, width: canvas.width, height: 10 };
 
-        if (checkCircleAABB(state.ball, leftWallRect)) {
-          const resolution = resolveBallCollision(state.ball, leftWallRect);
-          state.ball.vx = resolution.vx;
-          state.ball.vy = resolution.vy;
-          collisionCount++;
-        }
-
-        if (checkCircleAABB(state.ball, rightWallRect)) {
-          const resolution = resolveBallCollision(state.ball, rightWallRect);
-          state.ball.vx = resolution.vx;
-          state.ball.vy = resolution.vy;
-          collisionCount++;
-        }
-
-        if (checkCircleAABB(state.ball, topWallRect)) {
-          const resolution = resolveBallCollision(state.ball, topWallRect);
-          state.ball.vx = resolution.vx;
-          state.ball.vy = resolution.vy;
-          collisionCount++;
-        }
-
-        // Check paddle (bottom area) → resolve vy
-        if (checkCircleAABB(state.ball, state.paddle)) {
-          const resolution = resolveBallCollision(state.ball, state.paddle);
-          state.ball.vx = resolution.vx;
-          state.ball.vy = resolution.vy;
-          collisionCount++;
-        }
-
-        // Check all bricks → resolve velocity and mark brick for removal
-        state.bricks.forEach((brick) => {
-          if (brick.alive && checkCircleAABB(state.ball, brick)) {
-            const resolution = resolveBallCollision(state.ball, brick);
-            state.ball.vx = resolution.vx;
-            state.ball.vy = resolution.vy;
-            brick.alive = false;
+        for (const obstacle of [leftWallRect, rightWallRect, topWallRect, state.paddle]) {
+          const r = resolveCollision(state.ball, obstacle);
+          if (r.hit) {
+            state.ball.vx = r.vx;
+            state.ball.vy = r.vy;
+            state.ball.x  = r.nx;
+            state.ball.y  = r.ny;
             collisionCount++;
           }
-        });
+        }
+
+        // Brick collisions — only first hit per frame to avoid tunneling
+        for (const brick of state.bricks) {
+          if (!brick.alive) continue;
+          const r = resolveCollision(state.ball, brick);
+          if (r.hit) {
+            state.ball.vx = r.vx;
+            state.ball.vy = r.vy;
+            state.ball.x  = r.nx;
+            state.ball.y  = r.ny;
+            brick.alive = false;
+            collisionCount++;
+            break; // one brick per frame
+          }
+        }
 
         // Remove destroyed bricks
         state.bricks = state.bricks.filter((brick) => brick.alive);
