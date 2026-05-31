@@ -1,18 +1,9 @@
-import type { ThoughtInput } from '../types/thought'
+export function validateThought(text: string): { valid: boolean; error?: string } {
+  if (text.length === 0) return { valid: false, error: 'Thought cannot be empty' }
+  if (text.length > 200) return { valid: false, error: 'Thought must be 200 characters or less' }
+  return { valid: true }
+}
 
-export class ThoughtValidator {
-  static validate(input: ThoughtInput): boolean {
-    // Placeholder: validation logic
-    return true
-  }
-
-  static validateText(text: string): boolean {
-    // Placeholder: text validation
-    return text.length > 0 && text.length <= 5000
-  }
-
-  static validateTags(tags: string[]): boolean {
-    // Placeholder: tags validation
-    return Array.isArray(tags) && tags.every((tag) => tag.length > 0)
-  }
+export function normalizeTags(tags: string[]): string[] {
+  return [...new Set(tags.map(t => t.toLowerCase().trim()).filter(Boolean))]
 }
