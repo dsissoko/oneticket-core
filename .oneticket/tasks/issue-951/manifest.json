@@ -8,7 +8,7 @@
       "file": "apps/breakout/docs/what/product-spec.md",
       "content": "À partir des informations d'issue #951 : 'Breakout un jeu basé sur appshell' — le jeu arcade classique avec mur de briques, balle rebondissante, raquette et 3 vies.\n\nCrée apps/breakout/docs/what/product-spec.md en utilisant le template .oneticket/templates/product-spec.md.\n\nIl doit contenir :\n- **product name** : Breakout\n- **problem statement** : Jeu arcade où le joueur détruit un mur de briques en contrôlant une raquette pour faire rebondir une balle\n- **target user** : Joueurs de jeux arcade\n- **primary capabilities** (V1) :\n  1. Moteur de jeu avec balle rebondissante et détection de collision AABB\n  2. Raquette contrôlée au clavier (flèches gauche/droite)\n  3. Mur de 5 lignes de briques destructibles\n  4. Système de vies (3 au départ, perte si la balle descend sous l'écran)\n  5. Victoire/Défaite (destruction complète du mur = victoire, 0 vies = défaite)\n  6. Menu avec sliders pour régler la vitesse de la balle (lente à rapide)\n  7. Navigation menus à la souris (démarrer, rejouer, quitter)\n- **technical stack** : React + Vite, Canvas 2D, AppShell\n- **key constraints** : Game loop avec requestAnimationFrame et delta time, Détection de collision AABB\n\nSITE_DESCRIPTION doit être une phrase unique (max 160 chars) décrivant le produit.",
       "depends_on": [],
-      "status": "pending",
+      "status": "in_progress",
       "role": "analyst"
     },
     {
@@ -16,7 +16,9 @@
       "branch": "task/issue-951-B",
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/epic.md",
       "content": "Lis apps/breakout/docs/what/product-spec.md\n\nCrée apps/breakout/docs/what/epics/epic-0-mvp/epic.md en utilisant le template .oneticket/templates/epic.md.\n\nL'épic MVP doit couvrir la V1 complète du jeu Breakout tel que décrit dans product-spec.md. Les sections principales :\n- Vision : délivrer un jeu Breakout fonctionnel jouable\n- Scope : V1 = toutes les capacités listées dans product-spec\n- User stories : 4-5 US couvrant gameplay principal, menus et système de vies\n- Acceptance criteria : jeu jouable, sensations de gameplay fluides, pas de crash\n\nLe fichier doit lister les user stories dans une section 'Composant User Stories' (sans les créer — elles seront produites par la tâche suivante).",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending",
       "role": "analyst"
     },
@@ -25,7 +27,9 @@
       "branch": "task/issue-951-C",
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-gameplay-mechanics.md",
       "content": "Lis apps/breakout/docs/what/product-spec.md et apps/breakout/docs/what/epics/epic-0-mvp/epic.md\n\nCrée apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-gameplay-mechanics.md en utilisant le template .oneticket/templates/us.md.\n\nUser Story: US-001 — Gameplay Mechanics (moteur de jeu principal)\n\nFormat Mike Cohn :\n- Title: Gameplay Mechanics\n- As a player\n- I want to play a game where a ball bounces off walls, paddle, and bricks with physics-based collisions\n- So that I experience classic Breakout arcade mechanics\n\nAcceptance criteria (Gherkin format) :\n- Given the game is running, When the ball moves, Then it bounces off walls and paddle with correct trajectory\n- Given a brick exists, When the ball hits it, Then the brick is destroyed\n- Given the paddle is hit by the ball, When the player moves the paddle, Then the ball direction changes\n- Given no bricks remain, When all bricks are destroyed, Then the player wins\n- Given the ball falls below the screen, When it happens, Then the player loses one life\n\nDoit inclure : description technique (Canvas 2D, requestAnimationFrame, delta time, AABB collision detection), risques techniques, estimation story points.",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending",
       "role": "analyst"
     },
@@ -34,7 +38,9 @@
       "branch": "task/issue-951-D",
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-002-paddle-control.md",
       "content": "Lis apps/breakout/docs/what/product-spec.md et apps/breakout/docs/what/epics/epic-0-mvp/epic.md\n\nCrée apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-002-paddle-control.md en utilisant le template .oneticket/templates/us.md.\n\nUser Story: US-002 — Paddle Control\n\nFormat Mike Cohn :\n- Title: Paddle Control\n- As a player\n- I want to control the paddle exclusively with left/right keyboard arrows\n- So that I can hit the ball and keep it in play\n\nAcceptance criteria (Gherkin format) :\n- Given the game is running, When I press the left arrow key, Then the paddle moves left\n- Given the game is running, When I press the right arrow key, Then the paddle moves right\n- Given the paddle is at the left boundary, When I press left, Then the paddle does not move further\n- Given the paddle is at the right boundary, When I press right, Then the paddle does not move further\n- Given the game is paused, When I press arrow keys, Then nothing happens\n\nDoit inclure : description technique (event listeners, input handling, paddle bounds), estimation story points.",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending",
       "role": "analyst"
     },
@@ -43,7 +49,9 @@
       "branch": "task/issue-951-E",
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-003-lives-and-menus.md",
       "content": "Lis apps/breakout/docs/what/product-spec.md et apps/breakout/docs/what/epics/epic-0-mvp/epic.md\n\nCrée apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-003-lives-and-menus.md en utilisant le template .oneticket/templates/us.md.\n\nUser Story: US-003 — Lives System & Menus\n\nFormat Mike Cohn :\n- Title: Lives System & Menus\n- As a player\n- I want to start with 3 lives, lose a life when the ball falls off the bottom, and see menu options to start, replay, and quit\n- So that I can manage the game flow and replay after game over\n\nAcceptance criteria (Gherkin format) :\n- Given the game starts, When I load the game, Then I have 3 lives\n- Given a life is active, When the ball falls below the screen, Then I lose one life\n- Given I have lost all lives, When lives reach 0, Then the game ends with 'Game Over' screen\n- Given the game ends, When the win/lose state is reached, Then I can click 'Replay' or 'Quit'\n- Given the game is running, When I click 'Pause', Then the game pauses and shows the pause menu\n- Given the pause menu is open, When I click 'Resume', Then the game resumes\n\nDoit inclure : description technique (state management, menu components, mouse input handling), estimation story points.",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending",
       "role": "analyst"
     },
@@ -52,7 +60,9 @@
       "branch": "task/issue-951-F",
       "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-004-speed-settings.md",
       "content": "Lis apps/breakout/docs/what/product-spec.md et apps/breakout/docs/what/epics/epic-0-mvp/epic.md\n\nCrée apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-004-speed-settings.md en utilisant le template .oneticket/templates/us.md.\n\nUser Story: US-004 — Ball Speed Settings\n\nFormat Mike Cohn :\n- Title: Ball Speed Settings\n- As a player\n- I want to adjust the ball speed before the game starts via a slider (from very slow to very fast)\n- So that I can control the game difficulty\n\nAcceptance criteria (Gherkin format) :\n- Given the main menu is open, When I see the speed slider, Then it ranges from 'Very Slow' to 'Very Fast'\n- Given I adjust the slider, When I change the value, Then the ball speed updates accordingly\n- Given the game is running, When I started with a speed setting, Then the ball maintains that speed\n- Given the slider is at its minimum, When the game plays, Then the ball moves slowly\n- Given the slider is at its maximum, When the game plays, Then the ball moves very fast\n\nDoit inclure : description technique (slider component, speed parameter binding), estimation story points.",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending",
       "role": "analyst"
     },
@@ -61,7 +71,12 @@
       "branch": "task/issue-951-G",
       "file": "apps/breakout/docs/how/architecture.md",
       "content": "Lis apps/breakout/docs/what/product-spec.md, apps/breakout/docs/what/epics/epic-0-mvp/epic.md et tous les fichiers user-stories créés.\n\nCrée apps/breakout/docs/how/architecture.md en utilisant le template .oneticket/templates/architecture.md.\n\nL'architecture doit décrire :\n\n1. **Technical Stack** : React + Vite + TypeScript, Canvas 2D, AppShell foundation\n2. **System Overview** : Single-page game app avec Canvas au centre, React UI pour menus et HUD\n3. **Core Components** :\n   - GameEngine : moteur principal (game loop, physics, collision)\n   - GameCanvas : composant React wrappant le Canvas via useRef\n   - UI Layer : menus (Main, Pause, GameOver), HUD (lives display, speed indicator)\n   - Input Handler : keyboard + mouse événements\n   - State Management : game state (running, paused, over), lives, score, ball speed\n\n4. **Data Flow** :\n   - GameEngine produit l'état du jeu à chaque frame\n   - UI Layer consomme cet état via props/context\n   - Input Handler → GameEngine (commands)\n   - Canvas rendering synchronisé avec delta time\n\n5. **Key Constraints** :\n   - Game loop via requestAnimationFrame (60fps target)\n   - Collision detection : AABB entre ball, paddle, bricks, walls\n   - Performance : minimiser re-renders React en séparant Canvas du reste\n   - Responsive : Canvas adaptatif au viewport\n\n6. **Persistence & State** :\n   - localStorage pour sauvegarder speed slider preference\n\nLe fichier doit mapper chaque user story à un/plusieurs composant(s) technique(s).",
-      "depends_on": ["C", "D", "E", "F"],
+      "depends_on": [
+        "C",
+        "D",
+        "E",
+        "F"
+      ],
       "status": "pending",
       "role": "architect"
     }
