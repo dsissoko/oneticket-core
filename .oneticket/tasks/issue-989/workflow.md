@@ -4,3 +4,4 @@
 2026-05-31 14:09 | C1 | apps/monjournal/docs/what/epics/epic-0-mvp/user-stories/us-001-create-thought.md
 2026-05-31 14:09 | C6 | apps/monjournal/docs/what/epics/epic-0-mvp/user-stories/us-006-search-thoughts.md
 2026-05-31 14:09 | C4 | apps/monjournal/docs/what/epics/epic-0-mvp/user-stories/us-004-tag-thoughts.md
+2026-05-31 14:09 | C5 | apps/monjournal/docs/what/epics/epic-0-mvp/user-stories/us-005-filter-by-tag.md
