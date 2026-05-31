@@ -1,5 +1,57 @@
 # Changelog
 
+## [0.4.0](https://github.com/dsissoko/oneticket-core/compare/v0.3.0...v0.4.0) (2026-05-30)
+
+
+### Features
+
+* **agents:** add autonomous_mode rule to all Routing & Handoff sections ([73db971](https://github.com/dsissoko/oneticket-core/commit/73db971898ef51e0cfbdd3315991dd5f7e4da1db))
+* **agents:** add max_tasks config param and update manifest generation guidance ([4a76d60](https://github.com/dsissoko/oneticket-core/commit/4a76d60cc8be6930e2634f950f897d547d7c0266))
+* **agents:** inject response style in prompts and add emoji to routing/handoff rules ([35a7db6](https://github.com/dsissoko/oneticket-core/commit/35a7db6951a401fb8aa372f5eaa0a5a95f237e1d))
+* **agents:** replace routing/handoff indirection with explicit per-profile rules ([86602a8](https://github.com/dsissoko/oneticket-core/commit/86602a8d1bcf17a386ce42f04a8b75ef888e2da2))
+* **apps:** complete all tasks for issue [#879](https://github.com/dsissoko/oneticket-core/issues/879) ([0a2f5a1](https://github.com/dsissoko/oneticket-core/commit/0a2f5a160cf9b0cfba4beb3fb1c4d31f3a9ae522))
+* **apps:** complete all tasks for issue [#921](https://github.com/dsissoko/oneticket-core/issues/921) ([8233680](https://github.com/dsissoko/oneticket-core/commit/82336803ab387389a24a1cdd20928a4971e08c48))
+* **apps:** replace env-based MSW gating with explicit __ENABLE_MSW__ boolean ([66227d6](https://github.com/dsissoko/oneticket-core/commit/66227d656a4a4989cbbdecb0a105d8b836fe93ff))
+* complete task F ([4fc6d7d](https://github.com/dsissoko/oneticket-core/commit/4fc6d7d0bb8d0d14de76549fab656b49b2484701))
+* complete task H ([cdb0dfd](https://github.com/dsissoko/oneticket-core/commit/cdb0dfd4766d5c1b74395cc2c485ed03082efac5))
+* complete work for issue [#929](https://github.com/dsissoko/oneticket-core/issues/929) ([cb4f41e](https://github.com/dsissoko/oneticket-core/commit/cb4f41e499a542bc9dfa71ffdb331e49f8cc02b9))
+* **doc-site:** inject sidebar.order via SIDEBAR_ORDERS map — canonical Starlight ordering ([23d25ea](https://github.com/dsissoko/oneticket-core/commit/23d25eafece813aa2cbb5926e49169338122cb1b))
+* **docs:** auto-fix cross-reference links in link-docs.mjs + filename-only convention ([b66743d](https://github.com/dsissoko/oneticket-core/commit/b66743d2f38f61b21cd487a3951d06a8ff5da2b9))
+* **skills:** add foundation slice rule to oneticket-vertical-slice ([d21fcd1](https://github.com/dsissoko/oneticket-core/commit/d21fcd1cb4b8678e42115976bdf3e8414c9e9452))
+* **skills:** add slice sequencing guidance to oneticket-vertical-slice ([4175f2d](https://github.com/dsissoko/oneticket-core/commit/4175f2d06bad6d420e2fa792f1bc363f53dca212))
+
+
+### Bug Fixes
+
+* **agents:** po loads oneticket-doc-structure as THIRD ACTION — no exception ([9ba137a](https://github.com/dsissoko/oneticket-core/commit/9ba137a486a4c734c11b0fa4fe807c173672ccf0))
+* **agents:** remove orphan sections from po and leaddev profiles ([8095683](https://github.com/dsissoko/oneticket-core/commit/8095683480653ad0060878865a89b4639bf69f0c))
+* **apps:** add @/ path alias to vite.config.ts + @types/node for shadcn/ui build ([b0e28a1](https://github.com/dsissoko/oneticket-core/commit/b0e28a10963d9c1e4641c7d7ece3c876905c7afd))
+* **apps:** log warning when VITE_LOG_LEVEL not set + add VITE_LOG_LEVEL=debug in CI workflow ([daa2bd5](https://github.com/dsissoko/oneticket-core/commit/daa2bd5cbdd30b1aefa09fbc4e2f6f60fcc023c3))
+* **apps:** replace &lt;a href&gt; with &lt;Link to&gt; for internal navigation ([8f77717](https://github.com/dsissoko/oneticket-core/commit/8f77717bc94ef1e2a9ceefeb8a5a4e9e9f99198b))
+* **ci:** deploy-preview no longer blocked by build-app failure ([5c2022a](https://github.com/dsissoko/oneticket-core/commit/5c2022addd39cafe7609d30801aa35c8089758f5))
+* **ci:** fix indentation in Build full prompt step — broken YAML caused workflow_dispatch to disappear ([873bffd](https://github.com/dsissoko/oneticket-core/commit/873bffdefa32962abf1db9e0e7fdd6bc7b6674dd))
+* **ci:** revert Build full prompt step — directives already in .mjs files ([9f25fe0](https://github.com/dsissoko/oneticket-core/commit/9f25fe0b7aac3b8b1c2f789e0b48f2ad0078ce2a))
+* **ci:** use env vars in Build full prompt step — avoid YAML/bash injection ([6f6ed53](https://github.com/dsissoko/oneticket-core/commit/6f6ed536e971d03762dde79f428dde7647656cfa))
+* **config:** expose max_tasks in loadConfig() return value ([fc09ada](https://github.com/dsissoko/oneticket-core/commit/fc09ada44d092138eb87d141ce655a4717b36578))
+* **doc-site:** set sidebar.order: 0 on section index.md — TOC appears first in each group ([2accd72](https://github.com/dsissoko/oneticket-core/commit/2accd72f87eae6883618ad0e45a87f31fcbc14f8))
+* **docs:** fix link resolution for duplicate filenames in fixCrossRefLinks ([1121346](https://github.com/dsissoko/oneticket-core/commit/1121346b94138de0fd8b84fc42840533d427f8e4))
+* **docs:** move appshell-reuse.md to .oneticket/docs/run/ — framework runbook not appshell doc ([28a4e58](https://github.com/dsissoko/oneticket-core/commit/28a4e58b0a07d8fb0b3f70919a1b21d0d2c8f536))
+* **docs:** move run/ to docs root, add ship/ section, add favicon.svg ([d3822e8](https://github.com/dsissoko/oneticket-core/commit/d3822e8f83059697d2110c4a4f814000a71a53dc))
+* **docs:** use destDir instead of docSource for URL resolution in transformMarkdown ([ace9ba0](https://github.com/dsissoko/oneticket-core/commit/ace9ba0edbd941d17bf116b99aede6ee1677277f))
+* **pipeline:** add 2s delay between individual workflow dispatches ([ed42210](https://github.com/dsissoko/oneticket-core/commit/ed42210af925724f65ee215571b222a2f3d997c9))
+* **pipeline:** inject Do NOT push/PR directives in all dispatch paths ([5ca0dae](https://github.com/dsissoko/oneticket-core/commit/5ca0dae971097e17da1f7b1ffbc39aa4c0700170))
+* **pipeline:** inject max_tasks into agent-launcher prompt ([885070d](https://github.com/dsissoko/oneticket-core/commit/885070d72149256382e452f3fb125db959a86c9d))
+* **po:** restore manifest-generation skill loading and delegation guidance ([dcd4101](https://github.com/dsissoko/oneticket-core/commit/dcd410157050b2310620bdd92bb4c108513b57eb))
+* **skills:** add ship/ and run/ to placement rules in oneticket-doc-structure — prevent nesting in how/ ([367eaec](https://github.com/dsissoko/oneticket-core/commit/367eaece5b19481ef4377f156b0c0efdc0e5201f))
+* **skills:** enforce max_tasks with explicit count-and-group directive ([44b835f](https://github.com/dsissoko/oneticket-core/commit/44b835f3e381f8441b1d1dcc744c8520ac1e4167))
+* **skills:** fix cross-reference paths and solidify agent guidance ([7f65788](https://github.com/dsissoko/oneticket-core/commit/7f657885ddc50fe52279adde9f8006b593e72d2b))
+* **templates:** fix relative path to epic in us.md template ([a2fc52d](https://github.com/dsissoko/oneticket-core/commit/a2fc52ddd9d686cb76572430abf3c95a354ec762))
+
+
+### Reverts
+
+* undo Do NOT push/PR injection — broke agent-execute.yml YAML ([2d5bb86](https://github.com/dsissoko/oneticket-core/commit/2d5bb8613130b6b1f403d38ca849f0a211e37d01))
+
 ## [0.3.0](https://github.com/dsissoko/oneticket-core/compare/v0.2.0...v0.3.0) (2026-05-28)
 
 
