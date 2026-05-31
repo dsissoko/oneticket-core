@@ -1,10 +1,22 @@
 import { Box, Stack, Heading } from '@primer/react'
+import { useThoughts } from './hooks/useThoughts'
 import { ThoughtForm } from './components/ThoughtForm'
 import { ThoughtStream } from './components/ThoughtStream'
 import { SearchBar } from './components/SearchBar'
 import { FilterBar } from './components/FilterBar'
 
 export function App() {
+  const {
+    thoughts,
+    addThought,
+    updateThought,
+    deleteThought,
+    editingId,
+    setEditingId,
+  } = useThoughts()
+
+  const editingThought = thoughts.find(t => t.id === editingId)
+
   return (
     <Box
       as="main"
@@ -46,8 +58,23 @@ export function App() {
         }}
       >
         <Stack direction="vertical" gap="spacious">
-          <ThoughtForm />
-          <ThoughtStream />
+          <ThoughtForm
+            onSubmit={(text, tags) => {
+              if (editingThought) {
+                updateThought(editingThought.id, text, tags)
+              } else {
+                addThought(text, tags)
+              }
+            }}
+            initialText={editingThought?.text}
+            initialTags={editingThought?.tags}
+            isEditing={!!editingId}
+          />
+          <ThoughtStream
+            thoughts={thoughts}
+            onEdit={setEditingId}
+            onDelete={deleteThought}
+          />
         </Stack>
       </Box>
     </Box>
