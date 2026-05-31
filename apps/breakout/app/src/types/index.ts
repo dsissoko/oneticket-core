@@ -24,7 +24,7 @@ export interface Brick {
 }
 
 export interface GameState {
-  phase: 'menu' | 'playing';
+  phase: 'menu' | 'playing' | 'gameOver' | 'victory';
   ball: Ball;
   paddle: Paddle;
   bricks: Brick[];
