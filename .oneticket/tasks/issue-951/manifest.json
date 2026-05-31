@@ -8,7 +8,7 @@
       "file": "apps/breakout/docs/what/product-spec.md",
       "content": "À partir des informations d'issue #951 : 'Breakout un jeu basé sur appshell' — le jeu arcade classique avec mur de briques, balle rebondissante, raquette et 3 vies.\n\nCrée apps/breakout/docs/what/product-spec.md en utilisant le template .oneticket/templates/product-spec.md.\n\nIl doit contenir :\n- **product name** : Breakout\n- **problem statement** : Jeu arcade où le joueur détruit un mur de briques en contrôlant une raquette pour faire rebondir une balle\n- **target user** : Joueurs de jeux arcade\n- **primary capabilities** (V1) :\n  1. Moteur de jeu avec balle rebondissante et détection de collision AABB\n  2. Raquette contrôlée au clavier (flèches gauche/droite)\n  3. Mur de 5 lignes de briques destructibles\n  4. Système de vies (3 au départ, perte si la balle descend sous l'écran)\n  5. Victoire/Défaite (destruction complète du mur = victoire, 0 vies = défaite)\n  6. Menu avec sliders pour régler la vitesse de la balle (lente à rapide)\n  7. Navigation menus à la souris (démarrer, rejouer, quitter)\n- **technical stack** : React + Vite, Canvas 2D, AppShell\n- **key constraints** : Game loop avec requestAnimationFrame et delta time, Détection de collision AABB\n\nSITE_DESCRIPTION doit être une phrase unique (max 160 chars) décrivant le produit.",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "analyst"
     },
     {
