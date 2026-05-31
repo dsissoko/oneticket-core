@@ -10,10 +10,10 @@ const PADDLE_MARGIN = 20;
 const BALL_RADIUS = 6;
 const BRICK_ROWS = 5;
 const BRICK_COLS = 8;
-const BRICK_WIDTH = 70;
 const BRICK_HEIGHT = 15;
 const BRICK_PADDING = 10;
 const BRICK_OFFSET_TOP = 40;
+const BRICK_SIDE_MARGIN = 40;
 const TEXT_COLOR = '#333333';
 const TEXT_FONT = '14px Arial';
 const OVERLAY_BG = 'rgba(0, 0, 0, 0.6)';
@@ -56,14 +56,14 @@ export const GameCanvas: React.FC = () => {
     // Initialize game state
     const createInitialBricks = (): GameState['bricks'] => {
       const bricks: GameState['bricks'] = [];
-      const totalBricksWidth = BRICK_COLS * BRICK_WIDTH + (BRICK_COLS - 1) * BRICK_PADDING;
-      const offsetLeft = (canvas.width - totalBricksWidth) / 2;
+      const availableWidth = canvas.width - BRICK_SIDE_MARGIN * 2;
+      const brickWidth = (availableWidth - (BRICK_COLS - 1) * BRICK_PADDING) / BRICK_COLS;
       for (let row = 0; row < BRICK_ROWS; row++) {
         for (let col = 0; col < BRICK_COLS; col++) {
           bricks.push({
-            x: offsetLeft + col * (BRICK_WIDTH + BRICK_PADDING),
+            x: BRICK_SIDE_MARGIN + col * (brickWidth + BRICK_PADDING),
             y: BRICK_OFFSET_TOP + row * (BRICK_HEIGHT + BRICK_PADDING),
-            width: BRICK_WIDTH,
+            width: brickWidth,
             height: BRICK_HEIGHT,
             alive: true,
           });
@@ -508,11 +508,11 @@ export const GameCanvas: React.FC = () => {
       ref={canvasRef}
       style={{
         display: 'block',
-        width: '100vw',
-        height: '100vh',
+        width: '100%',
+        height: '100%',
         margin: 0,
         padding: 0,
-        cursor: 'pointer',
+        cursor: 'default',
       }}
     />
   );

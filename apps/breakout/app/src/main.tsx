@@ -54,9 +54,9 @@ function App(): React.ReactElement {
                 <Route path="/about" element={<AboutScreen />} />
                 <Route path="/help" element={<HelpScreen />} />
                 <Route path="/demo" element={<DemoScreen />} />
+                <Route path="/game" element={<GameScreen />} />
                 <Route path="*" element={<NotFoundScreen />} />
               </Route>
-              <Route path="/game" element={<GameScreen />} />
             </Routes>
           </Suspense>
         </BrowserRouter>
