@@ -9,7 +9,7 @@
       "content": "Lis apps/monjournal/docs/how/slices/slice-0-foundation/slice.md. Initialise l'application MonJournal selon la stack React + Vite + Primer + TypeScript. Met en place le projet selon la structure décrite : vite.config.ts, tsconfig.json, package.json, src/App.tsx, src/main.tsx, index.html. Configure tous les dépendances (React, Vite, Primer, react-markdown). Crée les fichiers stub: components/, hooks/, types/, domain/, storage/ avec les placeholders décrits dans la slice. Vérifie que npm install fonctionne et npm run dev lance le serveur dev sans erreurs. Aucun code métier n'est implémenté; il s'agit d'une fondation technique pure.",
       "role": "dev",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
@@ -17,7 +17,9 @@
       "file": "apps/monjournal/app/src/hooks/useThoughts.ts",
       "content": "Lis apps/monjournal/docs/how/slices/slice-1-thought-crud/slice.md et apps/monjournal/docs/how/architecture.md. Implémente les composants et logic pour la Slice 1 (CRUD pensées). Ceci inclut: 1) Compléter storage/storageAdapter.ts avec toute la logique localStorage (loadThoughts, saveThoughts, addThought, updateThought, deleteThought). 2) Implémenter le hook useThoughts() complet. 3) Créer ThoughtForm.tsx avec validation et textarea. 4) Créer ThoughtStream.tsx et ThoughtItem.tsx avec rendu des pensées. 5) Créer domain/thoughtValidator.ts. 6) Intégrer tous les composants dans App.tsx. Assure la persistence en localStorage, la validation du texte (max 200 chars), la normalisation des tags en minuscules. Teste manuellement: créer, éditer, supprimer une pensée; vérifier localStorage; vérifier affichage du flux trié par date décroissante.",
       "role": "dev",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending"
     },
     {
@@ -26,7 +28,9 @@
       "file": "apps/monjournal/app/src/hooks/useFilters.ts",
       "content": "Lis apps/monjournal/docs/how/slices/slice-2-search-filter/slice.md. Implémente les composants et logic pour la Slice 2 (recherche et filtrage par tag). Ceci inclut: 1) Implémenter le hook useFilters() complet avec logique AND pour les tags sélectionnés. 2) Créer SearchBar.tsx avec TextInput. 3) Créer FilterBar.tsx avec affichage des tags disponibles et toggles. 4) Créer domain/thoughtFilter.ts avec les fonctions searchThoughts, filterByTags, applyAllFilters. 5) Intégrer SearchBar et FilterBar dans App.tsx avec les bons props. Assure la recherche insensible à la casse, le filtrage en temps réel, l'affichage du compteur de pensées filtrées, le bouton Clear Filters. Teste manuellement: chercher par mot-clé, filtrer par tags (ET logique), réinitialiser les filtres.",
       "role": "dev",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -35,7 +39,9 @@
       "file": "apps/monjournal/app/src/hooks/useSurprise.ts",
       "content": "Lis apps/monjournal/docs/how/slices/slice-3-surprise/slice.md. Implémente les composants et logic pour la Slice 3 (surprise aléatoire). Ceci inclut: 1) Implémenter le hook useSurprise() complet avec sélection aléatoire. 2) Créer SurpriseButton.tsx avec bouton emoji. 3) Créer SurpriseModal.tsx avec affichage modal d'une pensée aléatoire. 4) Intégrer SurpriseButton et SurpriseModal dans App.tsx. Assure que la sélection aléatoire respecte les filtres courants (recherche + tags), que le bouton est désactivé s'il n'y a pas de pensées, que le modal affiche la pensée avec texte, date, tags, bouton Suivant et Fermer. Teste manuellement: cliquer sur Surprise, vérifier qu'une pensée aléatoire s'affiche, cliquer Suivant pour une autre, cliquer Fermer pour revenir à la liste.",
       "role": "dev",
-      "depends_on": ["C"],
+      "depends_on": [
+        "C"
+      ],
       "status": "pending"
     }
   ]
