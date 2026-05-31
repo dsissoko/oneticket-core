@@ -6,3 +6,4 @@
 2026-05-31 01:23 | D | apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-002-collision.md
 2026-05-31 01:25 | G | apps/breakout/docs/how/architecture.md
 2026-05-31 01:26 | H | apps/breakout/docs/how/c4/system-context.md
+2026-05-31 01:26 | J | apps/breakout/docs/how/slices/slice-2-physics/slice.md
