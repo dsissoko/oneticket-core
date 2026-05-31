@@ -2,3 +2,4 @@
 2026-05-31 14:07 | B | apps/monjournal/docs/what/epics/epic-0-mvp/epic.md
 2026-05-31 14:09 | C2 | apps/monjournal/docs/what/epics/epic-0-mvp/user-stories/us-002-list-thoughts.md
 2026-05-31 14:09 | C1 | apps/monjournal/docs/what/epics/epic-0-mvp/user-stories/us-001-create-thought.md
+2026-05-31 14:09 | C6 | apps/monjournal/docs/what/epics/epic-0-mvp/user-stories/us-006-search-thoughts.md
