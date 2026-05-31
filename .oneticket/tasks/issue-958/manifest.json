@@ -9,7 +9,7 @@
       "content": "Initialise et crée la structure de documentation pour le projet breakout dans apps/breakout/docs/. Crée le fichier product-spec.md en utilisant le template .oneticket/templates/product-spec.md. Le produit est 'Breakout — un jeu arcade classique'. Remplis les sections avec : nom du produit, description du problème (jeu arcade moderne basé sur appshell), capacités principales (gameplay avec briques, collision, vies, slider vitesse), utilisateurs (joueurs casual), règles métier clés (3 vies, destruction briques, game over/victoire). Respecte le format markdown avec titre frontmatter. Commit avec 'docs: add product-spec for breakout'.",
       "role": "analyst",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
