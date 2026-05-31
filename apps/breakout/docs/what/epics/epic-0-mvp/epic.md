@@ -41,7 +41,7 @@ Deliver a fully playable Breakout game with authentic arcade mechanics, responsi
      Component User Stories (to be created by next task):
      - [US-001 — Game Engine Setup](us-001-game-engine-setup.md)
      - [US-002 — Paddle Control & Input](us-002-paddle-control-input.md)
-     - [US-003 — Ball Physics & Collision Detection](us-003-ball-physics-collision.md)
+     - [US-003 — Lives System & Menus](us-003-lives-and-menus.md)
      - [US-004 — Brick Destruction & Game State](us-004-brick-destruction-game-state.md)
      - [US-005 — Menu & Game Flow](us-005-menu-game-flow.md)
 -->
