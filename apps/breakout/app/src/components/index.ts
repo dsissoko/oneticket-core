@@ -12,3 +12,4 @@ export { Header } from './layout/Header';
 export { Footer } from './layout/Footer';
 export { ErrorBoundary } from './ErrorBoundary';
 export { LoadingIndicator } from './LoadingIndicator';
+export { GameCanvas } from './GameCanvas';
