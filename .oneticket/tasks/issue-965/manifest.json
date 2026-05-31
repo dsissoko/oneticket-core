@@ -49,7 +49,7 @@
       "content": "Crée apps/breakout/app/.gitignore avec le contenu standard d'un projet Vite+React : dist/, node_modules/, .env.local, .DS_Store, *.log. Supprime le dossier dist/ du repo après commit du .gitignore.",
       "role": "dev",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     }
   ]
 }
