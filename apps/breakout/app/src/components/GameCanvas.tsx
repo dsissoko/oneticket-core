@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { GameState } from '../types';
 import { resolveCollision } from '../utils/collision';
 
@@ -20,12 +20,9 @@ const OVERLAY_BG = 'rgba(0, 0, 0, 0.6)';
 const BUTTON_COLOR = '#2563eb';
 const BUTTON_TEXT_COLOR = '#ffffff';
 
-interface GameCanvasProps {
-  onSpeedMultiplierChange?: (multiplier: number) => void;
-  speedMultiplier?: number;
-}
+interface GameCanvasProps {}
 
-export const GameCanvas: React.FC<GameCanvasProps> = ({ onSpeedMultiplierChange, speedMultiplier: externalSpeedMultiplier }) => {
+export const GameCanvas: React.FC<GameCanvasProps> = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameStateRef = useRef<GameState | null>(null);
   const lastTimeRef = useRef<number>(0);
@@ -33,7 +30,6 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({ onSpeedMultiplierChange,
   const keysRef = useRef<{ left: boolean; right: boolean }>({ left: false, right: false });
   const touchRef = useRef<{ startX: number; currentX: number; active: boolean }>({ startX: 0, currentX: 0, active: false });
   const speedMultiplierRef = useRef<number>(1.0);
-  const [gameStarted, setGameStarted] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -271,7 +267,6 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({ onSpeedMultiplierChange,
       if (state) {
         const newState = createInitialState();
         gameStateRef.current = newState;
-        setGameStarted(false);
         console.log('Phase: gameOver/victory → menu');
         console.log('Lives: reset to 3');
       }
@@ -285,7 +280,6 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({ onSpeedMultiplierChange,
         state.phase = 'playing';
         state.ball.vx = 300;
         state.ball.vy = -300;
-        setGameStarted(true);
         console.log(`Phase: ${oldPhase} → playing`);
       }
     };
@@ -310,7 +304,6 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({ onSpeedMultiplierChange,
             const newMultiplier = Math.max(0.5, Math.min(2.0, 0.5 + sliderProgress * 1.5));
             speedMultiplierRef.current = newMultiplier;
             state.speedMultiplier = newMultiplier;
-            if (onSpeedMultiplierChange) onSpeedMultiplierChange(newMultiplier);
             console.log(`Speed Multiplier: ${(newMultiplier - 0.1).toFixed(1)}x → ${newMultiplier.toFixed(1)}x`);
             return;
           }
@@ -350,13 +343,12 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({ onSpeedMultiplierChange,
       const sliderWidth = 200;
       const sliderX = canvas.width / 2 - sliderWidth / 2;
 
-       if (y >= sliderY && y <= sliderY + 20 && x >= sliderX && x <= sliderX + sliderWidth) {
-          const sliderProgress = (x - sliderX) / sliderWidth;
-          const newMultiplier = Math.max(0.5, Math.min(2.0, 0.5 + sliderProgress * 1.5));
-          speedMultiplierRef.current = newMultiplier;
-          state.speedMultiplier = newMultiplier;
-          if (onSpeedMultiplierChange) onSpeedMultiplierChange(newMultiplier);
-        }
+        if (y >= sliderY && y <= sliderY + 20 && x >= sliderX && x <= sliderX + sliderWidth) {
+           const sliderProgress = (x - sliderX) / sliderWidth;
+           const newMultiplier = Math.max(0.5, Math.min(2.0, 0.5 + sliderProgress * 1.5));
+           speedMultiplierRef.current = newMultiplier;
+           state.speedMultiplier = newMultiplier;
+         }
     };
 
     // Keyboard handlers — paddle moves with arrow keys
@@ -530,18 +522,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({ onSpeedMultiplierChange,
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [gameStarted]);
-
-  // Update speed multiplier from external prop (e.g., from parent slider)
-  useEffect(() => {
-    if (externalSpeedMultiplier !== undefined) {
-      speedMultiplierRef.current = externalSpeedMultiplier;
-      if (gameStateRef.current) {
-        gameStateRef.current.speedMultiplier = externalSpeedMultiplier;
-        console.log(`Speed multiplier updated: ${externalSpeedMultiplier.toFixed(1)}x`);
-      }
-    }
-  }, [externalSpeedMultiplier]);
+  }, []);
 
   return (
     <canvas
