@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { ThemeToggle } from '../ThemeToggle';
 
 /**
@@ -36,6 +36,11 @@ export function Header({
     { label: 'Help', href: '/help' },
   ],
 }: HeaderProps): React.ReactElement {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const closeMenu = () => setIsMenuOpen(false);
+
   return (
     <header className="sticky top-0 z-50 bg-background border-b border-border">
       <nav className="mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -43,6 +48,7 @@ export function Header({
         <Link
           to="/"
           className="flex items-center font-bold text-xl text-foreground hover:text-primary transition-colors"
+          onClick={closeMenu}
         >
           {logo}
         </Link>
@@ -68,11 +74,30 @@ export function Header({
           <button
             className="p-2 text-muted-foreground hover:text-foreground"
             aria-label="Toggle menu"
+            onClick={toggleMenu}
           >
-            <Menu className="h-6 w-6" />
+            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
       </nav>
+
+      {/* Mobile dropdown menu */}
+      {isMenuOpen && (
+        <div className="sm:hidden bg-background border-t border-border">
+          <div className="px-4 py-2 space-y-2">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                to={link.href}
+                className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded transition-colors"
+                onClick={closeMenu}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </header>
   );
 }
