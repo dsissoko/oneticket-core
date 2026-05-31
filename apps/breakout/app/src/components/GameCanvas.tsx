@@ -27,7 +27,7 @@ export const GameCanvas: React.FC = () => {
   const frameCountRef = useRef<number>(0);
   const keysRef = useRef<{ left: boolean; right: boolean }>({ left: false, right: false });
   const touchRef = useRef<{ startX: number; currentX: number; active: boolean }>({ startX: 0, currentX: 0, active: false });
-  const [speedMultiplier, setSpeedMultiplier] = useState(1.0);
+  const speedMultiplierRef = useRef<number>(1.0);
   const [gameStarted, setGameStarted] = useState(false);
 
   useEffect(() => {
@@ -154,23 +154,23 @@ export const GameCanvas: React.FC = () => {
       ctx.font = 'bold 20px Arial';
       ctx.fillText('Game Speed', canvas.width / 2, canvas.height / 2 - 20);
 
-      // Speed slider visualization
-      const sliderY = canvas.height / 2 + 20;
-      const sliderWidth = 200;
-      const sliderX = canvas.width / 2 - sliderWidth / 2;
+       // Speed slider visualization
+       const sliderY = canvas.height / 2 + 20;
+       const sliderWidth = 200;
+       const sliderX = canvas.width / 2 - sliderWidth / 2;
 
-      ctx.strokeStyle = BUTTON_TEXT_COLOR;
-      ctx.lineWidth = 2;
-      ctx.strokeRect(sliderX, sliderY, sliderWidth, 20);
+       ctx.strokeStyle = BUTTON_TEXT_COLOR;
+       ctx.lineWidth = 2;
+       ctx.strokeRect(sliderX, sliderY, sliderWidth, 20);
 
-      const sliderProgress = (speedMultiplier - 0.5) / 1.5;
-      ctx.fillStyle = BUTTON_COLOR;
-      ctx.fillRect(sliderX, sliderY, sliderWidth * sliderProgress, 20);
+       const sliderProgress = (speedMultiplierRef.current - 0.5) / 1.5;
+       ctx.fillStyle = BUTTON_COLOR;
+       ctx.fillRect(sliderX, sliderY, sliderWidth * sliderProgress, 20);
 
-      // Speed text
-      ctx.fillStyle = BUTTON_TEXT_COLOR;
-      ctx.font = '16px Arial';
-      ctx.fillText(`${speedMultiplier.toFixed(1)}x`, canvas.width / 2, sliderY + 50);
+       // Speed text
+       ctx.fillStyle = BUTTON_TEXT_COLOR;
+       ctx.font = '16px Arial';
+       ctx.fillText(`${speedMultiplierRef.current.toFixed(1)}x`, canvas.width / 2, sliderY + 50);
 
       // Start button
       const buttonY = canvas.height / 2 + 120;
@@ -300,14 +300,14 @@ export const GameCanvas: React.FC = () => {
         const sliderWidth = 200;
         const sliderX = canvas.width / 2 - sliderWidth / 2;
 
-        if (y >= sliderY && y <= sliderY + 20 && x >= sliderX && x <= sliderX + sliderWidth) {
-          const sliderProgress = (x - sliderX) / sliderWidth;
-          const newMultiplier = Math.max(0.5, Math.min(2.0, 0.5 + sliderProgress * 1.5));
-          setSpeedMultiplier(newMultiplier);
-          state.speedMultiplier = newMultiplier;
-          console.log(`Speed Multiplier: ${(newMultiplier - 0.1).toFixed(1)}x → ${newMultiplier.toFixed(1)}x`);
-          return;
-        }
+         if (y >= sliderY && y <= sliderY + 20 && x >= sliderX && x <= sliderX + sliderWidth) {
+           const sliderProgress = (x - sliderX) / sliderWidth;
+           const newMultiplier = Math.max(0.5, Math.min(2.0, 0.5 + sliderProgress * 1.5));
+           speedMultiplierRef.current = newMultiplier;
+           state.speedMultiplier = newMultiplier;
+           console.log(`Speed Multiplier: ${(newMultiplier - 0.1).toFixed(1)}x → ${newMultiplier.toFixed(1)}x`);
+           return;
+         }
 
         // Check start button
         const buttonY = canvas.height / 2 + 120;
@@ -344,12 +344,12 @@ export const GameCanvas: React.FC = () => {
       const sliderWidth = 200;
       const sliderX = canvas.width / 2 - sliderWidth / 2;
 
-      if (y >= sliderY && y <= sliderY + 20 && x >= sliderX && x <= sliderX + sliderWidth) {
-        const sliderProgress = (x - sliderX) / sliderWidth;
-        const newMultiplier = Math.max(0.5, Math.min(2.0, 0.5 + sliderProgress * 1.5));
-        setSpeedMultiplier(newMultiplier);
-        state.speedMultiplier = newMultiplier;
-      }
+       if (y >= sliderY && y <= sliderY + 20 && x >= sliderX && x <= sliderX + sliderWidth) {
+         const sliderProgress = (x - sliderX) / sliderWidth;
+         const newMultiplier = Math.max(0.5, Math.min(2.0, 0.5 + sliderProgress * 1.5));
+         speedMultiplierRef.current = newMultiplier;
+         state.speedMultiplier = newMultiplier;
+       }
     };
 
     // Keyboard handlers — paddle moves with arrow keys
@@ -523,7 +523,7 @@ export const GameCanvas: React.FC = () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [speedMultiplier, gameStarted]);
+  }, [gameStarted]);
 
   return (
     <canvas
