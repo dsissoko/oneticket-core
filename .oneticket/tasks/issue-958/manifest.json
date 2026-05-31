@@ -1,0 +1,141 @@
+{
+  "issue": 958,
+  "branch_base": "feature/issue-958",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-958-A",
+      "file": "apps/breakout/docs/what/product-spec.md",
+      "content": "Initialise et crée la structure de documentation pour le projet breakout dans apps/breakout/docs/. Crée le fichier product-spec.md en utilisant le template .oneticket/templates/product-spec.md. Le produit est 'Breakout — un jeu arcade classique'. Remplis les sections avec : nom du produit, description du problème (jeu arcade moderne basé sur appshell), capacités principales (gameplay avec briques, collision, vies, slider vitesse), utilisateurs (joueurs casual), règles métier clés (3 vies, destruction briques, game over/victoire). Respecte le format markdown avec titre frontmatter. Commit avec 'docs: add product-spec for breakout'.",
+      "role": "analyst",
+      "depends_on": [],
+      "status": "done"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-958-B",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/epic.md",
+      "content": "Lis apps/breakout/docs/what/product-spec.md. Crée le fichier epic.md pour Epic 0 — MVP en utilisant le template .oneticket/templates/epic.md. Décris l'épic MVP comme : 'Jeu Breakout jouable avec gameplay complet (briques, collision, vies, vitesse réglable)'. Inclus 3-4 user stories clés : US-001 (initialiser canvas), US-002 (gameplay murs/briques/collision), US-003 (gestion vies), US-004 (slider vitesse). Ajoute les cross-references vers les user stories au format [US-NNN — name](us-NNN-name.md). Commit avec 'docs: add epic-0-mvp for breakout'.",
+      "role": "analyst",
+      "depends_on": [
+        "A"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-958-C",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-001-canvas-init.md",
+      "content": "Lis apps/breakout/docs/what/epics/epic-0-mvp/epic.md. Crée us-001-canvas-init.md en utilisant le template .oneticket/templates/us.md. Titre : 'US-001 — Initialiser Canvas et boucle de jeu'. Description : 'En tant que joueur, je veux que le canvas 2D soit initialisé et la boucle de jeu démarre via requestAnimationFrame, afin que le jeu soit prêt à recevoir les inputs'. Acceptation Gherkin : 1) Canvas s'affiche sans erreur 2) Delta time calculé correctement 3) Boucle 60fps stable. Commit avec 'docs: add us-001-canvas-init'.",
+      "role": "analyst",
+      "depends_on": [
+        "B"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-958-D",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-002-collision.md",
+      "content": "Lis apps/breakout/docs/what/epics/epic-0-mvp/epic.md. Crée us-002-collision.md en utilisant le template .oneticket/templates/us.md. Titre : 'US-002 — Détection collision AABB et gameplay'. Description : 'En tant que joueur, je veux que la balle rebondisse sur les murs, plafond, raquette et briques, afin que le gameplay soit fonctionnel'. Acceptation Gherkin : 1) Balle détecte murs/plafond 2) Balle rebondit sur raquette 3) Briques disparaissent au contact 4) Collision AABB précise. Commit avec 'docs: add us-002-collision'.",
+      "role": "analyst",
+      "depends_on": [
+        "B"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-958-E",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-003-lives.md",
+      "content": "Lis apps/breakout/docs/what/epics/epic-0-mvp/epic.md. Crée us-003-lives.md en utilisant le template .oneticket/templates/us.md. Titre : 'US-003 — Gestion des vies et fin de partie'. Description : 'En tant que joueur, je veux perdre une vie quand la balle atteint le bas, et terminer quand plus de vies, afin que la progression soit claire'. Acceptation Gherkin : 1) Joueur démarre avec 3 vies 2) Vie perdue au bas 3) Game over à 0 vies 4) Victoire si briques=0. Commit avec 'docs: add us-003-lives'.",
+      "role": "analyst",
+      "depends_on": [
+        "B"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "F",
+      "branch": "task/issue-958-F",
+      "file": "apps/breakout/docs/what/epics/epic-0-mvp/user-stories/us-004-speed.md",
+      "content": "Lis apps/breakout/docs/what/epics/epic-0-mvp/epic.md. Crée us-004-speed.md en utilisant le template .oneticket/templates/us.md. Titre : 'US-004 — Menu et slider vitesse de la balle'. Description : 'En tant que joueur, je veux régler la vitesse de la balle via un slider dans le menu avant de jouer, afin d'adapter la difficulté'. Acceptation Gherkin : 1) Menu affiche slider vitesse 2) Valeurs très lent→très rapide 3) Vitesse appliquée au lancement 4) Souris contrôle le menu. Commit avec 'docs: add us-004-speed'.",
+      "role": "analyst",
+      "depends_on": [
+        "B"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "G",
+      "branch": "task/issue-958-G",
+      "file": "apps/breakout/docs/how/architecture.md",
+      "content": "Lis apps/breakout/docs/what/product-spec.md et tous les fichiers user stories (us-001 à us-004 dans user-stories/). Crée architecture.md en utilisant le template .oneticket/templates/architecture.md. Décris : Stack appshell (React+Vite+TypeScript), composant GameCanvas avec useRef, boucle requestAnimationFrame avec deltaTime, détection AABB, 5 lignes de briques, état (balle, raquette, briques, vies, vitesse), menus (démarrer, rejouer, quitter) contrôlés souris. Ajoute cross-references vers les user stories au format [US-NNN — name](us-NNN-name.md). Commit avec 'docs: add architecture for breakout'.",
+      "role": "architect",
+      "depends_on": [
+        "C",
+        "D",
+        "E",
+        "F"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "H",
+      "branch": "task/issue-958-H",
+      "file": "apps/breakout/docs/how/c4/system-context.md",
+      "content": "Lis apps/breakout/docs/how/architecture.md. Crée system-context.md en utilisant un diagramme C4 contexte système. Le système principal est 'Breakout Game', utilisateurs sont 'Joueur', conteneurs externes peuvent être 'Web Browser'. Diagramme minimal : Joueur ↔ Breakout Game (canvas, inputs clavier/souris, affichage). Respects les conventions C4. Commit avec 'docs: add c4-system-context'.",
+      "role": "architect",
+      "depends_on": [
+        "G"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "I",
+      "branch": "task/issue-958-I",
+      "file": "apps/breakout/docs/how/slices/slice-1-foundation/slice.md",
+      "content": "Lis apps/breakout/docs/how/architecture.md et us-001. Crée slice-1-foundation/slice.md en utilisant le template .oneticket/templates/slice.md. Titre : 'Slice 1 — Foundation (Canvas & Game Loop)'. Décris la mise en place du composant GameCanvas, initialisation canvas 2D, boucle requestAnimationFrame, calcul deltaTime. Ajoute cross-references : [Epic 0 — MVP](epic-0-mvp/epic.md), [US-001 — Canvas Init](us-001-canvas-init.md). Commit avec 'docs: add slice-1-foundation'.",
+      "role": "architect",
+      "depends_on": [
+        "G"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "J",
+      "branch": "task/issue-958-J",
+      "file": "apps/breakout/docs/how/slices/slice-2-physics/slice.md",
+      "content": "Lis apps/breakout/docs/how/architecture.md et us-002. Crée slice-2-physics/slice.md en utilisant le template .oneticket/templates/slice.md. Titre : 'Slice 2 — Physics (Collision & Rebounds)'. Décris implémentation AABB collision, rebond murs/plafond/raquette/briques, destruction briques, état balle. Ajoute cross-references : [Epic 0 — MVP](epic-0-mvp/epic.md), [US-002 — Collision](us-002-collision.md). Commit avec 'docs: add slice-2-physics'.",
+      "role": "architect",
+      "depends_on": [
+        "G"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "K",
+      "branch": "task/issue-958-K",
+      "file": "apps/breakout/docs/how/slices/slice-3-game-states/slice.md",
+      "content": "Lis apps/breakout/docs/how/architecture.md et us-003, us-004. Crée slice-3-game-states/slice.md en utilisant le template .oneticket/templates/slice.md. Titre : 'Slice 3 — Game States & Lives'. Décris gestion vies (3 initial, -1 au bas), états (menu, playing, gameOver, victory), menus (démarrer, rejouer, quitter), slider vitesse. Ajoute cross-references : [Epic 0 — MVP](epic-0-mvp/epic.md), [US-003 — Lives](us-003-lives.md), [US-004 — Speed](us-004-speed.md). Commit avec 'docs: add slice-3-game-states'.",
+      "role": "architect",
+      "depends_on": [
+        "G"
+      ],
+      "status": "done"
+    },
+    {
+      "id": "L",
+      "branch": "task/issue-958-L",
+      "file": "cross-references-update",
+      "content": "Lis apps/breakout/docs/how/slices/ et tous les fichiers slices créés (slice-1-foundation, slice-2-physics, slice-3-game-states) et user stories (us-001 à us-004). Mets à jour les cross-references : 1) epic.md : ajoute ## Related Slices avec liens vers slice-1, slice-2, slice-3 au format [Slice N — name](slice-N-name/slice.md) 2) Chaque us-*.md : ajoute ## Related Slices 3) Chaque slice.md : ajoute ## Related Epic et ## Related User Stories. Utilise format filename-only (pas de ../ ). Commit avec 'docs: add cross-references for breakout'.",
+      "role": "architect",
+      "depends_on": [
+        "I",
+        "J",
+        "K"
+      ],
+      "status": "done"
+    }
+  ]
+}
