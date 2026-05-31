@@ -26,6 +26,7 @@ export const GameCanvas: React.FC = () => {
   const lastTimeRef = useRef<number>(0);
   const frameCountRef = useRef<number>(0);
   const keysRef = useRef<{ left: boolean; right: boolean }>({ left: false, right: false });
+  const touchRef = useRef<{ startX: number; currentX: number; active: boolean }>({ startX: 0, currentX: 0, active: false });
   const [speedMultiplier, setSpeedMultiplier] = useState(1.0);
   const [gameStarted, setGameStarted] = useState(false);
 
@@ -362,6 +363,26 @@ export const GameCanvas: React.FC = () => {
       if (event.key === 'ArrowRight') keysRef.current.right = false;
     };
 
+    // Touch handlers — paddle moves with touch swipe on mobile
+    const handleTouchStart = (event: TouchEvent) => {
+      if (event.touches.length > 0) {
+        const touch = event.touches[0];
+        touchRef.current.startX = touch.clientX;
+        touchRef.current.currentX = touch.clientX;
+        touchRef.current.active = true;
+      }
+    };
+
+    const handleTouchMove = (event: TouchEvent) => {
+      if (!touchRef.current.active || event.touches.length === 0) return;
+      const touch = event.touches[0];
+      touchRef.current.currentX = touch.clientX;
+    };
+
+    const handleTouchEnd = () => {
+      touchRef.current.active = false;
+    };
+
     // Game loop
     let animationFrameId: number;
     let collisionCount = 0;
@@ -382,15 +403,25 @@ export const GameCanvas: React.FC = () => {
         collisionCount = 0;
       }
 
-      const state = gameStateRef.current;
-      if (state && state.phase === 'playing') {
-        // Move paddle with arrow keys
-        if (keysRef.current.left) {
-          state.paddle.x = Math.max(0, state.paddle.x - PADDLE_SPEED * deltaTime);
-        }
-        if (keysRef.current.right) {
-          state.paddle.x = Math.min(canvas.width - state.paddle.width, state.paddle.x + PADDLE_SPEED * deltaTime);
-        }
+       const state = gameStateRef.current;
+       if (state && state.phase === 'playing') {
+         // Move paddle with arrow keys
+         if (keysRef.current.left) {
+           state.paddle.x = Math.max(0, state.paddle.x - PADDLE_SPEED * deltaTime);
+         }
+         if (keysRef.current.right) {
+           state.paddle.x = Math.min(canvas.width - state.paddle.width, state.paddle.x + PADDLE_SPEED * deltaTime);
+         }
+
+         // Move paddle with touch swipe (mobile)
+         if (touchRef.current.active) {
+           const deltaX = touchRef.current.currentX - touchRef.current.startX;
+           // Update paddle position based on touch delta
+           const newPaddleX = state.paddle.x + deltaX;
+           state.paddle.x = Math.max(0, Math.min(canvas.width - state.paddle.width, newPaddleX));
+           // Update start position for smooth continuous tracking
+           touchRef.current.startX = touchRef.current.currentX;
+         }
 
         // Update ball position
         state.ball.x += state.ball.vx * deltaTime * state.speedMultiplier;
@@ -474,6 +505,9 @@ export const GameCanvas: React.FC = () => {
     // Add event listeners
     canvas.addEventListener('click', handleCanvasClick);
     canvas.addEventListener('mousemove', handleCanvasMouseMove);
+    canvas.addEventListener('touchstart', handleTouchStart);
+    canvas.addEventListener('touchmove', handleTouchMove);
+    canvas.addEventListener('touchend', handleTouchEnd);
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
 
@@ -483,6 +517,9 @@ export const GameCanvas: React.FC = () => {
       window.removeEventListener('resize', updateCanvasSize);
       canvas.removeEventListener('click', handleCanvasClick);
       canvas.removeEventListener('mousemove', handleCanvasMouseMove);
+      canvas.removeEventListener('touchstart', handleTouchStart);
+      canvas.removeEventListener('touchmove', handleTouchMove);
+      canvas.removeEventListener('touchend', handleTouchEnd);
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
