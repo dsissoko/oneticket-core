@@ -4,18 +4,15 @@
 
 Implement the complete game state lifecycle, lives management (starting with 3, losing 1 on ball bottom), and state transitions (menu → playing → gameOver/victory), plus speed adjustment menu and controls.
 
-## Related Epics
+## Related Epic
 
-<!-- @architect fills this section — write filename only, no relative path, no ../
-     The build script resolves the correct path automatically. -->
-[Epic 0 — MVP](epic-0-mvp/epic.md)
+[Epic 0 — MVP Breakout](epic-0-mvp/epic.md)
 
 ## Related User Stories
 
-<!-- @architect fills this section — write filename only, no relative path, no ../
-     The build script resolves the correct path automatically. -->
-[US-003 — Lives](us-003-lives.md)
-[US-004 — Speed](us-004-speed.md)
+[US-003 — Implement Lives System and Game Over Detection](us-003-lives-system.md)
+
+[US-004 — Add Paddle Speed Control Slider](us-004-paddle-speed-slider.md)
 
 ## Impacted Components
 

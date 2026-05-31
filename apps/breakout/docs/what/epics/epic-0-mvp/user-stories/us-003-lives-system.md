@@ -19,3 +19,7 @@ Manage player lives and detect game over/victory conditions with proper state tr
 ## Business Value
 
 Lives and game state management create meaningful progression and challenge. Clear feedback on game status and restart capability enable players to understand their progress and continue playing.
+
+## Related Slices
+
+[Slice 3 — Game States & Lives](../../../how/slices/slice-3-game-states/slice.md)

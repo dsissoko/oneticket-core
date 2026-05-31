@@ -17,3 +17,7 @@ Implement a slider UI control that allows players to adjust paddle movement spee
 ## Business Value
 
 Adjustable speed control enables accessibility for different player skill levels and provides agency in gameplay difficulty. This feature transforms a static game into one that adapts to player preference.
+
+## Related Slices
+
+[Slice 3 — Game States & Lives](../../../how/slices/slice-3-game-states/slice.md)
