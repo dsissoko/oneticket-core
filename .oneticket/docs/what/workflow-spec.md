@@ -213,6 +213,173 @@ flowchart TD
 
 ---
 
+# Exemple — 3 tâches séquentielles A → B → C
+
+Cet exemple illustre le cycle de vie complet d'un manifest avec 3 tâches séquentielles.
+
+## Le manifest initial
+
+`@leaddev` produit ce manifest sur `feature/issue-42` :
+
+```json
+{
+  "issue": 42,
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-42-A",
+      "file": "src/screens/GameScreen.tsx",
+      "content": "Crée le composant GameScreen...",
+      "role": "dev",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-42-B",
+      "file": "src/utils/collision.ts",
+      "content": "Implémente le module de collision AABB...",
+      "role": "dev",
+      "depends_on": ["A"],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-42-C",
+      "file": "src/main.tsx",
+      "content": "Ajoute la route /game dans main.tsx...",
+      "role": "dev",
+      "depends_on": ["B"],
+      "status": "pending"
+    }
+  ]
+}
+```
+
+---
+
+## Étape 1 — `@leaddev` produit le manifest
+
+**Workflow** : `on-issue-comment.yml` → `agent-execute.yml`
+
+**Scripts** :
+- `ensure-issue-branch.mjs` — crée `feature/issue-42` si absente
+- `check-prerequisites.mjs` — Gate 0 + init-doc si absente
+- `build-context.mjs` — construit le contexte GitHub
+- `agent-dispatch.mjs` — dispatche `agent-execute.yml` avec `is_fanout_task: false`
+
+`agent-execute.yml` tourne sur `feature/issue-42` :
+- `anomalyco/opencode` produit et commite `manifest.json`
+- push `feature/issue-42`
+- `is_fanout_task: false` + manifest présent → **"Manifest produit"**
+- `dispatch-fanout.mjs` → `on-fanout.yml`
+
+---
+
+## Étape 2 — FAN-OUT initial — lancement de A
+
+**Workflow** : `on-fanout.yml`
+
+**Scripts** :
+- `launch-fanout.mjs` — setup git, checkout `feature/issue-42`, lit manifest
+- `agent-launcher.mjs` :
+  - calcul DAG : seule A est ready (`depends_on: []`)
+  - manifest mis à jour :
+
+```json
+{ "id": "A", "status": "in_progress" }
+{ "id": "B", "status": "pending" }
+{ "id": "C", "status": "pending" }
+```
+
+  - crée `task/issue-42-A` via API GitHub
+  - dispatche `agent-execute.yml` avec `is_fanout_task: true`, `branch: task/issue-42-A`
+
+---
+
+## Étape 3 — Task A s'exécute et termine
+
+**Workflow** : `agent-execute.yml` sur `task/issue-42-A`
+
+**Scripts** :
+- `anomalyco/opencode` crée `src/screens/GameScreen.tsx`, commite
+- push `task/issue-42-A`
+- `is_fanout_task: true` → **"Task terminée"**
+- `dispatch-gather.mjs` → `on-gather.yml`
+
+---
+
+## Étape 4 — GATHER de A — lancement de B
+
+**Workflow** : `on-gather.yml`
+
+**Scripts** :
+- `validate-task-branch.mjs` — vérifie `task/issue-42-A` → `feature/issue-42` ✅
+- `orchestrate.mjs` :
+  - merge `task/issue-42-A` → `feature/issue-42` (retry optimiste 5x)
+  - manifest mis à jour :
+
+```json
+{ "id": "A", "status": "done" }
+{ "id": "B", "status": "pending" }
+{ "id": "C", "status": "pending" }
+```
+
+  - ferme task PR, supprime `task/issue-42-A`
+  - poste barre de progression sur l'issue : `█░░  1/3 done`
+  - calcul DAG : B est ready (`depends_on: ["A"]`, A=done)
+  - `agent-launcher.mjs` :
+    - manifest mis à jour :
+
+```json
+{ "id": "A", "status": "done" }
+{ "id": "B", "status": "in_progress" }
+{ "id": "C", "status": "pending" }
+```
+
+    - crée `task/issue-42-B` via API GitHub
+    - dispatche `agent-execute.yml` avec `is_fanout_task: true`, `branch: task/issue-42-B`
+
+---
+
+## Étape 5 — Task B s'exécute, GATHER, lancement de C
+
+Même séquence que les étapes 3 et 4.
+
+Manifest après GATHER de B :
+
+```json
+{ "id": "A", "status": "done" }
+{ "id": "B", "status": "done" }
+{ "id": "C", "status": "in_progress" }
+```
+
+Barre de progression : `██░  2/3 done`
+
+---
+
+## Étape 6 — Task C s'exécute et termine — DAG complet
+
+**Workflow** : `on-gather.yml`
+
+**Scripts** :
+- `orchestrate.mjs` :
+  - merge `task/issue-42-C` → `feature/issue-42`
+  - manifest final :
+
+```json
+{ "id": "A", "status": "done" }
+{ "id": "B", "status": "done" }
+{ "id": "C", "status": "done" }
+```
+
+  - barre de progression : `███  3/3 done`
+  - `allDone = true` → **FIN — DAG terminé**
+  - `feature/issue-42` contient le travail complet des 3 tasks
+  - La PR vers `main` est une décision user
+
+---
+
 # Philosophie d'architecture
 
 OneTicket applique une séparation stricte entre les opérations agentiques et les opérations déterministes.
