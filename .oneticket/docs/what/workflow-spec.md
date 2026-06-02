@@ -71,7 +71,10 @@ on-fanout.yml  (déclenché par dispatch-fanout.mjs via workflow_dispatch)
 ## Fan-in
 
 ```text
-on-gather.yml
+on-gather.yml  (déclenché par dispatch-gather.mjs via workflow_dispatch)
+  inputs :
+    task_branch  — ex: task/issue-42-A
+    branch_base  — ex: feature/issue-42 (calculable depuis task_branch)
   → validate-task-branch.mjs   (guard cross-issue : task/issue-N-X → feature/issue-N uniquement)
   → orchestrate.mjs            (merge task/*, retry optimiste 5x, update manifest, barre progression, ferme task PR, supprime task branch, calcul DAG)
   → agent-launcher.mjs         (dispatche les tasks READY suivantes)
@@ -451,6 +454,71 @@ Barre de progression : `██░  2/3 done`
   - `allDone = true` → **FIN — DAG terminé**
   - `feature/issue-42` contient le travail complet des 3 tasks
   - La PR vers `main` est une décision user
+
+---
+
+# Infrastructure requise
+
+## Structure du repo
+
+```
+.oneticket/
+  config.yml                  ← paramètres du framework (source de vérité)
+  AGENTS.md                   ← définition de l'équipe agents
+  agents/                     ← profils agents (*.agent.md)
+  skills/                     ← skills oneticket (<name>/SKILL.md)
+  tasks/                      ← manifests et workflow logs (issue-N/manifest.json)
+  templates/
+    docs/                     ← template de structure documentaire (copié par init-doc.mjs)
+
+src/                          ← tous les scripts .mjs du framework
+.github/
+  workflows/                  ← tous les workflows GitHub Actions .yml
+.gitattributes                ← règle merge=union pour workflow.md
+apps/
+  <project>/
+    app/                      ← code source de l'application
+    docs/                     ← documentation du projet (what/how/ship/run)
+```
+
+## Conventions de nommage des branches
+
+| Convention | Format | Exemple |
+|---|---|---|
+| Branche d'issue | `feature/issue-N` | `feature/issue-42` |
+| Branche de task | `task/issue-N-X` | `task/issue-42-A` |
+
+Ces conventions sont **strictes** — `validate-task-branch.mjs` rejette tout écart et `agent-execute.yml` refuse de tourner sur toute branche qui ne correspond pas à ces formats.
+
+## `.gitattributes`
+
+Le fichier `.gitattributes` à la racine du repo doit contenir la règle suivante :
+
+```
+.oneticket/tasks/issue-*/workflow.md merge=union
+```
+
+`merge=union` garantit que les appends parallèles sur `workflow.md` (log de progression des tasks) ne créent jamais de conflit git — les lignes sont fusionnées automatiquement.
+
+## `workflow.md`
+
+Chaque dossier de tâche `.oneticket/tasks/issue-N/` contient un `workflow.md` qui sert de log append-only de la progression des tasks. Il est mis à jour par chaque agent à la fin de son run et protégé par `merge=union`.
+
+Format d'une entrée :
+```
+2026-06-01 14:32 | A | apps/breakout/app/src/screens/GameScreen.tsx
+```
+
+## Secrets GitHub requis
+
+Deux secrets doivent être configurés dans les settings du repo GitHub (`Settings → Secrets → Actions`) :
+
+| Secret | Description | Droits requis |
+|---|---|---|
+| `ONETICKET_GH_PAT` | Personal Access Token GitHub du bot | `contents: write`, `issues: write`, `pull-requests: write`, `workflows: write` |
+| `OPENCODE_API_KEY` | Clé API opencode / anomalyco | Accès au modèle LLM configuré dans `config.yml` |
+
+Sans ces deux secrets, aucun workflow ne peut s'exécuter.
 
 ---
 
