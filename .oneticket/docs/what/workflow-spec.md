@@ -45,10 +45,25 @@ agent-execute.yml
   → dispatch-gather.mjs        (si sous-branche task/* — déclenche on-gather.yml)
 ```
 
+### Interface de `agent-execute.yml`
+
+| Input | Type | Valorisé par | Description |
+|---|---|---|---|
+| `branch` | string | `agent-dispatch.mjs` ou `agent-launcher.mjs` | Branche de travail (`feature/issue-N` ou `task/issue-N-X`) |
+| `issue_number` | string | `agent-dispatch.mjs` ou `agent-launcher.mjs` | Numéro d'issue GitHub |
+| `is_fanout_task` | boolean | `agent-launcher.mjs` → `true`, `agent-dispatch.mjs` → `false` | Signal : task FAN-OUT ou invocation directe |
+| `prompt` | string | `agent-dispatch.mjs` ou `agent-launcher.mjs` | Prompt système complet injecté dans anomalyco |
+| `model` | string | `config.yml` via `agent-dispatch.mjs` | Modèle LLM à utiliser |
+| `role` | string | `agent-dispatch.mjs` | Profil agent optionnel (dev, architect, analyst...) |
+| `retry_count` | string | `retry-dispatch.mjs` | Nombre de tentatives courantes |
+| `retry_max` | string | `config.yml` | Maximum de tentatives autorisées |
+
 ## Fan-out
 
 ```text
-on-fanout.yml
+on-fanout.yml  (déclenché par dispatch-fanout.mjs via workflow_dispatch)
+  inputs :
+    issue_number  — numéro d'issue GitHub
   → launch-fanout.mjs          (setup git, checkout feature/issue-N, lit le manifest)
   → agent-launcher.mjs         (crée task/issue-N-X via API GitHub, dispatche N × agent-execute.yml par batch)
 ```
@@ -134,7 +149,7 @@ init-template.mjs <template>
 |---|---|
 | `constants.mjs` | Source de vérité des chemins réservés du framework — aucune dépendance |
 | `config.mjs` | Lit et parse `.oneticket/config.yml`, expose `loadConfig()` |
-| `utils.mjs` | Shell (`run`, `runWithRetry`), git (`setupGit`), manifest (`readManifest`, `writeManifest`), DAG (`areDependenciesSatisfied`), GitHub API (`dispatchWorkflow`, `applyLabel`, `removeLabel`) |
+| `utils.mjs` | Shell (`run`, `runWithRetry`), git (`setupGit`), manifest (`readManifest`, `writeManifest`), DAG (`areDependenciesSatisfied`), GitHub API (`dispatchWorkflow`, `applyLabel`, `removeLabel`, `createBranch`) — `createBranch(branchName, fromBranch, repo, token)` : POST /repos/{repo}/git/refs, idempotent |
 | `print-config.mjs` | Wrapper CLI de `config.mjs` — permet aux workflows YAML de lire une valeur de config sans code inline |
 
 ---
@@ -158,6 +173,65 @@ init-template.mjs <template>
 - **Retry optimiste manifest** — `orchestrate.mjs` gère les conflits d'accès concurrent au manifest via reset hard + re-fetch + re-merge (5 tentatives max, `orchestrate_retry_max` dans `config.yml`)
 - **Exclude sandbox artefacts** — `agent-execute.yml` injecte `.agents/`, `.opencode/`, `opencode.json` dans `.git/info/exclude` pour que l'agent ne les commite pas accidentellement
 - **Guard cross-issue** — `validate-task-branch.mjs` empêche toute task branch de merger dans une feature branch d'une autre issue
+
+---
+
+# Structure du manifest
+
+Le manifest est le contrat entre `@leaddev` et le pipeline d'exécution. Il est produit par l'agent et jamais modifié par un autre agent — uniquement par les scripts déterministes (`orchestrate.mjs`, `agent-launcher.mjs`).
+
+## Format
+
+```json
+{
+  "issue": 42,
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-42-A",
+      "file": "src/screens/GameScreen.tsx",
+      "content": "Instruction complète et autosuffisante pour l'agent exécuteur...",
+      "role": "dev",
+      "depends_on": [],
+      "status": "pending"
+    }
+  ]
+}
+```
+
+## Champs
+
+| Champ | Type | Contrainte |
+|---|---|---|
+| `issue` | entier | Numéro d'issue GitHub exact |
+| `tasks` | tableau | Non vide — max `max_tasks` (config.yml) |
+| `id` | string | Lettre(s) majuscule(s) unique — A, B, C... |
+| `branch` | string | Convention stricte : `task/issue-N-X` |
+| `file` | string | Chemin relatif depuis la racine du repo — pas de `/` initial |
+| `content` | string | Instruction autosuffisante — l'agent n'a pas d'autre contexte |
+| `role` | string | Optionnel — `dev`, `architect`, `analyst`... |
+| `depends_on` | tableau | Ids existants dans ce manifest — `[]` si aucune dépendance |
+| `status` | string | `pending` \| `in_progress` \| `done` \| `merge-failed` |
+
+> `branch_base` est absent du manifest — c'est un paramètre calculable depuis `issue_number`.
+
+---
+
+# Configuration — `.oneticket/config.yml`
+
+Source de vérité unique des paramètres du framework. Lue par `config.mjs` et injectée dans les scripts et les workflows.
+
+| Paramètre | Rôle dans le pipeline |
+|---|---|
+| `current_project` | Détermine `docs_path` et `app_path` — vérifié par `check-prerequisites.mjs` (Gate 0) |
+| `model` | Modèle LLM utilisé par anomalyco — extrait de `agent_config.<cli>.model` |
+| `max_tasks` | Limite le nombre de tasks dans un manifest |
+| `retry_max` | Nombre max de retries agent dans `retry-dispatch.mjs` |
+| `orchestrate_retry_max` | Nombre max de retries optimistes dans `orchestrate.mjs` |
+| `clear_session_cache` | Vide le cache de session opencode avant chaque run |
+| `pr_base` | Branche cible des PRs finales (ex: `main`) |
+| `oneticket_git_user_name` | Identité git du bot CI |
+| `oneticket_git_user_email` | Email git du bot CI |
 
 ---
 
@@ -435,3 +509,5 @@ Cette séparation garantit que l'orchestration reste prédictible, reproductible
 - **Gate 0 déterministe** — la vérification de `current_project` est faite par `check-prerequisites.mjs`, jamais par un agent
 - **Zéro code inline dans les yml** — toute logique métier est dans des scripts `.mjs`. Les workflows YAML ne contiennent que des appels à ces scripts
 - **Décision de template = agentique** — la détection de la stack et la recommandation d'un template restent agentiques. Seule l'exécution de `init-template.mjs` est déterministe, déclenchée sur confirmation explicite de l'utilisateur (`@leaddev init-<template>`)
+- **branch_base — paramètre calculable** — la branche parente d'une task est toujours `feature/issue-N`, calculée depuis `issue_number` : `"feature/issue-" + issue_number`. Elle n'est jamais stockée dans le manifest ni passée en paramètre entre workflows
+- **switched=true — contrôle du push et des PRs** — le prompt injecte `FIRST ACTION: git checkout <branch>` en première ligne. anomalyco détecte le switch de branche (`switched=true`) et désactive automatiquement le push auto et la création de PR. Le pipeline reprend le contrôle après le run agent via les steps déterministes de `agent-execute.yml`
