@@ -193,10 +193,18 @@ flowchart TD
     EXEC -->|"Échec"| RETRY["Retry / Blocked"]
     RETRY -->|"retry_count < max"| EXEC
 
-    EXEC -->|"Succès + manifest"| FANOUT
+    EXEC -->|"Succès"| PUSH["Push déterministe"]
+
+    PUSH --> ISFANOUT{"is_fanout_task ?"}
+
+    ISFANOUT -->|"Oui — Task terminée"| GATHER
+    ISFANOUT -->|"Non"| MANIFESTCHECK{"Manifest produit ?"}
+
+    MANIFESTCHECK -->|"Oui — Manifest produit"| FANOUT
+    MANIFESTCHECK -->|"Non — Run direct"| END_SIMPLE["FIN"]
+
     FANOUT -->|"N tasks"| EXEC
 
-    EXEC -->|"Succès + task branch"| GATHER
     GATHER -->|"merge OK + tasks ready"| FANOUT
     GATHER -->|"merge OK + tout done"| DONE["FIN — DAG terminé"]
     GATHER -->|"merge error"| ERROR["FIN — intervention requise"]
