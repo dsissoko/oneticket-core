@@ -163,64 +163,44 @@ init-template.mjs <template>
 
 # Workflow complet
 
-## Vue d'ensemble
+## Vue macro
 
 ```mermaid
 flowchart TD
 
-    USER[Utilisateur]
+    subgraph AMONT["Amont — Déclenchement"]
+        ISSUE["on-issue-comment.yml"]
+        PR["on-pr-comment.yml"]
+        REVIEW["on-pr-review-comment.yml"]
+    end
 
-    USER --> ISSUE["on-issue-comment.yml"]
-    USER --> PR["on-pr-comment.yml"]
-    USER --> REVIEW["on-pr-review-comment.yml"]
+    subgraph EXEC_BOX["Exécution agentique"]
+        EXEC["agent-execute.yml"]
+    end
+
+    subgraph FANOUT_BOX["Fan-out"]
+        FANOUT["on-fanout.yml"]
+    end
+
+    subgraph FANIN_BOX["Fan-in"]
+        GATHER["on-gather.yml"]
+    end
 
     ISSUE --> EXEC
     PR --> EXEC
     REVIEW --> EXEC
 
-    EXEC["agent-execute.yml"]
+    EXEC -->|"Échec"| RETRY["Retry / Blocked"]
+    RETRY -->|"retry_count < max"| EXEC
 
-    EXEC --> OUTCOME{"Résultat agent"}
+    EXEC -->|"Succès + manifest"| FANOUT
+    FANOUT -->|"N tasks"| EXEC
 
-    OUTCOME -->|ÉCHEC| RETRY["retry-dispatch.mjs"]
-
-    RETRY --> RETRYCOUNT{"retry_count < retry_max"}
-
-    RETRYCOUNT -->|Oui| REDISPATCH["Re-dispatch agent-execute.yml"]
-    REDISPATCH --> EXEC
-
-    RETRYCOUNT -->|Non| BLOCKED["Label blocked"]
-    BLOCKED --> END1["FIN"]
-
-    OUTCOME -->|SUCCÈS| PUSH["Push déterministe branche de travail"]
-
-    PUSH --> MANIFESTCHECK{"Manifest présent ?"}
-
-    MANIFESTCHECK -->|Oui| FANOUT_DISPATCH["dispatch-fanout.mjs"]
-    FANOUT_DISPATCH --> FANOUT["on-fanout.yml"]
-    FANOUT --> LAUNCHER["agent-launcher.mjs"]
-    LAUNCHER --> EXEC
-
-    MANIFESTCHECK -->|Non| TASKCHECK{"Sous-branche task/* ?"}
-
-    TASKCHECK -->|Non| END2["FIN"]
-
-    TASKCHECK -->|Oui| GATHER["on-gather.yml"]
-
-    GATHER --> MERGE{"Merge task vers feature/issue-N"}
-
-    MERGE -->|ÉCHEC| MERGEERROR["Label merge-error"]
-    MERGEERROR --> END3["FIN"]
-
-    MERGE -->|SUCCÈS| DAG["Update manifest + calcul DAG"]
-
-    DAG --> READY{"Tasks READY ?"}
-
-    READY -->|Oui| LAUNCHER
-
-    READY -->|Non attente| END4["FIN"]
-
-    READY -->|Non tout DONE| END5["FIN — DAG terminé"]
+    EXEC -->|"Succès + task branch"| GATHER
+    GATHER -->|"merge OK + tasks ready"| FANOUT
+    GATHER -->|"merge OK + tout done"| DONE["FIN — DAG terminé"]
+    GATHER -->|"merge error"| ERROR["FIN — intervention requise"]
+    GATHER -->|"merge OK + en attente"| WAIT["FIN — attente signals"]
 ```
 
 ---
