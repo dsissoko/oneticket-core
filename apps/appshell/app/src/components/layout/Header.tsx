@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { ThemeToggle } from '../ThemeToggle';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '../ui/dropdown-menu';
 
 /**
  * HeaderProps Interface
@@ -22,6 +28,8 @@ interface HeaderProps {
  *
  * Displays the application header with logo (clickable, links to home)
  * and responsive navigation links. Uses Tailwind for responsive design.
+ * Mobile menu uses Radix UI DropdownMenu (Portal-based) to avoid clipping
+ * issues in CSS grid layouts.
  *
  * @component
  * @param {HeaderProps} props - Component props
@@ -36,10 +44,7 @@ export function Header({
     { label: 'Help', href: '/help' },
   ],
 }: HeaderProps): React.ReactElement {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-  const closeMenu = () => setIsMenuOpen(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 bg-background border-b border-border">
@@ -48,12 +53,11 @@ export function Header({
         <Link
           to="/"
           className="flex items-center font-bold text-xl text-foreground hover:text-primary transition-colors"
-          onClick={closeMenu}
         >
           {logo}
         </Link>
 
-        {/* Navigation Links - responsive */}
+        {/* Navigation Links - desktop */}
         <div className="hidden sm:flex gap-6 items-center">
           {navLinks.map((link) => (
             <Link
@@ -68,36 +72,34 @@ export function Header({
           <ThemeToggle />
         </div>
 
-        {/* Mobile menu button and theme toggle */}
+        {/* Mobile menu — Radix UI DropdownMenu (Portal-based, no clipping) */}
         <div className="sm:hidden flex items-center gap-2">
           <ThemeToggle />
-          <button
-            className="p-2 text-muted-foreground hover:text-foreground"
-            aria-label="Toggle menu"
-            onClick={toggleMenu}
-          >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+          <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+            <DropdownMenuTrigger asChild>
+              <button
+                className="p-2 text-muted-foreground hover:text-foreground"
+                aria-label="Toggle menu"
+              >
+                <Menu className="h-6 w-6" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              {navLinks.map((link) => (
+                <DropdownMenuItem key={link.href} asChild>
+                  <Link
+                    to={link.href}
+                    className="w-full cursor-pointer"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </nav>
-
-      {/* Mobile dropdown menu */}
-      {isMenuOpen && (
-        <div className="sm:hidden bg-background border-t border-border">
-          <div className="px-4 py-2 space-y-2">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                to={link.href}
-                className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded transition-colors"
-                onClick={closeMenu}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
     </header>
   );
 }
