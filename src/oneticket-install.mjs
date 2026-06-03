@@ -63,20 +63,6 @@ if (!fs.existsSync(SKILLS_SRC)) {
 }
 
 // ---------------------------------------------------------------------------
-// 2. Install AGENTS.md
-// ---------------------------------------------------------------------------
-
-const agentsSrc  = path.join(ROOT, '.oneticket', 'AGENTS.md');
-const agentsDest = path.join(ROOT, '.agents', 'AGENTS.md');
-
-if (fs.existsSync(agentsSrc)) {
-  fs.copyFileSync(agentsSrc, agentsDest);
-  console.log('[oneticket-install] installed AGENTS.md');
-} else {
-  console.log('[oneticket-install] AGENTS.md not found in .oneticket/ — skipped');
-}
-
-// ---------------------------------------------------------------------------
 // 3. Copy .oneticket/apm.yml → apm.yml (repo root)
 // ---------------------------------------------------------------------------
 
