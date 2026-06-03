@@ -22,7 +22,10 @@
 
 import { execSync } from 'child_process';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
+import path from 'path';
 import { loadConfig } from './config.mjs';
+import { TASKS_DIR, MANIFEST_FILE } from './constants.mjs';
 
 const GH_HEADERS = (token) => ({
   Authorization:          `Bearer ${token}`,
@@ -155,6 +158,16 @@ export async function createPR(issueNumber, branch, repo, token, config, manifes
   if (!branch.match(/^feature\/issue-\d+$/)) {
     console.log(`[create-pr] Branch ${branch} is not a feature branch — skipping.`);
     return;
+  }
+
+  // If called from agent-execute.yml (no manifest param) and manifest is present on disk
+  // → FAN-OUT pipeline will handle the PR at allDone — skip now
+  if (!manifest) {
+    const manifestPath = path.join(process.cwd(), TASKS_DIR, `issue-${issueNumber}`, MANIFEST_FILE);
+    if (fs.existsSync(manifestPath)) {
+      console.log(`[create-pr] Manifest present — FAN-OUT pipeline will create PR at allDone. Skipping.`);
+      return;
+    }
   }
 
   // Check commits ahead
