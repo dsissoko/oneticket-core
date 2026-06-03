@@ -7,7 +7,7 @@
       "file": "apps/breakout/app/components/GameCanvas.tsx",
       "content": "Create the GameCanvas component foundation as per Slice 1. Initialize canvas element with 60 FPS requestAnimationFrame loop. Set up game state (ball, paddle, bricks grid, lives=3, speedMultiplier=1.0). Implement initial rendering pipeline: clear canvas, draw bricks, paddle, ball. No collision detection yet—just rendering foundation.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
