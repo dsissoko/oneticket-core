@@ -89,21 +89,17 @@ jobs:
       # [DETERMINISTIC] Install skills and agent profiles via APM
       # Reads apm.yml from repo root (copied by oneticket-install.mjs)
       # Deploys to .agents/skills/ and .opencode/agents/
-      # Compiles .apm/instructions/ → .agents/AGENTS.md (opencode compiled target)
       - name: Install skills via APM
         run: apm install --target opencode
         env:
           GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
 
-      # [DEBUG] Verify APM output — to be removed once validated
-      - name: Verify APM output
-        run: |
-          echo "=== .agents/ ==="
-          ls -la .agents/ || echo "no .agents/"
-          echo "=== .agents/AGENTS.md ==="
-          cat .agents/AGENTS.md 2>/dev/null | head -5 || echo "no AGENTS.md"
-          echo "=== .opencode/agents/ ==="
-          ls -la .opencode/agents/ 2>/dev/null || echo "no .opencode/agents/"
+      # [DETERMINISTIC] Compile instructions → .agents/AGENTS.md
+      # apm install may skip compilation when lockfile says nothing changed.
+      # apm compile --target opencode --clean guarantees a fresh AGENTS.md
+      # from .apm/instructions/*.instructions.md on every run.
+      - name: Compile APM instructions
+        run: apm compile --target opencode --clean
 
       # [DETERMINISTIC] Exclude sandbox artefacts and dynamic config files from git index
       - name: Exclude sandbox artefacts from git
