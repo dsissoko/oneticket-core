@@ -1,0 +1,105 @@
+name: Workflow Gather
+
+# [DETERMINISTIC] Collects task completion signals and orchestrates next steps.
+# Triggered by dispatch-gather.mjs via workflow_dispatch after a task branch is pushed.
+#
+# v1.0.0:
+#   - branch_base input removed — derived from task_branch in the extract job
+#   - PR creation removed — user decision, never auto-created
+#
+# Security: validate-task-branch.mjs ensures task/issue-N-X only merges
+# into feature/issue-N — never into another issue or main.
+#
+# Pattern: Scatter/Gather — this workflow is the Gather + FAN-IN + optional re-Scatter
+
+on:
+  workflow_dispatch:
+    inputs:
+      task_branch:
+        required: true
+        type: string
+        description: "Task branch to merge (e.g. task/issue-42-A)"
+
+jobs:
+  # [VALIDATE + PARSE] Validates branch coherence and extracts issue number + branch_base
+  extract:
+    runs-on: ubuntu-latest
+    outputs:
+      issue_number: ${{ steps.validate.outputs.issue_number }}
+      branch_base:  ${{ steps.validate.outputs.branch_base }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ONETICKET_GH_PAT }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --silent
+
+      - name: Validate branch coherence and derive branch_base
+        id: validate
+        run: |
+          TASK_BRANCH="${{ inputs.task_branch }}"
+          ISSUE=$(echo "$TASK_BRANCH" | sed 's/task\/issue-\([0-9]*\)-.*/\1/')
+          BRANCH_BASE="feature/issue-${ISSUE}"
+          node src/validate-task-branch.mjs "$TASK_BRANCH" "$BRANCH_BASE"
+          echo "issue_number=$ISSUE" >> $GITHUB_OUTPUT
+          echo "branch_base=$BRANCH_BASE" >> $GITHUB_OUTPUT
+
+  orchestrate:
+    needs: extract
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ONETICKET_GH_PAT }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # [DETERMINISTIC ROUTING] orchestrate.mjs decides next steps — never the LLM
+      - name: Run orchestrator — merge, update manifest, route
+        env:
+          GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          TASK_BRANCH:  ${{ inputs.task_branch }}
+          REPO:         ${{ github.repository }}
+        run: node src/orchestrate.mjs
+
+  # [FAILURE NOTIFICATION] Posted on the issue if the orchestrate job fails.
+  notify-failure:
+    needs: [extract, orchestrate]
+    if: failure() && needs.extract.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post failure comment on issue
+        env:
+          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+        run: |
+          gh issue comment ${{ needs.extract.outputs.issue_number }} \
+            --repo ${{ github.repository }} \
+            --body "## Orchestration failure — branch \`${{ inputs.task_branch }}\`
+
+          The orchestration workflow failed while processing the GATHER signal.
+
+          **Actions run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          > Check the run logs to identify the cause (merge conflict, corrupted manifest, network error)."

@@ -38,6 +38,10 @@ on:
         required: false
         type: string
         default: ""
+      is_fanout_task:
+        required: false
+        type: string
+        default: "false"
 
 jobs:
   execute:
@@ -48,14 +52,19 @@ jobs:
       id-token: write
 
     steps:
-      # [GUARD] Validate branch name — feature/issue-N only at this stage
+      # [GUARD] Validate branch name
+      # - feature/issue-N        for standard agentic tasks
+      # - task/issue-N-X         for FAN-OUT tasks (is_fanout_task == "true")
       - name: Validate branch name
         run: |
           BRANCH="${{ inputs.branch }}"
+          IS_FANOUT="${{ inputs.is_fanout_task }}"
           if echo "$BRANCH" | grep -qE '^feature/issue-[0-9]+$'; then
             echo "[guard] feature branch — OK: $BRANCH"
+          elif [ "$IS_FANOUT" = "true" ] && echo "$BRANCH" | grep -qE '^task/issue-[0-9]+-[A-Za-z0-9]+$'; then
+            echo "[guard] fanout task branch — OK: $BRANCH"
           else
-            echo "[guard] REJECTED: '$BRANCH' — expected feature/issue-N"
+            echo "[guard] REJECTED: '$BRANCH' — expected feature/issue-N or (is_fanout_task=true) task/issue-N-X"
             exit 1
           fi
 
@@ -171,6 +180,15 @@ jobs:
       - name: Push branch
         if: steps.run-agent.outcome == 'success'
         run: git push origin ${{ inputs.branch }}
+
+      # [DETERMINISTIC] Trigger Gather workflow after task branch push (FAN-OUT tasks only)
+      - name: Dispatch Gather
+        if: steps.run-agent.outcome == 'success' && inputs.is_fanout_task == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          REPO:         ${{ github.repository }}
+          TASK_BRANCH:  ${{ inputs.branch }}
+        run: node src/dispatch-gather.mjs
 
   notify-failure:
     needs: execute

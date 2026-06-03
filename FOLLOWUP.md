@@ -7,16 +7,6 @@ One line per item. All detail lives in `product-spec.md`, `AGENTS.md`, or the co
 
 ## Backlog
 
-### Sprint 2 — FAN-OUT / GATHER
-- `dispatch-fanout.mjs` + `on-fanout.yml`
-- `agent-launcher.mjs` — task branches via GitHub API, is_fanout_task
-- `launch-fanout.mjs`
-- `dispatch-gather.mjs` — branch_base calculable depuis task_branch
-- `on-gather.yml`
-- `validate-task-branch.mjs`
-- `orchestrate.mjs` — supprimer createFinalPR, adapter branch_base
-- `is_fanout_task` dans `agent-execute.yml` — remplace branch_base
-
 ### Sprint 3 — Init + Skills
 - `init-doc.mjs` — brancher sur @po init-doc dans on-issue-comment.yml
 - `init-template.mjs` — nouveau script
@@ -25,6 +15,16 @@ One line per item. All detail lives in `product-spec.md`, `AGENTS.md`, or the co
 ## In Progress
 
 ## Done
+
+- Sprint 2 — FAN-OUT / GATHER
+  - `dispatch-fanout.mjs` — non nécessaire (agent-launcher déclenche directement agent-execute.yml)
+  - `agent-launcher.mjs` — prompt minimal, is_fanout_task, branch_base supprimé
+  - `launch-fanout.mjs` — copie directe src.old
+  - `dispatch-gather.mjs` — branch_base calculé depuis TASK_BRANCH
+  - `on-gather.yml` — input branch_base supprimé, calculé dans extract
+  - `validate-task-branch.mjs` — copie directe src.old
+  - `orchestrate.mjs` — createFinalPR supprimé, allDone = commentaire + labels
+  - `is_fanout_task` dans `agent-execute.yml` — guard étendu + step dispatch-gather
 
 - Sprint 1 — pipeline stabilisé
   - `retry-dispatch.mjs`
