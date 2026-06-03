@@ -10,6 +10,7 @@ One line per item. All detail lives in `product-spec.md`, `AGENTS.md`, or the co
 ### Sprint 4 — Init template + Skills
 - `init-template.mjs` — nouveau script (non implémenté)
 - Skills v1.0.0 dans `oneticket-skills` via `write-a-skill`
+- Optimisation : vérifier existence profil agent avant dispatch — éviter 3 retries sur "default agent not found"
 
 ## In Progress
 
@@ -70,6 +71,7 @@ One line per item. All detail lives in `product-spec.md`, `AGENTS.md`, or the co
 - Format réponse agent : `**[Agent: @role]**` → premier char `*` → pas de re-déclenchement `on-issue-comment.yml`
 - `autonomous_mode: true` → risque boucle (`@agent` commentaire) — non activé en v1.0.0
 - Gate 0 exit 0 — erreur config gérée proprement, pas failure pipeline
+- label `blocked` appliqué à retry_max exhaustion — signal correct même sur erreur de config (profil inexistant)
 - `current_project` — passé à `monjournal` (nouveau projet actif)
 - Templates manquants exit 1 — erreur repo inattendue, mérite notify-failure
 - APM gère agents + instructions + skills — oneticket-install.mjs = pont de copie uniquement
