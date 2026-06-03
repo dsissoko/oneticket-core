@@ -1,8 +1,16 @@
 # OneTicket v1.0.0 — Implementation Followup
 
+## Authoring rules
+
+This document is a memory aid for humans — no details, no specs, no explanations.
+One line per item. All detail lives in `product-spec.md`, `AGENTS.md`, or the code.
+
 ## Backlog
 
-- Setup APM — configure `apm.yml`, install APM CLI, wire `.agents/skills/` for opencode discovery
+- `product-spec.md` — precision pass on existing chapters
+- `product-spec.md` — new UX chapter based on `oneticket-brief.md`
+- Setup APM
+
 ## In Progress
 
 ## Done
@@ -16,3 +24,4 @@
 ## Decisions log
 
 ## Open questions
+
