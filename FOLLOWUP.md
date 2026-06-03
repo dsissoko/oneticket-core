@@ -8,31 +8,24 @@ One line per item. All detail lives in `product-spec.md`, `AGENTS.md`, or the co
 ## Backlog
 
 ### Sprint 4 — Init template + Skills
-- `init-template.mjs` — nouveau script
+- `init-template.mjs` — nouveau script (non implémenté)
 - Skills v1.0.0 dans `oneticket-skills` via `write-a-skill`
+- Restaurer `current_project: breakout` après test Gate 0
 
 ## In Progress
 
-### À valider (livré, non testé en propre)
-- `ensure-issue-branch.mjs` — validé partiellement sur #1015 (✅ step passé)
-- `check-prerequisites.mjs` — validé partiellement sur #1015 (✅ step passé)
-- `init-doc.mjs` — non encore déclenché (docs déjà présents sur breakout)
-- `create-pr.mjs` — validé sur #1015 (✅ PR #1016 créée), crash ISSUE_NUMBER fixé
-- `orchestrate.mjs` — allDone + createPR() — en cours de validation sur #1019
-
 ## Done
 
-- Sprint 3 — Init + PR automatique
-  - `ensure-issue-branch.mjs` — extrait de agent-dispatch.mjs, branché dans on-issue-comment.yml
-  - `check-prerequisites.mjs` — Gate 0 + init-doc, erreur explicite si templates absents
-  - `init-doc.mjs` — copie templates/docs/ vers docs_path, idempotent
+- Sprint 3 — Init + PR automatique — validé E2E #1019, #1021, #1025
+  - `ensure-issue-branch.mjs` — validé #1025 ✅
+  - `check-prerequisites.mjs` — Gate 0 validé #1025, init-doc déclenché ✅
+  - `init-doc.mjs` — validé #1025 (ship + run créés) ✅
+  - `create-pr.mjs` — validé #1021 (PR créée à allDone avec liste tâches) ✅
   - `agent-dispatch.mjs` — Gate 0 et création branche supprimés, responsabilité unique
-  - `create-pr.mjs` — PR créée automatiquement dès que fichiers pushés sur feature/issue-N
-  - `orchestrate.mjs` — allDone appelle createPR() avec manifest
-  - `agent-execute.yml` — step Create PR après push
-  - `retry-dispatch.mjs` — is_fanout_task passé dans le re-dispatch
-  - fix: create-pr.mjs main() conditionné à exécution directe (fileURLToPath)
-  - fix: ISSUE_NUMBER missing dans orchestrate.mjs → createPR() appelée en module
+  - fix: PR non créée au push manifest — manifest check dans create-pr.mjs ✅
+  - fix: create-pr.mjs main() conditionné fileURLToPath ✅
+  - fix: Gate 0 exit 0 — condition gérée, pas erreur pipeline ✅
+  - fix: retry-dispatch.mjs — is_fanout_task passé dans re-dispatch ✅
 
 - Sprint 2 — FAN-OUT / GATHER — validé E2E issues #1013, #1014
   - `dispatch-fanout.mjs` — détecte manifest, déclenche on-fanout.yml
@@ -42,9 +35,11 @@ One line per item. All detail lives in `product-spec.md`, `AGENTS.md`, or the co
   - `dispatch-gather.mjs` — branch_base calculé depuis TASK_BRANCH
   - `on-gather.yml` — input branch_base supprimé, calculé dans extract
   - `validate-task-branch.mjs` — copie directe src.old
+  - `orchestrate.mjs` — createFinalPR supprimé, allDone = createPR()
   - `is_fanout_task` dans `agent-execute.yml` — guard étendu + step dispatch-gather + step dispatch-fanout
   - `createBranch()` dans `utils.mjs` — POST /repos/{repo}/git/refs, idempotent
   - `oneticket-manifest-generation` skill dans `oneticket-skills/.apm/skills/`
+  - `create-pr.mjs` — PR créée automatiquement dès que fichiers pushés sur feature/issue-N
 
 - Sprint 1 — pipeline stabilisé
   - `retry-dispatch.mjs`
@@ -73,6 +68,10 @@ One line per item. All detail lives in `product-spec.md`, `AGENTS.md`, or the co
 - Direct run → PR créée par `create-pr.mjs` dans `agent-execute.yml`
 - FAN-OUT → PR créée par `orchestrate.mjs` à allDone (après dernier merge intermédiaire réussi)
 - `create-pr.mjs` exporté comme module ET exécutable standalone (fileURLToPath guard)
+- Format réponse agent : `**[Agent: @role]**` → premier char `*` → pas de re-déclenchement `on-issue-comment.yml`
+- `autonomous_mode: true` → risque boucle (`@agent` commentaire) — non activé en v1.0.0
+- Gate 0 exit 0 — erreur config gérée proprement, pas failure pipeline
+- Templates manquants exit 1 — erreur repo inattendue, mérite notify-failure
 - APM gère agents + instructions + skills — oneticket-install.mjs = pont de copie uniquement
 - `.oneticket/.apm/` = primitives APM projet-spécifiques (instructions, etc.)
 - `dsissoko/oneticket-skills` = repo partagé commun (agents + skills domaine)
@@ -84,4 +83,4 @@ One line per item. All detail lives in `product-spec.md`, `AGENTS.md`, or the co
 
 ## Open questions
 
-(none)
+- `autonomous_mode: true` — gérer le risque de boucle avant activation
