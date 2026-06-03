@@ -165,15 +165,16 @@ jobs:
       - name: Retry on agent failure
         if: steps.run-agent.outcome == 'failure'
         env:
-          GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
-          REPO:         ${{ github.repository }}
-          RETRY_COUNT:  ${{ inputs.retry_count }}
-          RETRY_MAX:    ${{ inputs.retry_max }}
-          ISSUE_NUMBER: ${{ inputs.issue_number }}
-          BRANCH:       ${{ inputs.branch }}
-          ROLE:         ${{ inputs.role }}
-          MODEL:        ${{ inputs.model }}
-          PROMPT:       ${{ inputs.prompt }}
+          GITHUB_TOKEN:   ${{ secrets.ONETICKET_GH_PAT }}
+          REPO:           ${{ github.repository }}
+          RETRY_COUNT:    ${{ inputs.retry_count }}
+          RETRY_MAX:      ${{ inputs.retry_max }}
+          ISSUE_NUMBER:   ${{ inputs.issue_number }}
+          BRANCH:         ${{ inputs.branch }}
+          ROLE:           ${{ inputs.role }}
+          MODEL:          ${{ inputs.model }}
+          PROMPT:         ${{ inputs.prompt }}
+          IS_FANOUT_TASK: ${{ inputs.is_fanout_task }}
         run: node src/retry-dispatch.mjs
 
       # [DETERMINISTIC] Push branch on success

@@ -41,13 +41,14 @@ async function main() {
   await new Promise(r => setTimeout(r, delay));
 
   await dispatchWorkflow('agent-execute.yml', {
-    issue_number: process.env.ISSUE_NUMBER,
-    branch:       process.env.BRANCH,
-    prompt:       process.env.PROMPT,
-    role:         process.env.ROLE || '',
+    issue_number:   process.env.ISSUE_NUMBER,
+    branch:         process.env.BRANCH,
+    prompt:         process.env.PROMPT,
+    role:           process.env.ROLE           || '',
+    is_fanout_task: process.env.IS_FANOUT_TASK || 'false',
     model,
-    retry_count:  String(nextRetry),
-    retry_max:    String(retryMax),
+    retry_count:    String(nextRetry),
+    retry_max:      String(retryMax),
   }, repo, token);
 
   console.log(`[retry-dispatch] Re-dispatch triggered (attempt ${nextRetry}/${retryMax}). This run exits cleanly.`);
