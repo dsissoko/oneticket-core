@@ -71,6 +71,26 @@ jobs:
       # Skip if comment was a deterministic command
       # ---------------------------------------------------------------------------
 
+      - name: Ensure issue branch exists
+        if: |
+          !startsWith(github.event.comment.body, '@po init-doc') &&
+          !startsWith(github.event.comment.body, '@leaddev init-')
+        env:
+          GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPO:         ${{ github.repository }}
+        run: node src/ensure-issue-branch.mjs
+
+      - name: Check prerequisites
+        if: |
+          !startsWith(github.event.comment.body, '@po init-doc') &&
+          !startsWith(github.event.comment.body, '@leaddev init-')
+        env:
+          GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPO:         ${{ github.repository }}
+        run: node src/check-prerequisites.mjs
+
       - name: Build context block
         id: context
         if: |

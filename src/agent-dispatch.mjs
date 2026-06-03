@@ -10,6 +10,10 @@
  *   REPO           — owner/repo
  *   GITHUB_TOKEN   — GitHub PAT
  *
+ * Prerequisites (handled upstream by on-issue-comment.yml):
+ *   - ensure-issue-branch.mjs — feature/issue-N exists
+ *   - check-prerequisites.mjs — Gate 0 + doc structure
+ *
  * Optional env vars:
  *   CONTEXT_BLOCK  — comment history block built by the trigger workflow
  *   ORIGIN_TYPE    — issue_comment | pull_request_comment | pull_request_review_comment
@@ -18,7 +22,7 @@
  */
 
 import { loadConfig } from './config.mjs';
-import { run, runCapture, runWithRetry, setupGit, dispatchWorkflow, applyLabel } from './utils.mjs';
+import { setupGit, dispatchWorkflow, applyLabel } from './utils.mjs';
 
 // ---------------------------------------------------------------------------
 // Comment parsing
@@ -37,23 +41,17 @@ function parseComment(commentBody) {
 }
 
 // ---------------------------------------------------------------------------
-// Project context (Gate 0)
+// Project context
 // ---------------------------------------------------------------------------
 
 function resolveProjectContext(config) {
-  if (!config.current_project) {
-    return { docsPath: null, appPath: null, currentProject: null,
-      error: 'current_project is missing or empty in .oneticket/config.yml.' };
-  }
   if (config.current_project === 'oneticket-core') {
-    return { docsPath: '.oneticket/docs', appPath: null,
-      currentProject: 'oneticket-core', error: null };
+    return { docsPath: '.oneticket/docs', appPath: null, currentProject: 'oneticket-core' };
   }
   return {
     docsPath:       `apps/${config.current_project}/docs`,
     appPath:        `apps/${config.current_project}/app`,
     currentProject: config.current_project,
-    error:          null,
   };
 }
 
@@ -143,34 +141,15 @@ async function main() {
   // 2. Load config
   const config = loadConfig();
 
-  // 3. Gate 0 — current_project check
-  const { docsPath, appPath, currentProject, error } = resolveProjectContext(config);
-
-  if (error || currentProject === null) {
-    console.error(`[agent-dispatch] Gate 0 failed: ${error}`);
-    try {
-      const { execFileSync } = await import('child_process');
-      const body = `## Configuration error\n\n\`current_project\` is not set in \`.oneticket/config.yml\`.\n\nPlease set it before triggering an agent:\n\`\`\`yaml\ncurrent_project: <your-project-name>\n\`\`\``;
-      execFileSync('gh', ['issue', 'comment', String(issueNumber), '--repo', repo, '--body', body],
-        { env: { ...process.env, GH_TOKEN: ghToken } });
-    } catch (e) {
-      console.error('[agent-dispatch] Could not post Gate 0 comment:', e.message);
-    }
-    process.exit(0);
-  }
+  // 3. Resolve project context
+  // Gate 0 and branch creation are handled upstream by check-prerequisites.mjs
+  // and ensure-issue-branch.mjs — called by on-issue-comment.yml before this script.
+  const { docsPath, appPath, currentProject } = resolveProjectContext(config);
 
   console.log(`[agent-dispatch] current_project="${currentProject}", docs_path="${docsPath}"`);
 
-  // 4. Git setup + ensure feature branch exists
+  // 4. Git setup
   setupGit('agent-dispatch', config, repo, ghToken);
-
-  const remoteBranches = runCapture('agent-dispatch', 'git branch -r');
-  if (!remoteBranches.includes(`origin/${featureBranch}`)) {
-    console.log(`[agent-dispatch] Creating branch ${featureBranch}...`);
-    run('agent-dispatch', `git checkout -b ${featureBranch}`);
-    runWithRetry('agent-dispatch', `git push origin ${featureBranch}`);
-    run('agent-dispatch', `git checkout -`);
-  }
 
   // 5. Build prompt
   const prompt = buildPrompt({
