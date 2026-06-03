@@ -57,7 +57,7 @@ async function main() {
   } catch (e) {
     const body = `## Configuration error\n\nCould not read \`.oneticket/config.yml\`: ${e.message}`;
     postComment(issueNumber, repo, ghToken, body);
-    process.exit(1);
+    process.exit(0);
   }
 
   if (!config.current_project) {
@@ -72,7 +72,7 @@ async function main() {
       `\`\`\``,
     ].join('\n');
     postComment(issueNumber, repo, ghToken, body);
-    process.exit(1);
+    process.exit(0);
   }
 
   const currentProject = config.current_project;
