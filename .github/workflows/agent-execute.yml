@@ -75,22 +75,34 @@ jobs:
       - name: Install dependencies
         run: npm ci --silent
 
-      # [DETERMINISTIC] Install APM CLI and resolve skills from .oneticket/apm.yml
-      # Skills land in .agents/skills/ and are natively discovered by opencode
+      # [DETERMINISTIC] Install APM CLI
       - name: Install APM
         run: curl -sSL https://aka.ms/apm-unix | sh
 
+      # [DETERMINISTIC] Pre-run setup:
+      #   1. Copy .oneticket/skills/ → .agents/skills/
+      #   2. Copy .oneticket/AGENTS.md → .agents/AGENTS.md
+      #   3. Copy .oneticket/apm.yml → apm.yml (repo root, read by apm install)
+      - name: OneTicket pre-run setup
+        run: node src/oneticket-install.mjs
+
+      # [DETERMINISTIC] Install skills and agent profiles via APM
+      # Reads apm.yml from repo root (copied by oneticket-install.mjs)
+      # Deploys to .agents/skills/ and .opencode/agents/
+      # OneTicket skills (installed above) take precedence on collision
       - name: Install skills via APM
-        run: apm install --config .oneticket/apm.yml
+        run: apm install --target opencode
         env:
           GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
 
-      # [DETERMINISTIC] Exclude sandbox artefacts from git index
+      # [DETERMINISTIC] Exclude sandbox artefacts and dynamic config files from git index
       - name: Exclude sandbox artefacts from git
         run: |
           echo ".agents/" >> .git/info/exclude
           echo ".opencode/" >> .git/info/exclude
           echo "opencode.json" >> .git/info/exclude
+          echo "apm.yml" >> .git/info/exclude
+          echo "apm.lock.yaml" >> .git/info/exclude
 
       # [DETERMINISTIC] Configure git from .oneticket/config.yml
       - name: Configure git
