@@ -8,7 +8,9 @@ One line per item. All detail lives in `product-spec.md`, `AGENTS.md`, or the co
 ## Backlog
 
 ### Sprint 3 — Init + Skills
-- `init-doc.mjs` — brancher sur @po init-doc dans on-issue-comment.yml
+- `ensure-issue-branch.mjs` — extraire de agent-dispatch.mjs, brancher dans on-issue-comment.yml
+- `check-prerequisites.mjs` — Gate 0 + init-doc, extraire de agent-dispatch.mjs
+- `init-doc.mjs` — copie templates/docs/ vers docs_path, appelé par check-prerequisites.mjs
 - `init-template.mjs` — nouveau script
 - Skills v1.0.0 dans `oneticket-skills` via `write-a-skill`
 
@@ -16,21 +18,24 @@ One line per item. All detail lives in `product-spec.md`, `AGENTS.md`, or the co
 
 ## Done
 
-- Sprint 2 — FAN-OUT / GATHER
-  - `dispatch-fanout.mjs` — non nécessaire (agent-launcher déclenche directement agent-execute.yml)
-  - `agent-launcher.mjs` — prompt minimal, is_fanout_task, branch_base supprimé
-  - `launch-fanout.mjs` — copie directe src.old
+- Sprint 2 — FAN-OUT / GATHER — validé E2E issues #1013, #1014
+  - `dispatch-fanout.mjs` — détecte manifest, déclenche on-fanout.yml
+  - `on-fanout.yml` — checkout main, délègue checkout feature/issue-N à launch-fanout.mjs
+  - `agent-launcher.mjs` — prompt minimal, is_fanout_task, createBranch() via GitHub API
+  - `launch-fanout.mjs` — setupGit + checkout feature/issue-N + check défensif après checkout
   - `dispatch-gather.mjs` — branch_base calculé depuis TASK_BRANCH
   - `on-gather.yml` — input branch_base supprimé, calculé dans extract
   - `validate-task-branch.mjs` — copie directe src.old
   - `orchestrate.mjs` — createFinalPR supprimé, allDone = commentaire + labels
-  - `is_fanout_task` dans `agent-execute.yml` — guard étendu + step dispatch-gather
+  - `is_fanout_task` dans `agent-execute.yml` — guard étendu + step dispatch-gather + step dispatch-fanout
+  - `createBranch()` dans `utils.mjs` — POST /repos/{repo}/git/refs, idempotent
+  - `oneticket-manifest-generation` skill dans `oneticket-skills/.apm/skills/`
 
 - Sprint 1 — pipeline stabilisé
   - `retry-dispatch.mjs`
   - `on-pr-comment.yml`
   - `on-pr-review-comment.yml`
-  - Pin dépendances APM — `dsissoko/oneticket-skills#v0.1.0`
+  - Pin dépendances APM — `dsissoko/oneticket-skills#main`
   - `.agents/AGENTS.md` produit par `apm compile --target opencode --clean`
 - Setup APM — `apm.yml` dans `.oneticket/`, copié à la racine par `oneticket-install.mjs`
 - Install `write-a-skill` via APM
@@ -53,9 +58,11 @@ One line per item. All detail lives in `product-spec.md`, `AGENTS.md`, or the co
 - APM gère agents + instructions + skills — oneticket-install.mjs = pont de copie uniquement
 - `.oneticket/.apm/` = primitives APM projet-spécifiques (instructions, etc.)
 - `dsissoko/oneticket-skills` = repo partagé commun (agents + skills domaine)
-- APM pinning = tag (pas SHA court) — `dsissoko/oneticket-skills#v0.1.0`
+- `oneticket-skills` pointé sur `#main` — pas de tag à chaque skill ajouté
+- `on-fanout.yml` checkout main — launch-fanout.mjs gère le checkout feature/issue-N
+- Skills dans `oneticket-skills/.apm/skills/` — pas dans `.oneticket/skills/` local
 - `apm compile --target opencode --clean` requis après `apm install` — install seul ne recompile pas si lockfile unchanged
 
 ## Open questions
 
-- `apm_modules/` déjà dans `.gitignore` (ajouté par APM) — vérifier qu'il ne gêne pas
+(none)
