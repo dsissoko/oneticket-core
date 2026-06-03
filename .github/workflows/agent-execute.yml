@@ -190,6 +190,15 @@ jobs:
           TASK_BRANCH:  ${{ inputs.branch }}
         run: node src/dispatch-gather.mjs
 
+      # [DETERMINISTIC] Trigger FAN-OUT if manifest present (direct agent runs only)
+      - name: Dispatch FAN-OUT
+        if: steps.run-agent.outcome == 'success' && inputs.is_fanout_task == 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          REPO:         ${{ github.repository }}
+          ISSUE_NUMBER: ${{ inputs.issue_number }}
+        run: node src/dispatch-fanout.mjs
+
   notify-failure:
     needs: execute
     if: failure()

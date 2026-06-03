@@ -220,6 +220,53 @@ export async function removeLabel(labelName, issueNumber, repo, token, prefix = 
 }
 
 // ---------------------------------------------------------------------------
+// GitHub branch creation
+// ---------------------------------------------------------------------------
+
+/**
+ * Creates a remote branch via GitHub API.
+ * Idempotent — silently succeeds if branch already exists (422).
+ *
+ * @param {string} branchName  - Branch to create (e.g. 'task/issue-42-A')
+ * @param {string} fromBranch  - Source branch (e.g. 'feature/issue-42')
+ * @param {string} repo        - "owner/repo"
+ * @param {string} token       - GitHub PAT
+ */
+export async function createBranch(branchName, fromBranch, repo, token) {
+  // Resolve SHA of fromBranch
+  const refRes = await fetch(
+    `https://api.github.com/repos/${repo}/git/ref/heads/${fromBranch}`,
+    { headers: GH_HEADERS(token) }
+  );
+  if (!refRes.ok) {
+    const body = await refRes.text();
+    throw new Error(`createBranch: cannot resolve ${fromBranch}: ${refRes.status} ${body}`);
+  }
+  const { object: { sha } } = await refRes.json();
+
+  // Create the new branch
+  const createRes = await fetch(
+    `https://api.github.com/repos/${repo}/git/refs`,
+    {
+      method: 'POST',
+      headers: GH_HEADERS(token),
+      body: JSON.stringify({ ref: `refs/heads/${branchName}`, sha }),
+    }
+  );
+
+  if (createRes.ok) {
+    console.log(`[createBranch] Created ${branchName} from ${fromBranch} (${sha.slice(0, 7)})`);
+    return;
+  }
+  if (createRes.status === 422) {
+    console.log(`[createBranch] ${branchName} already exists — skipping.`);
+    return;
+  }
+  const errBody = await createRes.text();
+  throw new Error(`createBranch: failed to create ${branchName}: ${createRes.status} ${errBody}`);
+}
+
+// ---------------------------------------------------------------------------
 // GitHub workflow dispatch
 // ---------------------------------------------------------------------------
 

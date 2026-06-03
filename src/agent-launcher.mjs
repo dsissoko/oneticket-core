@@ -20,7 +20,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { run, writeManifest, areDependenciesSatisfied, dispatchWorkflow } from './utils.mjs';
+import { run, writeManifest, areDependenciesSatisfied, dispatchWorkflow, createBranch } from './utils.mjs';
 import { loadConfig } from './config.mjs';
 import { TASKS_DIR, MANIFEST_FILE } from './constants.mjs';
 
@@ -103,6 +103,10 @@ export async function launchReadyTasks(manifest, repo, token) {
 
     for (const task of batch) {
       try {
+        // Create task branch via GitHub API before dispatching
+        const featureBranch = `feature/issue-${manifest.issue}`;
+        await createBranch(task.branch, featureBranch, repo, token);
+
         const prompt = buildTaskPrompt(task, manifest);
 
         await dispatchWorkflow('agent-execute.yml', {

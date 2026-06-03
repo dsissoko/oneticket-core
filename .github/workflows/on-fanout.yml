@@ -1,0 +1,70 @@
+name: Workflow FAN-OUT
+
+# [DETERMINISTIC] Bootstraps parallel task execution from a manifest.
+# Triggered by dispatch-fanout.mjs via workflow_dispatch after an agent
+# produces and pushes manifest.json on feature/issue-N.
+#
+# Pattern: Scatter — this workflow is the initial Scatter step
+#
+# Steps:
+#   1. Checkout feature/issue-N
+#   2. launch-fanout.mjs — reads manifest, delegates to agent-launcher.mjs
+#   3. agent-launcher.mjs — creates task branches via GitHub API, dispatches N × agent-execute.yml
+
+on:
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        required: true
+        type: string
+        description: "GitHub issue number"
+
+jobs:
+  fanout:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ONETICKET_GH_PAT }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --silent
+
+      # [DETERMINISTIC] Read manifest, create task branches, dispatch agent-execute.yml per task
+      - name: Launch FAN-OUT
+        env:
+          GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          ISSUE_NUMBER: ${{ inputs.issue_number }}
+          REPO:         ${{ github.repository }}
+        run: node src/launch-fanout.mjs
+
+  notify-failure:
+    needs: fanout
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post failure comment on issue
+        env:
+          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+        run: |
+          gh issue comment ${{ inputs.issue_number }} \
+            --repo ${{ github.repository }} \
+            --body "## FAN-OUT failure — issue #${{ inputs.issue_number }}
+
+          The FAN-OUT workflow failed while launching tasks.
+
+          **Actions run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          > Check the run logs to identify the cause (manifest corrupted, branch creation failed, dispatch error)."
