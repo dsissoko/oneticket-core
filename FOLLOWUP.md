@@ -2,7 +2,6 @@
 
 ## Backlog
 
-- Refine `product-spec.md` — align §13 with v1.0.0 target (gaps identified in diff analysis)
 - Setup APM — configure `apm.yml`, install APM CLI, wire `.agents/skills/` for opencode discovery
 ## In Progress
 
