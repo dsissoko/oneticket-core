@@ -53,7 +53,7 @@ clear_session_cache: true
 #
 # Set to 'oneticket-core' to work on the framework itself.
 # Set to your project name (e.g. breakout) to work on an application project.
-current_project: breakout
+current_project:
 
 # ---------------------------------------------------------------------------
 # Documentation path resolution
