@@ -21,6 +21,7 @@
  */
 
 import { execSync } from 'child_process';
+import { fileURLToPath } from 'url';
 import { loadConfig } from './config.mjs';
 
 const GH_HEADERS = (token) => ({
@@ -225,7 +226,10 @@ async function main() {
   await createPR(issueNumber, branch, repo, token, config);
 }
 
-main().catch(err => {
-  console.error('[create-pr] ERROR:', err.message);
-  process.exit(1);
-});
+// Standalone entry point — only when executed directly, not when imported
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  main().catch(err => {
+    console.error('[create-pr] ERROR:', err.message);
+    process.exit(1);
+  });
+}
