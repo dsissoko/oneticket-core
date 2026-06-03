@@ -8,7 +8,7 @@ One line per item. All detail lives in `product-spec.md`, `AGENTS.md`, or the co
 ## Backlog
 
 - `product-spec.md` — precision pass on existing chapters
-- `product-spec.md` — new UX chapter based on `oneticket-brief.md`
+- `product-spec.md` — new UX chapter based on [`oneticket-brief.md`](.oneticket/docs/what/oneticket-brief.md)
 - Setup APM
 
 ## In Progress
