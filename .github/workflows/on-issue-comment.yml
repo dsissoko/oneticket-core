@@ -1,0 +1,120 @@
+name: Comment Dispatcher
+
+# [DETERMINISTIC] Entry point for agent invocations via GitHub issue comments.
+#
+# Parse level 1 — Deterministic commands (hardcoded):
+#   @po init-doc              → init-doc step (not yet implemented)
+#   @leaddev init-<template>  → init-template step (not yet implemented)
+#
+# Parse level 2 — Agentic invocation:
+#   any other @<role> comment → build-context.mjs → agent-dispatch.mjs → agent-execute.yml
+
+on:
+  issue_comment:
+    types: [created]
+
+concurrency:
+  group: dispatch-${{ github.repository }}-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    if: "github.event.issue.pull_request == null && startsWith(github.event.comment.body, '@')"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ONETICKET_GH_PAT }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # ---------------------------------------------------------------------------
+      # Parse level 1 — Deterministic commands
+      # ---------------------------------------------------------------------------
+
+      - name: Handle @po init-doc
+        if: startsWith(github.event.comment.body, '@po init-doc')
+        run: |
+          echo "[dispatch] Deterministic command: @po init-doc — not yet implemented."
+          gh issue comment ${{ github.event.issue.number }} \
+            --repo ${{ github.repository }} \
+            --body "**[OneTicket]** \`@po init-doc\` received — not yet implemented."
+        env:
+          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+
+      - name: Handle @leaddev init-<template>
+        if: startsWith(github.event.comment.body, '@leaddev init-')
+        run: |
+          TEMPLATE=$(echo "${{ github.event.comment.body }}" | sed 's/@leaddev init-//' | xargs)
+          echo "[dispatch] Deterministic command: @leaddev init-${TEMPLATE} — not yet implemented."
+          gh issue comment ${{ github.event.issue.number }} \
+            --repo ${{ github.repository }} \
+            --body "**[OneTicket]** \`@leaddev init-${TEMPLATE}\` received — not yet implemented."
+        env:
+          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+
+      # ---------------------------------------------------------------------------
+      # Parse level 2 — Agentic invocation
+      # Skip if comment was a deterministic command
+      # ---------------------------------------------------------------------------
+
+      - name: Build context block
+        id: context
+        if: |
+          !startsWith(github.event.comment.body, '@po init-doc') &&
+          !startsWith(github.event.comment.body, '@leaddev init-')
+        env:
+          GITHUB_TOKEN:       ${{ secrets.ONETICKET_GH_PAT }}
+          REPO:               ${{ github.repository }}
+          ORIGIN_TYPE:        issue_comment
+          ISSUE_NUMBER:       ${{ github.event.issue.number }}
+          CURRENT_COMMENT_ID: ${{ github.event.comment.id }}
+          ISSUE_TITLE:        ${{ github.event.issue.title }}
+          ISSUE_BODY:         ${{ github.event.issue.body }}
+        run: |
+          echo "block=$(node src/build-context.mjs)" >> $GITHUB_OUTPUT
+
+      - name: Dispatch agent
+        if: |
+          !startsWith(github.event.comment.body, '@po init-doc') &&
+          !startsWith(github.event.comment.body, '@leaddev init-')
+        env:
+          GITHUB_TOKEN:  ${{ secrets.ONETICKET_GH_PAT }}
+          ISSUE_NUMBER:  ${{ github.event.issue.number }}
+          COMMENT_BODY:  ${{ github.event.comment.body }}
+          REPO:          ${{ github.repository }}
+          CONTEXT_BLOCK: ${{ steps.context.outputs.block }}
+          ORIGIN_TYPE:   issue_comment
+        run: |
+          export CONTEXT_BLOCK=$(echo "$CONTEXT_BLOCK" | base64 -d)
+          node src/agent-dispatch.mjs
+
+  notify-failure:
+    needs: dispatch
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post failure comment on issue
+        env:
+          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+        run: |
+          gh issue comment ${{ github.event.issue.number }} \
+            --repo ${{ github.repository }} \
+            --body "## Dispatch failure
+
+          The dispatch workflow failed while processing your command.
+
+          **Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

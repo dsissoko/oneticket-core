@@ -1,0 +1,147 @@
+name: Agent Execute
+
+# [AGENTIC] Only workflow involving an LLM (anomalyco/opencode).
+#
+# Triggered by agent-dispatch.mjs via workflow_dispatch.
+#
+# Steps:
+#   1. Checkout working branch
+#   2. Install APM + skills
+#   3. Exclude sandbox artefacts
+#   4. Configure git
+#   5. Run anomalyco/opencode with injected prompt
+#   6. Push branch on success
+
+on:
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        required: true
+        type: string
+      branch:
+        required: true
+        type: string
+      prompt:
+        required: true
+        type: string
+      retry_count:
+        required: false
+        type: string
+        default: "0"
+      retry_max:
+        required: true
+        type: string
+      model:
+        required: true
+        type: string
+      role:
+        required: false
+        type: string
+        default: ""
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      id-token: write
+
+    steps:
+      # [GUARD] Validate branch name — feature/issue-N only at this stage
+      - name: Validate branch name
+        run: |
+          BRANCH="${{ inputs.branch }}"
+          if echo "$BRANCH" | grep -qE '^feature/issue-[0-9]+$'; then
+            echo "[guard] feature branch — OK: $BRANCH"
+          else
+            echo "[guard] REJECTED: '$BRANCH' — expected feature/issue-N"
+            exit 1
+          fi
+
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+          token: ${{ secrets.ONETICKET_GH_PAT }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --silent
+
+      # [DETERMINISTIC] Install APM CLI and resolve skills from .oneticket/apm.yml
+      # Skills land in .agents/skills/ and are natively discovered by opencode
+      - name: Install APM
+        run: curl -sSL https://aka.ms/apm-unix | sh
+
+      - name: Install skills via APM
+        run: apm install --config .oneticket/apm.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+
+      # [DETERMINISTIC] Exclude sandbox artefacts from git index
+      - name: Exclude sandbox artefacts from git
+        run: |
+          echo ".agents/" >> .git/info/exclude
+          echo ".opencode/" >> .git/info/exclude
+          echo "opencode.json" >> .git/info/exclude
+
+      # [DETERMINISTIC] Configure git from .oneticket/config.yml
+      - name: Configure git
+        run: |
+          git config user.name "$(node src/print-config.mjs oneticket_git_user_name)"
+          git config user.email "$(node src/print-config.mjs oneticket_git_user_email)"
+
+      # [DETERMINISTIC] Clear opencode session cache
+      - name: Clear opencode session cache
+        run: |
+          CLEAR=$(node src/print-config.mjs clear_session_cache)
+          if [ "$CLEAR" != "false" ]; then
+            rm -rf ~/.local/share/opencode/sessions 2>/dev/null || true
+            echo "[session-cache] cleared"
+          fi
+
+      # [AGENTIC] Invoke anomalyco/opencode with the injected prompt
+      - name: Run agent
+        id: run-agent
+        continue-on-error: true
+        uses: anomalyco/opencode/github@v1.15.10
+        env:
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          PROMPT: ${{ inputs.prompt }}
+        with:
+          model: ${{ inputs.model }}
+          share: false
+          use_github_token: true
+          prompt: ${{ inputs.prompt }}
+
+      # [DETERMINISTIC] Push branch on success
+      - name: Push branch
+        if: steps.run-agent.outcome == 'success'
+        run: git push origin ${{ inputs.branch }}
+
+  notify-failure:
+    needs: execute
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post failure comment on issue
+        env:
+          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+        run: |
+          gh issue comment ${{ inputs.issue_number }} \
+            --repo ${{ github.repository }} \
+            --body "## Agent Execute failure
+
+          The execution workflow failed (retry_count=${{ inputs.retry_count }}/${{ inputs.retry_max }}).
+
+          **Branch:** \`${{ inputs.branch }}\`
+          **Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
