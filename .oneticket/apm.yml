@@ -1,0 +1,10 @@
+name: oneticket-core
+version: 1.0.0
+
+dependencies:
+  apm:
+    # OneTicket framework skills — private repo, requires ONETICKET_GH_PAT
+    - dsissoko/oneticket-skills
+
+    # Third-party skills
+    - mattpocock/skills --skill write-a-skill
