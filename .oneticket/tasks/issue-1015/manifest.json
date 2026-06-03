@@ -23,7 +23,7 @@
       "file": "apps/breakout/app/utils/input.ts",
       "content": "Implement input handling system: mapMouseTopaddle(mouseX, canvasWidth, paddleWidth), updateSpeedMultiplier(sliderValue). Write unit tests. These are independent utility functions that will be consumed by GameCanvas later.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "D",
