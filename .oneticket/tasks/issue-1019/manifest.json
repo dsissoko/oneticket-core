@@ -7,7 +7,7 @@
       "file": "apps/breakout/app/src/models/Player.ts",
       "content": "Create a Player model with basic properties: id, name, score. This is a foundational model that will be used by multiple dependent tasks. Write the file with TypeScript types and export the class.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
@@ -15,7 +15,7 @@
       "file": "apps/breakout/app/src/models/Ball.ts",
       "content": "Create a Ball model with properties: position (x, y), velocity (vx, vy), radius. This is independent and can be developed in parallel with the Player model. Write the file with TypeScript types and export the class.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "C",
@@ -23,14 +23,18 @@
       "file": "apps/breakout/app/src/models/Paddle.ts",
       "content": "Create a Paddle model with properties: position (x, y), width, height. This is independent and can be developed in parallel with A and B. Write the file with TypeScript types and export the class.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "D",
       "branch": "task/issue-1019-D",
       "file": "apps/breakout/app/src/services/GameService.ts",
       "content": "Create a GameService that orchestrates Player, Ball, and Paddle. This depends on tasks A, B, C being completed. Read the models from src/models/ and create a service that can initialize and manage game state.",
-      "depends_on": ["A", "B", "C"],
+      "depends_on": [
+        "A",
+        "B",
+        "C"
+      ],
       "status": "pending"
     },
     {
@@ -38,7 +42,9 @@
       "branch": "task/issue-1019-E",
       "file": "apps/breakout/app/src/services/PhysicsEngine.ts",
       "content": "Create a PhysicsEngine that handles collision detection and ball movement. This depends on task B (Ball model) but can be developed in parallel with task D. Implement physics calculations for the ball.",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -46,7 +52,10 @@
       "branch": "task/issue-1019-F",
       "file": "apps/breakout/app/src/controllers/GameController.ts",
       "content": "Create a GameController that integrates GameService and PhysicsEngine. This is the final orchestration layer that depends on both D and E being completed. Implement the main game loop coordination.",
-      "depends_on": ["D", "E"],
+      "depends_on": [
+        "D",
+        "E"
+      ],
       "status": "pending"
     }
   ]
