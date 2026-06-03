@@ -4,7 +4,7 @@ version: 1.0.0
 dependencies:
   apm:
     # OneTicket framework skills — private repo, requires ONETICKET_GH_PAT
-    - dsissoko/oneticket-skills
+    - dsissoko/oneticket-skills#f3c4d843
 
     # Third-party skills
-    - mattpocock/skills/skills/productivity/write-a-skill
+    - mattpocock/skills/skills/productivity/write-a-skill#aaf2453f
