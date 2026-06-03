@@ -103,6 +103,7 @@ jobs:
           echo "opencode.json" >> .git/info/exclude
           echo "apm.yml" >> .git/info/exclude
           echo "apm.lock.yaml" >> .git/info/exclude
+          echo ".apm/" >> .git/info/exclude
 
       # [DETERMINISTIC] Configure git from .oneticket/config.yml
       - name: Configure git

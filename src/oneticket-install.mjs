@@ -75,3 +75,33 @@ if (fs.existsSync(apmSrc)) {
 } else {
   console.log('[oneticket-install] No .oneticket/apm.yml found — skipping apm.yml copy.');
 }
+
+// ---------------------------------------------------------------------------
+// 4. Copy .oneticket/.apm/ → .apm/ (repo root)
+// APM reads project-specific instructions from .apm/ at the repo root.
+// These include instructions that will be compiled into AGENTS.md by apm install.
+// ---------------------------------------------------------------------------
+
+const apmDirSrc  = path.join(ROOT, '.oneticket', '.apm');
+const apmDirDest = path.join(ROOT, '.apm');
+
+function copyDirRecursive(src, dest) {
+  if (!fs.existsSync(src)) return;
+  fs.mkdirSync(dest, { recursive: true });
+  for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
+    const srcPath  = path.join(src, entry.name);
+    const destPath = path.join(dest, entry.name);
+    if (entry.isDirectory()) {
+      copyDirRecursive(srcPath, destPath);
+    } else {
+      fs.copyFileSync(srcPath, destPath);
+    }
+  }
+}
+
+if (fs.existsSync(apmDirSrc)) {
+  copyDirRecursive(apmDirSrc, apmDirDest);
+  console.log('[oneticket-install] .apm/ copied to repo root.');
+} else {
+  console.log('[oneticket-install] No .oneticket/.apm/ found — skipping .apm/ copy.');
+}
