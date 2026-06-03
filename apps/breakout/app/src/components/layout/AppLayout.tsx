@@ -27,7 +27,7 @@ export function AppLayout(): React.ReactElement {
   return (
     <div className="min-h-screen grid grid-rows-[auto_1fr_auto] bg-background text-foreground">
       {/* Header - sticky top */}
-      <Header />
+      <Header logo="breakout" />
 
       {/* Main content - flexible middle section */}
       <main className="flex flex-col overflow-auto">
