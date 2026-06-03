@@ -125,7 +125,78 @@ The `@qa`, `@analyst`, and `@help` roles belong to the V1 trajectory.
 
 ---
 
-## 8. High-Level Workflows
+## 8. User Experience
+
+### 8.1 Core interaction model
+
+- A GitHub issue is the unit of work — every agent invocation starts from one
+- No Git, no branches, no YAML for the user
+- One comment = one agent invocation
+
+### 8.2 Invocation model
+
+#### Deterministic commands
+
+| Command | Triggers |
+|---|---|
+| `@po init-doc` | `init-doc.mjs` — initializes the documentation structure |
+| `@leaddev init-<template>` | `init-template.mjs` — bootstraps the app from a template |
+
+#### Agentic conventions (recommended, not enforced)
+
+| Convention | When to use |
+|---|---|
+| `@role create ...` | Produce a new artifact |
+| `@role update ...` | Modify an existing artifact |
+| `@role validate ...` | Review and approve |
+| `@role fix ...` | Resolve an identified problem |
+| `@leaddev <request>` | Decompose into tasks and delegate to @dev |
+
+The agent interprets the full comment body — wording drives skill selection.
+
+### 8.3 Spec-First / Reverse-Doc
+
+- **Spec-First** — documentation drives implementation (normal flow): specs and user stories are produced first, then code is generated from them.
+- **Reverse-Doc** — `@po reverse-doc` generates structured documentation from existing code.
+
+### 8.4 Deliverables
+
+| Type | Format | Location |
+|---|---|---|
+| Documentation | Markdown | `apps/<project>/docs/` |
+| App | Code | `apps/<project>/app/` |
+| Doc site | Astro static site | GitHub Pages |
+
+### 8.5 End-to-end scenario — Breakout
+
+```
+User creates issue: "Build a Breakout game"
+
+User comments: @po create
+  → epic + user stories produced in docs
+
+User comments: @architect create
+  → architecture.md + C4 diagrams produced
+
+User comments: @leaddev init-appshell
+  → app bootstrapped from AppShell template
+
+User comments: @leaddev implement the Breakout game
+  → tasks decomposed, @dev dispatched in parallel
+
+GATHER: branches merged, feature/issue-N ready for review
+Deployed on GitHub Pages
+```
+
+### 8.6 Prerequisite handling
+
+- **Gate 0** — if `current_project` is not set in `config.yml`: clear error comment posted on the issue, pipeline stops, no agent invoked
+- **init-doc** — if doc structure is absent: automatically triggered before the agentic run
+- **init-template** — triggered on explicit `@leaddev init-<template>` command, confirmed by the user
+
+---
+
+## 9. High-Level Workflows
 
 **Workflow 1 — Task execution**
 ```
@@ -187,7 +258,7 @@ by adding a corresponding workflow file.
 
 ---
 
-## 9. Business Rules
+## 10. Business Rules
 
 - Orchestration logic must live in deterministic code — LLMs never make control flow decisions
 - Every agent invocation must start from a GitHub issue or a GitHub event
@@ -205,7 +276,7 @@ by adding a corresponding workflow file.
 
 ---
 
-## 10. Success Criteria
+## 11. Success Criteria
 
 - `reply` test passes — agent responds to a direct question with a GitHub comment, no manifest produced
 - `manifest` test passes — injected manifest triggers FAN-OUT, all tasks execute, feature branch ready for review
@@ -219,7 +290,7 @@ by adding a corresponding workflow file.
 
 ---
 
-## 11. Open Questions
+## 12. Open Questions
 
 | # | Question | Scope |
 |---|---|---|
@@ -237,7 +308,7 @@ by adding a corresponding workflow file.
 
 ---
 
-## 12. Roadmap
+## 13. Roadmap
 
 | Milestone | Epics | Goal |
 |---|---|---|
@@ -249,7 +320,7 @@ by adding a corresponding workflow file.
 
 ---
 
-## 13. Pipeline Architecture
+## 14. Pipeline Architecture
 
 ### 13.1 Simplified workflow overview
 
@@ -821,7 +892,7 @@ This separation guarantees that orchestration remains predictable, reproducible,
 
 ---
 
-## 14. DAG Execution Contract
+## 15. DAG Execution Contract
 
 OneTicket orchestrates tasks via FAN-OUT — each task runs on its own isolated branch and produces files that are merged back into the feature branch by GATHER.
 
@@ -891,7 +962,7 @@ A manifest where parallel tasks produce the same file is invalid and will cause 
 
 ---
 
-## 15. Decomposition and Quality Trade-offs
+## 16. Decomposition and Quality Trade-offs
 
 Operating a multi-agent pipeline requires navigating two fundamental tensions. Understanding them allows conscious, deliberate configuration — not trial and error.
 
@@ -961,7 +1032,7 @@ A game implementation decomposed into one task per JS module produced individual
 
 ---
 
-## 16. Merge Conflict Recovery
+## 17. Merge Conflict Recovery
 
 Merge conflicts are a **normal and expected** operational event in a FAN-OUT/GATHER pipeline — not an anomaly or a framework failure. They are the mechanical consequence of running parallel branches that share configuration files.
 
@@ -1002,7 +1073,7 @@ After manual conflict resolution and manifest correction, resume the pipeline by
 
 ---
 
-## 17. Glossary
+## 18. Glossary
 
 | Term | Definition |
 |---|---|
