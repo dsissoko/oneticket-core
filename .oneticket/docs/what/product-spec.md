@@ -144,13 +144,29 @@ The `@qa`, `@analyst`, and `@help` roles belong to the V1 trajectory.
 
 #### Agentic conventions (recommended, not enforced)
 
-| Convention | When to use |
-|---|---|
-| `@role create ...` | Produce a new artifact |
-| `@role update ...` | Modify an existing artifact |
-| `@role validate ...` | Review and approve |
-| `@role fix ...` | Resolve an identified problem |
-| `@leaddev <request>` | Decompose into tasks and delegate to @dev |
+| Role | Convention | Prerequisite |
+|---|---|---|
+| `@po` | `@po create` — epic or user story | `init-doc` |
+| `@po` | `@po update` — existing doc artifact | existing doc file |
+| `@po` | `@po validate` — documentation PR | existing doc structure |
+| `@po` | `@po fix` — doc inconsistency | identified problem |
+| `@po` | `@po reverse-doc` — generate doc from code | existing codebase |
+| `@analyst` | `@analyst create` — epic or user story draft | `init-doc` |
+| `@analyst` | `@analyst update` — refine existing artifact | existing doc file |
+| `@analyst` | `@analyst validate` — business conformance | existing doc file |
+| `@analyst` | `@analyst fix` — doc error or inconsistency | identified problem |
+| `@architect` | `@architect create` — architecture + C4 diagrams | `init-doc` |
+| `@architect` | `@architect update` — existing technical artifact | existing technical file |
+| `@architect` | `@architect validate` — technical feasibility | existing design |
+| `@architect` | `@architect fix` — architecture problem | identified problem |
+| `@leaddev` | `@leaddev <request>` — decompose into tasks, delegate to @dev | `init-template` |
+| `@leaddev` | `@leaddev update` — refactor or optimize code | existing code |
+| `@leaddev` | `@leaddev fix` — resolve merge conflict or technical issue | CI/CD detected problem |
+| `@dev` | `@dev create` — implement a feature | initialized template + user story |
+| `@dev` | `@dev update` — improve existing feature | existing code |
+| `@dev` | `@dev fix` — fix a bug | identified bug |
+| `@qa` | `@qa validate` — review PR (doc or code) | open PR |
+| `@qa` | `@qa fix` — document and report a bug | identified bug |
 
 The agent interprets the full comment body — wording drives skill selection.
 
@@ -193,6 +209,7 @@ Deployed on GitHub Pages
 - **Gate 0** — if `current_project` is not set in `config.yml`: clear error comment posted on the issue, pipeline stops, no agent invoked
 - **init-doc** — if doc structure is absent: automatically triggered before the agentic run
 - **init-template** — triggered on explicit `@leaddev init-<template>` command, confirmed by the user
+- **Missing agentic prerequisite** — if an agentic convention is used but its prerequisite is not satisfied (e.g. `@analyst update` called but no doc file exists): the agent posts a clear error comment indicating which command to run first, and stops without producing output
 
 ---
 
