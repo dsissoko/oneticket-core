@@ -1,0 +1,69 @@
+{
+  "issue": 1015,
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-1015-A",
+      "file": "test/e2e/pr-fanout/setup-test-repo.js",
+      "content": "Create a test setup script that initializes a temporary git repository for testing the PR fanout workflow. The script must:\n1. Create a temp directory with a git repo initialized\n2. Add initial commit with sample markdown file\n3. Create feature/issue-1015 branch\n4. Export helper functions for cleanup and repo path\n\nThis is a foundational task that other test tasks depend on.",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B1",
+      "branch": "task/issue-1015-B1",
+      "file": "test/e2e/pr-fanout/test-pr-creation.js",
+      "content": "Write an E2E test that validates PR creation when files are pushed to feature/issue-1015 branch. The test must:\n1. Use setup from test/e2e/pr-fanout/setup-test-repo.js (depends_on: A)\n2. Commit a test file to feature/issue-1015\n3. Simulate create-pr.mjs execution\n4. Verify PR is created with correct title/body\n5. Capture and return PR number for downstream tasks\n6. Assert PR targets main branch\n\nReturn the created PR number for downstream tasks.",
+      "depends_on": ["A"],
+      "status": "pending"
+    },
+    {
+      "id": "B2",
+      "branch": "task/issue-1015-B2",
+      "file": "test/e2e/pr-fanout/test-manifest-parsing.js",
+      "content": "Write a unit test that validates manifest.json parsing by task executor. The test must:\n1. Use setup from test/e2e/pr-fanout/setup-test-repo.js (depends_on: A)\n2. Create a valid .oneticket/tasks/issue-1015/manifest.json\n3. Verify all tasks are correctly parsed with id, branch, file, depends_on fields\n4. Validate dependency graph for cycles\n5. Verify task count does not exceed max_tasks\n6. Test error handling for malformed JSON\n\nThis test validates that the manifest parser works correctly.",
+      "depends_on": ["A"],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-1015-C",
+      "file": "test/e2e/pr-fanout/test-post-pr-enrichment.js",
+      "content": "Write an E2E test that validates post-PR actions enrich the SAME PR that was created. The test must:\n1. Use PR number from test-pr-creation.js (depends_on: B1)\n2. Simulate running task A from manifest (first sequential task)\n3. Create a commit that adds enrichment to the PR (e.g., architecture docs)\n4. Push to feature/issue-1015 branch\n5. Verify the push triggers post-PR actions\n6. Verify new commits are added to the SAME PR (not a new one)\n7. Assert PR still has original number (not duplicated)\n8. Verify commit message and enrichment content\n\nThis is critical for validating that parallel/sequential tasks all enrich the initial PR.",
+      "depends_on": ["B1"],
+      "status": "pending"
+    },
+    {
+      "id": "D1",
+      "branch": "task/issue-1015-D1",
+      "file": "test/e2e/pr-fanout/test-parallel-task-execution.js",
+      "content": "Write an E2E test that validates parallel task execution (B2 from manifest) runs independently and correctly. The test must:\n1. Use setup from test/e2e/pr-fanout/setup-test-repo.js (depends_on: A)\n2. Simulate parallel execution of multiple tasks that do not depend on each other\n3. Create commits for each task independently\n4. Verify all commits are created within the same PR (depends_on: C to ensure PR exists)\n5. Verify no race conditions between parallel task executions\n6. Assert task execution order does not matter for independent tasks\n\nThis validates the parallel execution pattern for the fanout mechanism.",
+      "depends_on": ["A", "C"],
+      "status": "pending"
+    },
+    {
+      "id": "D2",
+      "branch": "task/issue-1015-D2",
+      "file": "test/e2e/pr-fanout/test-sequential-task-chain.js",
+      "content": "Write an E2E test that validates sequential task execution where each task depends on previous results. The test must:\n1. Use setup from test/e2e/pr-fanout/setup-test-repo.js (depends_on: A)\n2. Execute task sequence: A → B1 → C → final task\n3. Verify each task waits for its dependency\n4. Verify data flow: output from C feeds into final task input\n5. Create commits for each sequential step\n6. Verify all commits enrich the SAME PR (depends_on: C)\n7. Assert final PR contains all enrichments in correct order\n\nThis validates the sequential execution pattern with data dependencies.",
+      "depends_on": ["A", "C"],
+      "status": "pending"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-1015-E",
+      "file": "test/e2e/pr-fanout/test-mixed-fanout-scenario.js",
+      "content": "Write a comprehensive E2E test combining both sequential and parallel task execution. The test must:\n1. Use all previous tests to create a real-world scenario:\n   - Setup (A)\n   - Parallel tasks B1 and B2 execute independently\n   - C waits for B1 (post-PR enrichment)\n   - D1 and D2 execute in parallel after C completes\n2. Simulate the full manifest execution workflow\n3. Create multiple commits from different parallel branches\n4. Push all changes and verify they land in the SAME PR\n5. Verify commit history shows correct dependency ordering\n6. Assert final PR contains all task outputs with correct metadata\n7. Depends on all previous test tasks: B1, B2, C, D1, D2\n\nThis is the comprehensive integration test validating the full fanout mechanism.",
+      "depends_on": ["B1", "B2", "C", "D1", "D2"],
+      "status": "pending"
+    },
+    {
+      "id": "F",
+      "branch": "task/issue-1015-F",
+      "file": "test/e2e/pr-fanout/test-runner.js",
+      "content": "Create the main test runner that orchestrates all tests in the correct dependency order. The test must:\n1. Import all test modules: setup, pr-creation, manifest-parsing, post-pr-enrichment, parallel, sequential, mixed\n2. Execute tests in dependency order: A → (B1, B2 parallel) → C → (D1, D2 parallel) → E\n3. Collect results and validate no failures\n4. Generate test report with timing for each task execution\n5. Assert final PR is in correct state with all expected commits\n6. Depends on all previous tasks: A, B1, B2, C, D1, D2, E\n7. Output summary showing which tests are sequential vs parallel\n\nThis orchestrates the full test suite and validates the fanout decomposition pattern works end-to-end.",
+      "depends_on": ["A", "B1", "B2", "C", "D1", "D2", "E"],
+      "status": "pending"
+    }
+  ]
+}
