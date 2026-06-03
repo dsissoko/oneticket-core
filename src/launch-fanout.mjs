@@ -36,6 +36,7 @@ async function main() {
 
   // Git setup + fetch with network retry
   setupGit('launch-fanout', config, repo, ghToken);
+  run('launch-fanout', `git fetch origin ${featureBranch}`);
   run('launch-fanout', `git checkout -B ${featureBranch} origin/${featureBranch}`);
 
   // Defensive check — manifest must be present after checkout
