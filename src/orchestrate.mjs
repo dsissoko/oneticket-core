@@ -14,7 +14,7 @@
  *   5. Mark the task as "done" in the manifest
  *   6. [DETERMINISTIC ROUTING] Decide what comes next:
  *      → ready tasks   : [FAN-OUT] via agent-launcher
- *      → all done      : post comment + label "ready for review" (PR = user decision)
+ *      → all done      : create PR feature/issue-N → main
  *      → waiting       : nothing, a future push will trigger this workflow
  *
  * [OPTIMISTIC LOCK] No GitHub Actions concurrency — manifest access conflicts
@@ -30,6 +30,7 @@
 
 import path from 'path';
 import { launchReadyTasks } from './agent-launcher.mjs';
+import { createPR } from './create-pr.mjs';
 import { loadConfig } from './config.mjs';
 import {
   run,
@@ -174,39 +175,6 @@ async function postProgressComment(manifest, issueNumber, repo, token) {
     console.log(`[orchestrate] Progress comment posted on #${issueNumber}`);
   } catch (err) {
     console.warn(`[orchestrate] Could not post progress comment on #${issueNumber}: ${err.message}`);
-  }
-}
-
-/**
- * Posts an "all done" comment — signals the feature branch is ready for a PR.
- * PR creation is a user decision — never auto-created in v1.0.0.
- */
-async function postAllDoneComment(manifest, featureBranch, issueNumber, repo, token) {
-  try {
-    const body = [
-      `## All tasks complete — issue #${issueNumber}`,
-      '',
-      `All ${manifest.tasks.length} task(s) have been merged into \`${featureBranch}\`.`,
-      '',
-      '**Completed tasks:**',
-      ...manifest.tasks.map(t => `- [x] ${t.id} — \`${t.file}\``),
-      '',
-      `> Branch \`${featureBranch}\` is ready. Create a PR when you are ready to review.`,
-    ].join('\n');
-
-    await fetch(`https://api.github.com/repos/${repo}/issues/${issueNumber}/comments`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/vnd.github+json',
-        'Content-Type': 'application/json',
-        'X-GitHub-Api-Version': '2022-11-28',
-      },
-      body: JSON.stringify({ body }),
-    });
-    console.log(`[orchestrate] All-done comment posted on #${issueNumber}`);
-  } catch (err) {
-    console.warn(`[orchestrate] Could not post all-done comment on #${issueNumber}: ${err.message}`);
   }
 }
 
@@ -379,11 +347,9 @@ async function main() {
   const readyTasks = getReadyTasks(manifest);
 
   if (allDone) {
-    // v1.0.0: PR is a user decision — notify and label, never auto-create
-    console.log('[orchestrate] All tasks done. Notifying — PR creation is a user decision.');
-    await postAllDoneComment(manifest, featureBranch, issueNumber, repo, ghToken);
-    await applyLabel('ready for review', issueNumber, repo, ghToken, 'orchestrate');
-    await removeLabel('in progress', issueNumber, repo, ghToken, 'orchestrate');
+    // v1.0.0: create PR feature/issue-N → main — user decision to merge
+    console.log('[orchestrate] All tasks done. Creating PR.');
+    await createPR(issueNumber, featureBranch, repo, ghToken, config, manifest);
   } else if (readyTasks.length > 0) {
     console.log(`[orchestrate] [FAN-IN → FAN-OUT] ${readyTasks.length} unblocked task(s): ${readyTasks.map(t => t.id).join(', ')}`);
     await launchReadyTasks(manifest, repo, ghToken);

@@ -181,6 +181,17 @@ jobs:
         if: steps.run-agent.outcome == 'success'
         run: git push origin ${{ inputs.branch }}
 
+      # [DETERMINISTIC] Create PR feature/issue-N → main if files were pushed
+      # Idempotent — skips if PR exists, skips if no commits ahead, skips for task/* branches
+      - name: Create PR
+        if: steps.run-agent.outcome == 'success'
+        env:
+          GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          REPO:         ${{ github.repository }}
+          ISSUE_NUMBER: ${{ inputs.issue_number }}
+          BRANCH:       ${{ inputs.branch }}
+        run: node src/create-pr.mjs
+
       # [DETERMINISTIC] Trigger Gather workflow after task branch push (FAN-OUT tasks only)
       - name: Dispatch Gather
         if: steps.run-agent.outcome == 'success' && inputs.is_fanout_task == 'true'
