@@ -15,7 +15,7 @@
       "file": "apps/breakout/app/utils/collision.ts",
       "content": "Implement pure collision detection functions per Slice 2: checkAABB(rect1, rect2), checkCircleAABB(ball, rect), resolveBallCollision(ball, obstacle). Write unit tests covering all edge cases (corner hits, tangential collisions, overlapping scenarios). These functions will be used in parallel with A but are independent implementations.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "C",
