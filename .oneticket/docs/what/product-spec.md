@@ -175,6 +175,37 @@ The agent interprets the full comment body — wording drives skill selection.
 - **Spec-First** — documentation drives implementation (normal flow): specs and user stories are produced first, then code is generated from them.
 - **Reverse-Doc** — `@po reverse-doc` generates structured documentation from existing code.
 
+#### Documentation structure
+
+OneTicket enforces an opinionated documentation structure covering the full product lifecycle.
+Each project's docs live in `apps/<project>/docs/`, initialized from a template by `init-doc.mjs`
+(`.oneticket/templates/docs/` → `apps/<project>/docs/`).
+
+```
+apps/<project>/docs/
+  what/                         ← product intent
+    product-spec.md
+    epics/
+      epic-N-<name>/
+        epic.md
+        user-stories/
+          us-NNN-<name>.md
+  how/                          ← technical decisions
+    architecture.md
+    c4/
+      system-context.md
+    slices/
+      slice-N-<name>/
+        slice.md
+  ship/                         ← delivery
+  run/                          ← operations
+```
+
+An Astro static site is generated from this documentation via `link-docs.mjs`, which scans
+`docs/` recursively, extracts page titles from H1 headings, and builds the site navigation.
+The script is idempotent and regenerates the full site from scratch on every build.
+The generated site is deployed to GitHub Pages alongside the app.
+
 ### 8.4 Deliverables
 
 | Type | Format | Location |
