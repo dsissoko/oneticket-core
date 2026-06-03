@@ -1,0 +1,85 @@
+name: PR Comment Dispatcher
+
+# [DETERMINISTIC] Entry point for agent invocations via PR comments.
+#
+# Trigger: issue_comment on a pull_request
+# (GitHub routes PR comments through the issue_comment event)
+#
+# Parse level 1 — Deterministic commands: none (PR context — branch exists)
+# Parse level 2 — Agentic: build-context.mjs → agent-dispatch.mjs
+
+on:
+  issue_comment:
+    types: [created]
+
+concurrency:
+  group: dispatch-pr-${{ github.repository }}-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    if: "github.event.issue.pull_request != null && startsWith(github.event.comment.body, '@')"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ONETICKET_GH_PAT }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build context block
+        id: context
+        env:
+          GITHUB_TOKEN:       ${{ secrets.ONETICKET_GH_PAT }}
+          REPO:               ${{ github.repository }}
+          ORIGIN_TYPE:        pull_request_comment
+          ISSUE_NUMBER:       ${{ github.event.issue.number }}
+          CURRENT_COMMENT_ID: ${{ github.event.comment.id }}
+          ISSUE_TITLE:        ${{ github.event.issue.title }}
+          ISSUE_BODY:         ${{ github.event.issue.body }}
+        run: |
+          echo "block=$(node src/build-context.mjs)" >> $GITHUB_OUTPUT
+
+      - name: Dispatch agent
+        env:
+          GITHUB_TOKEN:  ${{ secrets.ONETICKET_GH_PAT }}
+          ISSUE_NUMBER:  ${{ github.event.issue.number }}
+          COMMENT_BODY:  ${{ github.event.comment.body }}
+          REPO:          ${{ github.repository }}
+          CONTEXT_BLOCK: ${{ steps.context.outputs.block }}
+          ORIGIN_TYPE:   pull_request_comment
+          PR_NUMBER:     ${{ github.event.issue.number }}
+        run: |
+          export CONTEXT_BLOCK=$(echo "$CONTEXT_BLOCK" | base64 -d)
+          node src/agent-dispatch.mjs
+
+  notify-failure:
+    needs: dispatch
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post failure comment on PR
+        env:
+          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+        run: |
+          gh pr comment ${{ github.event.issue.number }} \
+            --repo ${{ github.repository }} \
+            --body "## Dispatch failure
+
+          The dispatch workflow failed while processing your command.
+
+          **Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

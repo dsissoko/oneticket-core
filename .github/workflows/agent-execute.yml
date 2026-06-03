@@ -145,6 +145,22 @@ jobs:
           use_github_token: true
           prompt: ${{ inputs.prompt }}
 
+      # [RETRY] anomalyco failure → re-dispatch via retry-dispatch.mjs
+      # Exponential backoff + jitter — applies blocked label at retry_max exhaustion
+      - name: Retry on agent failure
+        if: steps.run-agent.outcome == 'failure'
+        env:
+          GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          REPO:         ${{ github.repository }}
+          RETRY_COUNT:  ${{ inputs.retry_count }}
+          RETRY_MAX:    ${{ inputs.retry_max }}
+          ISSUE_NUMBER: ${{ inputs.issue_number }}
+          BRANCH:       ${{ inputs.branch }}
+          ROLE:         ${{ inputs.role }}
+          MODEL:        ${{ inputs.model }}
+          PROMPT:       ${{ inputs.prompt }}
+        run: node src/retry-dispatch.mjs
+
       # [DETERMINISTIC] Push branch on success
       - name: Push branch
         if: steps.run-agent.outcome == 'success'
