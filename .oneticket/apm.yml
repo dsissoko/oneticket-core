@@ -7,4 +7,4 @@ dependencies:
     - dsissoko/oneticket-skills
 
     # Third-party skills
-    - mattpocock/skills --skill write-a-skill
+    - mattpocock/skills/skills/productivity/write-a-skill
