@@ -2,6 +2,7 @@
 
 GitHub-native autonomous multi-agent framework. Invoke agents by commenting `@role` on any issue — they decompose, execute, and deliver a PR, fully autonomously.
 
+
 ---
 
 ## How it works
