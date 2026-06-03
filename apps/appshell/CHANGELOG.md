@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.0](https://github.com/dsissoko/oneticket-core/compare/appshell-v0.3.0...appshell-v0.4.0) (2026-06-03)
+
+
+### Features
+
+* complete work for issue [#987](https://github.com/dsissoko/oneticket-core/issues/987) ([aaece1e](https://github.com/dsissoko/oneticket-core/commit/aaece1ee02741d73621b998d6d8c51d552941a4a))
+
+
+### Bug Fixes
+
+* **appshell:** replace DIY mobile dropdown with Radix UI DropdownMenu — fixes clipping in CSS grid layout ([b167d03](https://github.com/dsissoko/oneticket-core/commit/b167d03084eb2018cce8df209e8cf428d861ce90))
+
 ## [0.3.0](https://github.com/dsissoko/oneticket-core/compare/appshell-v0.2.0...appshell-v0.3.0) (2026-05-31)
 
 

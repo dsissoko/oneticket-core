@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.5.0](https://github.com/dsissoko/oneticket-core/compare/v0.4.0...v0.5.0) (2026-06-03)
+
+
+### Features
+
+* **skills:** add oneticket-init-appshell — AppShell bootstrap skill for React+Vite projects ([57ee4e1](https://github.com/dsissoko/oneticket-core/commit/57ee4e12d93c4ca7ef654a78cb2dac15bf2a3c0c))
+
+
+### Bug Fixes
+
+* **skills:** correct App.tsx → main.tsx, add routing.test.tsx and handlers block rule in oneticket-appshell ([3ff6cac](https://github.com/dsissoko/oneticket-core/commit/3ff6caca6dab26a7de64028f853a85330c397091))
+
 ## [0.4.0](https://github.com/dsissoko/oneticket-core/compare/v0.3.0...v0.4.0) (2026-05-30)
 
 
