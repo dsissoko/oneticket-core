@@ -24,6 +24,12 @@ const SKILLS_SRC  = path.join(ROOT, '.oneticket', 'skills');
 const SKILLS_DEST = path.join(ROOT, '.agents', 'skills');
 
 // ---------------------------------------------------------------------------
+// Ensure .agents/skills/ exists unconditionally before any copy
+// ---------------------------------------------------------------------------
+
+fs.mkdirSync(SKILLS_DEST, { recursive: true });
+
+// ---------------------------------------------------------------------------
 // 1. Install skills
 // ---------------------------------------------------------------------------
 
