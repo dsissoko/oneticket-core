@@ -1,0 +1,85 @@
+{
+  "issue": 1015,
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-1015-A",
+      "file": "apps/breakout/app/components/GameCanvas.tsx",
+      "content": "Create the GameCanvas component foundation as per Slice 1. Initialize canvas element with 60 FPS requestAnimationFrame loop. Set up game state (ball, paddle, bricks grid, lives=3, speedMultiplier=1.0). Implement initial rendering pipeline: clear canvas, draw bricks, paddle, ball. No collision detection yet—just rendering foundation.",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-1015-B",
+      "file": "apps/breakout/app/utils/collision.ts",
+      "content": "Implement pure collision detection functions per Slice 2: checkAABB(rect1, rect2), checkCircleAABB(ball, rect), resolveBallCollision(ball, obstacle). Write unit tests covering all edge cases (corner hits, tangential collisions, overlapping scenarios). These functions will be used in parallel with A but are independent implementations.",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-1015-C",
+      "file": "apps/breakout/app/utils/input.ts",
+      "content": "Implement input handling system: mapMouseTopaddle(mouseX, canvasWidth, paddleWidth), updateSpeedMultiplier(sliderValue). Write unit tests. These are independent utility functions that will be consumed by GameCanvas later.",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-1015-D",
+      "file": "apps/breakout/app/components/GameCanvas.tsx",
+      "content": "Integrate collision detection from B into GameCanvas. Update physics loop: detect collisions against walls, paddle, and bricks each frame. Apply velocity reversals and mark destroyed bricks. This depends on both A (GameCanvas exists) and B (collision functions exist) being complete. Run existing tests to verify integration.",
+      "depends_on": ["A", "B"],
+      "status": "pending"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-1015-E",
+      "file": "apps/breakout/app/components/GameCanvas.tsx",
+      "content": "Integrate input handling from C. Bind mouse movement to paddle position, slider changes to speed multiplier. Update physics loop to apply speedMultiplier to ball velocity each frame. Run integration tests to verify mouse input and slider responsiveness.",
+      "depends_on": ["A", "C"],
+      "status": "pending"
+    },
+    {
+      "id": "F",
+      "branch": "task/issue-1015-F",
+      "file": "apps/breakout/app/components/GameCanvas.tsx",
+      "content": "Implement game state machine per Slice 3: phase transitions (menu → playing → gameOver/victory). Implement lives system (decrement on ball bottom, gameOver at 0). Render start button and menu overlays. This depends on A (GameCanvas exists) and uses collision detection from D (to detect ball at bottom).",
+      "depends_on": ["A", "D"],
+      "status": "pending"
+    },
+    {
+      "id": "G",
+      "branch": "task/issue-1015-G",
+      "file": "apps/breakout/app/components/MenuOverlay.tsx",
+      "content": "Create MenuOverlay component for rendering start menu, game-over screen, victory screen, and speed adjustment menu. Accept phase, lives, speedMultiplier as props and expose callbacks for start, restart, speed change. Can proceed in parallel with other UI work.",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "H",
+      "branch": "task/issue-1015-H",
+      "file": "apps/breakout/app/components/GameCanvas.tsx",
+      "content": "Integrate MenuOverlay component (G) into GameCanvas. Wire up button callbacks (start, restart) to phase transitions. Render overlay conditionally based on phase. This is a pure integration task that depends on both A (GameCanvas) and G (MenuOverlay).",
+      "depends_on": ["A", "G"],
+      "status": "pending"
+    },
+    {
+      "id": "I",
+      "branch": "task/issue-1015-I",
+      "file": "apps/breakout/app/pages/index.tsx",
+      "content": "Create main game page that imports and renders GameCanvas component. Set up responsive canvas sizing (100vh, 100vw). Verify game loop runs at 60 FPS. This depends on A (GameCanvas is complete with all integrations from D, E, F, H).",
+      "depends_on": ["D", "E", "F", "H"],
+      "status": "pending"
+    },
+    {
+      "id": "J",
+      "branch": "task/issue-1015-J",
+      "file": "apps/breakout/app/__tests__/game-integration.test.ts",
+      "content": "Write comprehensive integration tests covering full game flow: start game, move paddle, destroy bricks, lose life, game over, restart. Verify state transitions are correct, collision detection fires correctly, lives decrement as expected. Depends on all core functionality being complete.",
+      "depends_on": ["D", "E", "F", "H", "I"],
+      "status": "pending"
+    }
+  ]
+}
