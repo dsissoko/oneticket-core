@@ -2,6 +2,7 @@
 
 GitHub-native autonomous multi-agent framework. Invoke agents by commenting `@role` on any issue — they decompose, execute, and deliver a PR, fully autonomously.
 
+
 ---
 
 ## How it works
@@ -15,7 +16,7 @@ GitHub-native autonomous multi-agent framework. Invoke agents by commenting `@ro
       ↓
   GATHER: results merge, dependencies resolved
       ↓
-  PR created automatically
+  PR created automatically (direct run or DAG complete)
 ```
 
 All orchestration is deterministic code — zero LLM in the pipeline logic. LLMs only generate content.
@@ -47,7 +48,7 @@ pr_base: main
 agent_config:
   opencode:
     $schema: "https://opencode.ai/config.json"
-    model: opencode/minimax-m2.5   # ← change this to your preferred model
+    model: opencode/claude-haiku-4-5   # ← change this to your preferred model
     share: "disabled"
     autoupdate: false
     disabled_providers: [openai, gemini, anthropic]
@@ -78,7 +79,7 @@ model: opencode/minimax-m2.5
 You are a senior developer...
 ```
 
-A default `@po` (Product Owner) agent is included out of the box.
+A default set of agents is included out of the box: `@po`, `@leaddev`, `@dev`, `@architect`, `@qa`, `@analyst`.
 
 ### 4. Invoke an agent
 
@@ -148,8 +149,10 @@ Then invoke with `@architect design the database schema for this feature`.
 
 .github/workflows/
   on-issue-comment.yml  ← detects @role, routes to agent-dispatch.mjs
+  on-pr-comment.yml     ← detects @role on PR comments
+  on-pr-review-comment.yml ← detects @role on inline review comments
   agent-execute.yml     ← single LLM invocation point (anomalyco/opencode)
-  on-task-push.yml      ← GATHER: merges task branches, routes or creates PR
+  on-gather.yml         ← GATHER: merges task branches, routes or creates PR
 
 src/
   constants.mjs         ← framework path constants
@@ -202,25 +205,11 @@ Full list: `https://opencode.ai/zen/v1/models`
 
 ## Roadmap
 
-### V1 — GitHub-native runtime (current)
+| Milestone | Goal |
+|---|---|
+| **v0.1.0** — released | GitHub-native pipeline fully operational end-to-end |
+| **v0.5.0** — current | AppShell + Breakout apps delivered, product-spec stable, pipeline doc aligned |
+| **V1** — planned | Routing & handoff matrix, autonomous mode, full-stack skills, APM integration |
+| **V2** — planned | Cloud runtime, persistent sandboxes, multi-sandbox fan-out, observability |
 
-oneticket-core runs entirely inside GitHub Actions. Every agent invocation, task execution, and merge is a GitHub Actions workflow run. The infrastructure is free, transparent, and requires zero setup beyond a repository.
-
-**Constraints of V1:**
-- Execution time limited by GitHub Actions runner timeouts
-- No persistent context between agent runs
-- Parallel tasks limited by Actions concurrency
-- Cold start on every invocation (~30s)
-
-### V2 — Cloud runtime (planned)
-
-V2 will run agent sessions in dedicated cloud sandboxes (E2B or equivalent).
-
-**What V2 unlocks:**
-- Long-running agent sessions without timeout constraints
-- Persistent context and file system across steps
-- Richer execution environments (databases, services, browsers)
-- Faster cold starts and lower latency
-- More autonomous multi-agent workflows
-
-The oneticket-core concepts remain identical across runtimes — agents, profiles, skills, manifests, FAN-OUT/GATHER. Only the execution layer changes.
+> V1 and V2 are planning labels, not SemVer versions. Official releases follow semantic versioning carried by git tags.
