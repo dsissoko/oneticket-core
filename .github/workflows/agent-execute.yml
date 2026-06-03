@@ -95,6 +95,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
 
+      # [DETERMINISTIC] Compile instructions → .agents/AGENTS.md
+      # apm install deploys skills and agents but does not always compile instructions.
+      # apm compile ensures .apm/instructions/*.instructions.md are folded into AGENTS.md.
+      - name: Compile APM instructions
+        run: apm compile --target opencode
+
       # [DETERMINISTIC] Exclude sandbox artefacts and dynamic config files from git index
       - name: Exclude sandbox artefacts from git
         run: |
