@@ -32,21 +32,20 @@ async function main() {
 
   const featureBranch = `feature/issue-${issueNumber}`;
 
-  // Defensive check — this script must only be called
-  // when the manifest is present in the working tree
-  const manifestPath = path.join(process.cwd(), TASKS_DIR, `issue-${issueNumber}`, MANIFEST_FILE);
-  if (!fs.existsSync(manifestPath)) {
-    throw new Error(
-      `${MANIFEST_FILE} not found: ${manifestPath}\n` +
-      `launch-fanout.mjs must only be called when the manifest is present in the working tree.`
-    );
-  }
-
   const config = loadConfig();
 
   // Git setup + fetch with network retry
   setupGit('launch-fanout', config, repo, ghToken);
   run('launch-fanout', `git checkout -B ${featureBranch} origin/${featureBranch}`);
+
+  // Defensive check — manifest must be present after checkout
+  const manifestPath = path.join(process.cwd(), TASKS_DIR, `issue-${issueNumber}`, MANIFEST_FILE);
+  if (!fs.existsSync(manifestPath)) {
+    throw new Error(
+      `${MANIFEST_FILE} not found: ${manifestPath}\n` +
+      `launch-fanout.mjs must only be called when the manifest is present on ${featureBranch}.`
+    );
+  }
 
   // Read manifest
   const manifest = readManifest(issueNumber);
