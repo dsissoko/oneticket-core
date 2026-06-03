@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu } from 'lucide-react';
+import { Menu } from 'lucide-react'; // lucide-react v1+
 import { ThemeToggle } from '../ThemeToggle';
 import {
   DropdownMenu,
