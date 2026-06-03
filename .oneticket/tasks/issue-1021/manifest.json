@@ -8,14 +8,16 @@
       "file": "apps/breakout/test-fanout-A.md",
       "content": "Task A — Phase 1 (séquence). Crée le fichier apps/breakout/test-fanout-A.md avec le contenu: 'Phase 1 — Sequential initialization'. C'est le point de départ unique du pipeline.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
       "branch": "task/issue-1021-B",
       "file": "apps/breakout/test-fanout-B.md",
       "content": "Task B — Phase 2 (séquence). Dépend de A. Crée le fichier apps/breakout/test-fanout-B.md avec le contenu: 'Phase 2 — Preparation before fanout'. Vérifie que A existe avant de procéder.",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending"
     },
     {
@@ -23,7 +25,9 @@
       "branch": "task/issue-1021-C",
       "file": "apps/breakout/test-fanout-C.md",
       "content": "Task C — Phase 3 (séquence). Dépend de B. Crée le fichier apps/breakout/test-fanout-C.md avec le contenu: 'Phase 3 — Fanout trigger point'. Ceci active le fan-out parallèle.",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -31,7 +35,9 @@
       "branch": "task/issue-1021-D",
       "file": "apps/breakout/test-fanout-D.md",
       "content": "Task D — Parallel branch 1 (fan-out). Dépend de C. Crée le fichier apps/breakout/test-fanout-D.md avec le contenu: 'Branch D — Independent parallel work 1'. S'exécute en parallèle avec E et F.",
-      "depends_on": ["C"],
+      "depends_on": [
+        "C"
+      ],
       "status": "pending"
     },
     {
@@ -39,7 +45,9 @@
       "branch": "task/issue-1021-E",
       "file": "apps/breakout/test-fanout-E.md",
       "content": "Task E — Parallel branch 2 (fan-out). Dépend de C. Crée le fichier apps/breakout/test-fanout-E.md avec le contenu: 'Branch E — Independent parallel work 2'. S'exécute en parallèle avec D et F.",
-      "depends_on": ["C"],
+      "depends_on": [
+        "C"
+      ],
       "status": "pending"
     },
     {
@@ -47,7 +55,9 @@
       "branch": "task/issue-1021-F",
       "file": "apps/breakout/test-fanout-F.md",
       "content": "Task F — Parallel branch 3 (fan-out). Dépend de C. Crée le fichier apps/breakout/test-fanout-F.md avec le contenu: 'Branch F — Independent parallel work 3'. S'exécute en parallèle avec D et E.",
-      "depends_on": ["C"],
+      "depends_on": [
+        "C"
+      ],
       "status": "pending"
     },
     {
@@ -55,7 +65,11 @@
       "branch": "task/issue-1021-G",
       "file": "apps/breakout/test-fanout-G.md",
       "content": "Task G — Convergence point (fan-in). Dépend de D, E, F. Crée le fichier apps/breakout/test-fanout-G.md avec le contenu: 'Phase G — Convergence of parallel branches'. Attend que D, E et F soient complètement terminées avant de s'exécuter.",
-      "depends_on": ["D", "E", "F"],
+      "depends_on": [
+        "D",
+        "E",
+        "F"
+      ],
       "status": "pending"
     },
     {
@@ -63,7 +77,9 @@
       "branch": "task/issue-1021-H",
       "file": "apps/breakout/test-fanout-H.md",
       "content": "Task H — Final aggregation. Dépend de G. Crée le fichier apps/breakout/test-fanout-H.md avec le contenu: 'Phase H — Final aggregation and completion'. Vérifie que tous les fichiers D, E, F existent, puis conclut le pipeline.",
-      "depends_on": ["G"],
+      "depends_on": [
+        "G"
+      ],
       "status": "pending"
     }
   ]
