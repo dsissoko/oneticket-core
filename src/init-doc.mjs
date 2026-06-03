@@ -24,7 +24,7 @@ import path from 'path';
 import { execFileSync } from 'child_process';
 import { fileURLToPath } from 'url';
 import { loadConfig } from './config.mjs';
-import { setupGit, run, runWithRetry } from './utils.mjs';
+import { setupGit, run, runCapture, runWithRetry } from './utils.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT      = path.join(__dirname, '..');
@@ -142,8 +142,19 @@ async function main() {
 
   const featureBranch = `feature/issue-${issueNumber}`;
 
-  // Git setup + checkout feature branch
+  // Git setup
   setupGit('init-doc', config, repo, ghToken);
+
+  // Ensure feature branch exists — create if absent
+  const remoteBranches = runCapture('init-doc', 'git branch -r');
+  if (!remoteBranches.includes(`origin/${featureBranch}`)) {
+    console.log(`[init-doc] Creating ${featureBranch}...`);
+    run('init-doc', `git checkout -b ${featureBranch}`);
+    runWithRetry('init-doc', `git push origin ${featureBranch}`);
+    run('init-doc', `git checkout -`);
+  }
+
+  // Checkout feature branch
   run('init-doc', `git checkout -B ${featureBranch} origin/${featureBranch}`);
 
   const dest = path.join(ROOT, resolvedDocsPath);
