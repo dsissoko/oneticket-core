@@ -7,7 +7,7 @@
       "file": "apps/breakout/app/src/models/Player.ts",
       "content": "Create a Player model with basic properties: id, name, score. This is a foundational model that will be used by multiple dependent tasks. Write the file with TypeScript types and export the class.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
