@@ -64,7 +64,7 @@
       "file": "apps/breakout/app/components/MenuOverlay.tsx",
       "content": "Create MenuOverlay component for rendering start menu, game-over screen, victory screen, and speed adjustment menu. Accept phase, lives, speedMultiplier as props and expose callbacks for start, restart, speed change. Can proceed in parallel with other UI work.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "H",
