@@ -8,7 +8,7 @@
       "file": "apps/breakout/test-fanout-A.md",
       "content": "Task A — Phase 1 (séquence). Crée le fichier apps/breakout/test-fanout-A.md avec le contenu: 'Phase 1 — Sequential initialization'. C'est le point de départ unique du pipeline.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
