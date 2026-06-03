@@ -11,6 +11,7 @@ One line per item. All detail lives in `product-spec.md`, `AGENTS.md`, or the co
 - `init-template.mjs` — nouveau script (non implémenté)
 - Skills v1.0.0 dans `oneticket-skills` via `write-a-skill`
 - Optimisation : vérifier existence profil agent avant dispatch — éviter 3 retries sur "default agent not found"
+- `docs-site-github-pages.yml` — copier depuis `.old/`, aucune adaptation v1.0.0 nécessaire
 
 ## In Progress
 
