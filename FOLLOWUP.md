@@ -24,15 +24,14 @@ One line per item. All detail lives in `product-spec.md`, `AGENTS.md`, or the co
 
 ## In Progress
 
-### Sprint 1 — Stabiliser pipeline
-- `retry-dispatch.mjs`
-- `on-pr-comment.yml`
-- `on-pr-review-comment.yml`
-- Pin dépendances APM (`dsissoko/oneticket-skills#tag`, `write-a-skill#sha`)
-- Valider `.agents/AGENTS.md` produit par APM (instructions migration)
-
 ## Done
 
+- Sprint 1 — pipeline stabilisé
+  - `retry-dispatch.mjs`
+  - `on-pr-comment.yml`
+  - `on-pr-review-comment.yml`
+  - Pin dépendances APM — `dsissoko/oneticket-skills#v0.1.0`
+  - `.agents/AGENTS.md` produit par `apm compile --target opencode --clean`
 - Setup APM — `apm.yml` dans `.oneticket/`, copié à la racine par `oneticket-install.mjs`
 - Install `write-a-skill` via APM
 - `on-issue-comment.yml` — parse 2 niveaux (déterministe + agentique)
@@ -54,8 +53,9 @@ One line per item. All detail lives in `product-spec.md`, `AGENTS.md`, or the co
 - APM gère agents + instructions + skills — oneticket-install.mjs = pont de copie uniquement
 - `.oneticket/.apm/` = primitives APM projet-spécifiques (instructions, etc.)
 - `dsissoko/oneticket-skills` = repo partagé commun (agents + skills domaine)
+- APM pinning = tag (pas SHA court) — `dsissoko/oneticket-skills#v0.1.0`
+- `apm compile --target opencode --clean` requis après `apm install` — install seul ne recompile pas si lockfile unchanged
 
 ## Open questions
 
-- Pinning stratégie APM — tag ou SHA ?
 - `apm_modules/` déjà dans `.gitignore` (ajouté par APM) — vérifier qu'il ne gêne pas
