@@ -1,12 +1,12 @@
-# Product Specification
+# OneTicket Product Specification
 
-| Field     | Value                                               |
-|-----------|-----------------------------------------------------|
-| Version   | 0.5.0                                               |
-| Status    | ☐ draft  ☐ review  ☑ stable                        |
-| Author    | @dsissoko                                           |
-| Date      | 2026-06-03                                          |
-| Changelog | 0.5.0 — reference version for the v0.5.0 OneTicket tag |
+| Field     | Value                                                                                                                                               |
+|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| Version   | 1.0.0                                                                                                                                               |
+| Status    | ☑ draft  ☐ review  ☐ stable                                                                                                                         |
+| Author    | @dsissoko                                                                                                                                           |
+| Date      | 2026-06-03                                                                                                                                          |
+| Changelog | 1.0.0 — target architecture spec for pipeline v2 — describes is_fanout_task, dispatch-fanout.mjs, on-fanout.yml, branch_base removal, create-direct-pr.mjs removal |
 
 ---
 
@@ -16,7 +16,7 @@ OneTicket is a GitHub-native multi-agent collaboration framework. It provides th
 
 Four macro-capabilities define the product:
 
-**1. Task orchestration** — Certain agent roles have the ability to decompose a request into subtasks and assign them to specialized agents. Results are gathered, dependencies resolved, and a pull request is produced automatically.
+**1. Task orchestration** — Certain agent roles have the ability to decompose a request into subtasks and assign them to specialized agents. Results are gathered, dependencies resolved, and the feature branch is ready for review.
 
 **2. Autonomous mode** — Agents operate within a declared workflow: each role knows where to route a request and what to hand off. Routing and handoff rules make agent-to-agent chaining explicit and controllable, in both interactive and autonomous modes.
 
@@ -107,9 +107,9 @@ The `@qa`, `@analyst`, and `@help` roles belong to the V1 trajectory.
 | Capability | Description | Status |
 |---|---|---|
 | **Agent invocation** | Invoke any agent by commenting `@role` on a GitHub issue | ✅ v0.1.0 |
-| **Task decomposition** | Decomposer agents (e.g. `@po`) break requests into a manifest DAG | ✅ v0.1.0 |
+| **Task decomposition** | Decomposer agents (e.g. `@leaddev`) break requests into a manifest DAG | ✅ v0.1.0 |
 | **FAN-OUT execution** | Ready tasks dispatched in parallel to worker agents | ✅ v0.1.0 |
-| **GATHER and merge** | Completed task branches merged sequentially, dependencies resolved, PR created | ✅ v0.1.0 |
+| **GATHER and merge** | Completed task branches merged sequentially, dependencies resolved | ✅ v0.1.0 |
 | **Multi-trigger support** | Issue comments, PR comments, inline review comments | ✅ v0.1.0 |
 | **Documentation generation** | Structured docs covering product, architecture, epics, US, slices, C4, ship | ✅ v0.1.0 |
 | **Skill loading** | Agent profiles load domain-specific skills at runtime | ✅ v0.1.0 |
@@ -125,13 +125,16 @@ The `@qa`, `@analyst`, and `@help` roles belong to the V1 trajectory.
 
 **Workflow 1 — Task execution**
 ```
-Developer comments @po <request> on a GitHub issue
-  → agent-dispatch.mjs builds prompt + creates feature/issue-N
-  → @po produces manifest.json (DAG of tasks)
+Developer comments @leaddev <request> on a GitHub issue
+  → ensure-issue-branch.mjs creates feature/issue-N
+  → check-prerequisites.mjs — Gate 0 + init-doc
+  → agent-dispatch.mjs builds prompt, dispatches agent-execute.yml
+  → @leaddev produces manifest.json (DAG of tasks)
+  → dispatch-fanout.mjs → on-fanout.yml
   → FAN-OUT: ready tasks dispatched in parallel to worker agents
   → Each worker produces one file, commits, triggers GATHER
   → GATHER merges branch, resolves dependencies, dispatches next ready tasks
-  → When all tasks done → PR feature/issue-N → main created automatically
+  → When all tasks done → feature/issue-N is ready for review
 ```
 
 **Workflow 2 — Documentation cycle**
@@ -185,7 +188,7 @@ by adding a corresponding workflow file.
 - Orchestration logic must live in deterministic code — LLMs never make control flow decisions
 - Every agent invocation must start from a GitHub issue or a GitHub event
 - OneTicket mimics agile team best practices — each subtask gets its own branch, work is merged progressively as tasks complete, the final output is a single reviewable PR
-- Merge to `main` is an explicit human decision — the pipeline creates the PR, the human reviews and merges
+- Merge to `main` is an explicit human decision — the human reviews and merges the feature branch PR
 - In autonomous mode (V1), automatic merge will be supported for bounded and validated scenarios
 - An agent must never push directly to `main` — all changes go through feature branches and PRs
 - `current_project` must be set in `config.yml` before any agent can be dispatched
@@ -201,8 +204,8 @@ by adding a corresponding workflow file.
 ## 10. Success Criteria
 
 - `reply` test passes — agent responds to a direct question with a GitHub comment, no manifest produced
-- `manifest` test passes — injected manifest triggers FAN-OUT, all tasks execute, PR created
-- `decompose` test passes — agent decomposes a natural language request into the correct DAG, FAN-OUT executes, PR created
+- `manifest` test passes — injected manifest triggers FAN-OUT, all tasks execute, feature branch ready for review
+- `decompose` test passes — agent decomposes a natural language request into the correct DAG, FAN-OUT executes, feature branch ready for review
 - `parallel` test passes — two simultaneous pipelines execute independently, no branch crossing
 - Documentation cycle completes — Gates 1-4 produce valid `product-spec.md`, `architecture.md`, `epic-0-mvp/` without human-provided content being overwritten
 - PR comment and inline review comment trigger the correct agent response channel
@@ -234,7 +237,7 @@ by adding a corresponding workflow file.
 
 | Milestone | Epics | Goal |
 |---|---|---|
-| **v0.1.0** — current | Agent invocation, FAN-OUT/GATHER, `@po` profile, skill loading, multi-trigger | GitHub-native pipeline fully operational end-to-end |
+| **v0.5.0** — released | AppShell + Breakout apps, product-spec stable, pipeline doc aligned | GitHub-native pipeline fully operational end-to-end |
 | **V1** — planned | Routing & handoff matrix, autonomous mode, full-stack skills, APM integration, deployment skills | Complete agentic team operating autonomously on bounded scenarios |
 | **V2** — planned | Cloud runtime, persistent sandboxes, multi-sandbox fan-out, observability | Long-running agent sessions without GitHub Actions constraints |
 
@@ -252,10 +255,10 @@ This section presents only the structural GitHub workflows and the main scripts 
 
 ```text
 on-issue-comment.yml
+  → ensure-issue-branch.mjs    (creates feature/issue-N if absent — idempotent)
+  → check-prerequisites.mjs    (Gate 0 current_project, init-doc if doc structure missing)
   → build-context.mjs          (fetches comment history, formats the prompt context block)
-  → agent-dispatch.mjs         (creates feature/issue-N if absent, Gate 0 on current_project,
-                                 resolves docs_path/app_path, builds prompt,
-                                 sets in progress label, dispatches agent-execute.yml)
+  → agent-dispatch.mjs         (resolves docs_path/app_path, builds prompt, sets in progress label, dispatches agent-execute.yml)
 
 on-pr-comment.yml
   → build-context.mjs          (fetches PR comment history, formats the prompt context block)
@@ -275,11 +278,8 @@ agent-execute.yml
   → anomalyco/opencode         (runs the agent — only non-deterministic step)
   → retry-dispatch.mjs         (exponential backoff + jitter, sets blocked label on exhaustion)
   → deterministic push of the working branch
-  → if branch_base set (FAN-OUT task):
-      → dispatch-gather.mjs    (triggers on-gather.yml)
-  → if branch_base empty (direct invocation):
-      → if manifest.json present → launch-fanout.mjs  (triggers FAN-OUT)
-      → if no manifest           → create-direct-pr.mjs (creates PR feature/issue-N → pr_base)
+  → dispatch-fanout.mjs        (if manifest present — triggers on-fanout.yml)
+  → dispatch-gather.mjs        (if is_fanout_task: true — triggers on-gather.yml)
 ```
 
 ### 13.2 `agent-execute.yml` interface
@@ -288,7 +288,7 @@ agent-execute.yml
 |---|---|---|---|
 | `branch` | string | `agent-dispatch.mjs` or `agent-launcher.mjs` | Working branch (`feature/issue-N` or `task/issue-N-X`) |
 | `issue_number` | string | `agent-dispatch.mjs` or `agent-launcher.mjs` | GitHub issue number |
-| `branch_base` | string | `agent-launcher.mjs` → `feature/issue-N`, `agent-dispatch.mjs` → `""` | Empty = direct invocation. Set = FAN-OUT task — value is the parent feature branch |
+| `is_fanout_task` | boolean | `agent-launcher.mjs` → `true`, `agent-dispatch.mjs` → `false` | Signal: FAN-OUT task or direct invocation |
 | `prompt` | string | `agent-dispatch.mjs` or `agent-launcher.mjs` | Full system prompt injected into anomalyco |
 | `model` | string | `config.yml` via `agent-dispatch.mjs` | LLM model to use |
 | `role` | string | `agent-dispatch.mjs` | Optional agent profile (dev, architect, analyst...) |
@@ -297,16 +297,12 @@ agent-execute.yml
 
 ### 13.3 Fan-out
 
-FAN-OUT is triggered from `agent-execute.yml` when the agent produces a `manifest.json` on a direct invocation (`branch_base` empty).
-
 ```text
-agent-execute.yml detects manifest.json present + branch_base empty
-  → launch-fanout.mjs          (git setup, checkout feature/issue-N, reads manifest)
-  → agent-launcher.mjs         (DAG calc, marks tasks in_progress, dispatches N × agent-execute.yml
-                                 with branch_base set to feature/issue-N, batch of 4, 2s delay)
-
-Note: task/* branches are created by a bash step inside agent-execute.yml at runner startup,
-not by agent-launcher.mjs before dispatch.
+on-fanout.yml  (triggered by dispatch-fanout.mjs via workflow_dispatch)
+  inputs:
+    issue_number  — GitHub issue number
+  → launch-fanout.mjs          (git setup, checkout feature/issue-N, reads the manifest)
+  → agent-launcher.mjs         (creates task/issue-N-X via GitHub API, dispatches N × agent-execute.yml in batches)
 ```
 
 ### 13.4 Fan-in
@@ -315,24 +311,35 @@ not by agent-launcher.mjs before dispatch.
 on-gather.yml  (triggered by dispatch-gather.mjs via workflow_dispatch)
   inputs:
     task_branch  — e.g. task/issue-42-A
-    branch_base  — e.g. feature/issue-42 (required — passed by dispatch-gather.mjs)
+    branch_base  — e.g. feature/issue-42 (computable from task_branch)
   → validate-task-branch.mjs   (cross-issue guard: task/issue-N-X → feature/issue-N only)
-  → orchestrate.mjs            (merges task/*, optimistic retry 5x, updates manifest, progress bar,
-                                 closes task PR, deletes task branch, DAG recalc)
-  → agent-launcher.mjs         (dispatches next READY tasks, or creates final PR if all done)
+  → orchestrate.mjs            (merges task/*, optimistic retry 5x, updates manifest, progress bar, closes task PR, deletes task branch, DAG recalc)
+  → agent-launcher.mjs         (dispatches next READY tasks)
 ```
 
 ### 13.5 Project initialization
 
-Gate 0 is enforced inline in `agent-dispatch.mjs`: if `current_project` is not defined in `config.yml`, the script posts a comment on the issue and stops — no agent is invoked.
-
-Doc structure initialization is handled by `init-doc.mjs`, called from skills or manually. It is not yet triggered automatically by the pipeline.
+These operations are deterministic — never agentic. Invoked by the pipeline before every agentic run or explicitly by the user.
 
 ```text
-init-doc.mjs <docs_path>
-  → copies .oneticket/templates/docs/ to <docs_path> — idempotent, never overwrites existing files
-  → called from skills (oneticket-doc-structure) or manually — not called by the pipeline automatically
+check-prerequisites.mjs <docs_path>
+  → called by on-issue-comment.yml before every agentic run
+  → Gate 0: verifies that current_project is defined — notifies and stops if missing
+  → init-doc: verifies that docs_path contains the standard structure
+               if absent → copies .oneticket/templates/docs/ to docs_path (idempotent)
+  → extensible: additional deterministic prerequisites can be added here
+
+init-template.mjs <template>
+  → triggered by the user via @leaddev init-<template> (e.g. @leaddev init-appshell)
+  → copies apps/<template>/app/ to apps/<current_project>/app/
+  → customizes placeholders (package.json, index.html, screens)
+  → idempotent — if apps/<current_project>/app/ already exists, skip
+  → available templates: appshell (React+Vite), ...
+  → note: the decision to use a template remains agentic
+           (@leaddev detects the stack and recommends the appropriate template)
 ```
+
+---
 
 ### 13.6 Script reference
 
@@ -340,8 +347,10 @@ init-doc.mjs <docs_path>
 
 | Script | Functional content |
 |---|---|
-| `build-context.mjs` | Fetches GitHub comment history (max 10, truncated to 500 chars), formats the context block injected into the prompt. Supports `issue_comment`, `pull_request_comment`, and `pull_request_review_comment` origin types |
-| `agent-dispatch.mjs` | Creates `feature/issue-N` if absent (idempotent), Gate 0 (`current_project` check), resolves `docs_path`/`app_path`, builds the system prompt (agent profile, project context, contract), sets `in progress` label, dispatches `agent-execute.yml` with `branch_base` empty |
+| `ensure-issue-branch.mjs` | Creates `feature/issue-N` if absent — idempotent |
+| `check-prerequisites.mjs` | Gate 0 (`current_project`), init-doc if doc structure missing — extensible |
+| `build-context.mjs` | Fetches GitHub comment history (max 10, truncated to 500 chars), formats the context block injected into the prompt |
+| `agent-dispatch.mjs` | Resolves `docs_path`/`app_path`/`current_project`, builds the system prompt (agent profile, project context, contract), sets `in progress` label, dispatches `agent-execute.yml` |
 
 #### Agentic execution scripts
 
@@ -349,34 +358,30 @@ init-doc.mjs <docs_path>
 |---|---|
 | `oneticket-install.mjs` | Copies skills `.oneticket/skills/` → `.agents/skills/` and `AGENTS.md` before each run — opencode discovers them natively |
 | `generate-config.mjs` | Generates the opencode JSON config from `agent_config.<cli>` in `config.yml` — injected via `OPENCODE_CONFIG_CONTENT` |
-| `retry-dispatch.mjs` | Re-dispatches `agent-execute.yml` with exponential backoff + jitter (`2^n * 1000ms + [0,500ms]`), preserving all original inputs including `branch_base` — sets `blocked` label on `retry_max` exhaustion |
+| `retry-dispatch.mjs` | Re-dispatches `agent-execute.yml` with exponential backoff + jitter (`2^n * 1000ms + [0,500ms]`) — sets `blocked` label on `retry_max` exhaustion |
 
 #### Fan-out scripts
 
 | Script | Functional content |
 |---|---|
-| `launch-fanout.mjs` | Git setup, checkout `feature/issue-N`, reads manifest, verifies pending tasks exist, delegates to `agent-launcher.mjs` |
-| `agent-launcher.mjs` | Identifies ready tasks (DAG), marks `in_progress`, commits and pushes manifest update (optimistic lock — aborts if non-fast-forward), dispatches N × `agent-execute.yml` with `branch_base` set, in batches of 4 with 2s anti-cancellation delay. Task branches are created by a bash step inside `agent-execute.yml` at runner startup |
+| `dispatch-fanout.mjs` | Sends the `workflow_dispatch` signal to `on-fanout.yml` when a manifest is detected |
+| `launch-fanout.mjs` | Git setup, checkout `feature/issue-N`, reads the manifest, delegates to `agent-launcher.mjs` |
+| `agent-launcher.mjs` | Identifies ready tasks (DAG), marks `in_progress`, creates `task/issue-N-X` branches via GitHub API, dispatches N × `agent-execute.yml` in batches of 4 with anti-cancellation delay (2s between dispatches) |
 
 #### Fan-in scripts
 
 | Script | Functional content |
 |---|---|
-| `dispatch-gather.mjs` | Sends the `workflow_dispatch` signal to `on-gather.yml` from `agent-execute.yml` when a `task/*` branch completes. Requires `TASK_BRANCH` and `BRANCH_BASE` from env |
+| `dispatch-gather.mjs` | Sends the `workflow_dispatch` signal to `on-gather.yml` from task/* sub-branches |
 | `validate-task-branch.mjs` | Cross-issue guard: verifies that `task/issue-N-X` belongs to `feature/issue-N` — rejects any issue number mismatch |
-| `orchestrate.mjs` | Merges `task/*` → `feature/issue-N` with optimistic retry (5 attempts, exponential backoff), marks task `done` or `merge-failed`, posts progress bar on the issue, closes the task PR, deletes the task branch via GitHub API, recalculates DAG, delegates to `agent-launcher.mjs` for next ready tasks — or creates the final PR if all tasks are done |
+| `orchestrate.mjs` | Merges `task/*` → `feature/issue-N` with optimistic retry (5 attempts, exponential backoff), marks task `done` or `merge-failed`, posts progress bar on the issue, closes the task PR, deletes the task branch, recalculates DAG, delegates to `agent-launcher.mjs` |
 
 #### Initialization scripts
 
 | Script | Functional content |
 |---|---|
-| `init-doc.mjs` | Copies `.oneticket/templates/docs/` to `<docs_path>` — idempotent, never overwrites existing files. Called from skills or manually |
-
-#### Direct run scripts
-
-| Script | Functional content |
-|---|---|
-| `create-direct-pr.mjs` | Creates a PR `feature/issue-N → pr_base` when the agent completes a direct run without producing a manifest. Idempotent: checks for an existing open PR first. Guard: requires at least one commit ahead of `pr_base` |
+| `init-doc.mjs` | Copies `.oneticket/templates/docs/` to `<docs_path>` — idempotent, never overwrites existing files. Called by `check-prerequisites.mjs`, never by an agent |
+| `init-template.mjs` | Copies `apps/<template>/app/` to `apps/<current_project>/app/`, customizes placeholders — idempotent. Triggered on agentic decision confirmed by the user |
 
 #### Utility scripts (cross-cutting)
 
@@ -384,8 +389,10 @@ init-doc.mjs <docs_path>
 |---|---|
 | `constants.mjs` | Single source of truth for reserved framework paths — no dependencies |
 | `config.mjs` | Reads and parses `.oneticket/config.yml`, exposes `loadConfig()` |
-| `utils.mjs` | Shell (`run`, `runWithRetry`), git (`setupGit`), manifest (`readManifest`, `writeManifest`), DAG (`areDependenciesSatisfied`), GitHub API (`dispatchWorkflow`, `applyLabel`, `removeLabel`) |
+| `utils.mjs` | Shell (`run`, `runWithRetry`), git (`setupGit`), manifest (`readManifest`, `writeManifest`), DAG (`areDependenciesSatisfied`), GitHub API (`dispatchWorkflow`, `applyLabel`, `removeLabel`, `createBranch`) — `createBranch(branchName, fromBranch, repo, token)`: POST /repos/{repo}/git/refs, idempotent |
 | `print-config.mjs` | CLI wrapper for `config.mjs` — allows YAML workflows to read a config value without inline code |
+
+---
 
 ### 13.7 Labels and signals
 
@@ -396,7 +403,9 @@ init-doc.mjs <docs_path>
 | `blocked` | `retry-dispatch.mjs` | Manual | The agent has exhausted its retry attempts |
 | `ready for review` | — | — | User decision — never set automatically by the pipeline |
 
-> The `ready for review` label is never set automatically — it is a user decision.
+> The final PR is a user decision — never created automatically by the pipeline.
+
+---
 
 ### 13.8 Robustness
 
@@ -405,14 +414,17 @@ init-doc.mjs <docs_path>
 - **Exclude sandbox artefacts** — `agent-execute.yml` injects `.agents/`, `.opencode/`, `opencode.json` into `.git/info/exclude` so the agent does not accidentally commit them
 - **Cross-issue guard** — `validate-task-branch.mjs` prevents any task branch from merging into a feature branch of a different issue
 
+---
+
 ### 13.9 Manifest structure
 
 The manifest is the contract between `@leaddev` and the execution pipeline. It is produced by the agent and never modified by another agent — only by deterministic scripts (`orchestrate.mjs`, `agent-launcher.mjs`).
 
+#### Format
+
 ```json
 {
   "issue": 42,
-  "branch_base": "feature/issue-42",
   "tasks": [
     {
       "id": "A",
@@ -427,10 +439,11 @@ The manifest is the contract between `@leaddev` and the execution pipeline. It i
 }
 ```
 
+#### Fields
+
 | Field | Type | Constraint |
 |---|---|---|
 | `issue` | integer | Exact GitHub issue number |
-| `branch_base` | string | Parent feature branch — `feature/issue-N`. Used by `agent-launcher.mjs` and `orchestrate.mjs` |
 | `tasks` | array | Non-empty — max `max_tasks` (config.yml) |
 | `id` | string | Unique uppercase letter(s) — A, B, C... |
 | `branch` | string | Strict convention: `task/issue-N-X` |
@@ -440,13 +453,17 @@ The manifest is the contract between `@leaddev` and the execution pipeline. It i
 | `depends_on` | array | Ids existing in this manifest — `[]` if no dependency |
 | `status` | string | `pending` \| `in_progress` \| `done` \| `merge-failed` |
 
+> `branch_base` is absent from the manifest — it is a computable parameter from `issue_number`.
+
+---
+
 ### 13.10 Configuration — `.oneticket/config.yml`
 
 Single source of truth for framework parameters. Read by `config.mjs` and injected into scripts and workflows.
 
 | Parameter | Role in the pipeline |
 |---|---|
-| `current_project` | Determines `docs_path` and `app_path` — verified by Gate 0 inline in `agent-dispatch.mjs` |
+| `current_project` | Determines `docs_path` and `app_path` — verified by `check-prerequisites.mjs` (Gate 0) |
 | `model` | LLM model used by anomalyco — extracted from `agent_config.<cli>.model` |
 | `max_tasks` | Limits the number of tasks in a manifest |
 | `retry_max` | Maximum agent retries in `retry-dispatch.mjs` |
@@ -456,7 +473,226 @@ Single source of truth for framework parameters. Read by `config.mjs` and inject
 | `oneticket_git_user_name` | Git identity of the CI bot |
 | `oneticket_git_user_email` | Git email of the CI bot |
 
-### 13.11 Required infrastructure
+---
+
+### 13.11 Macro view (Mermaid)
+
+```mermaid
+flowchart TD
+
+    subgraph AMONT["Upstream — Triggering"]
+        ISSUE["on-issue-comment.yml"]
+        PR["on-pr-comment.yml"]
+        REVIEW["on-pr-review-comment.yml"]
+    end
+
+    subgraph EXEC_BOX["Agentic execution"]
+        EXEC["agent-execute.yml"]
+    end
+
+    subgraph FANOUT_BOX["Fan-out"]
+        FANOUT["on-fanout.yml"]
+    end
+
+    subgraph FANIN_BOX["Fan-in"]
+        GATHER["on-gather.yml"]
+    end
+
+    ISSUE --> EXEC
+    PR --> EXEC
+    REVIEW --> EXEC
+
+    EXEC -->|"Failure"| RETRY["Retry / Blocked"]
+    RETRY -->|"retry_count < max"| EXEC
+
+    EXEC -->|"Success"| PUSH["Deterministic push"]
+
+    PUSH --> ISFANOUT{"is_fanout_task ?"}
+
+    ISFANOUT -->|"Yes — Task complete"| GATHER
+    ISFANOUT -->|"No"| MANIFESTCHECK{"Manifest produced ?"}
+
+    MANIFESTCHECK -->|"Yes — Manifest produced"| FANOUT
+    MANIFESTCHECK -->|"No — Direct run"| END_SIMPLE["END — feature/issue-N ready for review"]
+
+    FANOUT -->|"N tasks"| EXEC
+
+    GATHER -->|"merge OK + tasks ready"| FANOUT
+    GATHER -->|"merge OK + all done"| DONE["END — DAG complete, feature/issue-N ready for review"]
+    GATHER -->|"merge error"| ERROR["END — intervention required"]
+    GATHER -->|"merge OK + waiting"| WAIT["END — waiting for signals"]
+```
+
+---
+
+### 13.12 Example — 3 sequential tasks A → B → C
+
+This example illustrates the complete lifecycle of a manifest with 3 sequential tasks.
+
+#### Initial manifest
+
+`@leaddev` produces this manifest on `feature/issue-42`:
+
+```json
+{
+  "issue": 42,
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-42-A",
+      "file": "src/screens/GameScreen.tsx",
+      "content": "Create the GameScreen component...",
+      "role": "dev",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-42-B",
+      "file": "src/utils/collision.ts",
+      "content": "Implement the AABB collision module...",
+      "role": "dev",
+      "depends_on": ["A"],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-42-C",
+      "file": "src/main.tsx",
+      "content": "Add the /game route in main.tsx...",
+      "role": "dev",
+      "depends_on": ["B"],
+      "status": "pending"
+    }
+  ]
+}
+```
+
+---
+
+#### Step 1 — `@leaddev` produces the manifest
+
+**Workflow**: `on-issue-comment.yml` → `agent-execute.yml`
+
+**Scripts**:
+- `ensure-issue-branch.mjs` — creates `feature/issue-42` if absent
+- `check-prerequisites.mjs` — Gate 0 + init-doc if missing
+- `build-context.mjs` — builds the GitHub context
+- `agent-dispatch.mjs` — dispatches `agent-execute.yml` with `is_fanout_task: false`
+
+`agent-execute.yml` runs on `feature/issue-42`:
+- `anomalyco/opencode` produces and commits `manifest.json`
+- pushes `feature/issue-42`
+- `is_fanout_task: false` + manifest present → **"Manifest produced"**
+- `dispatch-fanout.mjs` → `on-fanout.yml`
+
+---
+
+#### Step 2 — Initial FAN-OUT — launching A
+
+**Workflow**: `on-fanout.yml`
+
+**Scripts**:
+- `launch-fanout.mjs` — git setup, checkout `feature/issue-42`, reads manifest
+- `agent-launcher.mjs`:
+  - DAG calculation: only A is ready (`depends_on: []`)
+  - manifest updated:
+
+```json
+{ "id": "A", "status": "in_progress" }
+{ "id": "B", "status": "pending" }
+{ "id": "C", "status": "pending" }
+```
+
+  - creates `task/issue-42-A` via GitHub API
+  - dispatches `agent-execute.yml` with `is_fanout_task: true`, `branch: task/issue-42-A`
+
+---
+
+#### Step 3 — Task A executes and completes
+
+**Workflow**: `agent-execute.yml` on `task/issue-42-A`
+
+**Scripts**:
+- `anomalyco/opencode` creates `src/screens/GameScreen.tsx`, commits
+- pushes `task/issue-42-A`
+- `is_fanout_task: true` → **"Task complete"**
+- `dispatch-gather.mjs` → `on-gather.yml`
+
+---
+
+#### Step 4 — GATHER of A — launching B
+
+**Workflow**: `on-gather.yml`
+
+**Scripts**:
+- `validate-task-branch.mjs` — verifies `task/issue-42-A` → `feature/issue-42` ✅
+- `orchestrate.mjs`:
+  - merges `task/issue-42-A` → `feature/issue-42` (optimistic retry 5x)
+  - manifest updated:
+
+```json
+{ "id": "A", "status": "done" }
+{ "id": "B", "status": "pending" }
+{ "id": "C", "status": "pending" }
+```
+
+  - closes task PR, deletes `task/issue-42-A`
+  - posts progress bar on the issue: `█░░  1/3 done`
+  - DAG calculation: B is ready (`depends_on: ["A"]`, A=done)
+  - `agent-launcher.mjs`:
+    - manifest updated:
+
+```json
+{ "id": "A", "status": "done" }
+{ "id": "B", "status": "in_progress" }
+{ "id": "C", "status": "pending" }
+```
+
+    - creates `task/issue-42-B` via GitHub API
+    - dispatches `agent-execute.yml` with `is_fanout_task: true`, `branch: task/issue-42-B`
+
+---
+
+#### Step 5 — Task B executes, GATHER, launching C
+
+Same sequence as steps 3 and 4.
+
+Manifest after GATHER of B:
+
+```json
+{ "id": "A", "status": "done" }
+{ "id": "B", "status": "done" }
+{ "id": "C", "status": "in_progress" }
+```
+
+Progress bar: `██░  2/3 done`
+
+---
+
+#### Step 6 — Task C executes and completes — DAG complete
+
+**Workflow**: `on-gather.yml`
+
+**Scripts**:
+- `orchestrate.mjs`:
+  - merges `task/issue-42-C` → `feature/issue-42`
+  - final manifest:
+
+```json
+{ "id": "A", "status": "done" }
+{ "id": "B", "status": "done" }
+{ "id": "C", "status": "done" }
+```
+
+  - progress bar: `███  3/3 done`
+  - `allDone = true` → **END — DAG complete**
+  - `feature/issue-42` contains the complete work of all 3 tasks
+  - The PR to `main` is a user decision
+
+---
+
+### 13.13 Required infrastructure
 
 #### Repository structure
 
@@ -491,15 +727,17 @@ These conventions are **strict** — `validate-task-branch.mjs` rejects any devi
 
 #### `.gitattributes`
 
+The `.gitattributes` file at the repo root must contain the following rule:
+
 ```
 .oneticket/tasks/issue-*/workflow.md merge=union
 ```
 
-`merge=union` guarantees that parallel appends to `workflow.md` never create a git conflict.
+`merge=union` guarantees that parallel appends to `workflow.md` (task progress log) never create a git conflict — lines are merged automatically.
 
 #### `workflow.md`
 
-Each `.oneticket/tasks/issue-N/` folder contains a `workflow.md` — append-only log of task progress, protected by `merge=union`.
+Each `.oneticket/tasks/issue-N/` folder contains a `workflow.md` — append-only log of task progress, updated by each agent at the end of its run, protected by `merge=union`.
 
 Entry format:
 ```
@@ -508,112 +746,74 @@ Entry format:
 
 #### Required GitHub secrets
 
+Two secrets must be configured in the GitHub repo settings (`Settings → Secrets → Actions`):
+
 | Secret | Description | Required permissions |
 |---|---|---|
 | `ONETICKET_GH_PAT` | GitHub Personal Access Token for the bot | `contents: write`, `issues: write`, `pull-requests: write`, `workflows: write` |
 | `OPENCODE_API_KEY` | opencode / anomalyco API key | Access to the LLM model configured in `config.yml` |
 
-### 13.12 Architectural philosophy
+Without these two secrets, no workflow can execute.
+
+---
+
+### 13.14 Architectural philosophy
 
 OneTicket enforces a strict separation between agentic operations and deterministic operations.
 
-**Agents are allowed to:**
+#### Agent responsibilities
+
+Agents are allowed to:
+
+```text
 - analyze a context
 - produce content
 - modify files
 - create a local commit
 - publish a GitHub response
+```
 
-**Agents are not allowed to:**
+Agents are not allowed to:
+
+```text
 - create branches
 - choose a branch
 - push code
 - merge branches
 - create Pull Requests
 - directly modify the global orchestration
-
-**`.mjs` scripts are responsible for:** git management, branch management, pushes, merges, manifests, DAG calculation, fanout, fanin, retries, and GitHub API interactions.
-
-**Design decisions:**
-- **Manifest = DAG condition** — the presence of `manifest.json` on a direct invocation triggers FAN-OUT; `branch_base` set triggers GATHER
-- **branch_base as routing signal** — `branch_base` empty = direct invocation; `branch_base` set = FAN-OUT task. It is stored in the manifest and passed between workflows as the parent feature branch reference
-- **PR created automatically on direct run** — when the agent completes a direct invocation without producing a manifest, `create-direct-pr.mjs` creates `feature/issue-N → pr_base` automatically
-- **PR created automatically on DAG completion** — `orchestrate.mjs` creates the final PR when all tasks are `done`
-- **Branch always created upstream** — `feature/issue-N` is guaranteed to exist before any agentic run (inline in `agent-dispatch.mjs`). `task/issue-N-X` branches are created by a bash step inside `agent-execute.yml` at runner startup
-- **Gate 0 inline** — `current_project` verification is done inside `agent-dispatch.mjs`; if missing, the pipeline stops without invoking an agent
-- **switched=true** — the prompt injects `FIRST ACTION: git checkout <branch>`. anomalyco disables auto-push and PR creation. The pipeline resumes control via the deterministic steps of `agent-execute.yml`
-
-### 13.13 Macro view (Mermaid)
-
-```mermaid
-flowchart TD
-
-    subgraph AMONT["Upstream — Triggering"]
-        ISSUE["on-issue-comment.yml"]
-        PR["on-pr-comment.yml"]
-        REVIEW["on-pr-review-comment.yml"]
-    end
-
-    subgraph EXEC_BOX["Agentic execution"]
-        EXEC["agent-execute.yml"]
-    end
-
-    subgraph FANIN_BOX["Fan-in"]
-        GATHER["on-gather.yml"]
-    end
-
-    ISSUE --> EXEC
-    PR --> EXEC
-    REVIEW --> EXEC
-
-    EXEC -->|"Failure"| RETRY["Retry / Blocked"]
-    RETRY -->|"retry_count < max"| EXEC
-
-    EXEC -->|"Success"| PUSH["Deterministic push"]
-
-    PUSH --> BRANCHBASE{"branch_base set ?"}
-
-    BRANCHBASE -->|"Yes — FAN-OUT task"| GATHER
-    BRANCHBASE -->|"No — Direct invocation"| MANIFESTCHECK{"manifest.json present ?"}
-
-    MANIFESTCHECK -->|"Yes — FAN-OUT"| FANOUT["launch-fanout.mjs\n→ agent-launcher.mjs\n→ N × agent-execute.yml"]
-    MANIFESTCHECK -->|"No — Direct run"| DIRECTPR["create-direct-pr.mjs\n→ PR feature/issue-N → pr_base"]
-
-    FANOUT -->|"N tasks dispatched\n(branch_base set)"| EXEC
-
-    GATHER -->|"merge OK + tasks ready"| FANOUT
-    GATHER -->|"merge OK + all done"| FINALPR["orchestrate.mjs creates final PR\nfeature/issue-N → pr_base"]
-    GATHER -->|"merge error"| ERROR["END — intervention required"]
-    GATHER -->|"merge OK + waiting"| WAIT["END — waiting for signals"]
 ```
 
-### 13.14 Example — 3 sequential tasks A → B → C
+#### Deterministic script responsibilities
 
-`@leaddev` produces this manifest on `feature/issue-42`:
+`.mjs` scripts are responsible for:
 
-```json
-{
-  "issue": 42,
-  "branch_base": "feature/issue-42",
-  "tasks": [
-    { "id": "A", "branch": "task/issue-42-A", "file": "src/screens/GameScreen.tsx", "content": "Create the GameScreen component...", "role": "dev", "depends_on": [], "status": "pending" },
-    { "id": "B", "branch": "task/issue-42-B", "file": "src/utils/collision.ts", "content": "Implement the AABB collision module...", "role": "dev", "depends_on": ["A"], "status": "pending" },
-    { "id": "C", "branch": "task/issue-42-C", "file": "src/main.tsx", "content": "Add the /game route in main.tsx...", "role": "dev", "depends_on": ["B"], "status": "pending" }
-  ]
-}
+```text
+- git management
+- branch management
+- pushes
+- merges
+- manifests
+- DAG calculation
+- fanout
+- fanin
+- retries
+- GitHub API interactions
 ```
 
-**Step 1** — `on-issue-comment.yml` → `agent-execute.yml` (`branch_base` empty): `@leaddev` produces and commits `manifest.json` on `feature/issue-42`, push. `agent-execute.yml` detects `manifest.json` → calls `launch-fanout.mjs`.
+This separation guarantees that orchestration remains predictable, reproducible, and controlled independently of AI model behavior.
 
-**Step 2** — `launch-fanout.mjs` → `agent-launcher.mjs`: DAG → only A is ready. Marks A `in_progress`, pushes manifest. Dispatches `agent-execute.yml` with `branch: task/issue-42-A`, `branch_base: feature/issue-42`.
+#### Design decisions
 
-**Step 3** — `agent-execute.yml` on `task/issue-42-A` (`branch_base` set): bash step creates `task/issue-42-A` from `feature/issue-42`. `@dev` creates `GameScreen.tsx`, commits, push. `dispatch-gather.mjs` → `on-gather.yml`.
-
-**Step 4** — `on-gather.yml`: merges A → `feature/issue-42`. Marks A `done`. DAG → B is ready. `agent-launcher.mjs` dispatches B. Progress: `█░░  1/3 done`.
-
-**Step 5** — Same sequence for B. Progress: `██░  2/3 done`.
-
-**Step 6** — Merges C → `feature/issue-42`. Marks C `done`. `allDone = true`. Progress: `███  3/3 done`. `orchestrate.mjs` creates the final PR `feature/issue-42 → main`.
+- **PR = user decision** — the pipeline never creates a PR automatically. `create-direct-pr.mjs` and `createFinalPR` are removed in the v2 vision
+- **Manifest = DAG condition** — the presence of `manifest.json` triggers Fan-out, not the branch name
+- **Branch always created upstream** — `feature/issue-N` is guaranteed to exist before any agentic run (`ensure-issue-branch.mjs`). `task/issue-N-X` branches are created by `agent-launcher.mjs` via GitHub API before dispatch
+- **Deterministic initialization** — `init-doc` and `init-template` are deterministic scripts, never delegated to an agent. Doc structure is guaranteed by `check-prerequisites.mjs` before each run
+- **Gate 0 is deterministic** — `current_project` verification is done by `check-prerequisites.mjs`, never by an agent
+- **Zero inline code in yml** — all business logic lives in `.mjs` scripts. YAML workflows only contain calls to these scripts
+- **Template decision = agentic** — stack detection and template recommendation remain agentic. Only the execution of `init-template.mjs` is deterministic, triggered on explicit user confirmation (`@leaddev init-<template>`)
+- **branch_base — computable parameter** — the parent branch of a task is always `feature/issue-N`, computed from `issue_number`: `"feature/issue-" + issue_number`. Never stored in the manifest or passed as a parameter between workflows
+- **switched=true** — the prompt injects `FIRST ACTION: git checkout <branch>` as the first line. anomalyco detects the branch switch (`switched=true`) and automatically disables auto-push and PR creation. The pipeline resumes control after the agent run via the deterministic steps of `agent-execute.yml`
 
 ---
 
@@ -738,7 +938,7 @@ The two triangles are not independent. A fine-grained decomposition amplifies th
 Key principles:
 
 - **Documentation phase** — fine decomposition is safer. Documentation files are largely independent; integration risk is low; a file produced by one agent does not need to call functions defined in another.
-- **Implementation phase** — decomposition granularity must be matched to the integration strategy. The skeleton-first pattern (§13) is the recommended mitigation: a single task establishes the shared structure, then fine-grained tasks fill independent modules.
+- **Implementation phase** — decomposition granularity must be matched to the integration strategy. The skeleton-first pattern (§14) is the recommended mitigation: a single task establishes the shared structure, then fine-grained tasks fill independent modules.
 - **Model choice is a project-level decision** — it should be made explicitly, not by default. A cheaper model with a more robust framework configuration can outperform a capable model with a poorly structured decomposition.
 - **Human cost is never zero** — the framework reduces it, it does not eliminate it. Planning for a human validation pass is part of the delivery process, not a sign of framework failure.
 
@@ -802,17 +1002,25 @@ After manual conflict resolution and manifest correction, resume the pipeline by
 
 | Term | Definition |
 |---|---|
+| **Issue** | The unit of work — every agent invocation starts from a GitHub issue |
 | **DAG** | Directed Acyclic Graph. In OneTicket, the DAG is the dependency graph between tasks in a manifest. It determines execution order: a task can only start when all its dependencies (`depends_on`) are in `done` state. DAG calculation is done by `areDependenciesSatisfied()` in `utils.mjs`. |
-| **FAN-OUT** | Dispatch of N tasks in parallel from a manifest. Triggered from `agent-execute.yml` when `manifest.json` is detected on a direct invocation, then re-triggered by `orchestrate.mjs` each time new tasks are unblocked by the DAG. |
+| **Manifest** | JSON file produced by `@leaddev` describing the task graph to execute. Stored in `.oneticket/tasks/issue-N/manifest.json`. Contains the issue number and the list of tasks with their dependencies, statuses, and instructions. |
+| **FAN-OUT** | Dispatch of N tasks in parallel from a manifest. Triggered by `on-fanout.yml` on initial launch, then re-triggered by `orchestrate.mjs` each time new tasks are unblocked by the DAG. |
 | **FAN-IN** | Collection of a task completion signal and integration of its result into the issue branch. Handled by `on-gather.yml` → `orchestrate.mjs`. |
 | **GATHER** | Signal sent by a completed task to trigger FAN-IN. Sent via `dispatch-gather.mjs` → `workflow_dispatch` → `on-gather.yml`. |
-| **Manifest** | JSON file produced by `@leaddev` describing the task graph to execute. Stored in `.oneticket/tasks/issue-N/manifest.json`. Contains the issue number, `branch_base`, and the list of tasks with their dependencies, statuses, and instructions. |
-| **branch_base** | The parent feature branch of a set of tasks — `feature/issue-N`. Stored in the manifest and passed as a parameter between workflows. Empty = direct invocation; set = FAN-OUT task. Used by `agent-execute.yml` as the routing signal between direct run and FAN-OUT task paths. |
-| **Task branch** | Working branch created for each task in a manifest. Format: `task/issue-N-X`. Created by a bash step inside `agent-execute.yml` at runner startup, merged into `feature/issue-N` after completion by `orchestrate.mjs`, then deleted. |
-| **Feature branch** | Main issue branch. Format: `feature/issue-N`. Created by `agent-dispatch.mjs` (inline) on first invocation on the issue. Receives all task branch merges. |
-| **Direct run** | Execution of an agent on `feature/issue-N` without producing a manifest — comment reply, fix, doc, review. No FAN-OUT triggered. If the agent commits code, `create-direct-pr.mjs` creates a PR automatically. |
+| **Feature branch** | Main issue branch. Format: `feature/issue-N`. Created by `ensure-issue-branch.mjs` on first invocation on the issue. Receives all task branch merges. |
+| **Task branch** | Working branch created for each task in a manifest. Format: `task/issue-N-X`. Created by `agent-launcher.mjs` via GitHub API before dispatch, merged into `feature/issue-N` after completion by `orchestrate.mjs`, then deleted. |
+| **Agent profile** | A markdown file (`.agent.md`) declaring a role's identity, responsibilities, and skill loading rules |
+| **Skill** | An instruction set encoding domain knowledge — loaded by agents at runtime to guide their behavior |
+| **Role** | A named agent identity invokable via `@role` comment on a GitHub issue |
+| **Routing** | The rule declaring which role handles which type of request |
+| **Handoff** | The explicit transmission of context and intent from one agent to the next |
+| **Direct run** | Execution of an agent on `feature/issue-N` without producing a manifest — comment reply, fix, doc, review. No FAN-OUT triggered. The feature branch is left ready for the user to open a PR. |
+| **is_fanout_task** | Boolean parameter passed to `agent-execute.yml`. `true` if the task comes from a FAN-OUT (set by `agent-launcher.mjs`), `false` for direct invocation (set by `agent-dispatch.mjs`). |
 | **switched=true** | Internal anomalyco mechanism: when the agent's first action is a `git checkout`, anomalyco disables automatic push and PR creation, letting the pipeline resume control via the deterministic steps of `agent-execute.yml`. |
-| **Gate 0** | Verification performed inline in `agent-dispatch.mjs` before any agentic run: `current_project` must be defined in `config.yml`. If missing, a comment is posted on the issue and the pipeline stops without invoking an agent. |
-| **Optimistic lock** | Concurrent manifest access conflict handling in `orchestrate.mjs` and `agent-launcher.mjs`: on non-fast-forward push, hard reset + re-fetch + re-merge up to `orchestrate_retry_max` attempts. |
+| **Gate 0** | Deterministic check performed by `check-prerequisites.mjs` before any agentic run: `current_project` defined and doc structure present. If Gate 0 fails, the pipeline stops without invoking an agent. |
+| **Optimistic lock** | Concurrent manifest access conflict handling in `orchestrate.mjs`: on non-fast-forward push, hard reset + re-fetch + re-merge up to `orchestrate_retry_max` attempts. |
 | **current_project** | Parameter in `config.yml` that determines which project agents work on. Determines `docs_path` (`apps/<project>/docs`) and `app_path` (`apps/<project>/app`). |
+| **docs_path** | Resolved path to project documentation — `apps/<current_project>/docs` or `.oneticket/docs` for framework context |
+| **app_path** | Resolved path to project source code — `apps/<current_project>/app` — internal structure is skill-defined |
 | **merge=union** | Git strategy applied to `workflow.md` — guarantees that parallel task appends never create a git conflict. |
