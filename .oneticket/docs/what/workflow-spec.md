@@ -579,3 +579,23 @@ Cette séparation garantit que l'orchestration reste prédictible, reproductible
 - **Décision de template = agentique** — la détection de la stack et la recommandation d'un template restent agentiques. Seule l'exécution de `init-template.mjs` est déterministe, déclenchée sur confirmation explicite de l'utilisateur (`@leaddev init-<template>`)
 - **branch_base — paramètre calculable** — la branche parente d'une task est toujours `feature/issue-N`, calculée depuis `issue_number` : `"feature/issue-" + issue_number`. Elle n'est jamais stockée dans le manifest ni passée en paramètre entre workflows
 - **switched=true — contrôle du push et des PRs** — le prompt injecte `FIRST ACTION: git checkout <branch>` en première ligne. anomalyco détecte le switch de branche (`switched=true`) et désactive automatiquement le push auto et la création de PR. Le pipeline reprend le contrôle après le run agent via les steps déterministes de `agent-execute.yml`
+
+---
+
+# Glossaire
+
+| Terme | Définition |
+|---|---|
+| **DAG** | Directed Acyclic Graph — graphe orienté sans cycle. Dans OneTicket, le DAG est le graphe de dépendances entre les tasks d'un manifest. Il détermine l'ordre d'exécution : une task ne peut démarrer que si toutes ses dépendances (`depends_on`) sont à l'état `done`. Le calcul du DAG est fait par `areDependenciesSatisfied()` dans `utils.mjs`. |
+| **FAN-OUT** | Dispatchement de N tasks en parallèle depuis un manifest. Déclenché par `on-fanout.yml` lors du premier lancement, puis par `orchestrate.mjs` à chaque fois que de nouvelles tasks sont débloquées. |
+| **FAN-IN** | Collecte du signal de complétion d'une task et intégration de son résultat dans la branche d'issue. Géré par `on-gather.yml` → `orchestrate.mjs`. |
+| **GATHER** | Signal envoyé par une task terminée pour déclencher le FAN-IN. Envoyé via `dispatch-gather.mjs` → `workflow_dispatch` → `on-gather.yml`. |
+| **Manifest** | Fichier JSON produit par `@leaddev` qui décrit le graphe de tâches à exécuter. Stocké dans `.oneticket/tasks/issue-N/manifest.json`. Contient la liste des tasks, leurs dépendances, leurs statuts et les instructions pour chaque agent. |
+| **Task branch** | Branche de travail créée pour chaque tâche d'un manifest. Format : `task/issue-N-X`. Créée par `agent-launcher.mjs` via API GitHub, mergée dans `feature/issue-N` après complétion, puis supprimée. |
+| **Feature branch** | Branche d'issue principale. Format : `feature/issue-N`. Créée par `ensure-issue-branch.mjs` à la première invocation sur l'issue. Reçoit tous les merges des task branches. |
+| **Run direct** | Exécution d'un agent sur `feature/issue-N` sans production de manifest — réponse commentaire, fix, doc, revue. Pas de FAN-OUT ni de GATHER déclenché. |
+| **is_fanout_task** | Paramètre booléen passé à `agent-execute.yml`. `true` si la tâche est issue d'un FAN-OUT (valorisé par `agent-launcher.mjs`), `false` pour une invocation directe (valorisé par `agent-dispatch.mjs`). |
+| **switched=true** | Mécanisme interne d'anomalyco : quand la première action de l'agent est un `git checkout`, anomalyco désactive le push automatique et la création de PR, laissant le pipeline reprendre le contrôle. |
+| **Gate 0** | Vérification déterministe effectuée par `check-prerequisites.mjs` avant tout run agentique : `current_project` défini et structure documentaire présente. Si Gate 0 échoue, le pipeline s'arrête sans invoquer d'agent. |
+| **Optimistic lock** | Mécanisme de gestion des conflits d'accès concurrent au manifest dans `orchestrate.mjs` : en cas de push non-fast-forward, reset hard + re-fetch + re-merge jusqu'à `orchestrate_retry_max` tentatives. |
+| **current_project** | Paramètre dans `config.yml` qui détermine sur quel projet travaillent les agents. Détermine `docs_path` (`apps/<project>/docs`) et `app_path` (`apps/<project>/app`). |
