@@ -57,14 +57,13 @@ jobs:
 
       - name: Handle @leaddev init-<template>
         if: startsWith(github.event.comment.body, '@leaddev init-')
+        env:
+          GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPO:         ${{ github.repository }}
         run: |
           TEMPLATE=$(echo "${{ github.event.comment.body }}" | sed 's/@leaddev init-//' | xargs)
-          echo "[dispatch] Deterministic command: @leaddev init-${TEMPLATE} — not yet implemented."
-          gh issue comment ${{ github.event.issue.number }} \
-            --repo ${{ github.repository }} \
-            --body "**[OneTicket]** \`@leaddev init-${TEMPLATE}\` received — not yet implemented."
-        env:
-          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          node src/init-template.mjs "$TEMPLATE"
 
       # ---------------------------------------------------------------------------
       # Parse level 2 — Agentic invocation
