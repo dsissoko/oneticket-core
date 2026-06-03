@@ -12,17 +12,21 @@
 
 ## 1. Vision
 
-OneTicket is a GitHub-native multi-agent collaboration framework. It provides the orchestration model, the agent profiles, and the skill catalog that let a team and its agents build software together — from product intent to reviewable change.
+OneTicket — build apps with agents, right from your GitHub issues.
 
-Four macro-capabilities define the product:
+OneTicket is a GitHub-native framework that lets a team and its agents build software together — from product intent to working application. Comment on a GitHub issue, your agents decompose, implement, and deliver.
 
-**1. Task orchestration** — Certain agent roles have the ability to decompose a request into subtasks and assign them to specialized agents. Results are gathered, dependencies resolved, and the feature branch is ready for review.
+Five macro-capabilities define the product:
 
-**2. Autonomous mode** — Agents operate within a declared workflow: each role knows where to route a request and what to hand off. Routing and handoff rules make agent-to-agent chaining explicit and controllable, in both interactive and autonomous modes.
+**1. App delivery** — Agents produce working applications delivered in `apps/<current_project>/app/`. Multi-app by design: each project lives in its own `apps/<project>/` folder with co-located documentation in `apps/<project>/docs/`. Until V1: frontend apps only, deployed to GitHub Pages. `appshell` is the reference React+Vite template — every new frontend app bootstraps from it. `breakout` is the first delivered app, built on AppShell.
 
-**3. Documentation generation** — OneTicket covers the full software product lifecycle through structured documentation: product specification, architecture, epics, user stories, implementation slices, C4 diagrams, CI/CD, and operations. Documentation is the source of truth that agents read before acting.
+**2. Task orchestration** — Certain agent roles decompose a request into a DAG of tasks and delegate to specialized agents. Results are gathered, dependencies resolved, and the feature branch is ready for review.
 
-**4. Skill and agent management** — Agent profiles and skills are the distributable unit of the product. Integration with APM (Microsoft Agent Package Manager) is planned to enable versioned skill distribution and agent identity management.
+**3. Autonomous mode** — Agents operate within a declared workflow: each role knows where to route a request and what to hand off. Routing and handoff rules make agent-to-agent chaining explicit and controllable, in both interactive and autonomous modes.
+
+**4. Documentation generation** — OneTicket covers the full software product lifecycle through structured documentation: product specification, architecture, epics, user stories, implementation slices, C4 diagrams, CI/CD, and operations. Documentation is the source of truth that agents read before acting.
+
+**5. Skill and agent management** — Agent profiles and skills are the distributable unit of the product. Integration with APM (Microsoft Agent Package Manager) is planned to enable versioned skill distribution and agent identity management.
 
 The core principle: orchestration logic lives in deterministic code. LLMs only generate content — they never make control flow decisions.
 
@@ -817,9 +821,9 @@ This separation guarantees that orchestration remains predictable, reproducible,
 
 ---
 
-## 14. Parallel Task Execution Contract
+## 14. DAG Execution Contract
 
-OneTicket executes tasks in parallel via FAN-OUT — each task runs on its own isolated branch and produces files that are merged back into the feature branch by GATHER.
+OneTicket orchestrates tasks via FAN-OUT — each task runs on its own isolated branch and produces files that are merged back into the feature branch by GATHER.
 
 For deterministic merging to work, parallel tasks must respect one absolute rule:
 
