@@ -23,7 +23,7 @@
       "file": "apps/breakout/app/src/models/Paddle.ts",
       "content": "Create a Paddle model with properties: position (x, y), width, height. This is independent and can be developed in parallel with A and B. Write the file with TypeScript types and export the class.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "D",
