@@ -51,7 +51,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           REPO:         ${{ github.repository }}
-        run: node src/init-doc.mjs
+        run: |
+          node src/ensure-issue-branch.mjs
+          node src/init-doc.mjs
 
       - name: Handle @leaddev init-<template>
         if: startsWith(github.event.comment.body, '@leaddev init-')
