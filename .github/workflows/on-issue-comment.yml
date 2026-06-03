@@ -47,13 +47,11 @@ jobs:
 
       - name: Handle @po init-doc
         if: startsWith(github.event.comment.body, '@po init-doc')
-        run: |
-          echo "[dispatch] Deterministic command: @po init-doc — not yet implemented."
-          gh issue comment ${{ github.event.issue.number }} \
-            --repo ${{ github.repository }} \
-            --body "**[OneTicket]** \`@po init-doc\` received — not yet implemented."
         env:
-          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPO:         ${{ github.repository }}
+        run: node src/init-doc.mjs
 
       - name: Handle @leaddev init-<template>
         if: startsWith(github.event.comment.body, '@leaddev init-')
