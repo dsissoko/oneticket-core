@@ -8,6 +8,7 @@ One line per item. All detail lives in `product-spec.md`, `AGENTS.md`, or the co
 ## Backlog
 
 - Setup APM
+- Install [`write-a-skill`](https://skills.sh/mattpocock/skills/write-a-skill) via APM
 
 ## In Progress
 
