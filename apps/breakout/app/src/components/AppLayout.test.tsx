@@ -16,13 +16,13 @@ describe('AppLayout', () => {
     );
 
     // Header — logo link
-    expect(screen.getAllByText('AppShell').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('breakout').length).toBeGreaterThan(0);
 
     // Outlet content
     expect(screen.getByText('Page Content')).toBeInTheDocument();
 
     // Footer — copyright
-    expect(screen.getByText(/© 2026 AppShell/)).toBeInTheDocument();
+    expect(screen.getByText(/© 2026 breakout/)).toBeInTheDocument();
   });
 
   it('renders ThemeToggle in Header', () => {

@@ -7,7 +7,7 @@ import { Footer } from './layout/Footer';
 describe('Footer', () => {
   it('renders N1 copyright and links', () => {
     renderWithProviders(<Footer />);
-    expect(screen.getByText(/AppShell/)).toBeInTheDocument();
+    expect(screen.getByText(/breakout/)).toBeInTheDocument();
     expect(screen.getByText('Documentation')).toBeInTheDocument();
     expect(screen.getByText('Project')).toBeInTheDocument();
     expect(screen.getByText('Issues')).toBeInTheDocument();

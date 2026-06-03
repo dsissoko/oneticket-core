@@ -9,9 +9,9 @@ interface FooterProps {
 }
 
 export function Footer({
-  copyright = '© 2026 AppShell',
+  copyright = '© 2026 breakout',
   links = [
-    { label: 'Documentation', href: 'https://dsissoko.github.io/oneticket-core/appshell/docs/' },
+    { label: 'Documentation', href: 'https://dsissoko.github.io/oneticket-core/breakout/docs/' },
     { label: 'Project', href: 'https://github.com/dsissoko/oneticket-core' },
     { label: 'Issues', href: 'https://github.com/dsissoko/oneticket-core/issues' },
   ],
