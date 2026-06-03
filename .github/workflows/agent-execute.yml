@@ -107,6 +107,14 @@ jobs:
             echo "[session-cache] cleared"
           fi
 
+      # [DETERMINISTIC] Generate opencode config — injects default_agent: <role>
+      # so opencode loads the agent profile from .opencode/agents/<role>.md (installed by APM)
+      - name: Generate opencode config
+        id: agent-config
+        run: |
+          CONFIG=$(node src/generate-config.mjs "${{ inputs.role }}")
+          echo "config=$CONFIG" >> $GITHUB_OUTPUT
+
       # [AGENTIC] Invoke anomalyco/opencode with the injected prompt
       - name: Run agent
         id: run-agent
@@ -116,6 +124,7 @@ jobs:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
           GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          OPENCODE_CONFIG_CONTENT: ${{ steps.agent-config.outputs.config }}
           PROMPT: ${{ inputs.prompt }}
         with:
           model: ${{ inputs.model }}
