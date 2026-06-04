@@ -6,3 +6,4 @@
 2026-06-04 12:36 | G | apps/spaceinvaders/docs/how/slices/slice-4-shields/slice.md
 2026-06-04 12:36 | F | apps/spaceinvaders/docs/how/slices/slice-3-player/slice.md
 2026-06-04 12:36 | I | apps/spaceinvaders/docs/how/slices/slice-6-enemy-fire/slice.md
+2026-06-04 12:36 | J | apps/spaceinvaders/docs/how/slices/slice-7-bonus/slice.md
