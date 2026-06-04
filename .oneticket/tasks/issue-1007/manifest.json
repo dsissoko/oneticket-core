@@ -157,7 +157,7 @@
       "depends_on": [
         "I"
       ],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "O",
