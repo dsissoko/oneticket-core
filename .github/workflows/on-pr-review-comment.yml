@@ -41,13 +41,33 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # head.ref is natively available in pull_request_review_comment payload — no API call needed.
+      # Guard: if head.ref does not match feature/issue-N, skip with a comment.
+      - name: Resolve issue number from PR head ref
+        id: resolve
+        env:
+          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+        run: |
+          HEAD_REF="${{ github.event.pull_request.head.ref }}"
+          if echo "$HEAD_REF" | grep -qE '^feature/issue-[0-9]+$'; then
+            ISSUE_NUMBER=$(echo "$HEAD_REF" | sed 's/feature\/issue-//')
+            echo "issue_number=$ISSUE_NUMBER" >> $GITHUB_OUTPUT
+            echo "valid=true" >> $GITHUB_OUTPUT
+          else
+            echo "valid=false" >> $GITHUB_OUTPUT
+            gh pr comment ${{ github.event.pull_request.number }} \
+              --repo ${{ github.repository }} \
+              --body "Cannot dispatch agent — PR branch \`${HEAD_REF}\` does not follow the \`feature/issue-N\` naming convention."
+          fi
+
       - name: Build context block
+        if: steps.resolve.outputs.valid == 'true'
         id: context
         env:
           GITHUB_TOKEN:       ${{ secrets.ONETICKET_GH_PAT }}
           REPO:               ${{ github.repository }}
           ORIGIN_TYPE:        pull_request_review_comment
-          ISSUE_NUMBER:       ${{ github.event.pull_request.number }}
+          ISSUE_NUMBER:       ${{ steps.resolve.outputs.issue_number }}
           CURRENT_COMMENT_ID: ${{ github.event.comment.id }}
           ISSUE_TITLE:        ${{ github.event.pull_request.title }}
           ISSUE_BODY:         ${{ github.event.pull_request.body }}
@@ -59,9 +79,10 @@ jobs:
           echo "block=$(node src/build-context.mjs)" >> $GITHUB_OUTPUT
 
       - name: Dispatch agent
+        if: steps.resolve.outputs.valid == 'true'
         env:
           GITHUB_TOKEN:        ${{ secrets.ONETICKET_GH_PAT }}
-          ISSUE_NUMBER:        ${{ github.event.pull_request.number }}
+          ISSUE_NUMBER:        ${{ steps.resolve.outputs.issue_number }}
           COMMENT_BODY:        ${{ github.event.comment.body }}
           REPO:                ${{ github.repository }}
           CONTEXT_BLOCK:       ${{ steps.context.outputs.block }}
