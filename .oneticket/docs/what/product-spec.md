@@ -286,21 +286,32 @@ Developer comments @po <question> on a GitHub issue
   → Posts GitHub comment directly — no manifest, no FAN-OUT
 ```
 
-**Workflow 4 — PR comment**
+**Workflow 4 — PR comment (fil général)**
 ```
-Developer comments @role <request> on a pull request
-  → on-pr-comment.yml detects @role on PR
+Developer comments @role <request> in the PR Conversation tab
+  → on-pr-comment.yml detects @role (issue_comment with issue.pull_request != null)
+  → Resolves head.ref → extracts issue_number from feature/issue-N
   → agent-dispatch.mjs builds prompt with PR context (title, body)
-  → Agent responds via gh pr comment — no manifest, no FAN-OUT
+  → Agent responds via gh api .../issues/{N}/comments — no manifest, no FAN-OUT
 ```
 
-**Workflow 5 — Inline PR review comment**
-```
-Developer comments @role <request> on a specific line in a PR diff
-  → on-pr-review-comment.yml detects @role on review comment
-  → agent-dispatch.mjs builds prompt with diff hunk + file + line context
-  → Agent replies inline in the review thread via gh api in_reply_to
-```
+**Workflow 5 — PR review (inline diff + submit review)**
+
+Four distinct UX cases, all routed through `on-pr-review.yml` via `pull_request_review: submitted`:
+
+| Case | User action | Event emitted | Agent response |
+|---|---|---|---|
+| 5a | `@role` inline comment on diff — no pending review — click "Comment" | `pull_request_review` (auto-submitted) | Inline reply via `gh api .../pulls/{N}/comments --field in_reply_to` |
+| 5b | Click "Add review comment" on diff (pending review exists) | **none** — no event until Submit | Handled at Submit (case 5c/5d) |
+| 5c | Submit review — inline comments with `@role` as last comment in thread | `pull_request_review` | One agent per thread, inline reply via `in_reply_to` |
+| 5d | Submit review — body starts with `@role` | `pull_request_review` | Agent responds in PR Conversation tab via `gh api .../issues/{N}/comments` |
+
+Cases 5c and 5d are processed in parallel by `dispatch-review-agents.mjs`.
+
+**Rules:**
+- Only the **last comment of each thread** is checked for `@role` — earlier comments are context only
+- If last comment does not start with `@` → thread is ignored silently
+- `AGENTS.md` directive: for `pull_request_review_comment`, DO NOT use other command than `gh api .../pulls/{N}/comments --field in_reply_to`
 
 **Workflow 6 — GitHub event-driven (V1)**
 ```
