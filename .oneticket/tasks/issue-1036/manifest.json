@@ -41,7 +41,7 @@
       "file": "apps/monjournal/app/src/utils/filterLogic.ts",
       "content": "Read docs/how/slices/slice-1-data-foundation/slice.md section 'Modules & Exports'. Implement src/utils/filterLogic.ts with: (1) FilterState interface (text, dateStart, dateEnd, selectedTags); (2) matchesTextSearch(thought, query) with case-insensitive substring matching on title and content; (3) matchesDateRange(thought, start, end) with inclusive bounds; (4) matchesTags(thought, selectedTags) with OR logic (any selected tag matches); (5) applyFilters(thoughts, filterState) that combines all filters with AND logic. Export all functions and FilterState type.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "F",
