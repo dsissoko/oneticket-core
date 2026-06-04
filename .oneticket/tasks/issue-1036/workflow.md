@@ -21,3 +21,4 @@
 2026-06-04 22:17 | F | apps/monjournal/app/src/hooks/useThoughts.ts
 2026-06-04 22:17 | G | apps/monjournal/app/src/components/TagDisplay.tsx
 2026-06-04 22:17 | Q | apps/monjournal/app/src/components/TagList.tsx
+2026-06-04 22:19 | J | apps/monjournal/app/src/components/ThoughtCard.tsx
