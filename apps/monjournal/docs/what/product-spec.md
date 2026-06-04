@@ -59,10 +59,11 @@ MonJournal is a personal thought journal application designed for individuals wh
 **Tag**
 - A tag is an object with two properties:
   - **name**: user-defined string (e.g., "work", "personal", "idea")
-  - **color**: a hex color code (e.g., `#FF6B6B`) automatically assigned on first use, derived deterministically from the tag name using a fixed hash function
-- Same tag name always renders in the same color across all views and sessions
-- Color is never chosen by the user; the system determines it automatically
-- No separate tag entity storage: tags are derived from all thoughts by collecting unique tag names and assigning colors deterministically (any tag that appears in any thought's tag array is a valid tag)
+  - **color**: a hex color code (e.g., `#FF6B6B`) automatically assigned on first use, derived **deterministically** from the tag name via a hash function
+- **Color assignment mechanism**: On first use of a new tag name, the system computes `hash(tagName) % paletteSize` to select a color from the fixed palette. The result is always the same for the same tag name—not random.
+- Same tag name always renders in the same color across all views, sessions, and instances
+- Color is never chosen by the user; the system determines it automatically via the deterministic hash function
+- **No separate tag entity storage**: Tags are derived from all thoughts by collecting unique tag names and assigning colors deterministically. Any tag name that appears in any thought's tag array is a valid tag.
 
 **Filter State**
 - Text search: filters thoughts by matching title or content (case-insensitive substring match)
@@ -111,14 +112,15 @@ MonJournal is a personal thought journal application designed for individuals wh
    - On save: redirect to home screen, new thought appears at top
    - Success feedback (optional toast notification)
 
-5. **Deterministic Tag Colors**
-    - Each tag is automatically assigned a color object (name + color hex code)
-    - Tag color is derived deterministically from the tag name using a hash function
-    - The color is assigned on first creation of a tag (when a thought using that tag name is first saved)
-    - Same tag name always renders in the same color across the app, in all views and sessions
-    - Color palette: fixed, pre-defined set of 8–12 visually distinct colors
-    - Users never pick or customize colors; the system handles this automatically
-    - Tag colors are visible in add form, thought cards, tag filter UI, and timeline view
+5. **Deterministic Tag Color Assignment**
+     - Each tag is automatically assigned a color on first creation (when a thought using that tag name is first saved)
+     - Tag color is derived **deterministically** from the tag name using a hash function (consistent, not random)
+     - Algorithm: hash the tag name string and map the hash value to one of N colors in the fixed palette
+     - **Important**: The same tag name always renders in the same color across all views, sessions, and app instances—not a random selection
+     - Color palette: fixed, pre-defined set of 8–12 visually distinct colors (colors do not change; selection is not random)
+     - On first use of a new tag name: the system automatically computes and assigns the color; no user involvement
+     - Users never pick, customize, or randomize colors; the system handles this deterministically
+     - Tag colors are visible in add form, thought cards, tag filter UI, and timeline view
 
 6. **Empty States**
    - Empty home screen: friendly message encouraging first thought
@@ -161,7 +163,7 @@ MonJournal is a personal thought journal application designed for individuals wh
 1. **Thought Immutability**: Once created, a thought's title, content, tags, and timestamp cannot be changed (no edit) and cannot be deleted (no delete in V1)
 2. **Auto-Timestamp**: Every thought is timestamped when created; users cannot set a custom timestamp
 3. **Tag Derivation**: Tags are derived from the union of all tags across all thoughts; no separate tag management (no create/edit/delete tag operations)
-4. **Deterministic Color Assignment**: Tag color is deterministically computed from the tag name using a fixed hash function; no user customization
+4. **Deterministic Tag Color Assignment**: Tag color is **deterministically** computed from the tag name using a hash function `hash(tagName) % paletteSize`; no user customization, no randomness. Same tag name always produces the same color.
 5. **Immutable Thought Order**: Thoughts always ordered by creation date, newest first
 6. **Filter Composability**: All active filters (text, date, tags, surprise) are combined with AND logic
 7. **Single Device**: No sync; data is local to this browser on this device
