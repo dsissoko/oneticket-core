@@ -57,10 +57,12 @@ MonJournal is a personal thought journal application designed for individuals wh
 - Persistence: stored in browser localStorage
 
 **Tag**
-- Lightweight categorization: users assign one or more tags to a thought
-- Name: user-defined string (e.g., "work", "personal", "idea")
-- Color: deterministically derived from tag name using a fixed 8–12 color palette (same tag always gets same color)
-- No separate tag entity: tags are computed from all thoughts (any tag that appears in any thought's tag array is a valid tag)
+- A tag is an object with two properties:
+  - **name**: user-defined string (e.g., "work", "personal", "idea")
+  - **color**: a hex color code (e.g., `#FF6B6B`) automatically assigned on first use, derived deterministically from the tag name using a fixed hash function
+- Same tag name always renders in the same color across all views and sessions
+- Color is never chosen by the user; the system determines it automatically
+- No separate tag entity storage: tags are derived from all thoughts by collecting unique tag names and assigning colors deterministically (any tag that appears in any thought's tag array is a valid tag)
 
 **Filter State**
 - Text search: filters thoughts by matching title or content (case-insensitive substring match)
@@ -110,10 +112,13 @@ MonJournal is a personal thought journal application designed for individuals wh
    - Success feedback (optional toast notification)
 
 5. **Deterministic Tag Colors**
-   - Each tag name is hashed to a fixed position in a color palette (8–12 colors)
-   - Same tag always renders in the same color across the app
-   - Color palette: fixed, pre-defined, visually distinct
-   - Visible in add form, thought cards, tag filter UI
+    - Each tag is automatically assigned a color object (name + color hex code)
+    - Tag color is derived deterministically from the tag name using a hash function
+    - The color is assigned on first creation of a tag (when a thought using that tag name is first saved)
+    - Same tag name always renders in the same color across the app, in all views and sessions
+    - Color palette: fixed, pre-defined set of 8–12 visually distinct colors
+    - Users never pick or customize colors; the system handles this automatically
+    - Tag colors are visible in add form, thought cards, tag filter UI, and timeline view
 
 6. **Empty States**
    - Empty home screen: friendly message encouraging first thought

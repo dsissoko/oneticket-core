@@ -6,16 +6,17 @@ As a journaler, I want each tag to have a consistent, automatically assigned col
 
 ## Expected Behavior
 
-Tags are automatically assigned a color based on a deterministic hash of their name. The same tag always renders in the same color throughout the application, including in thought cards, filter UI, and the add thought form.
+A tag is an object containing a name (user-provided) and a color (automatically assigned). Tags are automatically assigned a color on first creation, based on a deterministic hash of their name. The same tag name always renders in the same color throughout the application, including in thought cards, filter UI, and the add thought form. Users never directly choose or customize tag colors.
 
 ## Acceptance Criteria
 
-1. Color is assigned deterministically from tag name using a hash-based algorithm
-2. Same tag always renders in the same color across all views and sessions
-3. Fixed palette of 8–12 visually distinct colors is used for all tags
-4. No user color picker or customization in MVP
-5. Tag colors are displayed on tags in all views (list, timeline, filters, form)
-6. New tags added during thought creation are automatically assigned a color from the palette
+1. A tag is an object with two properties: `name` (string) and `color` (hex code string)
+2. Tag color is assigned deterministically from tag name using a hash-based algorithm on first tag creation
+3. Same tag name always renders in the same color across all views and sessions
+4. Fixed palette of 8–12 visually distinct colors is used for all tags
+5. No user color picker or customization in MVP; users cannot override or customize tag colors
+6. Tag colors are displayed on tags in all views (list, timeline, filters, form)
+7. New tags added during thought creation are automatically assigned a color from the palette on save
 
 ## Related Epic
 

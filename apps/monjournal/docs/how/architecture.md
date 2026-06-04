@@ -186,39 +186,52 @@ interface Thought {
 ```typescript
 interface Tag {
   name: string;          // user-assigned string (derived from thoughts)
-  color: string;         // hex color (computed from tagName hash)
+  color: string;         // hex color string (e.g., "#FF6B6B", computed deterministically from tagName hash)
 }
 ```
 
 **Derivation**:
-- Tags are computed from the union of all `thought.tags` arrays
+- Tags are objects with both `name` and `color` properties
+- Tags are computed from the union of all `thought.tags` arrays (in thoughts, tags are stored as strings, but when retrieved via `deriveTags()`, they become Tag objects)
 - No separate storage; recomputed on demand
-- Example: `deriveTags([thought1, thought2, ...])` returns all unique tag names with computed colors
+- Color is assigned deterministically on first tag creation (when a thought with that tag is first saved)
+- Example: `deriveTags([thought1, thought2, ...])` returns all unique tag names, each with a computed color based on the hash of its name
+- Same tag name always produces the same color across all browser sessions
 
 ---
 
 ## 7. Tag Derivation
 
-Tags are **not** stored separately; they are **derived** from all thoughts.
+Tags are **not** stored separately as entities; they are **derived** as Tag objects from all thoughts.
 
 ### Algorithm
 
 ```
-1. Collect all tag names from all thoughts
+1. Collect all tag names from all thoughts (thoughts.tags arrays contain string names)
 2. Deduplicate (convert to Set)
-3. For each unique tag name, compute color using deterministic hash
-4. Return array of { name, color } objects
+3. For each unique tag name, compute color using deterministic hash function
+4. Return array of Tag objects: { name: string, color: string } 
 ```
+
+### Tag Structure
+
+A tag is always an object with two properties:
+- **name**: The string identifier (e.g., "work", "personal")
+- **color**: A hex color code (e.g., "#FF6B6B") computed deterministically from the name
+- The color is assigned automatically; no user customization
 
 ### Benefits
 
 - Single source of truth: the thoughts array
 - Automatic cleanup: a tag disappears when no thought references it
 - No tag management UI needed
+- Colors are deterministic and consistent across sessions
 
 ### Implementation Location
 
 - **Function**: `deriveTags()` in `tagModel.ts`
+- **Input**: Array of Thought objects
+- **Output**: Array of Tag objects (name + color)
 - **Called From**: `useThoughts` hook when needed, filter UI for tag list
 - **Memoization**: Optional `useMemo` to avoid recomputation on every render
 
@@ -352,9 +365,11 @@ applyFilters(thoughts, filters) → Thought[]
 
 - **Hash Function**: Consistent hash of tag name → color index (0–11)
 - **Reproducibility**: Same tag name always produces same color across all browser sessions
-- **Algorithm**: `colorIndex = tagName.charCodeAt(0) % colorPalette.length` (or better hash)
+- **Assignment**: Color is determined on tag creation (when a thought with that tag name is first saved) and never changes
+- **Algorithm**: `colorIndex = hash(tagName) % colorPalette.length` (e.g., `tagName.charCodeAt(0) % colorPalette.length` or better hash)
 - **Palette**: 8–12 visually distinct colors (sufficient for typical journaling use)
 - **Example**: `"work"` → always `#FF6B6B`, `"personal"` → always `#4ECDC4`
+- **User Control**: Users never pick or customize colors; the system handles all color assignment automatically
 
 ### Accessibility & Responsiveness
 
