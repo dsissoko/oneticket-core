@@ -7,3 +7,4 @@
 2026-06-04 10:13 | G | apps/spaceinvaders/docs/what/epics/epic-0-mvp/user-stories/us-005-enemy-fire-mystery-ships.md
 2026-06-04 10:13 | H | apps/spaceinvaders/docs/what/epics/epic-0-mvp/user-stories/us-006-wave-progression-scoring.md
 2026-06-04 10:15 | I | apps/spaceinvaders/docs/how/architecture.md
+2026-06-04 10:18 | Q | apps/spaceinvaders/docs/how/slices/slice-6-enemy-ai-fire/slice.md
