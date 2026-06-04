@@ -100,7 +100,7 @@
       "depends_on": [
         "J"
       ],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "L",
@@ -112,7 +112,7 @@
         "I",
         "J"
       ],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "M",
