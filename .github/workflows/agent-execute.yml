@@ -163,7 +163,7 @@ jobs:
       # [RETRY] anomalyco failure → re-dispatch via retry-dispatch.mjs
       # Exponential backoff + jitter — applies blocked label at retry_max exhaustion
       - name: Retry on agent failure
-        if: steps.run-agent.outcome == 'failure'
+        if: failure() && steps.run-agent.outcome != 'success'
         env:
           GITHUB_TOKEN:   ${{ secrets.ONETICKET_GH_PAT }}
           REPO:           ${{ github.repository }}
