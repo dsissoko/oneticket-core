@@ -4,3 +4,4 @@
 2026-06-04 13:17 | D | apps/monjournal/docs/how/architecture.md
 2026-06-04 13:19 | E | apps/monjournal/docs/how/c4/system-context.md
 2026-06-04 13:19 | F | apps/monjournal/docs/how/c4/containers.md
+2026-06-04 13:19 | G | apps/monjournal/docs/how/slices/slice-1-data-foundation/slice.md
