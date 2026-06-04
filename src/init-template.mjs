@@ -28,6 +28,7 @@ import { execFileSync, execSync } from 'child_process';
 import { fileURLToPath } from 'url';
 import { loadConfig } from './config.mjs';
 import { setupGit, run, runWithRetry } from './utils.mjs';
+import { createPR } from './create-pr.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT       = path.join(__dirname, '..');
@@ -175,6 +176,9 @@ async function main() {
   run('init-template', `git add apps/${currentProject}/app/`);
   run('init-template', `git commit -m "feat: init ${currentProject} app from ${template} template"`);
   runWithRetry('init-template', `git push origin ${featureBranch}`);
+
+  // Create PR if files were pushed
+  await createPR(issueNumber, featureBranch, repo, ghToken, config);
 
   // Post success comment
   postComment(issueNumber, repo, ghToken,

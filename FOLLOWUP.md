@@ -10,6 +10,7 @@ One line per item. All detail lives in `product-spec.md`, `AGENTS.md`, or the co
 ### Sprint 4 — Skills + Optimisations
 - Skills v1.0.0 dans `oneticket-skills` via `write-a-skill`
 - Optimisation : vérifier existence profil agent avant dispatch — éviter 3 retries sur "default agent not found"
+- Refactoring : extraire `postComment()` vers `utils.mjs` — dupliqué dans `init-doc.mjs` + `init-template.mjs`
 
 ## In Progress
 
@@ -24,7 +25,7 @@ One line per item. All detail lives in `product-spec.md`, `AGENTS.md`, or the co
   - `check-prerequisites.mjs` — Gate 0 validé #1025, init-doc déclenché ✅
   - `init-doc.mjs` — mode library (check-prerequisites) + mode command (@po init-doc) — validé #1027 ✅
   - `@po init-doc` — implémenté et validé #1027 ✅
-  - `init-template.mjs` — livré, branché sur @leaddev init-<template>, non testé
+  - `init-template.mjs` — livré, ensure-issue-branch + createPR ajoutés, non testé
   - `@leaddev init-<template>` — implémenté, non testé
   - `create-pr.mjs` — validé #1021 (FAN-OUT allDone) + #1027 (direct run) ✅
   - `agent-dispatch.mjs` — Gate 0 et création branche supprimés, responsabilité unique
@@ -73,7 +74,7 @@ One line per item. All detail lives in `product-spec.md`, `AGENTS.md`, or the co
 - `is_fanout_task` remplace `branch_base` comme signal de routage dans agent-execute.yml
 - PR créée automatiquement par le pipeline dès que fichiers pushés sur feature/issue-N — merge = décision humaine
 - Direct run → PR créée par `create-pr.mjs` dans `agent-execute.yml`
-- FAN-OUT → PR créée par `orchestrate.mjs` à allDone (après dernier merge intermédiaire réussi)
+- FAN-OUT → PR créée au premier merge réussi — body mis à jour à allDone avec liste des tâches
 - `@po init-doc` et `@leaddev init-<template>` → commandes déterministes, pas agentiques
 - `init-doc.mjs` — dual mode : library (args CLI) + command (env vars, git, PR, commentaire)
 - `create-pr.mjs` exporté comme module ET exécutable standalone (fileURLToPath guard)
@@ -95,4 +96,4 @@ One line per item. All detail lives in `product-spec.md`, `AGENTS.md`, or the co
 ## Open questions
 
 - `autonomous_mode: true` — gérer le risque de boucle avant activation
-- `init-template.mjs` — tester sur une issue spaceinvaders avec `@leaddev init-appshell`
+- `open_question` : `init-template.mjs` — tester sur une issue monjournal avec `@leaddev init-appshell`

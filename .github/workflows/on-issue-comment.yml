@@ -62,6 +62,7 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           REPO:         ${{ github.repository }}
         run: |
+          node src/ensure-issue-branch.mjs
           TEMPLATE=$(echo "${{ github.event.comment.body }}" | sed 's/@leaddev init-//' | xargs)
           node src/init-template.mjs "$TEMPLATE"
 
