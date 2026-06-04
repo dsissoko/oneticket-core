@@ -10,3 +10,4 @@
 2026-06-04 10:17 | J | apps/spaceinvaders/docs/how/c4/system-context.md
 2026-06-04 10:17 | K | apps/spaceinvaders/docs/how/c4/containers.md
 2026-06-04 10:18 | M | apps/spaceinvaders/docs/how/slices/slice-2-player-input-cannon/slice.md
+2026-06-04 10:18 | L | apps/spaceinvaders/docs/how/slices/slice-1-foundation-game-loop/slice.md
