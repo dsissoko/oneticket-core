@@ -80,4 +80,4 @@ Scenario: Player fires with touch button (mobile)
 
 ## Related Slices
 
-<!-- @architect fills this section -->
+- [Slice 3 — Player Control & Firing](slice-3-player/slice.md)

@@ -11,8 +11,13 @@ Implement a fully functional 11×5 enemy formation with realistic lateral moveme
 ## Related User Stories
 
 [US-002 — Enemy Formation Movement](us-002-enemy-formation-movement.md)
-[US-006 — Collision Detection & Scoring](us-006-collision-detection-scoring.md)
 [US-007 — Game States & Wave Progression](us-007-game-states-wave-progression.md)
+
+## Related Slices
+
+- [Slice 1 — Foundation](slice-1-foundation/slice.md)
+- [Slice 5 — Collision Detection & Resolution](slice-5-collision/slice.md)
+- [Slice 8 — Wave Progression & Difficulty Scaling](slice-8-waves/slice.md)
 
 ## Impacted Components
 

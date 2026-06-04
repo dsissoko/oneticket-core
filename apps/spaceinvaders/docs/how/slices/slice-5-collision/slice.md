@@ -11,11 +11,6 @@ Implement comprehensive AABB (Axis-Aligned Bounding Box) collision detection for
 ## Related User Stories
 
 [US-006 — Collision Detection & Scoring](us-006-collision-detection-scoring.md)
-[US-002 — Enemy Formation Movement](us-002-enemy-formation-movement.md)
-[US-003 — Player Controls](us-003-player-controls.md)
-[US-004 — Destructible Shields](us-004-destructible-shields.md)
-[US-005 — Enemy Fire & Bullet Pooling](us-005-enemy-fire-bullet-pooling.md)
-[US-007 — Game States & Wave Progression](us-007-game-states-wave-progression.md)
 
 ## Impacted Components
 
@@ -584,8 +579,10 @@ console.log(`BulletPool: ${activeCount}/${poolSize} in use`)
 
 ## Related Slices
 
-- **Slice 1** (Foundation): Provides game loop and canvas infrastructure
-- **Slice 2** (Enemies): Provides Formation and Enemy entities with accurate bounding boxes
-- **Slice 3** (Player): Provides Player and PlayerBullet entities with collision boxes
-- **Slice 4** (Shields): Provides Shield and Segment entities for collision response
-- **Slice 6** (Game States): Uses collision detection results to trigger state transitions (Victory, GameOver)
+- [Slice 1 — Foundation](slice-1-foundation/slice.md)
+- [Slice 2 — Enemy Formation & Rendering](slice-2-enemies/slice.md)
+- [Slice 3 — Player Control & Firing](slice-3-player/slice.md)
+- [Slice 4 — Destructible Shields](slice-4-shields/slice.md)
+- [Slice 6 — Enemy Fire System](slice-6-enemy-fire/slice.md)
+- [Slice 7 — Mystery Ship & Bonus Encounters](slice-7-bonus/slice.md)
+- [Slice 8 — Wave Progression & Difficulty Scaling](slice-8-waves/slice.md)

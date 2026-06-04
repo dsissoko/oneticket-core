@@ -61,4 +61,4 @@ Scenario: Shields regenerate on new wave
 
 ## Related Slices
 
-<!-- @architect fills this section -->
+- [Slice 4 — Destructible Shields](slice-4-shields/slice.md)

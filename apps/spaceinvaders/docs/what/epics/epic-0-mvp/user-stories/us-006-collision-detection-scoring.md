@@ -88,4 +88,5 @@ Scenario: Score persists across waves
 
 ## Related Slices
 
-<!-- @architect fills this section -->
+- [Slice 5 — Collision Detection & Resolution](slice-5-collision/slice.md)
+- [Slice 7 — Mystery Ship & Bonus Encounters](slice-7-bonus/slice.md)

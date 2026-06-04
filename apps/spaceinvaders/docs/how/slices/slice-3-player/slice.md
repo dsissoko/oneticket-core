@@ -11,8 +11,6 @@ Implement complete player control system with dual input support (keyboard + tou
 ## Related User Stories
 
 [US-003 — Player Controls](us-003-player-controls.md)
-[US-005 — Enemy Bullets & Damage](us-005-enemy-bullets-damage.md)
-[US-006 — Player Bullets & Scoring](us-006-player-bullets-scoring.md)
 
 ## Impacted Components
 
@@ -368,6 +366,6 @@ TouchEnd (x, y)
 
 ## Related Slices
 
-- **Slice 1** (Foundation): Provides game loop, canvas, input scaffolding
-- **Slice 5** (Collision Detection): Detects bullet-enemy collisions, bullet-shield collisions, bullet-player collisions
-- **Slice 4** (Enemy Fire): Handles enemy bullets that collide with player (triggers invincibility)
+- [Slice 1 — Foundation](slice-1-foundation/slice.md)
+- [Slice 5 — Collision Detection & Resolution](slice-5-collision/slice.md)
+- [Slice 6 — Enemy Fire System](slice-6-enemy-fire/slice.md)

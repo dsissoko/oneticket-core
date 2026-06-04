@@ -51,4 +51,4 @@ Scenario: Player restarts after game over
 
 ## Related Slices
 
-<!-- @architect fills this section -->
+- [Slice 1 — Foundation](slice-1-foundation/slice.md)
