@@ -33,7 +33,7 @@
       "file": "apps/monjournal/app/src/hooks/useLocalStorage.ts",
       "content": "Read docs/how/slices/slice-1-data-foundation/slice.md section 'LocalStorage Schema'. Implement src/hooks/useLocalStorage.ts as a custom React hook with: (1) getItem(key) function that reads from window.localStorage and parses JSON; (2) setItem(key, value) function that serializes to JSON and writes to window.localStorage; (3) graceful error handling if storage is unavailable (log warning, return null/empty). Export both functions.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "E",
