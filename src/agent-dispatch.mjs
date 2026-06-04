@@ -111,6 +111,11 @@ function buildPrompt({ role, request, branch, issueNumber, repo, docsPath, appPa
     lines.push(contextBlock);
   }
 
+  // Pipeline housekeeping — symmetric with FAN-OUT prompt
+  lines.push(`## Pipeline housekeeping`);
+  lines.push(`If you produced or modified files, commit them with message: feat: @${role} response for issue #${issueNumber}.`);
+  lines.push(`Do NOT push. Do NOT create a PR. The pipeline handles this after your run.`);
+
   return lines.join('\n');
 }
 
