@@ -9,3 +9,4 @@
 2026-06-04 10:15 | I | apps/spaceinvaders/docs/how/architecture.md
 2026-06-04 10:17 | J | apps/spaceinvaders/docs/how/c4/system-context.md
 2026-06-04 10:17 | K | apps/spaceinvaders/docs/how/c4/containers.md
+2026-06-04 10:18 | M | apps/spaceinvaders/docs/how/slices/slice-2-player-input-cannon/slice.md
