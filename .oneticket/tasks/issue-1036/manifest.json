@@ -71,7 +71,7 @@
       "file": "apps/monjournal/app/src/utils/dateFormat.ts",
       "content": "Read docs/how/slices/slice-2-thought-list-display/slice.md section 'Utilities' (dateFormat.ts). Implement src/utils/dateFormat.ts with: (1) formatDate(timestamp, format: 'relative'|'absolute') function; (2) Relative format: '2 hours ago', 'yesterday', '3 days ago', 'last week', etc. using natural language; (3) Absolute format: 'June 4, 2026' style using Intl.DateTimeFormat or date library; (4) Handle edge cases (future dates, very old dates). Export formatDate function.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "I",
