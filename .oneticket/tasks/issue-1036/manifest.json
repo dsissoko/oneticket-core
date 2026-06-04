@@ -7,7 +7,7 @@
       "file": "apps/monjournal/app/src/models/thoughtModel.ts",
       "content": "Read docs/how/slices/slice-1-data-foundation/slice.md section 'Modules & Exports'. Implement src/models/thoughtModel.ts with: (1) Thought interface with id, title, content, createdAt, tags; (2) createThought(title, content, tags) function that generates UUID and timestamp; (3) validateThought(t) function that validates required fields. Export Thought type and both functions. Use uuid package for UUID generation.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
