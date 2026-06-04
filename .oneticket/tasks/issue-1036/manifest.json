@@ -15,7 +15,7 @@
       "file": "apps/monjournal/app/src/utils/colorPalette.ts",
       "content": "Read docs/how/slices/slice-1-data-foundation/slice.md section 'Modules & Exports'. Implement src/utils/colorPalette.ts with: (1) COLORS array export containing 8-12 distinct hex colors (WCAG AA compliant); use colors like #FF6B6B, #4ECDC4, #45B7D1, #FFA07A, #98D8C8, #F7DC6F, #BB8FCE, #85C1E2, #F8B88B, #AED581, #F1948A, #D7BDE2. These colors must have sufficient contrast for readable text overlays.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "C",
