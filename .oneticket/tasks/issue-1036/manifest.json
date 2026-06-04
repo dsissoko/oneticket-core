@@ -51,7 +51,7 @@
       "depends_on": [
         "D"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "architect"
     },
     {
@@ -62,7 +62,7 @@
       "depends_on": [
         "D"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "architect"
     },
     {
@@ -73,7 +73,7 @@
       "depends_on": [
         "D"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "architect"
     },
     {
