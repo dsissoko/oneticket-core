@@ -4,9 +4,6 @@
 # Protected via .git/info/exclude injected in agent-execute.yml — never committed
 # Dev framework is free to version any of these locally
 
-# AGENTS.md — compiled by apm compile at CI runtime, never committed
-AGENTS.md
-
 # doc-site build artifacts — generated at CI runtime, never committed
 doc-site/dist/
 doc-site/.astro/
