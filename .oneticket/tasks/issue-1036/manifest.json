@@ -7,7 +7,7 @@
       "file": "apps/monjournal/app/src/models/thoughtModel.ts",
       "content": "Read docs/how/slices/slice-1-data-foundation/slice.md section 'Modules & Exports'. Implement src/models/thoughtModel.ts with: (1) Thought interface with id, title, content, createdAt, tags; (2) createThought(title, content, tags) function that generates UUID and timestamp; (3) validateThought(t) function that validates required fields. Export Thought type and both functions. Use uuid package for UUID generation.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
@@ -15,14 +15,16 @@
       "file": "apps/monjournal/app/src/utils/colorPalette.ts",
       "content": "Read docs/how/slices/slice-1-data-foundation/slice.md section 'Modules & Exports'. Implement src/utils/colorPalette.ts with: (1) COLORS array export containing 8-12 distinct hex colors (WCAG AA compliant); use colors like #FF6B6B, #4ECDC4, #45B7D1, #FFA07A, #98D8C8, #F7DC6F, #BB8FCE, #85C1E2, #F8B88B, #AED581, #F1948A, #D7BDE2. These colors must have sufficient contrast for readable text overlays.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "C",
       "branch": "task/issue-1036-C",
       "file": "apps/monjournal/app/src/models/tagModel.ts",
       "content": "Read docs/how/slices/slice-1-data-foundation/slice.md section 'Modules & Exports' and 'Tag Color Assignment'. Implement src/models/tagModel.ts with: (1) Tag interface with name and color properties; (2) getTagColor(tagName) function that uses a simple deterministic hash (e.g., charCodeAt-based) to map tag names to colors from colorPalette; (3) deriveTags(thoughts) function that collects unique tag names from all thoughts and returns Tag[] with computed colors. Same tag name must always produce same color. Export Tag type and both functions.",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -31,7 +33,7 @@
       "file": "apps/monjournal/app/src/hooks/useLocalStorage.ts",
       "content": "Read docs/how/slices/slice-1-data-foundation/slice.md section 'LocalStorage Schema'. Implement src/hooks/useLocalStorage.ts as a custom React hook with: (1) getItem(key) function that reads from window.localStorage and parses JSON; (2) setItem(key, value) function that serializes to JSON and writes to window.localStorage; (3) graceful error handling if storage is unavailable (log warning, return null/empty). Export both functions.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "E",
@@ -39,14 +41,18 @@
       "file": "apps/monjournal/app/src/utils/filterLogic.ts",
       "content": "Read docs/how/slices/slice-1-data-foundation/slice.md section 'Modules & Exports'. Implement src/utils/filterLogic.ts with: (1) FilterState interface (text, dateStart, dateEnd, selectedTags); (2) matchesTextSearch(thought, query) with case-insensitive substring matching on title and content; (3) matchesDateRange(thought, start, end) with inclusive bounds; (4) matchesTags(thought, selectedTags) with OR logic (any selected tag matches); (5) applyFilters(thoughts, filterState) that combines all filters with AND logic. Export all functions and FilterState type.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "F",
       "branch": "task/issue-1036-F",
       "file": "apps/monjournal/app/src/hooks/useThoughts.ts",
       "content": "Read docs/how/slices/slice-1-data-foundation/slice.md section 'Modules & Exports'. Implement src/hooks/useThoughts.ts as a React custom hook with: (1) Load from localStorage('monjournal_thoughts') on mount; (2) Return object with: thoughts (Thought[]), addThought(t: Thought) function, getThoughts() function, getTags() function that calls deriveTags(); (3) addThought persists updated array to localStorage; (4) Data validation on load: check id, title, content, createdAt, tags; (5) Reset to empty array on corrupted data. Use dependency on previous tasks (thoughtModel, tagModel, useLocalStorage). Export hook as useThoughts.",
-      "depends_on": ["A", "C", "D"],
+      "depends_on": [
+        "A",
+        "C",
+        "D"
+      ],
       "status": "pending"
     },
     {
@@ -54,7 +60,9 @@
       "branch": "task/issue-1036-G",
       "file": "apps/monjournal/app/src/components/TagDisplay.tsx",
       "content": "Read docs/how/slices/slice-2-thought-list-display/slice.md section 'Components' (TagDisplay). Implement src/components/TagDisplay.tsx React component with: (1) Props: tags: string[], compact?: boolean; (2) Render each tag as a colored chip with background color from getTagColor(); (3) Use flexbox layout for inline chip display; (4) Responsive sizing (larger on desktop, compact on mobile if compact=true); (5) Text color (black or white) chosen for WCAG AA contrast against background. Import getTagColor from tagModel.",
-      "depends_on": ["C"],
+      "depends_on": [
+        "C"
+      ],
       "status": "pending"
     },
     {
@@ -63,7 +71,7 @@
       "file": "apps/monjournal/app/src/utils/dateFormat.ts",
       "content": "Read docs/how/slices/slice-2-thought-list-display/slice.md section 'Utilities' (dateFormat.ts). Implement src/utils/dateFormat.ts with: (1) formatDate(timestamp, format: 'relative'|'absolute') function; (2) Relative format: '2 hours ago', 'yesterday', '3 days ago', 'last week', etc. using natural language; (3) Absolute format: 'June 4, 2026' style using Intl.DateTimeFormat or date library; (4) Handle edge cases (future dates, very old dates). Export formatDate function.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "I",
@@ -71,14 +79,17 @@
       "file": "apps/monjournal/app/src/utils/groupByDate.ts",
       "content": "Read docs/how/slices/slice-2-thought-list-display/slice.md section 'Utilities' (groupByDate.ts). Implement src/utils/groupByDate.ts with: (1) groupThoughtsByDate(thoughts: Thought[]): Map<string, Thought[]> function; (2) Groups thoughts by creation date (normalized to midnight, YYYY-MM-DD key); (3) Thoughts within each group sorted by createdAt descending (newest first); (4) Returns Map for stable iteration. Export function.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "J",
       "branch": "task/issue-1036-J",
       "file": "apps/monjournal/app/src/components/ThoughtCard.tsx",
       "content": "Read docs/how/slices/slice-2-thought-list-display/slice.md section 'Components' (ThoughtCard). Implement src/components/ThoughtCard.tsx React component with: (1) Props: thought: Thought, onHighlight?: () => void; (2) Render: title (bold header), truncated content (100 chars with ellipsis), creation date (relative via formatDate), tags via TagDisplay component; (3) Card-based layout with padding and shadow; (4) Optional highlight state for surprise feature (border or background color change). Import formatDate, TagDisplay, getTagColor.",
-      "depends_on": ["G", "H"],
+      "depends_on": [
+        "G",
+        "H"
+      ],
       "status": "pending"
     },
     {
@@ -86,7 +97,9 @@
       "branch": "task/issue-1036-K",
       "file": "apps/monjournal/app/src/components/ThoughtList.tsx",
       "content": "Read docs/how/slices/slice-2-thought-list-display/slice.md section 'Components' (ThoughtList). Implement src/components/ThoughtList.tsx React component with: (1) Props: thoughts: Thought[], onSurpriseClick?: (thought: Thought) => void; (2) Render array of ThoughtCard components sorted by createdAt descending (most recent first); (3) Empty state message when thoughts.length === 0; (4) Pass onHighlight callback to ThoughtCard for surprise feature. Import ThoughtCard.",
-      "depends_on": ["J"],
+      "depends_on": [
+        "J"
+      ],
       "status": "pending"
     },
     {
@@ -94,7 +107,11 @@
       "branch": "task/issue-1036-L",
       "file": "apps/monjournal/app/src/components/TimelineView.tsx",
       "content": "Read docs/how/slices/slice-2-thought-list-display/slice.md section 'Components' (TimelineView, TimelineGroup). Implement src/components/TimelineView.tsx and src/components/TimelineGroup.tsx with: (1) TimelineView: Props: thoughts: Thought[], onSurpriseClick?: callback; Uses groupThoughtsByDate() to organize; Renders array of TimelineGroup components; Empty state message; (2) TimelineGroup: Props: date: number (timestamp), thoughts: Thought[], onSurpriseClick?: callback; Renders day separator (absolute date format via formatDate), then ThoughtCard array. Import groupByDate, formatDate, ThoughtCard.",
-      "depends_on": ["H", "I", "J"],
+      "depends_on": [
+        "H",
+        "I",
+        "J"
+      ],
       "status": "pending"
     },
     {
@@ -103,14 +120,17 @@
       "file": "apps/monjournal/app/src/components/ViewModeToggle.tsx",
       "content": "Read docs/how/slices/slice-2-thought-list-display/slice.md section 'Components' (ViewModeToggle). Implement src/components/ViewModeToggle.tsx React component with: (1) Props: currentMode: 'list'|'timeline', onChange: (mode) => void; (2) Render two buttons or toggle switch labeled 'List' and 'Timeline'; (3) Active mode visually highlighted (background color, border, etc.); (4) Call onChange(mode) on click. Style with AppShell CSS.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "N",
       "branch": "task/issue-1036-N",
       "file": "apps/monjournal/app/src/components/FilterPanel.tsx",
       "content": "Read docs/how/slices/slice-3-filtering-search/slice.md section 'Components' (FilterPanel, DateRangePicker, TagMultiSelect). Implement src/components/FilterPanel.tsx, src/components/DateRangePicker.tsx, src/components/TagMultiSelect.tsx with: (1) FilterPanel: Props: existingTags: Tag[], onFilterChange: (filters) => void, onSurpriseClick: () => void; Render text input, date inputs, tag multi-select checkboxes, buttons; Manage local state for all filters; (2) DateRangePicker: Two date input fields (HTML type='date'), validate start <= end; (3) TagMultiSelect: Checkbox list for each tag with TagDisplay colors, toggle selection. Call onFilterChange on every change. Import TagDisplay, getTagColor.",
-      "depends_on": ["C", "G"],
+      "depends_on": [
+        "C",
+        "G"
+      ],
       "status": "pending"
     },
     {
@@ -118,7 +138,13 @@
       "branch": "task/issue-1036-O",
       "file": "apps/monjournal/app/src/pages/Home.tsx",
       "content": "Read docs/how/slices/slice-2-thought-list-display/slice.md and slice-3-filtering-search/slice.md section 'Integration with Home Component'. Implement src/pages/Home.tsx React component with: (1) Use useThoughts() hook to fetch thoughts and tags; (2) Initialize filterState and viewMode with useState; (3) Call applyFilters(thoughts, filterState) to get filtered results; (4) Implement onFilterChange handler that updates filterState; (5) Implement onSurpriseClick handler that selects random thought and highlights it; (6) Conditionally render ThoughtList or TimelineView based on viewMode; (7) Include FilterPanel and ViewModeToggle controls; (8) Route: path='/'. Import all components and hooks.",
-      "depends_on": ["F", "K", "L", "M", "N"],
+      "depends_on": [
+        "F",
+        "K",
+        "L",
+        "M",
+        "N"
+      ],
       "status": "pending"
     },
     {
@@ -127,14 +153,16 @@
       "file": "apps/monjournal/app/src/components/TagInput.tsx",
       "content": "Read docs/how/slices/slice-4-add-thought-form/slice.md section 'Components' (TagInput). Implement src/components/TagInput.tsx React component with: (1) Props: value: string, onChange: (text) => void, suggestions: string[], onAddTag: (tag) => void, disabled?: boolean; (2) Render text input field with dropdown suggestion list; (3) Filter suggestions by current input (case-insensitive substring); (4) On Enter key: add tag if non-empty and not duplicate; (5) On suggestion click: add tag and clear input; (6) Do not add empty or duplicate tags. Style with AppShell CSS.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "Q",
       "branch": "task/issue-1036-Q",
       "file": "apps/monjournal/app/src/components/TagList.tsx",
       "content": "Read docs/how/slices/slice-4-add-thought-form/slice.md section 'Components' (TagList). Implement src/components/TagList.tsx React component with: (1) Props: tags: string[], onRemoveTag: (tag) => void; (2) Render each tag as colored chip (background from getTagColor); (3) Show remove button (X) on each chip; (4) On remove click: call onRemoveTag(tag). Inline flex layout with tag colors. Import getTagColor.",
-      "depends_on": ["C"],
+      "depends_on": [
+        "C"
+      ],
       "status": "pending"
     },
     {
@@ -142,7 +170,11 @@
       "branch": "task/issue-1036-R",
       "file": "apps/monjournal/app/src/pages/AddThought.tsx",
       "content": "Read docs/how/slices/slice-4-add-thought-form/slice.md section 'Implementation Steps'. Implement src/pages/AddThought.tsx React component with: (1) State: title, content, selectedTags, tagInput, validationErrors via useState; (2) Fetch suggestions on mount via useThoughts().getTags(); (3) Render form: title input (required), content textarea (required), TagInput component, TagList component, buttons (Cancel, Save); (4) Validate title and content (not empty); show inline error messages; (5) On Save: call createThought and useThoughts.addThought(), show success message, navigate to '/' via useNavigate; (6) On Cancel: navigate to '/'; (7) Route: path='/add'. Import TagInput, TagList, useThoughts, useNavigate, createThought.",
-      "depends_on": ["F", "P", "Q"],
+      "depends_on": [
+        "F",
+        "P",
+        "Q"
+      ],
       "status": "pending"
     },
     {
@@ -150,7 +182,10 @@
       "branch": "task/issue-1036-S",
       "file": "apps/monjournal/app/src/App.tsx",
       "content": "Read existing App.tsx from AppShell template. Update routing configuration to add routes: (1) '/' → Home component (already exists); (2) '/add' → AddThought component (new); (3) Ensure Layout/Header includes navigation links to Home ('/') and Add Thought ('/add'). If using React Router, add Route elements. Import Home and AddThought pages. Verify navigation links are functional.",
-      "depends_on": ["O", "R"],
+      "depends_on": [
+        "O",
+        "R"
+      ],
       "status": "pending"
     }
   ]
