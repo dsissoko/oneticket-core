@@ -10,3 +10,4 @@
 2026-06-04 13:24 | I | apps/monjournal/docs/how/slices/slice-3-filtering-search/slice.md
 2026-06-04 13:26 | K | apps/monjournal/docs/how/architecture.md
 2026-06-04 22:13 | A | apps/monjournal/app/src/models/thoughtModel.ts
+2026-06-04 22:14 | H | apps/monjournal/app/src/utils/dateFormat.ts
