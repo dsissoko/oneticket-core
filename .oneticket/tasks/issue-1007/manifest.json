@@ -8,7 +8,7 @@
       "role": "analyst",
       "content": "Create product-spec.md from the comprehensive SpaceInvaders brief provided in issue #1007. The product is a Space Invaders arcade game with: 11×5 formation of enemies (3 visual types), bonus mystery ships, player cannon with projectiles, 4 shields with destructible segments, enemy fire, 3 lives system, wave progression with increasing difficulty. Include vision, target user (casual arcade game player), main capabilities (gameplay loop, enemy AI, collision detection, scoring, wave progression), key rules (enemy movement, firing mechanics, shield degradation, game over conditions, victory conditions). Use template .oneticket/templates/product-spec.md and frontmatter with title field.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
