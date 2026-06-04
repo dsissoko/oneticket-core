@@ -67,6 +67,18 @@ Always use the command provided in `## Agent contract` of the prompt — it is a
 
 ---
 
+## Skill loading
+
+Before starting any task, review the available skills listed in your system prompt and load any skill whose description matches the current request.
+
+When you load a skill, always state in your first response:
+- Which skill(s) you loaded
+- Why (one sentence)
+
+This applies to all agents — explicit (profile-mandated) and dynamic (self-selected) skill loads alike.
+
+---
+
 ## Question and response style
 
 Keep responses **short and focused** — the comment history is visible to all agents and accumulates fast.
