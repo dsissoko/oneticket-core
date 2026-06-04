@@ -3,3 +3,4 @@
 2026-06-04 10:12 | C | apps/spaceinvaders/docs/what/epics/epic-0-mvp/user-stories/us-001-game-start.md
 2026-06-04 10:13 | D | apps/spaceinvaders/docs/what/epics/epic-0-mvp/user-stories/us-002-enemy-formation.md
 2026-06-04 10:13 | F | apps/spaceinvaders/docs/what/epics/epic-0-mvp/user-stories/us-004-shields-collisions.md
+2026-06-04 10:13 | E | apps/spaceinvaders/docs/what/epics/epic-0-mvp/user-stories/us-003-player-controls.md
