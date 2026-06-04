@@ -1,0 +1,98 @@
+name: PR Review Dispatcher
+
+# [DETERMINISTIC] Entry point for agent invocations via submitted PR reviews.
+#
+# Trigger: pull_request_review (submitted)
+# GitHub emits this event when a reviewer submits a review — including inline comments.
+#
+# Responsibilities:
+#   1. Resolve issue_number from PR head.ref (feature/issue-N)
+#   2. Call dispatch-review-agents.mjs which:
+#      - Fetches all inline comments of the review
+#      - Groups by thread, takes the last comment of each
+#      - Dispatches one agent per thread where last comment starts with @role
+#      - All dispatches in parallel
+#
+# Note: PR conversation comments (@role in PR general thread) are handled
+# by on-pr-comment.yml — not this workflow.
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+concurrency:
+  group: dispatch-review-${{ github.repository }}-${{ github.event.pull_request.number }}-${{ github.event.review.id }}
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.ONETICKET_GH_PAT }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # head.ref is natively available in pull_request_review payload.
+      # Guard: if head.ref does not match feature/issue-N, skip with a comment.
+      - name: Resolve issue number from PR head ref
+        id: resolve
+        env:
+          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+        run: |
+          HEAD_REF="${{ github.event.pull_request.head.ref }}"
+          if echo "$HEAD_REF" | grep -qE '^feature/issue-[0-9]+$'; then
+            ISSUE_NUMBER=$(echo "$HEAD_REF" | sed 's/feature\/issue-//')
+            echo "issue_number=$ISSUE_NUMBER" >> $GITHUB_OUTPUT
+            echo "valid=true" >> $GITHUB_OUTPUT
+          else
+            echo "valid=false" >> $GITHUB_OUTPUT
+            gh pr comment ${{ github.event.pull_request.number }} \
+              --repo ${{ github.repository }} \
+              --body "Cannot dispatch agent — PR branch \`${HEAD_REF}\` does not follow the \`feature/issue-N\` naming convention."
+          fi
+
+      - name: Dispatch review agents
+        if: steps.resolve.outputs.valid == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          REPO:         ${{ github.repository }}
+          ISSUE_NUMBER: ${{ steps.resolve.outputs.issue_number }}
+          PR_NUMBER:    ${{ github.event.pull_request.number }}
+          REVIEW_ID:    ${{ github.event.review.id }}
+          PR_TITLE:     ${{ github.event.pull_request.title }}
+          PR_BODY:      ${{ github.event.pull_request.body }}
+        run: node src/dispatch-review-agents.mjs
+
+  notify-failure:
+    needs: dispatch
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post failure comment on PR
+        env:
+          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+        run: |
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --repo ${{ github.repository }} \
+            --body "## Dispatch failure
+
+          The review dispatch workflow failed while processing your review.
+
+          **Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
