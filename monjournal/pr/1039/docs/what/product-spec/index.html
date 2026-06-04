@@ -126,10 +126,15 @@
 </ul>
 <p><strong>Tag</strong></p>
 <ul>
-<li>Lightweight categorization: users assign one or more tags to a thought</li>
-<li>Name: user-defined string (e.g., “work”, “personal”, “idea”)</li>
-<li>Color: deterministically derived from tag name using a fixed 8–12 color palette (same tag always gets same color)</li>
-<li>No separate tag entity: tags are computed from all thoughts (any tag that appears in any thought’s tag array is a valid tag)</li>
+<li>A tag is an object with two properties:
+<ul>
+<li><strong>name</strong>: user-defined string (e.g., “work”, “personal”, “idea”)</li>
+<li><strong>color</strong>: a hex color code (e.g., <code dir="auto">#FF6B6B</code>) automatically assigned on first use, derived deterministically from the tag name using a fixed hash function</li>
+</ul>
+</li>
+<li>Same tag name always renders in the same color across all views and sessions</li>
+<li>Color is never chosen by the user; the system determines it automatically</li>
+<li>No separate tag entity storage: tags are derived from all thoughts by collecting unique tag names and assigning colors deterministically (any tag that appears in any thought’s tag array is a valid tag)</li>
 </ul>
 <p><strong>Filter State</strong></p>
 <ul>
@@ -198,10 +203,13 @@
 <li>
 <p><strong>Deterministic Tag Colors</strong></p>
 <ul>
-<li>Each tag name is hashed to a fixed position in a color palette (8–12 colors)</li>
-<li>Same tag always renders in the same color across the app</li>
-<li>Color palette: fixed, pre-defined, visually distinct</li>
-<li>Visible in add form, thought cards, tag filter UI</li>
+<li>Each tag is automatically assigned a color object (name + color hex code)</li>
+<li>Tag color is derived deterministically from the tag name using a hash function</li>
+<li>The color is assigned on first creation of a tag (when a thought using that tag name is first saved)</li>
+<li>Same tag name always renders in the same color across the app, in all views and sessions</li>
+<li>Color palette: fixed, pre-defined set of 8–12 visually distinct colors</li>
+<li>Users never pick or customize colors; the system handles this automatically</li>
+<li>Tag colors are visible in add form, thought cards, tag filter UI, and timeline view</li>
 </ul>
 </li>
 <li>
@@ -284,4 +292,4 @@
 <li><strong>Form navigation</strong>: On save, should the app stay on the add form or redirect to home? (Specified: redirect to home)</li>
 <li><strong>Color palette size</strong>: How many distinct colors in the tag color palette? (Suggested: 8–12)</li>
 <li><strong>Performance at scale</strong>: How many thoughts should the app handle before performance degradation? (Estimated: thousands without issue with localStorage)</li>
-</ol> </div> <footer class="doc-footer astro-jtjyxvqf"> <div class="doc-footer-content astro-jtjyxvqf"> <span class="astro-jtjyxvqf">Branch: <code class="astro-jtjyxvqf">1039/merge</code></span>  <span class="astro-jtjyxvqf">Build: <code class="astro-jtjyxvqf">#469</code></span> <span class="astro-jtjyxvqf">Commit: <code class="astro-jtjyxvqf">d6694d8</code></span> <span class="astro-jtjyxvqf">2026-06-04</span> <span class="astro-jtjyxvqf">App: <a href="https://dsissoko.github.io/oneticket-core/monjournal/pr/1039/app" class="astro-jtjyxvqf">https://dsissoko.github.io/oneticket-core/monjournal/pr/1039/app</a></span> </div> </footer>  </div> </div>   </main> </div> </div>  </div> </div>  </body></html>
+</ol> </div> <footer class="doc-footer astro-jtjyxvqf"> <div class="doc-footer-content astro-jtjyxvqf"> <span class="astro-jtjyxvqf">Branch: <code class="astro-jtjyxvqf">1039/merge</code></span>  <span class="astro-jtjyxvqf">Build: <code class="astro-jtjyxvqf">#470</code></span> <span class="astro-jtjyxvqf">Commit: <code class="astro-jtjyxvqf">8247cbf</code></span> <span class="astro-jtjyxvqf">2026-06-04</span> <span class="astro-jtjyxvqf">App: <a href="https://dsissoko.github.io/oneticket-core/monjournal/pr/1039/app" class="astro-jtjyxvqf">https://dsissoko.github.io/oneticket-core/monjournal/pr/1039/app</a></span> </div> </footer>  </div> </div>   </main> </div> </div>  </div> </div>  </body></html>
