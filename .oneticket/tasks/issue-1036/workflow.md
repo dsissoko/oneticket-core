@@ -7,3 +7,4 @@
 2026-06-04 13:19 | G | apps/monjournal/docs/how/slices/slice-1-data-foundation/slice.md
 2026-06-04 13:21 | J | apps/monjournal/docs/how/slices/slice-4-add-thought-form/slice.md
 2026-06-04 13:21 | H | apps/monjournal/docs/how/slices/slice-2-thought-list-display/slice.md
+2026-06-04 13:24 | I | apps/monjournal/docs/how/slices/slice-3-filtering-search/slice.md
