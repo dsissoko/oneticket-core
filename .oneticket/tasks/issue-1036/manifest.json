@@ -7,7 +7,7 @@
       "file": "apps/monjournal/docs/what/product-spec.md",
       "content": "Create the product specification for MonJournal based on the brief provided in issue #1036. The app is a personal thought journal where users capture thoughts (title + free text) with automatic timestamps. Use the provided core concept, data model (Thought and Tag), feature list (home screen with filters, add thought form, tag color assignment), stack (React + TypeScript + Vite), and implementation notes (localStorage, React hooks + context, no backend in V1). Document the vision, users, capabilities, and constraints. Replace the <!-- SITE_DESCRIPTION: ... --> placeholder with: 'Personal thought journal for capturing and filtering daily thoughts'",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "analyst"
     },
     {
