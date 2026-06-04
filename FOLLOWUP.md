@@ -12,11 +12,19 @@ One line per item. All detail lives in `product-spec.md`, `AGENTS.md`, or the co
 - Optimisation : vérifier existence profil agent avant dispatch — éviter 3 retries sur "default agent not found"
 - Refactoring : extraire `postComment()` vers `utils.mjs` — dupliqué dans `init-doc.mjs` + `init-template.mjs`
 
+### Rétrodoc framework — runbooks
+- Vérifier cohérence `merge-recovery.md` avec pipeline v1.0.0 (branch_base supprimé, PR au 1er merge)
+- Créer `setup.md` — runbook setup initial OneTicket :
+  - Secrets GitHub : `ONETICKET_GH_PAT` + `OPENCODE_API_KEY`
+  - `config.yml` : current_project, model, max_tasks, pr_base
+  - Paramétrage auto-delete head branches : GitHub Settings → General → Pull Requests
+- Créer `post-merge.md` — runbook post-merge propre (suppression branche feature, fermeture issue)
+
 ## In Progress
 
-### Doc site + GitHub Pages deploy
-- `docs-site-github-pages.yml` — copier depuis `.old/`, aucune adaptation v1.0.0 nécessaire
-- Valider deploy preview sur PR + deploy prod sur merge main
+### Doc site + GitHub Pages deploy — validé E2E #1035 ✅
+- `docs-site-github-pages.yml` — deploy preview sur PR ✅, deploy prod sur merge main à valider
+- PR #1037 mergée proprement — doc space invaders en prod
 
 ## Done
 
@@ -82,6 +90,7 @@ One line per item. All detail lives in `product-spec.md`, `AGENTS.md`, or the co
 - `autonomous_mode: true` → risque boucle (`@agent` commentaire) — non activé en v1.0.0
 - Gate 0 exit 0 — erreur config gérée proprement, pas failure pipeline
 - label `blocked` appliqué à retry_max exhaustion — signal correct même sur erreur de config (profil inexistant)
+- Auto-delete branches PR — configurer dans GitHub Settings → General → "Automatically delete head branches"
 - `current_project` — passé à `spaceinvaders`
 - Templates manquants exit 1 — erreur repo inattendue, mérite notify-failure
 - APM gère agents + instructions + skills — oneticket-install.mjs = pont de copie uniquement
@@ -96,4 +105,4 @@ One line per item. All detail lives in `product-spec.md`, `AGENTS.md`, or the co
 ## Open questions
 
 - `autonomous_mode: true` — gérer le risque de boucle avant activation
-- `open_question` : `init-template.mjs` — tester sur une issue monjournal avec `@leaddev init-appshell`
+- `init-template.mjs` — tester sur une issue monjournal avec `@leaddev init-appshell`
