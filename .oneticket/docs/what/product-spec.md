@@ -261,6 +261,16 @@ Developer comments @leaddev <request> on a GitHub issue
 ```
 
 **Workflow 2 — Documentation cycle**
+
+*Doc initialization (deterministic)*
+```
+User comments: @po init-doc on a GitHub issue
+  → ensure-issue-branch.mjs creates feature/issue-N
+  → init-doc.mjs copies .oneticket/templates/docs/ → apps/<project>/docs/
+  → Commit + push on feature/issue-N → PR created automatically
+```
+
+*Doc content (agentic)*
 ```
 Developer comments @po <doc request> on a GitHub issue
   → @po loads oneticket-init-knowledge skill
@@ -302,6 +312,28 @@ Any GitHub event — label added, PR merged, milestone closed, tag pushed, etc.
 In V1, any GitHub Actions trigger (push, pull_request, release, label,
 milestone, schedule, etc.) can become an agent invocation entry point
 by adding a corresponding workflow file.
+```
+
+**Workflow 7 — App initialization (deterministic)**
+```
+User comments: @leaddev init-<template> on a GitHub issue
+  → ensure-issue-branch.mjs creates feature/issue-N
+  → init-template.mjs copies apps/<template>/app/ → apps/<project>/app/
+  → Replaces template name placeholders with project name
+  → Commit + push on feature/issue-N → PR created automatically
+```
+
+**Workflow 8 — Doc site generation and deployment**
+```
+On push to main or PR to main (paths: apps/**/docs/**, .oneticket/docs/**)
+  → resolve-context: detect project from modified paths (independent of config.yml)
+  → link-docs.mjs: DOC_SOURCE → doc-site/src/content/docs/
+      README.md → index.md, frontmatter injection, cross-ref link fixing
+  → Astro build → doc-site/dist/
+  → App build (parallel, app projects only) → apps/<project>/app/dist/
+  → GitHub Pages deploy:
+      push to main → prod:    https://…/<slug>/docs/
+      pull_request → preview: https://…/<slug>/pr/<N>/docs/ + sticky PR comment
 ```
 
 ---
@@ -370,7 +402,7 @@ by adding a corresponding workflow file.
 
 ## 14. Pipeline Architecture
 
-### 13.1 Simplified workflow overview
+### 14.1 Simplified workflow overview
 
 This section presents only the structural GitHub workflows and the main scripts they use.
 
@@ -405,7 +437,7 @@ agent-execute.yml
   → dispatch-gather.mjs        (if is_fanout_task: true — triggers on-gather.yml)
 ```
 
-### 13.2 `agent-execute.yml` interface
+### 14.2 `agent-execute.yml` interface
 
 | Input | Type | Set by | Description |
 |---|---|---|---|
@@ -418,7 +450,7 @@ agent-execute.yml
 | `retry_count` | string | `retry-dispatch.mjs` | Current attempt count |
 | `retry_max` | string | `config.yml` | Maximum allowed attempts |
 
-### 13.3 Fan-out
+### 14.3 Fan-out
 
 ```text
 on-fanout.yml  (triggered by dispatch-fanout.mjs via workflow_dispatch)
@@ -428,7 +460,7 @@ on-fanout.yml  (triggered by dispatch-fanout.mjs via workflow_dispatch)
   → agent-launcher.mjs         (creates task/issue-N-X via GitHub API, dispatches N × agent-execute.yml in batches)
 ```
 
-### 13.4 Fan-in
+### 14.4 Fan-in
 
 ```text
 on-gather.yml  (triggered by dispatch-gather.mjs via workflow_dispatch)
@@ -440,7 +472,7 @@ on-gather.yml  (triggered by dispatch-gather.mjs via workflow_dispatch)
   → agent-launcher.mjs         (dispatches next READY tasks)
 ```
 
-### 13.5 Project initialization
+### 14.5 Project initialization
 
 These operations are deterministic — never agentic. Invoked by the pipeline before every agentic run or explicitly by the user.
 
@@ -464,7 +496,7 @@ init-template.mjs <template>
 
 ---
 
-### 13.6 Script reference
+### 14.6 Script reference
 
 #### Entry scripts
 
@@ -517,7 +549,7 @@ init-template.mjs <template>
 
 ---
 
-### 13.7 Labels and signals
+### 14.7 Labels and signals
 
 | Label | Set by | Removed by | Meaning |
 |---|---|---|---|
@@ -530,7 +562,7 @@ init-template.mjs <template>
 
 ---
 
-### 13.8 Robustness
+### 14.8 Robustness
 
 - **`notify-failure`** — all workflows (`on-issue-comment`, `on-pr-comment`, `on-pr-review-comment`, `agent-execute`, `on-gather`) have a `notify-failure` job that posts a comment on the issue when the workflow fails definitively
 - **Optimistic manifest retry** — `orchestrate.mjs` handles concurrent manifest access conflicts via hard reset + re-fetch + re-merge (max 5 attempts, `orchestrate_retry_max` in `config.yml`)
@@ -539,7 +571,7 @@ init-template.mjs <template>
 
 ---
 
-### 13.9 Manifest structure
+### 14.9 Manifest structure
 
 The manifest is the contract between `@leaddev` and the execution pipeline. It is produced by the agent and never modified by another agent — only by deterministic scripts (`orchestrate.mjs`, `agent-launcher.mjs`).
 
@@ -580,7 +612,7 @@ The manifest is the contract between `@leaddev` and the execution pipeline. It i
 
 ---
 
-### 13.10 Configuration — `.oneticket/config.yml`
+### 14.10 Configuration — `.oneticket/config.yml`
 
 Single source of truth for framework parameters. Read by `config.mjs` and injected into scripts and workflows.
 
@@ -598,7 +630,7 @@ Single source of truth for framework parameters. Read by `config.mjs` and inject
 
 ---
 
-### 13.11 Macro view (Mermaid)
+### 14.11 Macro view (Mermaid)
 
 ```mermaid
 flowchart TD
@@ -648,7 +680,7 @@ flowchart TD
 
 ---
 
-### 13.12 Example — 3 sequential tasks A → B → C
+### 14.12 Example — 3 sequential tasks A → B → C
 
 This example illustrates the complete lifecycle of a manifest with 3 sequential tasks.
 
@@ -815,7 +847,7 @@ Progress bar: `██░  2/3 done`
 
 ---
 
-### 13.13 Required infrastructure
+### 14.13 Required infrastructure
 
 #### Repository structure
 
@@ -880,7 +912,7 @@ Without these two secrets, no workflow can execute.
 
 ---
 
-### 13.14 Architectural philosophy
+### 14.14 Architectural philosophy
 
 OneTicket enforces a strict separation between agentic operations and deterministic operations.
 
@@ -937,6 +969,90 @@ This separation guarantees that orchestration remains predictable, reproducible,
 - **Template decision = agentic** — stack detection and template recommendation remain agentic. Only the execution of `init-template.mjs` is deterministic, triggered on explicit user confirmation (`@leaddev init-<template>`)
 - **branch_base — computable parameter** — the parent branch of a task is always `feature/issue-N`, computed from `issue_number`: `"feature/issue-" + issue_number`. Never stored in the manifest or passed as a parameter between workflows
 - **switched=true** — the prompt injects `FIRST ACTION: git checkout <branch>` as the first line. anomalyco detects the branch switch (`switched=true`) and automatically disables auto-push and PR creation. The pipeline resumes control after the agent run via the deterministic steps of `agent-execute.yml`
+
+---
+
+### 14.15 Doc site pipeline
+
+```text
+docs-site-github-pages.yml
+  (triggered on push/PR to main — paths: apps/**/docs/**, .oneticket/docs/**)
+
+  resolve-context
+    → detects project from changed file paths (independent of config.yml)
+    → computes DOC_SOURCE, slug, target folder, app path, URLs
+
+  build-doc-site
+    → link-docs.mjs (DOC_SOURCE → doc-site/src/content/docs/)
+        README.md → index.md
+        frontmatter injection (title from H1)
+        cross-ref link fixing
+        missing index.md generation
+    → Astro build → doc-site/dist/
+
+  build-app (parallel, app projects only)
+    → npm run build in apps/<project>/app/ → dist/
+    → VITE_BASE_PATH injected for correct GitHub Pages base URL
+
+  deploy-preview (pull_request only)
+    → JamesIves/github-pages-deploy-action → gh-pages/<slug>/pr/<N>/
+    → sticky PR comment with doc and app preview URLs
+
+  deploy-prod (push to main or tag)
+    → JamesIves/github-pages-deploy-action → gh-pages/<slug>/
+    → clean: true (removes stale files), preserves pr/ subfolder
+```
+
+#### URL structure
+
+| Project | Doc URL | App URL |
+|---|---|---|
+| `framework` (oneticket-core) | `.../framework/docs/` | — |
+| `<project>` | `.../<project>/docs/` | `.../<project>/app/` |
+| PR preview | `.../<slug>/pr/<N>/docs/` | `.../<slug>/pr/<N>/app/` |
+
+#### Doc site Mermaid
+
+```mermaid
+flowchart TD
+
+    subgraph TRIGGERS["Upstream — Triggering (push/PR to main)"]
+        PUSH_MAIN["push to main\napps/**/docs/** · .oneticket/docs/**"]
+        PR_MAIN["pull_request to main\n(same paths)"]
+        TAG["tag v*"]
+    end
+
+    subgraph RESOLVE["resolve-context"]
+        CTX["Detect project from changed paths\nno config.yml dependency"]
+    end
+
+    subgraph BUILD["Build"]
+        LINKDOCS["link-docs.mjs\nDOC_SOURCE → src/content/docs/"]
+        ASTRO["Astro build\n→ doc-site/dist/"]
+        APPBUILD["App build\napps/project/app/dist/\napp projects only"]
+    end
+
+    subgraph DEPLOY["Deploy — GitHub Pages"]
+        PREVIEW["deploy-preview\ngh-pages/slug/pr/N/\n+ sticky PR comment"]
+        PROD["deploy-prod\ngh-pages/slug/"]
+    end
+
+    PUSH_MAIN --> CTX
+    PR_MAIN --> CTX
+    TAG --> CTX
+
+    CTX --> LINKDOCS
+    CTX --> APPBUILD
+    LINKDOCS --> ASTRO
+
+    ASTRO --> PREVIEW
+    ASTRO --> PROD
+    APPBUILD --> PREVIEW
+    APPBUILD --> PROD
+
+    PR_MAIN -->|"preview only"| PREVIEW
+    PUSH_MAIN & TAG -->|"prod only"| PROD
+```
 
 ---
 
