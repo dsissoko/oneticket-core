@@ -8,3 +8,4 @@
 2026-06-04 13:21 | J | apps/monjournal/docs/how/slices/slice-4-add-thought-form/slice.md
 2026-06-04 13:21 | H | apps/monjournal/docs/how/slices/slice-2-thought-list-display/slice.md
 2026-06-04 13:24 | I | apps/monjournal/docs/how/slices/slice-3-filtering-search/slice.md
+2026-06-04 13:26 | K | apps/monjournal/docs/how/architecture.md

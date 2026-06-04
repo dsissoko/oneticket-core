@@ -279,3 +279,5 @@ The `Home` component orchestrates the entire filtering flow:
 - [Epic 0 — MonJournal MVP](../../what/epics/epic-0-mvp/epic.md)
 
 ## Related User Stories
+
+- [US-002 — Multi-Filter](../../../what/epics/epic-0-mvp/user-stories/us-002-multi-filter.md)

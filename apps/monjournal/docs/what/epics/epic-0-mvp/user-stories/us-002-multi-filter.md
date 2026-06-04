@@ -24,4 +24,5 @@ Users can apply multiple filters simultaneously to refine their view of thoughts
 
 ## Related Slices
 
-(To be populated by @architect)
+- [Slice 1 — Data Foundation](../../how/slices/slice-1-data-foundation/slice.md)
+- [Slice 3 — Filtering & Search](../../how/slices/slice-3-filtering-search/slice.md)

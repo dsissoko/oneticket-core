@@ -23,4 +23,4 @@ Tags are automatically assigned a color based on a deterministic hash of their n
 
 ## Related Slices
 
-(To be populated by @architect)
+- [Slice 1 — Data Foundation](../../how/slices/slice-1-data-foundation/slice.md)
