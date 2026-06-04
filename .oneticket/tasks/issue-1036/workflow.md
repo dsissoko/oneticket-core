@@ -11,3 +11,4 @@
 2026-06-04 13:26 | K | apps/monjournal/docs/how/architecture.md
 2026-06-04 22:13 | A | apps/monjournal/app/src/models/thoughtModel.ts
 2026-06-04 22:14 | H | apps/monjournal/app/src/utils/dateFormat.ts
+2026-06-04 22:14 | E | apps/monjournal/app/src/utils/filterLogic.ts
