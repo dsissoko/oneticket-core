@@ -6,7 +6,9 @@
  *
  * Responsibilities:
  *   1. Check if manifest.json is present for this issue
- *   2. If yes → trigger on-fanout.yml via workflow_dispatch
+ *   2. If yes → check if all tasks are already done (allDone guard)
+ *      → allDone : skip FAN-OUT — manifest is stale, cleanup_on_success will handle it
+ *      → not done: trigger on-fanout.yml via workflow_dispatch
  *   3. If no  → log and exit 0 (manifest is optional — direct agent run)
  *
  * Expected environment variables:
@@ -32,6 +34,14 @@ async function main() {
 
   if (!fs.existsSync(manifestPath)) {
     console.log(`[dispatch-fanout] No manifest found for issue #${issueNumber} — skipping FAN-OUT.`);
+    return;
+  }
+
+  // Guard: skip if all tasks already done — manifest is stale (not yet cleaned up)
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  const allDone = manifest.tasks && manifest.tasks.every(t => t.status === 'done');
+  if (allDone) {
+    console.log(`[dispatch-fanout] Manifest for issue #${issueNumber} is allDone — skipping FAN-OUT.`);
     return;
   }
 

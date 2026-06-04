@@ -43,6 +43,11 @@ pr_base: main
 # false — session persistence enabled, better performance (use when oneticket is stable)
 clear_session_cache: true
 
+# Delete .oneticket/tasks/issue-N/ after all tasks are done (no merge-failed).
+# false — keep task logs even on success (useful for debugging)
+# true  (default) — clean up after success; always preserved on merge-failed
+cleanup_on_success: true
+
 # Active user project — determines docs_path and app_path
 #
 # States:

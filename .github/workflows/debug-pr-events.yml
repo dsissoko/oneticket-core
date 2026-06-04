@@ -1,0 +1,28 @@
+name: Debug PR Events
+
+# [TEMPORARY] Logs all PR-related events to identify what GitHub emits
+# for inline diff comments ("Add single comment").
+# Remove once the event type is confirmed.
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review:
+    types: [submitted]
+  pull_request_review_comment:
+    types: [created]
+
+jobs:
+  log:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log event
+        run: |
+          echo "EVENT_NAME=${{ github.event_name }}"
+          echo "ACTION=${{ github.event.action }}"
+          echo "COMMENT_BODY=${{ github.event.comment.body }}"
+          echo "REVIEW_BODY=${{ github.event.review.body }}"
+          echo "ISSUE_NUMBER=${{ github.event.issue.number }}"
+          echo "PR_NUMBER=${{ github.event.pull_request.number }}"
+          echo "HEAD_REF=${{ github.event.pull_request.head.ref }}"
+          echo "IS_PR=${{ github.event.issue.pull_request != null }}"

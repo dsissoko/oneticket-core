@@ -355,6 +355,19 @@ async function main() {
     await updatePR(issueNumber, featureBranch, repo, ghToken, manifest);
     await applyLabel('ready for review', issueNumber, repo, ghToken, 'orchestrate');
     await removeLabel('in progress', issueNumber, repo, ghToken, 'orchestrate');
+
+    // Cleanup task logs if configured — always preserved on merge-failed
+    if (config.cleanup_on_success !== false) {
+      const taskDir = path.join(TASKS_DIR, `issue-${issueNumber}`);
+      try {
+        run('orchestrate', `git rm -r ${taskDir}`);
+        run('orchestrate', `git commit -m "chore: cleanup tasks/issue-${issueNumber} — allDone"`);
+        runWithRetry('orchestrate', `git push origin ${featureBranch}`);
+        console.log(`[orchestrate] Task logs cleaned up: ${taskDir}`);
+      } catch (e) {
+        console.warn(`[orchestrate] Could not cleanup task logs: ${e.message}`);
+      }
+    }
   } else if (readyTasks.length > 0) {
     console.log(`[orchestrate] [FAN-IN → FAN-OUT] ${readyTasks.length} unblocked task(s): ${readyTasks.map(t => t.id).join(', ')}`);
     await launchReadyTasks(manifest, repo, ghToken);

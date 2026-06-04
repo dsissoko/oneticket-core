@@ -7,7 +7,9 @@ One line per item. All detail lives in `product-spec.md`, `AGENTS.md`, or the co
 
 ## Backlog
 
-### Sprint 4 — Skills + Optimisations
+### PR comment triggers
+- `on-pr-comment.yml` — fix livré : résolution `head.ref` via API, extraction `issue_number`, guard pattern `feature/issue-N` ✅
+- Commentaire inline diff (Add single comment) — GitHub n'émet aucun événement → non traité ; à investiguer (review formelle via `pull_request_review_comment` ?, workaround UX ?)
 - Skills v1.0.0 dans `oneticket-skills` via `write-a-skill`
 - Optimisation : vérifier existence profil agent avant dispatch — éviter 3 retries sur "default agent not found"
 - Refactoring : extraire `postComment()` vers `utils.mjs` — dupliqué dans `init-doc.mjs` + `init-template.mjs`
