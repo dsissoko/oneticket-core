@@ -153,7 +153,7 @@
       "file": "apps/monjournal/app/src/components/TagInput.tsx",
       "content": "Read docs/how/slices/slice-4-add-thought-form/slice.md section 'Components' (TagInput). Implement src/components/TagInput.tsx React component with: (1) Props: value: string, onChange: (text) => void, suggestions: string[], onAddTag: (tag) => void, disabled?: boolean; (2) Render text input field with dropdown suggestion list; (3) Filter suggestions by current input (case-insensitive substring); (4) On Enter key: add tag if non-empty and not duplicate; (5) On suggestion click: add tag and clear input; (6) Do not add empty or duplicate tags. Style with AppShell CSS.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "Q",
