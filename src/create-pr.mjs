@@ -145,15 +145,18 @@ async function removeLabel(labelName, issueNumber, repo, token) {
 /**
  * Creates a PR feature/issue-N → pr_base if conditions are met.
  * Idempotent — safe to call multiple times.
+ * In FAN-OUT context (manifest provided without allDone), creates PR with
+ * minimal body — pipeline in progress.
  *
  * @param {string} issueNumber
  * @param {string} branch        - feature/issue-N
  * @param {string} repo          - owner/repo
  * @param {string} token         - GitHub PAT
  * @param {object} config        - loaded from config.mjs
- * @param {object} [manifest]    - optional, enriches PR body with task list
+ * @param {object} [manifest]    - optional, used to detect FAN-OUT context
+ * @param {boolean} [allDone]    - true when all tasks complete
  */
-export async function createPR(issueNumber, branch, repo, token, config, manifest = null) {
+export async function createPR(issueNumber, branch, repo, token, config, manifest = null, allDone = false) {
   // Only create PRs for feature branches
   if (!branch.match(/^feature\/issue-\d+$/)) {
     console.log(`[create-pr] Branch ${branch} is not a feature branch — skipping.`);
@@ -161,11 +164,11 @@ export async function createPR(issueNumber, branch, repo, token, config, manifes
   }
 
   // If called from agent-execute.yml (no manifest param) and manifest is present on disk
-  // → FAN-OUT pipeline will handle the PR at allDone — skip now
+  // → FAN-OUT pipeline will handle the PR — skip now
   if (!manifest) {
     const manifestPath = path.join(process.cwd(), TASKS_DIR, `issue-${issueNumber}`, MANIFEST_FILE);
     if (fs.existsSync(manifestPath)) {
-      console.log(`[create-pr] Manifest present — FAN-OUT pipeline will create PR at allDone. Skipping.`);
+      console.log(`[create-pr] Manifest present — FAN-OUT pipeline will create PR. Skipping.`);
       return;
     }
   }
@@ -190,12 +193,16 @@ export async function createPR(issueNumber, branch, repo, token, config, manifes
     ? `feat: issue #${issueNumber} — ${issueTitle}`
     : `feat: issue #${issueNumber}`;
 
+  // Body: minimal during FAN-OUT, enriched at allDone
   const bodyLines = [`Closes #${issueNumber}`];
-  if (manifest) {
+  if (manifest && allDone) {
     bodyLines.push('', '## Completed tasks');
     for (const t of manifest.tasks) {
       bodyLines.push(`- [x] ${t.id} — \`${t.file}\``);
     }
+  } else if (manifest) {
+    bodyLines.push('', '_Pipeline in progress — tasks completing progressively._');
+    bodyLines.push(`_See issue #${issueNumber} for real-time progress._`);
   }
 
   // Create PR
@@ -218,6 +225,46 @@ export async function createPR(issueNumber, branch, repo, token, config, manifes
   await postPRComment(issueNumber, data.html_url, repo, token);
   await applyLabel('ready for review', issueNumber, repo, token);
   await removeLabel('in progress', issueNumber, repo, token);
+}
+
+/**
+ * Updates the body of an existing PR with the completed task list.
+ * Called by orchestrate.mjs at allDone.
+ *
+ * @param {string} issueNumber
+ * @param {string} branch
+ * @param {string} repo
+ * @param {string} token
+ * @param {object} manifest  - full manifest with all tasks done
+ */
+export async function updatePR(issueNumber, branch, repo, token, manifest) {
+  const existing = await getExistingPR(branch, repo, token);
+  if (!existing) {
+    console.log(`[create-pr] No existing PR to update for ${branch}.`);
+    return;
+  }
+
+  const bodyLines = [
+    `Closes #${issueNumber}`,
+    '',
+    '## Completed tasks',
+    ...manifest.tasks.map(t => `- [x] ${t.id} — \`${t.file}\``),
+  ];
+
+  const res = await fetch(
+    `https://api.github.com/repos/${repo}/pulls/${existing.number}`,
+    {
+      method: 'PATCH',
+      headers: GH_HEADERS(token),
+      body: JSON.stringify({ body: bodyLines.join('\n') }),
+    }
+  );
+
+  if (res.ok) {
+    console.log(`[create-pr] PR #${existing.number} body updated with completed tasks.`);
+  } else {
+    console.warn(`[create-pr] Could not update PR #${existing.number}: HTTP ${res.status}`);
+  }
 }
 
 // ---------------------------------------------------------------------------

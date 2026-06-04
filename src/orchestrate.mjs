@@ -30,7 +30,7 @@
 
 import path from 'path';
 import { launchReadyTasks } from './agent-launcher.mjs';
-import { createPR } from './create-pr.mjs';
+import { createPR, updatePR } from './create-pr.mjs';
 import { loadConfig } from './config.mjs';
 import {
   run,
@@ -335,6 +335,9 @@ async function main() {
 
   console.log(`[orchestrate] Task ${taskId} marked done and merged into ${featureBranch}.`);
 
+  // Create PR after first successful merge — idempotent, visible from start of FAN-OUT
+  await createPR(issueNumber, featureBranch, repo, ghToken, config, manifest, false);
+
   const resolvedPrNumber = await findTaskPR(taskBranch, featureBranch, repo, ghToken);
   if (resolvedPrNumber) {
     await closePR(resolvedPrNumber, repo, ghToken);
@@ -347,9 +350,11 @@ async function main() {
   const readyTasks = getReadyTasks(manifest);
 
   if (allDone) {
-    // v1.0.0: create PR feature/issue-N → main — user decision to merge
-    console.log('[orchestrate] All tasks done. Creating PR.');
-    await createPR(issueNumber, featureBranch, repo, ghToken, config, manifest);
+    // v1.0.0: PR created at first merge — update body with completed tasks summary
+    console.log('[orchestrate] All tasks done. Updating PR with completed tasks.');
+    await updatePR(issueNumber, featureBranch, repo, ghToken, manifest);
+    await applyLabel('ready for review', issueNumber, repo, ghToken, 'orchestrate');
+    await removeLabel('in progress', issueNumber, repo, ghToken, 'orchestrate');
   } else if (readyTasks.length > 0) {
     console.log(`[orchestrate] [FAN-IN → FAN-OUT] ${readyTasks.length} unblocked task(s): ${readyTasks.map(t => t.id).join(', ')}`);
     await launchReadyTasks(manifest, repo, ghToken);
