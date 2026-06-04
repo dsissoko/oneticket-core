@@ -16,3 +16,4 @@
 2026-06-04 22:14 | B | apps/monjournal/app/src/utils/colorPalette.ts
 2026-06-04 22:14 | P | apps/monjournal/app/src/components/TagInput.tsx
 2026-06-04 22:14 | I | apps/monjournal/app/src/utils/groupByDate.ts
+2026-06-04 22:14 | M | apps/monjournal/app/src/components/ViewModeToggle.tsx
