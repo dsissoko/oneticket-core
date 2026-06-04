@@ -113,7 +113,7 @@
       "depends_on": [
         "I"
       ],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "K",
@@ -124,7 +124,7 @@
       "depends_on": [
         "I"
       ],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "L",
@@ -135,7 +135,7 @@
       "depends_on": [
         "I"
       ],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "M",
@@ -146,7 +146,7 @@
       "depends_on": [
         "I"
       ],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "N",
@@ -157,7 +157,7 @@
       "depends_on": [
         "I"
       ],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "O",
@@ -168,7 +168,7 @@
       "depends_on": [
         "I"
       ],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "P",
@@ -179,7 +179,7 @@
       "depends_on": [
         "I"
       ],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "Q",
@@ -190,7 +190,7 @@
       "depends_on": [
         "I"
       ],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "R",
@@ -201,7 +201,7 @@
       "depends_on": [
         "I"
       ],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "S",
@@ -212,7 +212,7 @@
       "depends_on": [
         "I"
       ],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "T",
