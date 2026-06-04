@@ -630,7 +630,7 @@ Single source of truth for framework parameters. Read by `config.mjs` and inject
 
 ---
 
-### 14.11 Macro view (Mermaid)
+### 14.11 Agnetic pipeline
 
 ```mermaid
 flowchart TD
