@@ -79,7 +79,7 @@
       "file": "apps/monjournal/app/src/utils/groupByDate.ts",
       "content": "Read docs/how/slices/slice-2-thought-list-display/slice.md section 'Utilities' (groupByDate.ts). Implement src/utils/groupByDate.ts with: (1) groupThoughtsByDate(thoughts: Thought[]): Map<string, Thought[]> function; (2) Groups thoughts by creation date (normalized to midnight, YYYY-MM-DD key); (3) Thoughts within each group sorted by createdAt descending (newest first); (4) Returns Map for stable iteration. Export function.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "J",
