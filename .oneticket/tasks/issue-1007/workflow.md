@@ -13,3 +13,4 @@
 2026-06-04 10:18 | L | apps/spaceinvaders/docs/how/slices/slice-1-foundation-game-loop/slice.md
 2026-06-04 10:18 | N | apps/spaceinvaders/docs/how/slices/slice-3-enemy-formation/slice.md
 2026-06-04 10:18 | Q | apps/spaceinvaders/docs/how/slices/slice-6-enemy-ai-fire/slice.md
+2026-06-04 10:18 | P | apps/spaceinvaders/docs/how/slices/slice-5-shields-degradation/slice.md
