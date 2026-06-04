@@ -82,6 +82,7 @@ function buildPrompt({ role, request, branch, issueNumber, repo, docsPath, appPa
   lines.push(`## Agent contract`);
   lines.push(`- Prefix every response with: **[Agent: \`@${role}\`]**`);
   lines.push(`- ALWAYS respond at the end of every job — no exception.`);
+  lines.push(`- Do NOT push. Do NOT create a PR. The pipeline handles this after your run.`);
 
   if (originType === 'pull_request_review_comment') {
     lines.push(`- Reply inline:`);
