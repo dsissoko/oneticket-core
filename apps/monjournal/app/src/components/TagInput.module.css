@@ -1,0 +1,62 @@
+.tagInputContainer {
+  position: relative;
+  width: 100%;
+}
+
+.inputWrapper {
+  position: relative;
+}
+
+.input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--color-border, #ccc);
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: inherit;
+  background-color: var(--color-background, #fff);
+  color: var(--color-text, #000);
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-primary, #007bff);
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.input:disabled {
+  background-color: var(--color-disabled-bg, #f5f5f5);
+  color: var(--color-disabled-text, #999);
+  cursor: not-allowed;
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: var(--color-background, #fff);
+  border: 1px solid var(--color-border, #ccc);
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.suggestionItem {
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  color: var(--color-text, #000);
+}
+
+.suggestionItem:hover {
+  background-color: var(--color-hover-bg, #f0f0f0);
+}
+
+.suggestionItem:active {
+  background-color: var(--color-active-bg, #e0e0e0);
+}
