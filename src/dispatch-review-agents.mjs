@@ -8,13 +8,13 @@
  *   1. Fetch all inline comments of the review via GitHub API
  *   2. Group comments by thread (thread_root_id)
  *   3. For each thread: take the last comment
- *      → if it starts with @role → dispatch an agent
+ *      → if it starts with @role → dispatch agent (inline reply via in_reply_to)
  *      → otherwise → ignore
- *   4. For each invocation: build context (last 10 thread comments) + dispatch agent-execute.yml
+ *   4. If review body starts with @role → dispatch agent (PR conversation reply)
  *   5. All dispatches in parallel (Promise.all)
  *
  * Expected environment variables:
- *   GITHUB_TOKEN, REPO, ISSUE_NUMBER, PR_NUMBER, REVIEW_ID
+ *   GITHUB_TOKEN, REPO, ISSUE_NUMBER, PR_NUMBER, REVIEW_ID, REVIEW_BODY
  */
 
 import { loadConfig } from './config.mjs';
@@ -113,8 +113,9 @@ async function main() {
   const issueNumber = process.env.ISSUE_NUMBER;
   const prNumber    = process.env.PR_NUMBER;
   const reviewId    = process.env.REVIEW_ID;
-  const prTitle     = process.env.PR_TITLE     || '';
-  const prBody      = process.env.PR_BODY      || '';
+  const prTitle     = process.env.PR_TITLE       || '';
+  const prBody      = process.env.PR_BODY        || '';
+  const reviewBody  = process.env.REVIEW_BODY    || '';
 
   if (!repo)        throw new Error('REPO missing');
   if (!token)       throw new Error('GITHUB_TOKEN missing');
@@ -127,11 +128,6 @@ async function main() {
   // 1. Fetch inline comments of the review
   const comments = await fetchReviewComments(repo, prNumber, reviewId, token);
   console.log(`[dispatch-review-agents] ${comments.length} inline comment(s) found for review #${reviewId}`);
-
-  if (comments.length === 0) {
-    console.log('[dispatch-review-agents] No inline comments — nothing to dispatch.');
-    return;
-  }
 
   // 2. Group by thread
   const threads = groupByThread(comments);
@@ -194,12 +190,56 @@ async function main() {
     );
   }
 
+  // 5. Review body — dispatch if starts with @role (reply in PR conversation)
+  if (reviewBody.trimStart().startsWith('@')) {
+    const parsed = parseComment(reviewBody);
+    if (parsed) {
+      const { role, request } = parsed;
+      console.log(`[dispatch-review-agents] Review body — dispatching @${role} (PR conversation)`);
+
+      const contextBlock = [
+        `## Context for PR #${prNumber}`,
+        `**Title:** ${prTitle}`,
+        '',
+        prBody || '',
+      ].join('\n');
+
+      const prompt = buildPrompt({
+        role,
+        request,
+        branch:       featureBranch,
+        issueNumber,
+        repo,
+        docsPath,
+        appPath,
+        currentProject,
+        contextBlock,
+        originType: 'pull_request_comment',
+        prNumber,
+        config,
+      });
+
+      dispatches.push(
+        dispatchWorkflow('agent-execute.yml', {
+          issue_number: String(issueNumber),
+          branch:       featureBranch,
+          prompt,
+          role,
+          model:     config.model,
+          retry_max: String(config.retry_max),
+        }, repo, token)
+      );
+    }
+  } else {
+    console.log(`[dispatch-review-agents] Review body does not start with @ — skipping`);
+  }
+
   if (dispatches.length === 0) {
     console.log('[dispatch-review-agents] No @role invocations found — nothing dispatched.');
     return;
   }
 
-  // 5. Dispatch all in parallel
+  // 6. Dispatch all in parallel
   await Promise.all(dispatches);
   await applyLabel('in progress', issueNumber, repo, token, 'dispatch-review-agents');
   console.log(`[dispatch-review-agents] ${dispatches.length} agent(s) dispatched.`);
