@@ -7,3 +7,4 @@
 2026-06-04 12:36 | F | apps/spaceinvaders/docs/how/slices/slice-3-player/slice.md
 2026-06-04 12:36 | I | apps/spaceinvaders/docs/how/slices/slice-6-enemy-fire/slice.md
 2026-06-04 12:36 | J | apps/spaceinvaders/docs/how/slices/slice-7-bonus/slice.md
+2026-06-04 12:38 | H | apps/spaceinvaders/docs/how/slices/slice-5-collision/slice.md
