@@ -15,3 +15,4 @@
 2026-06-04 10:18 | Q | apps/spaceinvaders/docs/how/slices/slice-6-enemy-ai-fire/slice.md
 2026-06-04 10:18 | P | apps/spaceinvaders/docs/how/slices/slice-5-shields-degradation/slice.md
 2026-06-04 10:18 | O | apps/spaceinvaders/docs/how/slices/slice-4-collision-scoring/slice.md
+2026-06-04 10:18 | R | apps/spaceinvaders/docs/how/slices/slice-7-mystery-ships-bonuses/slice.md
