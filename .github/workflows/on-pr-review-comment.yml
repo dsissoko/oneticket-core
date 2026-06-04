@@ -1,8 +1,15 @@
 name: PR Review Comment Dispatcher
 
-# [DETERMINISTIC] Entry point for agent invocations via inline PR review comments.
+# [DETERMINISTIC] Entry point for agent invocations via PR review comments.
 #
-# Trigger: pull_request_review_comment (comment on a specific line of code in a PR diff)
+# Triggers:
+#   - pull_request_review_comment: inline diff comment (Start a review → inline comment)
+#   - pull_request_review: review body submitted (Submit review with @agent in body)
+#
+# Both events expose github.event.pull_request.head.ref natively.
+# COMMENT_BODY resolved from:
+#   - pull_request_review_comment → github.event.comment.body
+#   - pull_request_review         → github.event.review.body
 #
 # Parse level 1 — Deterministic commands: none (PR context — branch exists)
 # Parse level 2 — Agentic: build-context.mjs → agent-dispatch.mjs
@@ -10,14 +17,16 @@ name: PR Review Comment Dispatcher
 on:
   pull_request_review_comment:
     types: [created]
+  pull_request_review:
+    types: [submitted]
 
 concurrency:
-  group: dispatch-review-${{ github.repository }}-${{ github.event.pull_request.number }}-${{ github.event.comment.id }}
+  group: dispatch-review-${{ github.repository }}-${{ github.event.pull_request.number }}-${{ github.event.comment.id }}${{ github.event.review.id }}
   cancel-in-progress: false
 
 jobs:
   dispatch:
-    if: "startsWith(github.event.comment.body, '@')"
+    if: "startsWith(github.event.comment.body, '@') || startsWith(github.event.review.body, '@')"
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -41,17 +50,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # head.ref is natively available in pull_request_review_comment payload — no API call needed.
+      # head.ref is natively available in both events — no API call needed.
+      # COMMENT_BODY: comment.body for inline diff, review.body for review submit.
       # Guard: if head.ref does not match feature/issue-N, skip with a comment.
-      - name: Resolve issue number from PR head ref
+      - name: Resolve issue number and comment body
         id: resolve
         env:
           GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
         run: |
           HEAD_REF="${{ github.event.pull_request.head.ref }}"
+          COMMENT_BODY="${{ github.event.comment.body }}${{ github.event.review.body }}"
           if echo "$HEAD_REF" | grep -qE '^feature/issue-[0-9]+$'; then
             ISSUE_NUMBER=$(echo "$HEAD_REF" | sed 's/feature\/issue-//')
             echo "issue_number=$ISSUE_NUMBER" >> $GITHUB_OUTPUT
+            echo "comment_body=$COMMENT_BODY" >> $GITHUB_OUTPUT
             echo "valid=true" >> $GITHUB_OUTPUT
           else
             echo "valid=false" >> $GITHUB_OUTPUT
@@ -68,13 +80,13 @@ jobs:
           REPO:               ${{ github.repository }}
           ORIGIN_TYPE:        pull_request_review_comment
           ISSUE_NUMBER:       ${{ steps.resolve.outputs.issue_number }}
-          CURRENT_COMMENT_ID: ${{ github.event.comment.id }}
+          CURRENT_COMMENT_ID: ${{ github.event.comment.id }}${{ github.event.review.id }}
           ISSUE_TITLE:        ${{ github.event.pull_request.title }}
           ISSUE_BODY:         ${{ github.event.pull_request.body }}
           COMMENT_PATH:       ${{ github.event.comment.path }}
           COMMENT_LINE:       ${{ github.event.comment.line }}
           COMMENT_DIFF_HUNK:  ${{ github.event.comment.diff_hunk }}
-          COMMENT_BODY:       ${{ github.event.comment.body }}
+          COMMENT_BODY:       ${{ steps.resolve.outputs.comment_body }}
         run: |
           echo "block=$(node src/build-context.mjs)" >> $GITHUB_OUTPUT
 
@@ -83,12 +95,12 @@ jobs:
         env:
           GITHUB_TOKEN:        ${{ secrets.ONETICKET_GH_PAT }}
           ISSUE_NUMBER:        ${{ steps.resolve.outputs.issue_number }}
-          COMMENT_BODY:        ${{ github.event.comment.body }}
+          COMMENT_BODY:        ${{ steps.resolve.outputs.comment_body }}
           REPO:                ${{ github.repository }}
           CONTEXT_BLOCK:       ${{ steps.context.outputs.block }}
           ORIGIN_TYPE:         pull_request_review_comment
           PR_NUMBER:           ${{ github.event.pull_request.number }}
-          REPLY_TO_COMMENT_ID: ${{ github.event.comment.id }}
+          REPLY_TO_COMMENT_ID: ${{ github.event.comment.id }}${{ github.event.review.id }}
         run: |
           export CONTEXT_BLOCK=$(echo "$CONTEXT_BLOCK" | base64 -d)
           node src/agent-dispatch.mjs
