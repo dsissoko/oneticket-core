@@ -7,7 +7,7 @@
       "file": "apps/monjournal/docs/what/product-spec.md",
       "content": "Create the product specification for MonJournal based on the brief provided in issue #1036. The app is a personal thought journal where users capture thoughts (title + free text) with automatic timestamps. Use the provided core concept, data model (Thought and Tag), feature list (home screen with filters, add thought form, tag color assignment), stack (React + TypeScript + Vite), and implementation notes (localStorage, React hooks + context, no backend in V1). Document the vision, users, capabilities, and constraints. Replace the <!-- SITE_DESCRIPTION: ... --> placeholder with: 'Personal thought journal for capturing and filtering daily thoughts'",
       "depends_on": [],
-      "status": "pending",
+      "status": "in_progress",
       "role": "analyst"
     },
     {
@@ -15,7 +15,9 @@
       "branch": "task/issue-1036-B",
       "file": "apps/monjournal/docs/what/epics/epic-0-mvp/epic.md",
       "content": "Read apps/monjournal/docs/what/product-spec.md. Create the MVP epic (Epic 0) for MonJournal. Scope includes: (1) Thought storage and list display with multi-criteria filtering (by text, date range, tags, and surprise), (2) Thought creation with auto-timestamp and tag autocomplete, (3) Two view modes (list and timeline), (4) Deterministic tag color assignment. Note: no edit/delete in MVP (immutable thoughts). Document the epic objective, scope, and value. Include a ## Related User Stories section (leave empty for now).",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending",
       "role": "analyst"
     },
@@ -24,7 +26,9 @@
       "branch": "task/issue-1036-C",
       "file": "apps/monjournal/docs/what/epics/epic-0-mvp/user-stories/us-001-thought-list.md",
       "content": "Read apps/monjournal/docs/what/epics/epic-0-mvp/epic.md. Create user stories US-001 through US-005 for MonJournal MVP:\n\nUS-001 — Thought List: 'As a journaler, I want to see all my thoughts in a list ordered by most recent first, so that I can quickly review my recent reflections.' Acceptance: (1) Compact cards with title, truncated content, date, tags, (2) Ordered by createdAt descending, (3) Handle empty list. Include ## Related Slices and ## Related Epics sections.\n\nUS-002 — Multi-Filter: 'As a journaler, I want to filter thoughts by title/content (text search), date range, selected tags, and randomly select one thought, so that I can find specific thoughts and explore my journal.' Acceptance: (1) Text search filters title and content, (2) Date picker start/end, (3) Multi-select tag filter, (4) Surprise filter randomly selects thought, (5) Combinable filters, (6) Works in list view.\n\nUS-003 — Timeline View: 'As a journaler, I want to toggle between list and timeline views of my thoughts, so that I can see my thoughts grouped by date for a chronological perspective.' Acceptance: (1) Groups by date with separators, (2) Most recent to oldest, (3) Shows title + tags, (4) Truncate content, (5) Single toggle control, (6) Filters apply to timeline.\n\nUS-004 — Add Thought: 'As a journaler, I want to add a new thought with a title, content, and optional tags, with automatic timestamping, so that I can capture my thoughts quickly and return to the home screen to see them immediately.' Acceptance: (1) Form with title (required), content (required), tags (optional), (2) Tag input with autocomplete from existing tags, (3) On Enter/selection: tag added, (4) Multiple tags, (5) Auto timestamp (not editable), (6) On save: redirect to home, new thought at top, (7) Form validation.\n\nUS-005 — Tag Colors: 'As a journaler, I want each tag to have a consistent, automatically assigned color derived from its name, so that I can visually distinguish tags across all my thoughts without choosing colors.' Acceptance: (1) Color assigned deterministically from tag name (hash-based), (2) Same tag always same color, (3) Fixed palette 8-12 colors, (4) No user picker, (5) Display on tags in views, (6) New tags assigned automatically.\n\nCreate all 5 as separate .md files in apps/monjournal/docs/what/epics/epic-0-mvp/user-stories/ using the template. Each file includes ## Related Slices and ## Related Epics sections (leave empty).",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending",
       "role": "analyst"
     },
@@ -33,7 +37,9 @@
       "branch": "task/issue-1036-D",
       "file": "apps/monjournal/docs/how/architecture.md",
       "content": "Read apps/monjournal/docs/what/product-spec.md and all user stories (us-001 through us-005). Create the technical architecture for MonJournal. Document: (1) Tech stack: React + TypeScript + Vite (from AppShell template), (2) Persistence strategy: localStorage with no backend/auth in V1, (3) State management: React hooks + context (no external store), (4) Key components/modules: ThoughtList, AddThought, FilterPanel, TimelineView, TagColorAssignment, useThoughts hook, (5) Routing with React Router from AppShell, (6) Data model implementation: Thought and Tag shapes, (7) Tag derivation: tags computed from all thoughts (no separate tag store), (8) LocalStorage schema and serialization, (9) Filter state management (local component state), (10) Non-functional requirements: performance, immutability of thoughts, deterministic color assignment. Include ## Related User Stories section (leave empty for now).",
-      "depends_on": ["C"],
+      "depends_on": [
+        "C"
+      ],
       "status": "pending",
       "role": "architect"
     },
@@ -42,7 +48,9 @@
       "branch": "task/issue-1036-E",
       "file": "apps/monjournal/docs/how/c4/system-context.md",
       "content": "Read apps/monjournal/docs/how/architecture.md. Create the C4 System Context diagram for MonJournal. Show: (1) User (journaler) as external actor, (2) MonJournal system as the main container, (3) Browser localStorage as external system/dependency. Document interactions: user interacts with MonJournal UI, MonJournal reads/writes to localStorage. Use Mermaid C4 diagram syntax. Include title 'MonJournal System Context' and a brief description.",
-      "depends_on": ["D"],
+      "depends_on": [
+        "D"
+      ],
       "status": "pending",
       "role": "architect"
     },
@@ -51,7 +59,9 @@
       "branch": "task/issue-1036-F",
       "file": "apps/monjournal/docs/how/c4/containers.md",
       "content": "Read apps/monjournal/docs/how/architecture.md. Create the C4 Containers diagram for MonJournal. Show: (1) React App (frontend SPA), (2) LocalStorage (data store). Document technologies: React + TypeScript + Vite, localStorage. Show data flow: app reads/writes thought data to localStorage. Use Mermaid C4 diagram syntax. Include title 'MonJournal Containers' and a brief description.",
-      "depends_on": ["D"],
+      "depends_on": [
+        "D"
+      ],
       "status": "pending",
       "role": "architect"
     },
@@ -60,7 +70,9 @@
       "branch": "task/issue-1036-G",
       "file": "apps/monjournal/docs/how/slices/slice-1-data-foundation/slice.md",
       "content": "Read apps/monjournal/docs/what/product-spec.md, user stories (us-001, us-004, us-005), and apps/monjournal/docs/how/architecture.md. Create Slice 1 — Data Foundation. This slice covers: (1) Thought data model definition (id, title, content, createdAt, tags), (2) Tag data model (name, color), (3) useThoughts hook: manage localStorage persistence, getThoughts(), addThought(title, content, tags), (4) Tag color assignment utility: deterministic color from tag name, fixed 8-12 color palette, (5) LocalStorage schema and serialization/deserialization. This is foundational for all other slices. Include ## Related Epics (epic-0-mvp) and ## Related User Stories sections (leave empty for now).",
-      "depends_on": ["D"],
+      "depends_on": [
+        "D"
+      ],
       "status": "pending",
       "role": "architect"
     },
@@ -69,7 +81,9 @@
       "branch": "task/issue-1036-H",
       "file": "apps/monjournal/docs/how/slices/slice-2-thought-list-display/slice.md",
       "content": "Read user stories us-001, us-003, us-005 and apps/monjournal/docs/how/architecture.md. Create Slice 2 — Thought List Display. This slice covers: (1) ThoughtList component: renders thoughts as cards (title, truncated content, date, tags), (2) Timeline view component: groups thoughts by date with day separators, (3) View mode toggle control (list ↔ timeline), (4) TagDisplay component: shows tags with assigned colors, (5) Date formatting (relative/absolute), (6) Integration with useThoughts hook to fetch thoughts. This slice displays thought data created by Slice 1. Depends on: Slice 1 (Data Foundation). Include ## Related Epics (epic-0-mvp) and ## Related User Stories sections (leave empty for now).",
-      "depends_on": ["G"],
+      "depends_on": [
+        "G"
+      ],
       "status": "pending",
       "role": "architect"
     },
@@ -78,7 +92,9 @@
       "branch": "task/issue-1036-I",
       "file": "apps/monjournal/docs/how/slices/slice-3-filtering-search/slice.md",
       "content": "Read user stories us-002, us-003 and apps/monjournal/docs/how/architecture.md. Create Slice 3 — Filtering & Search. This slice covers: (1) FilterPanel component: text search (title + content), date range picker (start/end), multi-select tag filter, surprise filter button, (2) Filter state management (local component or context), (3) Apply filters to thought list and timeline views, (4) Text search logic: case-insensitive match title or content, (5) Date range filtering: createdAt between start and end, (6) Tag filtering: thought matches if any selected tag is in thought.tags, (7) Surprise filter: random thought selection and highlight. Depends on: Slice 1 (Data Foundation), Slice 2 (Thought List Display). Include ## Related Epics (epic-0-mvp) and ## Related User Stories sections (leave empty for now).",
-      "depends_on": ["H"],
+      "depends_on": [
+        "H"
+      ],
       "status": "pending",
       "role": "architect"
     },
@@ -87,7 +103,9 @@
       "branch": "task/issue-1036-J",
       "file": "apps/monjournal/docs/how/slices/slice-4-add-thought-form/slice.md",
       "content": "Read user stories us-004, us-005 and apps/monjournal/docs/how/architecture.md. Create Slice 4 — Add Thought Form. This slice covers: (1) AddThought component: form with title input (required), content textarea (required), tag input section, (2) Tag input with autocomplete: free text input, suggestions from existing tags, on Enter or selection: tag added, (3) TagList display: show selected tags with colors, remove option, (4) Form validation: prevent empty title/content, (5) On save: call useThoughts.addThought(), redirect to home, (6) Success feedback (optional toast/message), (7) Tag color display in form. Depends on: Slice 1 (Data Foundation). Include ## Related Epics (epic-0-mvp) and ## Related User Stories sections (leave empty for now).",
-      "depends_on": ["G"],
+      "depends_on": [
+        "G"
+      ],
       "status": "pending",
       "role": "architect"
     },
@@ -96,7 +114,12 @@
       "branch": "task/issue-1036-K",
       "file": "apps/monjournal/docs/how/architecture.md",
       "content": "Cross-reference task: Read all slice files (slice-1 through slice-4) and update ## Related Slices sections in: (1) epic-0-mvp/epic.md, (2) all user story files (us-001 through us-005). Add cross-reference links to relevant slices for each story. Update ## Related Epics and ## Related User Stories sections in each slice.md to reference epic-0-mvp and relevant user stories. Use filename-only link format (no ../). This is the final task; it depends on all slice tasks to avoid merge conflicts.",
-      "depends_on": ["G", "H", "I", "J"],
+      "depends_on": [
+        "G",
+        "H",
+        "I",
+        "J"
+      ],
       "status": "pending",
       "role": "architect"
     }
