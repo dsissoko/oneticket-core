@@ -10,3 +10,7 @@ doc-site/.astro/
 doc-site/.docs-generated/
 doc-site/src/content/docs/
 doc-site/src/content/docs-generated/
+
+
+# APM dependencies
+apm_modules/
