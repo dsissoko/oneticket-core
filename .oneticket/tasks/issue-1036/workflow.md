@@ -23,3 +23,4 @@
 2026-06-04 22:17 | Q | apps/monjournal/app/src/components/TagList.tsx
 2026-06-04 22:19 | J | apps/monjournal/app/src/components/ThoughtCard.tsx
 2026-06-04 22:19 | N | apps/monjournal/app/src/components/FilterPanel.tsx
+2026-06-04 22:20 | R | apps/monjournal/app/src/pages/AddThought.tsx
