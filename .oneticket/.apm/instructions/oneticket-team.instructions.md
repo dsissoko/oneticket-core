@@ -61,9 +61,9 @@ Always use the command provided in `## Agent contract` of the prompt — it is a
 
 | origin_type | Channel |
 |---|---|
-| `issue_comment` | `gh issue comment` |
-| `pull_request_comment` | `gh pr comment` |
-| `pull_request_review_comment` | `gh api .../pulls/.../comments` with `in_reply_to` |
+| `issue_comment` | `gh api .../issues/{N}/comments` |
+| `pull_request_comment` | `gh api .../issues/{N}/comments` |
+| `pull_request_review_comment` | `gh api .../pulls/{N}/comments` with `in_reply_to` — DO NOT use other command |
 
 ---
 
