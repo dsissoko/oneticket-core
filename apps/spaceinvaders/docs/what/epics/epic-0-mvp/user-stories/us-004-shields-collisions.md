@@ -100,6 +100,5 @@ Feature: Shield and Collision System
 
 ## Related Slices
 
-<!-- @architect fills this section after producing slices — write filename only, no relative path, no ../
-     The build script resolves the correct path automatically.
-     Example: [Slice 4 — Bunker System](slice-4-bunker-system/slice.md) -->
+- [Slice 4 — Collision Detection and Scoring System](slice-4-collision-scoring/slice.md)
+- [Slice 5 — Shields Degradation](slice-5-shields-degradation/slice.md)

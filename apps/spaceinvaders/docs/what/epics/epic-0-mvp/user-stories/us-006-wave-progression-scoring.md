@@ -70,6 +70,5 @@ And the game resumes playable state
 
 ## Related Slices
 
-<!-- @architect fills this section after producing slices — write filename only, no relative path, no ../
-     The build script resolves the correct path automatically.
-     Example: [Slice 1 — Skeleton Foundation](slice-1-skeleton-foundation/slice.md) -->
+- [Slice 4 — Collision Detection and Scoring System](slice-4-collision-scoring/slice.md)
+- [Slice 8 — Game States and Wave Progression](slice-8-game-states-progression/slice.md)

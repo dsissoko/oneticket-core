@@ -43,3 +43,5 @@ Feature: Game Start Screen
 
 ## Related Slices
 
+- [Slice 1 — Foundation Game Loop](slice-1-foundation-game-loop/slice.md)
+- [Slice 8 — Game States and Wave Progression](slice-8-game-states-progression/slice.md)

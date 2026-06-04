@@ -102,4 +102,5 @@ Feature: Player Controls and Movement
 
 ## Related Slices
 
-<!-- @architect fills this section after producing slices -->
+- [Slice 1 — Foundation Game Loop](slice-1-foundation-game-loop/slice.md)
+- [Slice 2 — Player Input & Cannon](slice-2-player-input-cannon/slice.md)
