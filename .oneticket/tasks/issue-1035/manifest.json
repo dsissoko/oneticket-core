@@ -8,7 +8,7 @@
       "role": "analyst",
       "content": "Create product-spec.md, epic.md, and all 7 user stories (us-001 through us-007) for Space Invaders MVP.\n\n**Product-Spec**: From issue #1035 game brief:\n- **Product**: Space Invaders browser game (React + TypeScript + HTML5 Canvas)\n- **Problem**: Recreate classic arcade with responsive controls (desktop + mobile)\n- **Target Users**: Casual players, nostalgia seekers, arcade enthusiasts\n- **Main V1 Capabilities**: Start screen, 11x5 enemy formation, player cannon with dual input (max 1 bullet), 4 destructible shields, enemy fire (max 3 bullets), mystery ship bonuses, AABB collision, wave progression\n- **Key Business Rules**: Formation reaching player line = game over. All enemies destroyed = victory → new wave. Score persists; lives reset to 3.\n- **Technical Stack**: React, TypeScript, HTML5 Canvas, requestAnimationFrame delta-time loop\n\n**Epic 0 — MVP**: Complete, playable Space Invaders with all core mechanics.\n\n**User Stories** (with Gherkin acceptance criteria):\n- US-001: Setup (start button → game begins, HUD shows score=0, lives=3)\n- US-002: Enemy Formation (11x5 grid, lateral movement, edge bounce + drop, speed scaling)\n- US-003: Player Controls (arrow keys + spacebar desktop, swipe + touch button mobile, 1-bullet max)\n- US-004: Shields (4 bunkers, segments degrade on bullet hit, formation contact)\n- US-005: Enemy Fire (random intervals, max 3 bullets, hits player = -1 life + invincibility)\n- US-006: Collisions & Scoring (AABB, player bullet + enemy = destroy + score, mystery ship bonus)\n- US-007: Game States & Waves (victory → new wave with increased speed, lives reset, game over)\n\nPlace files in: apps/spaceinvaders/docs/what/ and apps/spaceinvaders/docs/what/epics/epic-0-mvp/user-stories/\nUse templates: product-spec.md, epic.md, us.md",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
@@ -16,7 +16,9 @@
       "file": "apps/spaceinvaders/docs/how/architecture.md",
       "role": "architect",
       "content": "Create architecture.md. Read product-spec.md and all user stories from task A.\n\n**Architecture Overview**:\n- Stack: React + TypeScript + HTML5 Canvas + requestAnimationFrame\n- Rendering: Canvas 2D for game, React DOM for HUD/UI\n- Game Loop: delta-time via requestAnimationFrame\n- State: React state for UI (score, lives, wave); refs for game loop state\n- Entities: Formation, Player, Enemies, PlayerBullet, EnemyBullets (pooled), Shields, MysteryShip\n- Collision: AABB for all pairs\n- Object Pooling: Bullets reused\n- Input: Desktop (keyboard) + Mobile (touch/swipe)\n\n**Components**:\n1. Game Loop Manager: requestAnimationFrame driver, delta-time\n2. Rendering System: Canvas 2D rendering\n3. Input System: Keyboard + Touch handlers\n4. Physics/Collision: AABB detection + response\n5. Entity Manager: Formation, enemies, bullets, shields, mystery ship lifecycle\n6. State Machine: Game states (setup, playing, victory, gameOver)\n7. UI Layer: React HUD (score, lives, wave), buttons\n\n**Data Flow**: Input → State changes → Game Loop update → Collision checks → Score/state updates → UI rerender\n\n**Non-Functional**: 60 FPS target, responsive desktop + mobile, visual feedback, difficulty scales with wave\n\nUse template: .oneticket/templates/architecture.md",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending"
     },
     {
@@ -25,7 +27,9 @@
       "file": "apps/spaceinvaders/docs/how/c4/system-context.md",
       "role": "architect",
       "content": "Create all three C4 diagrams. Read architecture.md from task B.\n\n**C4 System Context** (apps/spaceinvaders/docs/how/c4/system-context.md):\n- Player (human actor) sends input (keyboard/touch)\n- Web Browser (external system) hosts the game\n- Use Mermaid C4 syntax\n\n**C4 Containers** (apps/spaceinvaders/docs/how/c4/containers.md):\n1. React Application (TypeScript) — UI, state, orchestration\n2. Canvas Game Loop (JavaScript/Canvas API) — entity updates, collisions, rendering\n3. Input Handler (JavaScript) — keyboard + touch processing\n4. Collision Engine (TypeScript) — AABB detection + response\n5. Sprite Manager — sprite definitions\nShow data flow: Input Handler → React state → Canvas Game Loop → Collision Engine → Score/UI updates\n\n**C4 Components** (apps/spaceinvaders/docs/how/c4/components.md, within Canvas Game Loop):\n1. GameLoop — requestAnimationFrame driver, orchestration\n2. EntityManager — formation, player, enemies, bullets, shields, mystery ship\n3. CollisionDetector — AABB detection + response\n4. InputHandler — keyboard + touch processing\n5. Renderer — canvas 2D rendering\n6. StateManager — game state transitions\n7. ScoreManager — score tracking\n8. DifficultyScaler — wave-based difficulty adjustments\nShow dependencies: GameLoop calls EntityManager, CollisionDetector, Renderer. CollisionDetector calls ScoreManager, StateManager. DifficultyScaler adjusts EntityManager.\n\nUse Mermaid C4 syntax for all three. Include brief descriptions of responsibilities.",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -34,7 +38,9 @@
       "file": "apps/spaceinvaders/docs/how/slices/slice-1-foundation/slice.md",
       "role": "architect",
       "content": "Create Slice 1 — Foundation. Read epic and user stories from task A, architecture from task B.\n\n**Slice Title**: Slice 1 — Foundation: Game Loop, Canvas Setup, UI Framework\n\n**Description**: Foundational infrastructure: canvas initialization, React setup, game loop with delta-time, HUD component (score, lives, wave), state machine scaffolding.\n\n**Deliverables**:\n1. Canvas setup in React component\n2. requestAnimationFrame game loop with delta-time calculation\n3. React state for gameState, score, lives, wave\n4. HUD component (score display, lives counter, wave indicator)\n5. State machine transitions (setup → playing → gameOver/victory)\n6. Input system scaffolding\n\n**Related User Stories**: US-001 (setup), US-007 (game states)\n**Related Epics**: Epic 0 — MVP\n**Success Criteria**: Canvas renders, loop runs at 60 FPS target, start button transitions to playing, HUD displays correctly, state transitions work\n\nUse template: .oneticket/templates/slice.md",
-      "depends_on": ["C"],
+      "depends_on": [
+        "C"
+      ],
       "status": "pending"
     },
     {
@@ -43,7 +49,9 @@
       "file": "apps/spaceinvaders/docs/how/slices/slice-2-enemies/slice.md",
       "role": "architect",
       "content": "Create Slice 2 — Enemy Formation & Rendering. Read US-002, architecture.md, Slice 1.\n\n**Slice Title**: Slice 2 — Enemy Formation & Rendering\n\n**Description**: Enemy grid (11x5), sprites by type, lateral movement, edge bouncing, speed scaling, rendering.\n\n**Deliverables**:\n1. Enemy entity with position, type, points, alive flag\n2. Formation manager: 11x5 grid initialization, lateral movement\n3. Edge detection and direction reversal\n4. Speed scaling based on enemy count\n5. Sprite rendering for 3 enemy types (small/medium/large)\n6. Formation.drop() for bouncing behavior\n7. Game loop integration\n\n**Related User Stories**: US-002 (formation), US-006 (destruction), US-007 (reset)\n**Related Epics**: Epic 0 — MVP\n**Success Criteria**: 55 enemies in grid, smooth lateral movement, bounces at edges, speed increases as enemies die, 3 sprite types visible, reaching bottom = game over\n\nUse template: .oneticket/templates/slice.md",
-      "depends_on": ["D"],
+      "depends_on": [
+        "D"
+      ],
       "status": "pending"
     },
     {
@@ -52,7 +60,9 @@
       "file": "apps/spaceinvaders/docs/how/slices/slice-3-player/slice.md",
       "role": "architect",
       "content": "Create Slice 3 — Player Control & Firing. Read US-003, architecture.md, Slice 1.\n\n**Slice Title**: Slice 3 — Player Control & Firing\n\n**Description**: Player cannon with dual input (keyboard + touch), movement bounds, bullet firing (1-max), invincibility frames.\n\n**Deliverables**:\n1. Player entity: position, bounds, sprite\n2. Keyboard handler (left/right arrow, spacebar)\n3. Touch handler (swipe detection, mobile fire button)\n4. PlayerBullet entity: position, velocity, collision box\n5. Bullet fire logic with 1-max constraint\n6. Invincibility frame tracking\n7. Player rendering with invincibility visual feedback\n\n**Related User Stories**: US-003 (controls), US-005 (enemy bullets), US-006 (player bullets)\n**Related Epics**: Epic 0 — MVP\n**Success Criteria**: Player at bottom center, arrow keys move with bounds, spacebar fires 1 bullet, mobile swipe/buttons work, invincibility frames + visual feedback, smooth rendering\n\nUse template: .oneticket/templates/slice.md",
-      "depends_on": ["D"],
+      "depends_on": [
+        "D"
+      ],
       "status": "pending"
     },
     {
@@ -61,7 +71,9 @@
       "file": "apps/spaceinvaders/docs/how/slices/slice-4-shields/slice.md",
       "role": "architect",
       "content": "Create Slice 4 — Destructible Shields. Read US-004, architecture.md, Slice 1.\n\n**Slice Title**: Slice 4 — Destructible Shields\n\n**Description**: 4 bunker shields as segment matrices, damage tracking per segment, visual degradation with opacity changes.\n\n**Deliverables**:\n1. Shield entity: 4x4 (or similar) segment matrix\n2. Segment class: position, hit count, opacity, alive flag\n3. Damage logic: hit increments counter, opacity decreases\n4. Shield initialization: place 4 bunkers evenly between player and formation\n5. Rendering: draw segments with opacity feedback\n6. Segment removal: when degraded beyond threshold, segment disappears\n7. Collision response: decrease segment health on any bullet hit\n\n**Related User Stories**: US-004 (shields), US-005 (enemy fire), US-006 (collisions)\n**Related Epics**: Epic 0 — MVP\n**Success Criteria**: 4 bunkers render between player and enemies, player bullets degrade segments, enemy bullets degrade, formation contact degrades, opacity changes visible, full degradation removes segment\n\nUse template: .oneticket/templates/slice.md",
-      "depends_on": ["D"],
+      "depends_on": [
+        "D"
+      ],
       "status": "pending"
     },
     {
@@ -70,7 +82,11 @@
       "file": "apps/spaceinvaders/docs/how/slices/slice-5-collision/slice.md",
       "role": "architect",
       "content": "Create Slice 5 — Collision Detection & Resolution. Read US-006, architecture.md, Slices 2-4.\n\n**Slice Title**: Slice 5 — Collision Detection & Resolution\n\n**Description**: AABB collision detection for all entity pairs (bullets, enemies, shields, player, formation) with proper collision response and scoring.\n\n**Deliverables**:\n1. AABB collision detection function (two rectangles overlap test)\n2. Collision manager: iterate all entity pairs, detect overlaps\n3. Collision response logic:\n   - Player bullet + enemy → destroy enemy, add score (10/20/30 pts by type)\n   - Player bullet + mystery ship → destroy ship, add bonus score (50/100/150/300 pts)\n   - Enemy bullet + player → damage player, trigger invincibility\n   - Any bullet + shield segment → degrade segment\n   - Formation + shield → degrade segments\n   - Formation + player line → trigger game over\n4. Object pool management: bullets removed after collision or exit\n5. Score update on enemy destruction\n\n**Related User Stories**: US-006 (collisions/scoring), all others (cross-cutting)\n**Related Epics**: Epic 0 — MVP\n**Success Criteria**: All collisions detected and resolved correctly, score updates on enemy destruction, enemy bullets damage player, player bullets destroy enemies, shields degrade on all hits, performance acceptable\n\nUse template: .oneticket/templates/slice.md",
-      "depends_on": ["E", "F", "G"],
+      "depends_on": [
+        "E",
+        "F",
+        "G"
+      ],
       "status": "pending"
     },
     {
@@ -79,7 +95,9 @@
       "file": "apps/spaceinvaders/docs/how/slices/slice-6-enemy-fire/slice.md",
       "role": "architect",
       "content": "Create Slice 6 — Enemy Fire System. Read US-005, architecture.md, Slice 1.\n\n**Slice Title**: Slice 6 — Enemy Fire System\n\n**Description**: Random enemy bullet firing with max 3 simultaneous bullets, object pooling for reuse, collision integration.\n\n**Deliverables**:\n1. EnemyBullet entity: position, velocity, collision box\n2. Bullet pool: max 3 bullets, reuse pool slots on exit\n3. Fire logic: random timer per column, one random enemy fires per trigger\n4. Fire rate control: reduce interval between fires as wave progresses\n5. Bullet movement: downward trajectory with canvas bounds checking\n6. Rendering: draw enemy bullets to canvas\n7. Integration with collision manager (from Slice 5)\n\n**Related User Stories**: US-005 (enemy fire), US-006 (collisions)\n**Related Epics**: Epic 0 — MVP\n**Success Criteria**: Enemy bullets fire at random intervals, max 3 on screen simultaneously, bullets move downward predictably, bullets exit screen and return to pool, fire interval decreases with wave progression, bullets render visible, integration with collision system works\n\nUse template: .oneticket/templates/slice.md",
-      "depends_on": ["D"],
+      "depends_on": [
+        "D"
+      ],
       "status": "pending"
     },
     {
@@ -88,7 +106,9 @@
       "file": "apps/spaceinvaders/docs/how/slices/slice-7-bonus/slice.md",
       "role": "architect",
       "content": "Create Slice 7 — Mystery Ship & Bonus. Read US-006, architecture.md, Slice 1.\n\n**Slice Title**: Slice 7 — Mystery Ship & Bonus Encounters\n\n**Description**: Mystery ship crosses top of screen at random intervals with random point values (50, 100, 150, 300), collision integration.\n\n**Deliverables**:\n1. MysteryShip entity: position, velocity, point value, alive flag\n2. Spawn logic: random interval timer (e.g., 10-20 seconds)\n3. Point value generation: random choice of 50, 100, 150, 300 pts\n4. Rendering: draw mystery ship sprite to canvas\n5. Movement: horizontal trajectory across top of screen\n6. Bounds checking: remove when exits screen, respawn after interval\n7. Integration with collision manager: player bullet destroys, adds bonus score\n\n**Related User Stories**: US-006 (collision detection & scoring - mystery ship bonuses)\n**Related Epics**: Epic 0 — MVP\n**Success Criteria**: Mystery ship spawns at random intervals, renders at top with unique sprite, moves horizontally smoothly, point value assigned randomly, player bullet destroys ship + adds bonus score, ship exits and respawns after interval, no impact on core game if disabled\n\nUse template: .oneticket/templates/slice.md",
-      "depends_on": ["D"],
+      "depends_on": [
+        "D"
+      ],
       "status": "pending"
     },
     {
@@ -97,7 +117,10 @@
       "file": "apps/spaceinvaders/docs/how/slices/slice-8-waves/slice.md",
       "role": "architect",
       "content": "Create Slice 8 — Wave Progression & Difficulty Scaling. Read US-007, architecture.md, Slices 1-2.\n\n**Slice Title**: Slice 8 — Wave Progression & Difficulty Scaling\n\n**Description**: Implement wave transitions, difficulty increases (enemy speed, fire rate), lives reset, score persistence.\n\n**Deliverables**:\n1. Wave counter: increment on victory, display in HUD\n2. Difficulty parameters: base speed, fire interval, tied to wave count\n3. Formation reset logic: respawn 55 enemies with new speed\n4. Lives reset: set to 3 on new wave (but score persists)\n5. Score persistence: carry score across waves\n6. Victory condition: detect all enemies destroyed\n7. Restart logic: reset to wave 1, score 0, lives 3 on restart from game over\n\n**Related User Stories**: US-007 (game states & wave progression), US-002 (enemy formation speed scaling), US-005 (enemy fire rate scaling)\n**Related Epics**: Epic 0 — MVP\n**Success Criteria**: Victory triggers when all enemies destroyed, wave increments on victory, new formation spawns with increased speed, enemy fire interval decreases, lives reset to 3 on new wave, score displays cumulatively, game over screen shows final score, restart resets all state to initial values\n\nUse template: .oneticket/templates/slice.md",
-      "depends_on": ["D", "E"],
+      "depends_on": [
+        "D",
+        "E"
+      ],
       "status": "pending"
     },
     {
@@ -106,7 +129,16 @@
       "file": "apps/spaceinvaders/docs/how/slices/xref.txt",
       "role": "architect",
       "content": "Update cross-references in all documentation files.\n\n**Files to update**:\n1. epic-0-mvp/epic.md: Add `## Related Slices` section listing all 8 slices with links\n2. epic-0-mvp/user-stories/us-*.md: Add `## Related Slices` (link relevant slices) + `## Related Epic`\n3. slices/slice-*/slice.md: Add `## Related Epic` + `## Related User Stories`\n\n**Link Format** (per oneticket-init-knowledge): NO `../` in paths. Use filename only.\n\n**Epic Related Slices**:\n- [Slice 1 — Foundation](slice-1-foundation/slice.md)\n- [Slice 2 — Enemy Formation & Rendering](slice-2-enemies/slice.md)\n- [Slice 3 — Player Control & Firing](slice-3-player/slice.md)\n- [Slice 4 — Destructible Shields](slice-4-shields/slice.md)\n- [Slice 5 — Collision Detection & Resolution](slice-5-collision/slice.md)\n- [Slice 6 — Enemy Fire System](slice-6-enemy-fire/slice.md)\n- [Slice 7 — Mystery Ship & Bonus Encounters](slice-7-bonus/slice.md)\n- [Slice 8 — Wave Progression & Difficulty Scaling](slice-8-waves/slice.md)\n\n**US → Slices Mapping**:\n- US-001: Slice 1\n- US-002: Slices 2, 8\n- US-003: Slice 3\n- US-004: Slice 4\n- US-005: Slices 6, 8\n- US-006: Slices 5, 7\n- US-007: Slices 1, 8\n\nPerform as final task after all slices complete.",
-      "depends_on": ["D", "E", "F", "G", "H", "I", "J", "K"],
+      "depends_on": [
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K"
+      ],
       "status": "pending"
     }
   ]
