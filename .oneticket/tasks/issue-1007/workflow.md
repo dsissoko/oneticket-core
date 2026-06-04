@@ -11,3 +11,4 @@
 2026-06-04 10:17 | K | apps/spaceinvaders/docs/how/c4/containers.md
 2026-06-04 10:18 | M | apps/spaceinvaders/docs/how/slices/slice-2-player-input-cannon/slice.md
 2026-06-04 10:18 | L | apps/spaceinvaders/docs/how/slices/slice-1-foundation-game-loop/slice.md
+2026-06-04 10:18 | N | apps/spaceinvaders/docs/how/slices/slice-3-enemy-formation/slice.md
