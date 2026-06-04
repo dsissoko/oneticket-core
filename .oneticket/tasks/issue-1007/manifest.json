@@ -8,7 +8,7 @@
       "role": "analyst",
       "content": "Create product-spec.md from the comprehensive SpaceInvaders brief provided in issue #1007. The product is a Space Invaders arcade game with: 11×5 formation of enemies (3 visual types), bonus mystery ships, player cannon with projectiles, 4 shields with destructible segments, enemy fire, 3 lives system, wave progression with increasing difficulty. Include vision, target user (casual arcade game player), main capabilities (gameplay loop, enemy AI, collision detection, scoring, wave progression), key rules (enemy movement, firing mechanics, shield degradation, game over conditions, victory conditions). Use template .oneticket/templates/product-spec.md and frontmatter with title field.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
@@ -16,7 +16,9 @@
       "file": "apps/spaceinvaders/docs/what/epics/epic-0-mvp/epic.md",
       "role": "analyst",
       "content": "Create epic-0-mvp/epic.md with MVP scope: Complete playable Space Invaders game with all mechanics from product-spec.md (start screen, enemy formation, player controls, shields, enemy fire, collisions, scoring, lives system, wave progression, game over/victory states). Read product-spec.md first. Use template .oneticket/templates/epic.md. Include title frontmatter, epic description, scope, acceptance criteria, and empty 'Related User Stories' section.",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending"
     },
     {
@@ -25,7 +27,9 @@
       "file": "apps/spaceinvaders/docs/what/epics/epic-0-mvp/user-stories/us-001-game-start.md",
       "role": "analyst",
       "content": "Create user story us-001-game-start.md: 'As a player, I want to see a title screen with a Start button so that I can begin a new game.' Read epic-0-mvp/epic.md first. Use template .oneticket/templates/us.md. Include title frontmatter, story format, acceptance criteria in Gherkin format (Given/When/Then), empty 'Related Slices' and 'Related Epics' sections.",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -34,7 +38,9 @@
       "file": "apps/spaceinvaders/docs/what/epics/epic-0-mvp/user-stories/us-002-enemy-formation.md",
       "role": "analyst",
       "content": "Create user story us-002-enemy-formation.md: 'As a player, I want to see enemies arranged in a 11×5 grid with 3 visual types (10/20/30 pts) so that I can strategically target high-value enemies.' Read epic-0-mvp/epic.md first. Include enemy movement (left-right-down), speed increase as enemies die, visual differentiation by row. Use template .oneticket/templates/us.md with Gherkin acceptance criteria.",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -43,7 +49,9 @@
       "file": "apps/spaceinvaders/docs/what/epics/epic-0-mvp/user-stories/us-003-player-controls.md",
       "role": "analyst",
       "content": "Create user story us-003-player-controls.md: 'As a player, I want to move my cannon left/right and fire projectiles so that I can destroy enemies and survive waves.' Include desktop controls (arrows/spacebar) and mobile controls (swipe/buttons). One active projectile at a time. 3 starting lives with respawn at center + invincibility. Use template .oneticket/templates/us.md with Gherkin acceptance criteria.",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -52,7 +60,9 @@
       "file": "apps/spaceinvaders/docs/what/epics/epic-0-mvp/user-stories/us-004-shields-collisions.md",
       "role": "analyst",
       "content": "Create user story us-004-shields-collisions.md: 'As a player, I want shields between me and enemies that degrade when hit so that I have partial protection during battles.' Include 4 bunkers with destructible segments, damage from both player and enemy fire, formation contact destroys segments. Also document all collision behaviors (enemy hit = destroy + score, mystery ship = bonus, shield segment = degrade, enemy fire to player = -1 life, formation reaching player = game over). Use template .oneticket/templates/us.md.",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -61,7 +71,9 @@
       "file": "apps/spaceinvaders/docs/what/epics/epic-0-mvp/user-stories/us-005-enemy-fire-mystery-ships.md",
       "role": "analyst",
       "content": "Create user story us-005-enemy-fire-mystery-ships.md: 'As a player, I want enemies to fire projectiles and bonus mystery ships to pass overhead so that I face evolving challenges and can earn bonus points.' Include: enemies fire randomly from bottom of each column (max 3 simultaneous), mystery ship with random value (50/100/150/300 pts), periodic appearance, horizontal trajectory. Use template .oneticket/templates/us.md with Gherkin criteria.",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -70,7 +82,9 @@
       "file": "apps/spaceinvaders/docs/what/epics/epic-0-mvp/user-stories/us-006-wave-progression-scoring.md",
       "role": "analyst",
       "content": "Create user story us-006-wave-progression-scoring.md: 'As a player, I want waves to increase in difficulty and score to persist across waves so that I experience escalating challenge and can build a high score.' Include: victory condition (all enemies destroyed), new wave triggers with increased speed and reduced fire interval, lives reset to 3 but score persists, game over on lives=0 or formation reaching player line. Display final score and restart button on game over. Use template .oneticket/templates/us.md.",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending"
     },
     {
@@ -79,7 +93,15 @@
       "file": "apps/spaceinvaders/docs/how/architecture.md",
       "role": "architect",
       "content": "Create architecture.md describing the technical implementation of Space Invaders based on product-spec.md and all user stories (us-001 through us-006). Read all spec and user story files first. Document: tech stack (React, TypeScript, HTML5 Canvas), main system components (Game Loop, Renderer, Physics/Collision, Input Handler, State Manager, Entity System for enemies/player/projectiles/shields), key interfaces and data structures, non-functional requirements (60 FPS target, mobile-responsive, touch+keyboard support). Use template .oneticket/templates/architecture.md with title frontmatter and empty 'Related Slices' section.",
-      "depends_on": ["A", "C", "D", "E", "F", "G", "H"],
+      "depends_on": [
+        "A",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
       "status": "pending"
     },
     {
@@ -88,7 +110,9 @@
       "file": "apps/spaceinvaders/docs/how/c4/system-context.md",
       "role": "architect",
       "content": "Create C4 system context diagram (system-context.md) showing Space Invaders game as central system interacting with Player (via browser input and rendering). Include one Mermaid C4 Context diagram. Read architecture.md first. Use title frontmatter. Keep narrative brief.",
-      "depends_on": ["I"],
+      "depends_on": [
+        "I"
+      ],
       "status": "pending"
     },
     {
@@ -97,7 +121,9 @@
       "file": "apps/spaceinvaders/docs/how/c4/containers.md",
       "role": "architect",
       "content": "Create C4 containers diagram (containers.md) for Space Invaders showing: Game Canvas Container, Input Manager Container, State Manager Container, Renderer Container, Physics Engine Container. Include one Mermaid C4 Container diagram showing how React hosts these containers. Read architecture.md first. Use title frontmatter.",
-      "depends_on": ["I"],
+      "depends_on": [
+        "I"
+      ],
       "status": "pending"
     },
     {
@@ -106,7 +132,9 @@
       "file": "apps/spaceinvaders/docs/how/slices/slice-1-foundation-game-loop/slice.md",
       "role": "architect",
       "content": "Create slice-1-foundation-game-loop/slice.md describing the foundational game loop: render loop at 60 FPS, state updates, input polling, frame-independent timing. Scope: core engine infrastructure to support all gameplay. Read architecture.md and us-001. Use template .oneticket/templates/slice.md with title frontmatter, description, tasks, and empty 'Related Epics' and 'Related User Stories' sections.",
-      "depends_on": ["I"],
+      "depends_on": [
+        "I"
+      ],
       "status": "pending"
     },
     {
@@ -115,7 +143,9 @@
       "file": "apps/spaceinvaders/docs/how/slices/slice-2-player-input-cannon/slice.md",
       "role": "architect",
       "content": "Create slice-2-player-input-cannon/slice.md: Input handling (desktop + mobile), player cannon rendering, movement, projectile firing logic. Read architecture.md, us-001, us-003. Use template .oneticket/templates/slice.md with title frontmatter, description, tasks, empty cross-references.",
-      "depends_on": ["I"],
+      "depends_on": [
+        "I"
+      ],
       "status": "pending"
     },
     {
@@ -124,7 +154,9 @@
       "file": "apps/spaceinvaders/docs/how/slices/slice-3-enemy-formation/slice.md",
       "role": "architect",
       "content": "Create slice-3-enemy-formation/slice.md: 11×5 enemy grid, 3 visual types with point values, formation movement (left-right-down), speed scaling with remaining enemies, rendering. Read architecture.md, us-002. Use template .oneticket/templates/slice.md.",
-      "depends_on": ["I"],
+      "depends_on": [
+        "I"
+      ],
       "status": "pending"
     },
     {
@@ -133,7 +165,9 @@
       "file": "apps/spaceinvaders/docs/how/slices/slice-4-collision-scoring/slice.md",
       "role": "architect",
       "content": "Create slice-4-collision-scoring/slice.md: Collision detection engine (projectile-enemy, projectile-shield, projectile-mystery, enemy-shield, formation-player), scoring system with point values by enemy type, life management. Read architecture.md, us-002, us-004, us-005. Use template .oneticket/templates/slice.md.",
-      "depends_on": ["I"],
+      "depends_on": [
+        "I"
+      ],
       "status": "pending"
     },
     {
@@ -142,7 +176,9 @@
       "file": "apps/spaceinvaders/docs/how/slices/slice-5-shields-degradation/slice.md",
       "role": "architect",
       "content": "Create slice-5-shields-degradation/slice.md: 4 shield bunkers with destructible segment matrices, damage accumulation (player fire, enemy fire, formation contact), visual degradation, removal when destroyed. Read architecture.md, us-004. Use template .oneticket/templates/slice.md.",
-      "depends_on": ["I"],
+      "depends_on": [
+        "I"
+      ],
       "status": "pending"
     },
     {
@@ -151,7 +187,9 @@
       "file": "apps/spaceinvaders/docs/how/slices/slice-6-enemy-ai-fire/slice.md",
       "role": "architect",
       "content": "Create slice-6-enemy-ai-fire/slice.md: Enemy fire AI (random selection from bottom of each column), projectile spawning, max 3 concurrent enemy projectiles, trajectory simulation. Read architecture.md, us-005. Use template .oneticket/templates/slice.md.",
-      "depends_on": ["I"],
+      "depends_on": [
+        "I"
+      ],
       "status": "pending"
     },
     {
@@ -160,7 +198,9 @@
       "file": "apps/spaceinvaders/docs/how/slices/slice-7-mystery-ships-bonuses/slice.md",
       "role": "architect",
       "content": "Create slice-7-mystery-ships-bonuses/slice.md: Mystery ship mechanics (periodic appearance, horizontal movement), random value selection (50/100/150/300), collision with player projectile triggers destruction + score. Read architecture.md, us-005. Use template .oneticket/templates/slice.md.",
-      "depends_on": ["I"],
+      "depends_on": [
+        "I"
+      ],
       "status": "pending"
     },
     {
@@ -169,7 +209,9 @@
       "file": "apps/spaceinvaders/docs/how/slices/slice-8-game-states-progression/slice.md",
       "role": "architect",
       "content": "Create slice-8-game-states-progression/slice.md: Game states (Start, Playing, GameOver, Victory), state transitions, wave progression (speed increase, fire interval reduction, lives reset, score persistence), UI for title screen + game over/victory screens with restart button. Read architecture.md, us-001, us-006. Use template .oneticket/templates/slice.md.",
-      "depends_on": ["I"],
+      "depends_on": [
+        "I"
+      ],
       "status": "pending"
     },
     {
@@ -178,7 +220,16 @@
       "file": "apps/spaceinvaders/docs/how/architecture.md",
       "role": "architect",
       "content": "Update architecture.md to add 'Related Slices' section with links to all 8 slices (slice-1 through slice-8). Also read and update all 6 user story files (us-001 through us-006) to add 'Related Slices' section with relevant slice links. Finally, update epic-0-mvp/epic.md to add 'Related User Stories' section with links to us-001 through us-006. Use filename-only link format without ../ paths: [Slice N — name](slice-N-name/slice.md), [US-NNN — name](us-NNN-name.md), [Epic N — name](epic-N-name/epic.md).",
-      "depends_on": ["L", "M", "N", "O", "P", "Q", "R", "S"],
+      "depends_on": [
+        "L",
+        "M",
+        "N",
+        "O",
+        "P",
+        "Q",
+        "R",
+        "S"
+      ],
       "status": "pending"
     }
   ]
