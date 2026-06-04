@@ -120,7 +120,7 @@
       "file": "apps/monjournal/app/src/components/ViewModeToggle.tsx",
       "content": "Read docs/how/slices/slice-2-thought-list-display/slice.md section 'Components' (ViewModeToggle). Implement src/components/ViewModeToggle.tsx React component with: (1) Props: currentMode: 'list'|'timeline', onChange: (mode) => void; (2) Render two buttons or toggle switch labeled 'List' and 'Timeline'; (3) Active mode visually highlighted (background color, border, etc.); (4) Call onChange(mode) on click. Style with AppShell CSS.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "N",
