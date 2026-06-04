@@ -488,7 +488,14 @@ interface GameSave {
 
 ## 12. Related Implementation Slices
 
-See [how/slices/](../slices/) for all implementation slices derived from this architecture.
+- [Slice 1 — Foundation Game Loop](slice-1-foundation-game-loop/slice.md)
+- [Slice 2 — Player Input & Cannon](slice-2-player-input-cannon/slice.md)
+- [Slice 3 — Enemy Formation Grid with Movement and Rendering](slice-3-enemy-formation/slice.md)
+- [Slice 4 — Collision Detection and Scoring System](slice-4-collision-scoring/slice.md)
+- [Slice 5 — Shields Degradation](slice-5-shields-degradation/slice.md)
+- [Slice 6 — Enemy AI Fire](slice-6-enemy-ai-fire/slice.md)
+- [Slice 7 — Mystery Ships Bonuses](slice-7-mystery-ships-bonuses/slice.md)
+- [Slice 8 — Game States and Wave Progression](slice-8-game-states-progression/slice.md)
 
 ---
 

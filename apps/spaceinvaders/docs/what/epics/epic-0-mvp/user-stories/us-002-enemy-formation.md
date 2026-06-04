@@ -74,6 +74,5 @@ Feature: Enemy Formation Display and Movement
 
 ## Related Slices
 
-<!-- @architect fills this section after producing slices — write filename only, no relative path, no ../
-     The build script resolves the correct path automatically.
-     Example: [Slice 1 — Skeleton Foundation](slice-1-skeleton-foundation/slice.md) -->
+- [Slice 3 — Enemy Formation Grid with Movement and Rendering](slice-3-enemy-formation/slice.md)
+- [Slice 8 — Game States and Wave Progression](slice-8-game-states-progression/slice.md)

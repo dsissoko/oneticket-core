@@ -70,6 +70,6 @@ Feature: Enemy Fire and Mystery Ships
 
 ## Related Slices
 
-<!-- @architect fills this section after producing slices — write filename only, no relative path, no ../
-     The build script resolves the correct path automatically.
-     Example: [Slice 1 — Skeleton Foundation](slice-1-skeleton-foundation/slice.md) -->
+- [Slice 4 — Collision Detection and Scoring System](slice-4-collision-scoring/slice.md)
+- [Slice 6 — Enemy AI Fire](slice-6-enemy-ai-fire/slice.md)
+- [Slice 7 — Mystery Ships Bonuses](slice-7-mystery-ships-bonuses/slice.md)

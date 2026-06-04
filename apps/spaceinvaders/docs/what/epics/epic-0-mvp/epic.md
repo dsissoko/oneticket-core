@@ -63,7 +63,9 @@ This MVP establishes the foundational game loop and all primary mechanics (enemy
 
 ## Related User Stories
 
-<!-- @analyst fills this section — write filename only, no relative path, no ../
-     US files are always in user-stories/ subfolder — never flat in the epic directory
-     The build script resolves the correct path automatically.
-     Example: [US-001 — Skeleton Setup](us-001-skeleton-setup.md) -->
+- [US-001 — Game Start](user-stories/us-001-game-start.md)
+- [US-002 — Enemy Formation](user-stories/us-002-enemy-formation.md)
+- [US-003 — Player Controls](user-stories/us-003-player-controls.md)
+- [US-004 — Shields and Collisions](user-stories/us-004-shields-collisions.md)
+- [US-005 — Enemy Fire and Mystery Ships](user-stories/us-005-enemy-fire-mystery-ships.md)
+- [US-006 — Wave Progression and Scoring](user-stories/us-006-wave-progression-scoring.md)
