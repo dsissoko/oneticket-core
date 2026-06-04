@@ -76,6 +76,7 @@ jobs:
           ISSUE_NUMBER: ${{ steps.resolve.outputs.issue_number }}
           PR_NUMBER:    ${{ github.event.pull_request.number }}
           REVIEW_ID:    ${{ github.event.review.id }}
+          REVIEW_BODY:  ${{ github.event.review.body }}
           PR_TITLE:     ${{ github.event.pull_request.title }}
           PR_BODY:      ${{ github.event.pull_request.body }}
         run: node src/dispatch-review-agents.mjs
