@@ -24,4 +24,5 @@ Users can switch between a list view (default) and a timeline view using a singl
 
 ## Related Slices
 
-(To be populated by @architect)
+- [Slice 1 — Data Foundation](../../how/slices/slice-1-data-foundation/slice.md)
+- [Slice 2 — Thought List Display](../../how/slices/slice-2-thought-list-display/slice.md)

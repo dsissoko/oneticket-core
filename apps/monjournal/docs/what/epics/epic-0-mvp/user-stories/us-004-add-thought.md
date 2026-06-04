@@ -25,4 +25,5 @@ Users access a form to create new thoughts. The form includes inputs for title, 
 
 ## Related Slices
 
-(To be populated by @architect)
+- [Slice 1 — Data Foundation](../../how/slices/slice-1-data-foundation/slice.md)
+- [Slice 4 — Add Thought Form](../../how/slices/slice-4-add-thought-form/slice.md)

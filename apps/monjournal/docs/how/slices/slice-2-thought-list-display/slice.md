@@ -221,4 +221,5 @@ This slice is **user-facing** and directly implements the core viewing experienc
 
 ## Related User Stories
 
-(To be populated by @architect)
+- [US-001 — Thought List](../../../what/epics/epic-0-mvp/user-stories/us-001-thought-list.md)
+- [US-003 — Timeline View](../../../what/epics/epic-0-mvp/user-stories/us-003-timeline-view.md)

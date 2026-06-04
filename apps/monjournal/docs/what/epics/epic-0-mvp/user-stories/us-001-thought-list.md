@@ -21,4 +21,5 @@ Users can access the home screen and view all stored thoughts as compact cards d
 
 ## Related Slices
 
-(To be populated by @architect)
+- [Slice 1 — Data Foundation](../../how/slices/slice-1-data-foundation/slice.md)
+- [Slice 2 — Thought List Display](../../how/slices/slice-2-thought-list-display/slice.md)

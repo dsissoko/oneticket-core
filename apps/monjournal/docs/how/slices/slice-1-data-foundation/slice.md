@@ -171,4 +171,8 @@ color = colorPalette[tagColorIndex]
 
 ## Related User Stories
 
-(All user stories depend on this foundational slice; specific mappings will be added as feature slices reference them)
+- [US-001 — Thought List](../../../what/epics/epic-0-mvp/user-stories/us-001-thought-list.md)
+- [US-002 — Multi-Filter](../../../what/epics/epic-0-mvp/user-stories/us-002-multi-filter.md)
+- [US-003 — Timeline View](../../../what/epics/epic-0-mvp/user-stories/us-003-timeline-view.md)
+- [US-004 — Add Thought](../../../what/epics/epic-0-mvp/user-stories/us-004-add-thought.md)
+- [US-005 — Tag Colors](../../../what/epics/epic-0-mvp/user-stories/us-005-tag-colors.md)

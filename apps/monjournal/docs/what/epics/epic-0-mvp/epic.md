@@ -112,4 +112,15 @@ Journalers need a simple tool that removes barriers to capturing fleeting ideas 
 
 ## Related User Stories
 
-(To be populated after epic breakdown)
+- [US-001 — Thought List](user-stories/us-001-thought-list.md)
+- [US-002 — Multi-Filter](user-stories/us-002-multi-filter.md)
+- [US-003 — Timeline View](user-stories/us-003-timeline-view.md)
+- [US-004 — Add Thought](user-stories/us-004-add-thought.md)
+- [US-005 — Tag Colors](user-stories/us-005-tag-colors.md)
+
+## Related Slices
+
+- [Slice 1 — Data Foundation](../../how/slices/slice-1-data-foundation/slice.md)
+- [Slice 2 — Thought List Display](../../how/slices/slice-2-thought-list-display/slice.md)
+- [Slice 3 — Filtering & Search](../../how/slices/slice-3-filtering-search/slice.md)
+- [Slice 4 — Add Thought Form](../../how/slices/slice-4-add-thought-form/slice.md)
