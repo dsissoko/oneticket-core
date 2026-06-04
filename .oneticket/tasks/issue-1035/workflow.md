@@ -9,3 +9,4 @@
 2026-06-04 12:36 | J | apps/spaceinvaders/docs/how/slices/slice-7-bonus/slice.md
 2026-06-04 12:38 | H | apps/spaceinvaders/docs/how/slices/slice-5-collision/slice.md
 2026-06-04 12:39 | K | apps/spaceinvaders/docs/how/slices/slice-8-waves/slice.md
+2026-06-04 12:42 | L | apps/spaceinvaders/docs/how/slices/xref.txt

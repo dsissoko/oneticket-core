@@ -59,4 +59,5 @@ Scenario: Formation speed increases as enemies are destroyed
 
 ## Related Slices
 
-<!-- @architect fills this section -->
+- [Slice 2 — Enemy Formation & Rendering](slice-2-enemies/slice.md)
+- [Slice 8 — Wave Progression & Difficulty Scaling](slice-8-waves/slice.md)

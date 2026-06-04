@@ -104,4 +104,5 @@ Scenario: Restart after game over
 
 ## Related Slices
 
-<!-- @architect fills this section -->
+- [Slice 1 — Foundation](slice-1-foundation/slice.md)
+- [Slice 8 — Wave Progression & Difficulty Scaling](slice-8-waves/slice.md)

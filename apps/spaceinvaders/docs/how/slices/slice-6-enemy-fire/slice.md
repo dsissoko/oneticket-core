@@ -11,7 +11,6 @@ Implement a complete enemy fire system with random bullet spawning, object pooli
 ## Related User Stories
 
 [US-005 — Enemy Fire System](us-005-enemy-fire-system.md)
-[US-006 — Collision Detection & Scoring](us-006-collision-detection-scoring.md)
 
 ## Impacted Components
 
@@ -334,9 +333,10 @@ PhysicsSystem.checkCollisions() {
 
 ## Related Slices
 
-- **Slice 1**: Foundation — provides canvas, game loop, rendering pipeline
-- **Slice 5**: Collision Detection & Scoring — receives enemy bullet collision events
-- **Slice 7** (future): Enemy Fire Rate Tuning — adjusts fire interval per difficulty
+- [Slice 1 — Foundation](slice-1-foundation/slice.md)
+- [Slice 3 — Player Control & Firing](slice-3-player/slice.md)
+- [Slice 5 — Collision Detection & Resolution](slice-5-collision/slice.md)
+- [Slice 8 — Wave Progression & Difficulty Scaling](slice-8-waves/slice.md)
 
 ## Notes
 

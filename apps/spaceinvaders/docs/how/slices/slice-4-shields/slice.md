@@ -11,8 +11,13 @@ Implement the complete shield system: 4 destructible bunkers positioned between 
 ## Related User Stories
 
 [US-004 — Destructible Shields](us-004-destructible-shields.md)
-[US-005 — Enemy Fire & Bullet Pooling](us-005-enemy-fire-bullet-pooling.md)
-[US-006 — Collision Detection & Scoring](us-006-collision-detection-scoring.md)
+
+## Related Slices
+
+- [Slice 1 — Foundation](slice-1-foundation/slice.md)
+- [Slice 3 — Player Control & Firing](slice-3-player/slice.md)
+- [Slice 5 — Collision Detection & Resolution](slice-5-collision/slice.md)
+- [Slice 6 — Enemy Fire System](slice-6-enemy-fire/slice.md)
 
 ## Impacted Components
 

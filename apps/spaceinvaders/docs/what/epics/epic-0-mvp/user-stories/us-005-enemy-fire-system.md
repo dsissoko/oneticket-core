@@ -69,4 +69,5 @@ Scenario: Fire rate increases as enemies are destroyed
 
 ## Related Slices
 
-<!-- @architect fills this section -->
+- [Slice 6 — Enemy Fire System](slice-6-enemy-fire/slice.md)
+- [Slice 8 — Wave Progression & Difficulty Scaling](slice-8-waves/slice.md)

@@ -12,6 +12,12 @@ Introduce a bonus target—the mystery ship—that traverses the top of the scre
 
 [US-006 — Collision Detection & Scoring](us-006-collision-detection-scoring.md)
 
+## Related Slices
+
+- [Slice 1 — Foundation](slice-1-foundation/slice.md)
+- [Slice 3 — Player Control & Firing](slice-3-player/slice.md)
+- [Slice 5 — Collision Detection & Resolution](slice-5-collision/slice.md)
+
 ## Impacted Components
 
 ### Core Components
