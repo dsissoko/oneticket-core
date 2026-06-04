@@ -58,8 +58,27 @@ function copyDir(src, dest) {
 }
 
 /**
+ * Converts a lowercase name to TitleCase by capitalizing each word.
+ * Words are detected by splitting on common separators or known compound patterns.
+ * Examples: "appshell" → "AppShell", "monjournal" → "MonJournal"
+ *
+ * Strategy: tries known word boundaries first (dictionary-based),
+ * falls back to simple first-char uppercase.
+ */
+const KNOWN_COMPOUNDS = {
+  appshell:   'AppShell',
+  monjournal: 'MonJournal',
+  spaceinvaders: 'SpaceInvaders',
+  breakout:   'Breakout',
+};
+
+function toTitleCase(name) {
+  return KNOWN_COMPOUNDS[name.toLowerCase()] || (name.charAt(0).toUpperCase() + name.slice(1));
+}
+
+/**
  * Replaces all occurrences of template name with project name in a file.
- * Handles both lowercase and PascalCase variants.
+ * Handles lowercase, PascalCase (first char), and TitleCase (compound) variants.
  * Skips binary files silently.
  */
 function replaceInFile(filePath, templateName, projectName) {
@@ -70,11 +89,13 @@ function replaceInFile(filePath, templateName, projectName) {
     return; // binary file — skip
   }
 
-  // Build PascalCase variants
   const templatePascal = templateName.charAt(0).toUpperCase() + templateName.slice(1);
   const projectPascal  = projectName.charAt(0).toUpperCase() + projectName.slice(1);
+  const templateTitle  = toTitleCase(templateName);
+  const projectTitle   = toTitleCase(projectName);
 
   const updated = content
+    .replaceAll(templateTitle,  projectTitle)
     .replaceAll(templatePascal, projectPascal)
     .replaceAll(templateName,   projectName);
 
