@@ -103,10 +103,11 @@ export function buildPrompt({ role, request, branch, issueNumber, repo, docsPath
   lines.push(`- ALWAYS respond at the end of every job — no exception.`);
 
   if (originType === 'pull_request_review_comment') {
-    lines.push(`- Reply inline:`);
+    lines.push(`- Reply inline using this command:`);
     lines.push('  ```bash');
     lines.push(`  gh api repos/${repo}/pulls/${prNumber}/comments --method POST --field body="**[Agent: @${role}]** {your message}" --field in_reply_to=${replyToCommentId}`);
     lines.push('  ```');
+    lines.push(`  DO NOT use other command.`);
   } else if (originType === 'pull_request_comment') {
     lines.push(`- Reply on PR:`);
     lines.push('  ```bash');
