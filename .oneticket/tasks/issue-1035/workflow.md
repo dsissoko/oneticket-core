@@ -1,0 +1,12 @@
+2026-06-04 12:27 | A | apps/spaceinvaders/docs/what/product-spec.md
+2026-06-04 12:29 | B | apps/spaceinvaders/docs/how/architecture.md
+2026-06-04 12:31 | C | apps/spaceinvaders/docs/how/c4/system-context.md
+2026-06-04 12:33 | D | apps/spaceinvaders/docs/how/slices/slice-1-foundation/slice.md
+2026-06-04 12:36 | E | apps/spaceinvaders/docs/how/slices/slice-2-enemies/slice.md
+2026-06-04 12:36 | G | apps/spaceinvaders/docs/how/slices/slice-4-shields/slice.md
+2026-06-04 12:36 | F | apps/spaceinvaders/docs/how/slices/slice-3-player/slice.md
+2026-06-04 12:36 | I | apps/spaceinvaders/docs/how/slices/slice-6-enemy-fire/slice.md
+2026-06-04 12:36 | J | apps/spaceinvaders/docs/how/slices/slice-7-bonus/slice.md
+2026-06-04 12:38 | H | apps/spaceinvaders/docs/how/slices/slice-5-collision/slice.md
+2026-06-04 12:39 | K | apps/spaceinvaders/docs/how/slices/slice-8-waves/slice.md
+2026-06-04 12:42 | L | apps/spaceinvaders/docs/how/slices/xref.txt
