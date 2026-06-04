@@ -14,3 +14,4 @@
 2026-06-04 22:14 | E | apps/monjournal/app/src/utils/filterLogic.ts
 2026-06-04 22:14 | D | apps/monjournal/app/src/hooks/useLocalStorage.ts
 2026-06-04 22:14 | B | apps/monjournal/app/src/utils/colorPalette.ts
+2026-06-04 22:15 | C | apps/monjournal/app/src/models/tagModel.ts
