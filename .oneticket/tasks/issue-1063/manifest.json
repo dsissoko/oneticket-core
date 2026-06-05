@@ -40,7 +40,7 @@
       "depends_on": [
         "A"
       ],
-      "status": "pending",
+      "status": "done",
       "role": "dev"
     },
     {
