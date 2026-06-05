@@ -28,6 +28,9 @@ export interface Player extends BoundingBox {
   invincible: boolean
   invincibilityTimer: number
   bulletInFlight: PlayerBullet | null
+  takeDamage(): void
+  fire(): PlayerBullet | null
+  getBoundingBox(): BoundingBox
 }
 
 export interface PlayerBullet extends BoundingBox {
@@ -43,6 +46,10 @@ export interface EnemyBullet extends BoundingBox {
   vx: number
   vy: number
   type: 'enemy'
+  active: boolean
+  update(deltaTime: number): void
+  isOutOfBounds(canvasHeight: number): boolean
+  getBoundingBox(): BoundingBox
 }
 
 export type Bullet = PlayerBullet | EnemyBullet
@@ -53,23 +60,46 @@ export interface Segment extends BoundingBox {
   alive: boolean
   hitCount: number
   opacity: number
+  takeDamage(): void
 }
 
-export interface Shield {
-  x: number
-  y: number
-  width: number
-  height: number
+export interface Shield extends BoundingBox {
   segments: Segment[][]
   reset(): void
   damageSegment(gridX: number, gridY: number): boolean
   isDestroyed(): boolean
   getVisibleSegments(): Segment[]
+  getBoundingBox(): BoundingBox
 }
 
 export interface MysteryShip extends BoundingBox {
   vx: number
   active: boolean
+}
+
+export interface CollisionResponse {
+  pointsAwarded: number
+  entitiesToDestroy: any[]
+  playerDamage: boolean
+  playerInvincibility: boolean
+  gameOverTriggered: boolean
+  shieldDamageData?: {
+    shieldIndex: number
+    segmentGridX: number
+    segmentGridY: number
+  }
+}
+
+export interface CollisionEvent {
+  type:
+    | 'bullet-enemy'
+    | 'bullet-mystery'
+    | 'bullet-shield'
+    | 'enemy-bullet-player'
+    | 'formation-shield'
+    | 'formation-player'
+  entities: any[]
+  response: CollisionResponse
 }
 
 export interface GameLoopState {

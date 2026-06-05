@@ -126,16 +126,19 @@ export class RenderingSystem {
   }
 
   /**
-   * Draw shields
-   */
+    * Draw shields
+    */
   drawShields(shields: Shield[]): void {
     shields.forEach((shield) => {
       this.ctx.fillStyle = '#00FF00'
 
-      shield.segments.forEach((segment) => {
-        if (segment.alive) {
-          this.ctx.fillRect(segment.x, segment.y, segment.width, segment.height)
-        }
+      // Handle 2D array of segments
+      shield.segments.forEach((row) => {
+        row.forEach((segment) => {
+          if (segment.alive) {
+            this.ctx.fillRect(segment.x, segment.y, segment.width, segment.height)
+          }
+        })
       })
     })
   }

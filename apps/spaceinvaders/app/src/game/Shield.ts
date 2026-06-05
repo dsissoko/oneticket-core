@@ -3,7 +3,7 @@
  * Manages 4×4 grid of segments per shield with damage tracking
  */
 
-import type { Segment } from './types'
+import type { Segment, Shield } from './types'
 
 /**
  * Segment class - represents a single segment in a shield grid
@@ -72,7 +72,7 @@ export class SegmentImpl implements Segment {
  * Contains a 4×4 grid of segments (16 total)
  * Segment size: 12×12 pixels, shield total: 48×48 pixels
  */
-export class ShieldImpl {
+export class ShieldImpl implements Shield {
   x: number
   y: number
   width: number = 48 // 4 columns × 12 pixels per segment
@@ -86,6 +86,7 @@ export class ShieldImpl {
   constructor(x: number, y: number) {
     this.x = x
     this.y = y
+    this.segments = []
     this.initializeSegments()
   }
 
