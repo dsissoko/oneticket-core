@@ -101,6 +101,7 @@ export function buildPrompt({ role, request, branch, issueNumber, repo, docsPath
   lines.push(`## Agent contract`);
   lines.push(`- Prefix every response with: **[Agent: \`@${role}\`]**`);
   lines.push(`- ALWAYS respond at the end of every job — no exception.`);
+  lines.push(`- Your response must include a short summary of what you did: files created or modified, key decisions, and anything the user should know to validate the result visually.`);
 
   if (originType === 'pull_request_review_comment') {
     lines.push(`- Reply inline using this command:`);
