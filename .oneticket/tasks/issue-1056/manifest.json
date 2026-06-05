@@ -26,7 +26,7 @@
       "role": "architect",
       "content": "CREATE apps/monjournal/docs/how/c4/deployment.md with a C4 Deployment diagram using Mermaid. Document how MonJournal is deployed and runs. Include: static web browser container, browser with React SPA, localStorage within browser, and any build/hosting infrastructure. MonJournal is a static SPA with no backend—deployment is simple (static file hosting). Include title frontmatter 'title: MonJournal Deployment' and a descriptive H1 header. Reference apps/monjournal/docs/how/architecture.md section 14 for deployment details.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "D",
