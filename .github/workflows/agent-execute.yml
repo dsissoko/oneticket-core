@@ -182,19 +182,19 @@ jobs:
 
       # [DETERMINISTIC] Notify agent failure on issue — covers all error types
       # (CreditsError, rate limit, timeout, etc.) not caught by notify-failure job
+      # Also applies dev error label on issue + PR to signal the failure visually
       - name: Notify agent failure
         if: steps.run-agent.outcome == 'failure'
         env:
-          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
-        run: |
-          gh issue comment ${{ inputs.issue_number }} \
-            --repo ${{ github.repository }} \
-            --body "## Agent Execute failure
-
-          The agent failed (retry_count=${{ inputs.retry_count }}/${{ inputs.retry_max }}).
-
-          **Branch:** \`${{ inputs.branch }}\`
-          **Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          REPO:         ${{ github.repository }}
+          ISSUE_NUMBER: ${{ inputs.issue_number }}
+          BRANCH:       ${{ inputs.branch }}
+          RUN_URL:      ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          RETRY_COUNT:  ${{ inputs.retry_count }}
+          RETRY_MAX:    ${{ inputs.retry_max }}
+          IS_FANOUT_TASK: ${{ inputs.is_fanout_task }}
+        run: node src/notify-agent-failure.mjs
 
       # [DETERMINISTIC] Push branch on success
       - name: Push branch
@@ -235,15 +235,20 @@ jobs:
     if: failure()
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm ci --silent
       - name: Post failure comment on issue
         env:
-          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
-        run: |
-          gh issue comment ${{ inputs.issue_number }} \
-            --repo ${{ github.repository }} \
-            --body "## Agent Execute failure
-
-          The execution workflow failed (retry_count=${{ inputs.retry_count }}/${{ inputs.retry_max }}).
-
-          **Branch:** \`${{ inputs.branch }}\`
-          **Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          REPO:         ${{ github.repository }}
+          ISSUE_NUMBER: ${{ inputs.issue_number }}
+          BRANCH:       ${{ inputs.branch }}
+          RUN_URL:      ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          RETRY_COUNT:  ${{ inputs.retry_count }}
+          RETRY_MAX:    ${{ inputs.retry_max }}
+          IS_FANOUT_TASK: ${{ inputs.is_fanout_task }}
+        run: node src/notify-agent-failure.mjs

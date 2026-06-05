@@ -25,8 +25,26 @@
  */
 
 import { fileURLToPath } from 'url';
+import fs from 'fs';
+import path from 'path';
 import { loadConfig } from './config.mjs';
-import { setupGit, dispatchWorkflow, applyLabel } from './utils.mjs';
+import { TASKS_DIR, MANIFEST_FILE } from './constants.mjs';
+import { setupGit, dispatchWorkflow, applyLabel, removeLabel } from './utils.mjs';
+
+// ---------------------------------------------------------------------------
+// GitHub helpers
+// ---------------------------------------------------------------------------
+
+async function getExistingPR(branch, repo, token) {
+  const owner = repo.split('/')[0];
+  const res = await fetch(
+    `https://api.github.com/repos/${repo}/pulls?head=${owner}:${branch}&state=open`,
+    { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' } }
+  );
+  if (!res.ok) return null;
+  const prs = await res.json();
+  return prs.length > 0 ? prs[0] : null;
+}
 
 // ---------------------------------------------------------------------------
 // Comment parsing
@@ -194,6 +212,19 @@ async function main() {
     model:     config.model,
     retry_max: String(config.retry_max),
   }, repo, ghToken);
+
+  // 7. Label management
+  // Direct run on existing PR — remove ready for review before agent runs
+  // (signals the PR is being modified, prevents premature merge)
+  const manifestPath = path.join(process.cwd(), TASKS_DIR, `issue-${issueNumber}`, MANIFEST_FILE);
+  const isDirectRun = !fs.existsSync(manifestPath);
+  if (isDirectRun && originType === 'issue_comment') {
+    const existingPR = await getExistingPR(featureBranch, repo, ghToken);
+    if (existingPR) {
+      console.log(`[agent-dispatch] Direct run on existing PR #${existingPR.number} — removing ready for review`);
+      await removeLabel('ready for review', existingPR.number, repo, ghToken, 'agent-dispatch');
+    }
+  }
 
   await applyLabel('in progress', issueNumber, repo, ghToken, 'agent-dispatch');
   console.log('[agent-dispatch] Dispatch complete.');

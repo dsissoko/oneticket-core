@@ -142,6 +142,7 @@ export function areDependenciesSatisfied(task, allTasks) {
 const LABEL_COLORS = {
   'in progress':      '0075ca',
   'merge error':      'b60205',
+  'dev error':        'e4e669',
   'blocked':          'd93f0b',
   'ready for review': '0e8a16',
 };
