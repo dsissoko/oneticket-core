@@ -218,7 +218,7 @@ async function main() {
   // (signals the PR is being modified, prevents premature merge)
   const manifestPath = path.join(process.cwd(), TASKS_DIR, `issue-${issueNumber}`, MANIFEST_FILE);
   const isDirectRun = !fs.existsSync(manifestPath);
-  if (isDirectRun && originType === 'issue_comment') {
+  if (isDirectRun && (originType === 'issue_comment' || originType === 'pull_request_comment')) {
     const existingPR = await getExistingPR(featureBranch, repo, ghToken);
     if (existingPR) {
       console.log(`[agent-dispatch] Direct run on existing PR #${existingPR.number} — removing ready for review`);
