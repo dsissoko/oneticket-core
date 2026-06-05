@@ -5,3 +5,4 @@
 2026-06-05 08:02 | F | apps/monjournal/app/src/utils/dateUtils.ts
 2026-06-05 08:04 | E | apps/monjournal/app/src/hooks/useThoughts.ts
 2026-06-05 08:04 | I | apps/monjournal/app/src/components/form-components.tsx
+2026-06-05 08:07 | G | apps/monjournal/app/src/components/ThoughtCard.tsx
