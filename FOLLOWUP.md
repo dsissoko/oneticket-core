@@ -26,6 +26,11 @@ One line per item. All detail lives in `product-spec.md`, `AGENTS.md`, or the co
 - `replaceInFile` réduit à `content.replaceAll(templateName, projectName)` — aucune logique de casse
 - `buildPrompt` pull_request_review_comment : renforcer "DO NOT use other command" si le comportement se reproduit après tests supplémentaires
 
+### Merge conflict barrel files — fix skill + issue-1040
+- `oneticket-manifest-generation` : ajouter règle barrel files (`index.ts`, `App.tsx`, `main.tsx`) — tâche wiring dédiée en dernière position avec `depends_on` sur toutes les tâches productrices
+- Documenter approche alternative : stubs vides en passe 1 (séquentielle) + impl en passe 2 (parallèle)
+- Résoudre conflit `apps/monjournal/app/src/components/index.ts` sur `feature/issue-1040` — relancer tâche D
+
 ## In Progress
 
 ### PR #1039 — MonJournal doc init
