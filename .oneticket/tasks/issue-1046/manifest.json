@@ -1,0 +1,37 @@
+{
+  "issue": 1046,
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-1046-A",
+      "file": "apps/monjournal/app/package.json",
+      "content": "Slice 1 — Data Foundation: Establish core data models and persistence layer. Read apps/monjournal/docs/how/slices/slice-1-data-foundation/slice.md and apps/monjournal/docs/how/architecture.md. Scaffold the MonJournal app from AppShell template (use skill oneticket-scaffold-appshell). Create these modules in apps/monjournal/app/src/:\n\n1. models/types.ts — Export Thought, Tag, FilterState interfaces\n2. utils/colorPalette.ts — Export COLORS array (8-12 WCAG AA compliant hex colors)\n3. models/thoughtModel.ts — Export createThought(), validateThought(), Thought type\n4. models/tagModel.ts — Export deriveTags(), getTagColor(), Tag type\n5. hooks/useLocalStorage.ts — Wrapper for localStorage with JSON serialization\n6. hooks/useThoughts.ts — Custom hook with thoughts state, addThought(), getThoughts(), getTags()\n7. utils/filterLogic.ts — Export applyFilters(), matchesTextSearch(), matchesDateRange(), matchesTags()\n\nImplement all modules per the slice spec. Ensure immutability (no update/delete), deterministic color hashing, and proper localStorage persistence. Run tests to verify all acceptance criteria from the slice pass.",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-1046-B",
+      "file": "apps/monjournal/app/src/components/ThoughtList.tsx",
+      "content": "Slice 2 — Thought List Display: Implement user-facing thought display layer. Read apps/monjournal/docs/how/slices/slice-2-thought-list-display/slice.md. Create these React components in apps/monjournal/app/src/:\n\n1. utils/dateFormat.ts — formatDate(timestamp, format: 'relative'|'absolute'): string\n2. utils/groupByDate.ts — groupThoughtsByDate(thoughts[]): Map<string, Thought[]>\n3. components/TagDisplay.tsx — Render tag chips with colors from getTagColor()\n4. components/ThoughtCard.tsx — Display single thought: title, truncated content, date, tags\n5. components/ThoughtList.tsx — Render array of ThoughtCard, sorted descending by createdAt\n6. components/TimelineGroup.tsx — Day separator + thought cards for one day\n7. components/TimelineView.tsx — Group thoughts by date, render TimelineGroup array\n8. components/ViewModeToggle.tsx — Toggle buttons for list vs timeline view\n\nIntegrate with useThoughts hook from Slice 1. Implement all styling using AppShell theme CSS. Ensure responsive layout and empty state messages. Run tests to verify all 13 acceptance criteria from the slice pass.",
+      "depends_on": ["A"],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-1046-C",
+      "file": "apps/monjournal/app/src/components/FilterPanel.tsx",
+      "content": "Slice 3 — Filtering & Search: Implement filtering and search UI. Read apps/monjournal/docs/how/slices/slice-3-filtering-search/slice.md. Create these React components in apps/monjournal/app/src/:\n\n1. components/DateRangePicker.tsx — Two date input fields with validation\n2. components/TagMultiSelect.tsx — Checkboxes for multi-select tag filtering\n3. components/FilterPanel.tsx — Unified filter UI: text search, date range, tag multi-select, surprise button\n4. Update pages/Home.tsx — Initialize filterState with useState, implement onFilterChange and onSurpriseClick handlers, call applyFilters(thoughts, filterState) from Slice 1, render FilterPanel + ViewModeToggle + ThoughtList/TimelineView\n\nImplement text search (case-insensitive substring match on title+content), date range (inclusive bounds), tag filter (OR logic), and surprise button (random selection from filtered results). Filters compose with AND logic. Manage filter state locally in Home (not persisted). Run tests to verify all 15 acceptance criteria from the slice pass.",
+      "depends_on": ["B"],
+      "status": "pending"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-1046-D",
+      "file": "apps/monjournal/app/src/pages/AddThought.tsx",
+      "content": "Slice 4 — Add Thought Form: Implement form for capturing new thoughts. Read apps/monjournal/docs/how/slices/slice-4-add-thought-form/slice.md. Create these React components in apps/monjournal/app/src/:\n\n1. components/TagInput.tsx — Controlled autocomplete input with suggestion dropdown\n2. components/TagList.tsx — Render selected tags as colored chips with remove option\n3. pages/AddThought.tsx — Form page with title (required), content (required), tag input, tag list, save/cancel buttons\n\nImplement validation (title and content required). Call useThoughts.getTags() for autocomplete suggestions (case-insensitive substring filter). Prevent duplicate tags. On save: call useThoughts.addThought() with new Thought, display success message, navigate to /. Add route /add in App router. Integrate AddThought link in navigation. Use AppShell styling for responsive form layout. Run tests to verify all 15 acceptance criteria from the slice pass.",
+      "depends_on": ["C"],
+      "status": "pending"
+    }
+  ]
+}
