@@ -22,10 +22,8 @@ export function useThoughts(): UseThoughtsReturn {
   const [thoughts, setThoughts] = useState<Thought[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // Load from localStorage on component mount
-  useEffect(() => {
-    if (isInitialized) return;
-
+  // Function to load thoughts from localStorage
+  const loadThoughtsFromStorage = (): Thought[] => {
     try {
       // Check if this is the first visit
       const hasBeenSeeded = getItem(SEED_KEY);
@@ -36,29 +34,36 @@ export function useThoughts(): UseThoughtsReturn {
         const sampleThoughts = generateSampleThoughts();
         setItem(STORAGE_KEY, sampleThoughts);
         setItem(SEED_KEY, true);
-        setThoughts(sampleThoughts);
+        return sampleThoughts;
       } else if (!stored) {
         // Key doesn't exist or couldn't be read
-        setThoughts([]);
+        return [];
       } else if (Array.isArray(stored)) {
         // Validate all thoughts, filter out invalid ones
-        const validThoughts = stored.filter((t: any) => validateThought(t));
-        setThoughts(validThoughts);
+        return stored.filter((t: any) => validateThought(t));
       } else {
         // Corrupted data, reset to empty
         console.warn('Corrupted localStorage data, resetting to empty');
-        setThoughts([]);
+        return [];
       }
     } catch (error) {
       console.error('Failed to load thoughts from localStorage:', error);
-      setThoughts([]);
+      return [];
     }
+  };
 
+  // Load from localStorage on component mount
+  useEffect(() => {
+    if (isInitialized) return;
+
+    const loaded = loadThoughtsFromStorage();
+    setThoughts(loaded);
     setIsInitialized(true);
   }, [isInitialized]);
 
   /**
    * Adds a new thought and persists to localStorage.
+   * Reloads from localStorage to sync with other instances of the hook.
    */
   const addThought = (thought: Thought): void => {
     setThoughts((prev) => {

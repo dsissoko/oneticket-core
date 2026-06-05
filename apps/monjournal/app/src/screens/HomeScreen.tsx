@@ -15,7 +15,7 @@ import { applyFilters, FilterState } from '@/utils/filterLogic';
  * All functionality on a single page with no separate routes needed.
  */
 export function HomeScreen(): React.ReactElement {
-  const { thoughts } = useThoughts();
+  const { thoughts, addThought, getTags } = useThoughts();
   const [filters, setFilters] = useState<FilterState>({
     textQuery: '',
     startDate: null,
@@ -64,10 +64,10 @@ export function HomeScreen(): React.ReactElement {
 
         {/* Inline Add Thought Form */}
         <div className="mb-8">
-          <InlineAddThoughtForm onThoughtAdded={() => {
-            // Refresh tags when a new thought is added
-            // This causes the component to re-render with updated data
-          }} />
+          <InlineAddThoughtForm 
+            addThought={addThought}
+            getAvailableTags={() => getTags().map((tag) => tag.name)}
+          />
         </div>
 
         {/* Control Zone (View Mode + Surprise) */}

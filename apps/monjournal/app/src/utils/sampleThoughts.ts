@@ -154,13 +154,13 @@ const sampleTags = [
 
 /**
  * Generate sample thoughts for initial seeding.
- * Creates around 100 thoughts spread from 2024 to 2026.
+ * Creates around 100 thoughts spread from 2017-02-24 to 2026-06-05.
  * Used only when localStorage is empty on first visit.
  */
 export function generateSampleThoughts(): Thought[] {
   const thoughts: Thought[] = [];
-  const startDate = new Date('2024-01-01').getTime();
-  const endDate = new Date('2026-12-31').getTime();
+  const startDate = new Date('2017-02-24').getTime();
+  const endDate = new Date('2026-06-05').getTime();
   const dateRange = endDate - startDate;
 
   // Generate 100 sample thoughts

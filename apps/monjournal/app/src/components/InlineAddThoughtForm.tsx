@@ -2,8 +2,8 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { ChevronDown, ChevronUp, Save, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Thought, createThought } from '@/models/thoughtModel';
 import { useThoughts } from '@/hooks/useThoughts';
-import { createThought } from '@/models/thoughtModel';
 import { TagInput } from '@/components/TagInput';
 import { TagList } from '@/components/TagList';
 
@@ -15,10 +15,19 @@ import { TagList } from '@/components/TagList';
  */
 export function InlineAddThoughtForm({
   onThoughtAdded,
+  addThought: addThoughtProp,
+  getAvailableTags: getAvailableTagsProp,
 }: {
   onThoughtAdded?: () => void;
+  addThought?: (thought: Thought) => void;
+  getAvailableTags?: () => string[];
 }): React.ReactElement {
-  const { addThought, getTags } = useThoughts();
+  // Fall back to hook if props aren't provided
+  const hookData = useThoughts();
+  const addThought = addThoughtProp || hookData.addThought;
+  const getAvailableTagsFromHook = () => hookData.getTags().map((tag) => tag.name);
+  const getAvailableTags = getAvailableTagsProp || getAvailableTagsFromHook;
+
   const [isExpanded, setIsExpanded] = useState(false);
 
   // Form state
@@ -33,8 +42,8 @@ export function InlineAddThoughtForm({
 
   // Get available tags for autocomplete
   const availableTags = useMemo(() => {
-    return getTags().map((tag) => tag.name);
-  }, [getTags]);
+    return getAvailableTags();
+  }, [getAvailableTags]);
 
   // Validation function
   const validateForm = useCallback(() => {
