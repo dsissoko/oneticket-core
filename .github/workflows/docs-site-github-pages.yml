@@ -11,12 +11,8 @@ on:
       - 'apps/**/docs/**'
       - 'apps/**/app/**'
   pull_request:
-    types: [opened, reopened, synchronize]
+    types: [labeled]
     branches: [main]
-    paths:
-      - '.oneticket/docs/**'
-      - 'apps/**/docs/**'
-      - 'apps/**/app/**'
 
 permissions:
   contents: write
@@ -26,6 +22,7 @@ jobs:
 
   resolve-context:
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.label.name == 'ready for review')
     outputs:
       doc_source:          ${{ steps.ctx.outputs.doc_source }}
       slug:                ${{ steps.ctx.outputs.slug }}
