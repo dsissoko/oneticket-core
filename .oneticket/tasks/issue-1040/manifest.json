@@ -27,7 +27,7 @@
       "file": "apps/monjournal/app/src/utils/dateFormat.ts",
       "content": "Read apps/monjournal/docs/how/slices/slice-2-thought-list-display/slice.md section 'Utilities - dateFormat.ts'. Implement date formatting utilities:\n\n1. Create src/utils/dateFormat.ts:\n   - Function formatDate(timestamp: number, format: 'relative' | 'absolute'): string\n     - Relative format: \"2 hours ago\", \"yesterday\", \"3 days ago\", \"1 week ago\"\n       - Use humanized relative time\n       - Implementation: calculate difference in ms, convert to human-readable units\n       - Examples: recent times (< 1 min) → \"just now\", (< 1 hour) → \"X minutes ago\", same day → \"today\", yesterday → \"yesterday\", older → \"X days ago\"\n     - Absolute format: \"June 4, 2026\" locale-aware (use Intl.DateTimeFormat or similar)\n       - Output: Month Day, Year (ISO-like but localized)\n       - Consistent formatting across browsers\n\n2. Create src/utils/groupByDate.ts:\n   - Function groupThoughtsByDate(thoughts: Thought[]): Map<string, Thought[]>\n     - Group thoughts by creation date (normalize to midnight, ignore time)\n     - Return Map of [dateKey] → Thought[]\n     - dateKey format: \"YYYY-MM-DD\" for stable grouping\n     - Within each group, sort by createdAt descending (newest first within day)\n     - Handle edge cases: empty array, single thought, same-day thoughts\n\n3. Test both utilities:\n   - formatDate: recent, today, yesterday, week ago, month ago\n   - groupByDate: empty array, single thought, multiple thoughts same day, multiple days\n   - Verify date keys are stable\n\nNo dependencies on other slices. Pure utility functions.",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "dev"
     },
     {
