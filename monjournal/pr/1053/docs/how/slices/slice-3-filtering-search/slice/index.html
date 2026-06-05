@@ -1,0 +1,418 @@
+<!DOCTYPE html><html lang="en" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-bguv2lll"> <head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Slice 3 — Filtering & Search | Monjournal</title><link rel="canonical" href="https://dsissoko.github.io/oneticket-core/monjournal/pr/1053/docs/how/slices/slice-3-filtering-search/slice/"/><link rel="sitemap" href="/oneticket-core/monjournal/pr/1053/docs/sitemap-index.xml"/><link rel="shortcut icon" href="/oneticket-core/monjournal/pr/1053/docs/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v5.18.1"/><meta name="generator" content="Starlight v0.34.8"/><meta property="og:title" content="Slice 3 — Filtering &#38; Search"/><meta property="og:type" content="article"/><meta property="og:url" content="https://dsissoko.github.io/oneticket-core/monjournal/pr/1053/docs/how/slices/slice-3-filtering-search/slice/"/><meta property="og:locale" content="en"/><meta property="og:description" content="Personal thought journal for capturing and filtering daily thoughts"/><meta property="og:site_name" content="Monjournal"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="Personal thought journal for capturing and filtering daily thoughts"/><script>
+	window.StarlightThemeProvider = (() => {
+		const storedTheme =
+			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
+		const theme =
+			storedTheme ||
+			(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+		return {
+			updatePickers(theme = storedTheme || 'auto') {
+				document.querySelectorAll('starlight-theme-select').forEach((picker) => {
+					const select = picker.querySelector('select');
+					if (select) select.value = theme;
+					/** @type {HTMLTemplateElement | null} */
+					const tmpl = document.querySelector(`#theme-icons`);
+					const newIcon = tmpl && tmpl.content.querySelector('.' + theme);
+					if (newIcon) {
+						const oldIcon = picker.querySelector('svg.label-icon');
+						if (oldIcon) {
+							oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+						}
+					}
+				});
+			},
+		};
+	})();
+</script><template id="theme-icons"><svg aria-hidden="true" class="light astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg><svg aria-hidden="true" class="dark astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg><svg aria-hidden="true" class="auto astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg></template><link rel="stylesheet" href="/oneticket-core/monjournal/pr/1053/docs/_astro/print.DNXP8c50.css" media="print"><link rel="stylesheet" href="/oneticket-core/monjournal/pr/1053/docs/_astro/index.DfIxps_E.css"><script type="module" src="/oneticket-core/monjournal/pr/1053/docs/_astro/page.B1D-nYk3.js"></script></head> <body class="astro-bguv2lll"> <a href="#_top" class="astro-7q3lir66">Skip to content</a>  <div class="page sl-flex astro-vrdttmbt"> <header class="header astro-vrdttmbt"><div class="header astro-kmkmnagf"> <div class="title-wrapper sl-flex astro-kmkmnagf"> <a href="/oneticket-core/monjournal/pr/1053/docs/" class="site-title sl-flex astro-m46x6ez3">  <span class="astro-m46x6ez3" translate="no"> Monjournal </span> </a>  </div> <div class="sl-flex print:hidden astro-kmkmnagf"> <site-search class="astro-kmkmnagf astro-v37mnknz" data-translations="{&#34;placeholder&#34;:&#34;Search&#34;}"> <button data-open-modal disabled aria-label="Search" aria-keyshortcuts="Control+K" class="astro-v37mnknz"> <svg aria-hidden="true" class="astro-v37mnknz astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg> <span class="sl-hidden md:sl-block astro-v37mnknz" aria-hidden="true">Search</span> <kbd class="sl-hidden md:sl-flex astro-v37mnknz" style="display: none;"> <kbd class="astro-v37mnknz">Ctrl</kbd><kbd class="astro-v37mnknz">K</kbd> </kbd> </button> <dialog style="padding:0" aria-label="Search" class="astro-v37mnknz"> <div class="dialog-frame sl-flex astro-v37mnknz">  <button data-close-modal class="sl-flex md:sl-hidden astro-v37mnknz"> Cancel </button> <div class="search-container astro-v37mnknz"> <div id="starlight__search" class="astro-v37mnknz"></div> </div> </div> </dialog> </site-search>  <script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script> <script type="module" src="/oneticket-core/monjournal/pr/1053/docs/_astro/Search.astro_astro_type_script_index_0_lang.BfcHq00L.js"></script>   </div> <div class="sl-hidden md:sl-flex print:hidden right-group astro-kmkmnagf"> <div class="sl-flex social-icons astro-kmkmnagf"> <a href="https://github.com/dsissoko/oneticket-core" rel="me" class="sl-flex astro-wy4te6ga"><span class="sr-only astro-wy4te6ga">GitHub</span><svg aria-hidden="true" class="astro-wy4te6ga astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a> </div> <starlight-theme-select>  <label style="--sl-select-width: 6.25em" class="astro-4yphtoen"> <span class="sr-only astro-4yphtoen">Select theme</span> <svg aria-hidden="true" class="icon label-icon astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg> <select value="auto" autocomplete="off" class="astro-4yphtoen"> <option value="dark" class="astro-4yphtoen">Dark</option><option value="light" class="astro-4yphtoen">Light</option><option value="auto" selected class="astro-4yphtoen">Auto</option> </select> <svg aria-hidden="true" class="icon caret astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg> </label>  </starlight-theme-select>  <script>
+	StarlightThemeProvider.updatePickers();
+</script> <script type="module">const r="starlight-theme",o=e=>e==="auto"||e==="dark"||e==="light"?e:"auto",c=()=>o(typeof localStorage<"u"&&localStorage.getItem(r));function n(e){typeof localStorage<"u"&&localStorage.setItem(r,e==="light"||e==="dark"?e:"")}const l=()=>matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";function t(e){StarlightThemeProvider.updatePickers(e),document.documentElement.dataset.theme=e==="auto"?l():e,n(e)}matchMedia("(prefers-color-scheme: light)").addEventListener("change",()=>{c()==="auto"&&t("auto")});class s extends HTMLElement{constructor(){super(),t(c()),this.querySelector("select")?.addEventListener("change",a=>{a.currentTarget instanceof HTMLSelectElement&&t(o(a.currentTarget.value))})}}customElements.define("starlight-theme-select",s);</script> <script type="module">class s extends HTMLElement{constructor(){super();const e=this.querySelector("select");e&&(e.addEventListener("change",t=>{t.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=t.currentTarget.value)}),window.addEventListener("pageshow",t=>{if(!t.persisted)return;const n=e.querySelector("option[selected]")?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}}customElements.define("starlight-lang-select",s);</script> </div> </div> </header> <nav class="sidebar print:hidden astro-vrdttmbt" aria-label="Main"> <starlight-menu-button class="print:hidden astro-jif73yzw"> <button aria-expanded="false" aria-label="Menu" aria-controls="starlight__sidebar" class="sl-flex md:sl-hidden astro-jif73yzw"> <svg aria-hidden="true" class="open-menu astro-jif73yzw astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg> <svg aria-hidden="true" class="close-menu astro-jif73yzw astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"/></svg> </button> </starlight-menu-button> <script type="module">class s extends HTMLElement{constructor(){super(),this.btn=this.querySelector("button"),this.btn.addEventListener("click",()=>this.toggleExpanded());const t=this.closest("nav");t&&t.addEventListener("keyup",e=>this.closeOnEscape(e))}setExpanded(t){this.setAttribute("aria-expanded",String(t)),document.body.toggleAttribute("data-mobile-menu-expanded",t)}toggleExpanded(){this.setExpanded(this.getAttribute("aria-expanded")!=="true")}closeOnEscape(t){t.code==="Escape"&&(this.setExpanded(!1),this.btn.focus())}}customElements.define("starlight-menu-button",s);</script>   <div id="starlight__sidebar" class="sidebar-pane astro-vrdttmbt"> <div class="sidebar-content sl-flex astro-vrdttmbt"> <sl-sidebar-state-persist data-hash="10v0e49" class="astro-kku4brbg"> <script aria-hidden="true">
+		(() => {
+			try {
+				if (!matchMedia('(min-width: 50em)').matches) return;
+				/** @type {HTMLElement | null} */
+				const target = document.querySelector('sl-sidebar-state-persist');
+				const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
+				if (!target || !state || target.dataset.hash !== state.hash) return;
+				window._starlightScrollRestore = state.scroll;
+				customElements.define(
+					'sl-sidebar-restore',
+					class SidebarRestore extends HTMLElement {
+						connectedCallback() {
+							try {
+								const idx = parseInt(this.dataset.index || '');
+								const details = this.closest('details');
+								if (details && typeof state.open[idx] === 'boolean') details.open = state.open[idx];
+							} catch {}
+						}
+					}
+				);
+			} catch {}
+		})();
+	</script>  <ul class="top-level astro-3ii7xxms"> <li class="astro-3ii7xxms"> <details class="astro-3ii7xxms"> <sl-sidebar-restore data-index="0"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">What</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/oneticket-core/monjournal/pr/1053/docs/what/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">What</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/monjournal/pr/1053/docs/what/product-spec/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">MonJournal Product Specification</span>  </a> </li><li class="astro-3ii7xxms"> <details class="astro-3ii7xxms"> <sl-sidebar-restore data-index="1"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">epics</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/oneticket-core/monjournal/pr/1053/docs/what/epics/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Epics</span>  </a> </li><li class="astro-3ii7xxms"> <details class="astro-3ii7xxms"> <sl-sidebar-restore data-index="2"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">epic-0-mvp</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/oneticket-core/monjournal/pr/1053/docs/what/epics/epic-0-mvp/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Epic 0 Mvp</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/monjournal/pr/1053/docs/what/epics/epic-0-mvp/epic/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Epic 0 — MonJournal MVP</span>  </a> </li><li class="astro-3ii7xxms"> <details class="astro-3ii7xxms"> <sl-sidebar-restore data-index="3"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">user-stories</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/oneticket-core/monjournal/pr/1053/docs/what/epics/epic-0-mvp/user-stories/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">User Stories</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/monjournal/pr/1053/docs/what/epics/epic-0-mvp/user-stories/us-001-thought-list/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">US-001 — Thought List</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/monjournal/pr/1053/docs/what/epics/epic-0-mvp/user-stories/us-002-multi-filter/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">US-002 — Multi-Filter</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/monjournal/pr/1053/docs/what/epics/epic-0-mvp/user-stories/us-003-timeline-view/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">US-003 — Timeline View</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/monjournal/pr/1053/docs/what/epics/epic-0-mvp/user-stories/us-004-add-thought/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">US-004 — Add Thought</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/monjournal/pr/1053/docs/what/epics/epic-0-mvp/user-stories/us-005-tag-colors/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">US-005 — Tag Colors</span>  </a> </li> </ul>  </details> </li> </ul>  </details> </li> </ul>  </details> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="4"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">How</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/oneticket-core/monjournal/pr/1053/docs/how/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">How</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/monjournal/pr/1053/docs/how/architecture/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">MonJournal Technical Architecture</span>  </a> </li><li class="astro-3ii7xxms"> <details class="astro-3ii7xxms"> <sl-sidebar-restore data-index="5"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">c4</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/oneticket-core/monjournal/pr/1053/docs/how/c4/system-context/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">MonJournal System Context</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/monjournal/pr/1053/docs/how/c4/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">C4</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/monjournal/pr/1053/docs/how/c4/containers/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">MonJournal Containers</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="6"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">slices</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/oneticket-core/monjournal/pr/1053/docs/how/slices/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Slices</span>  </a> </li><li class="astro-3ii7xxms"> <details class="astro-3ii7xxms"> <sl-sidebar-restore data-index="7"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">slice-1-data-foundation</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/oneticket-core/monjournal/pr/1053/docs/how/slices/slice-1-data-foundation/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Slice 1 Data Foundation</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/monjournal/pr/1053/docs/how/slices/slice-1-data-foundation/slice/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Slice 1 — Data Foundation</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details class="astro-3ii7xxms"> <sl-sidebar-restore data-index="8"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">slice-2-thought-list-display</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/oneticket-core/monjournal/pr/1053/docs/how/slices/slice-2-thought-list-display/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Slice 2 Thought List Display</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/monjournal/pr/1053/docs/how/slices/slice-2-thought-list-display/slice/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Slice 2 — Thought List Display</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <sl-sidebar-restore data-index="9"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">slice-3-filtering-search</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/oneticket-core/monjournal/pr/1053/docs/how/slices/slice-3-filtering-search/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Slice 3 Filtering Search</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/monjournal/pr/1053/docs/how/slices/slice-3-filtering-search/slice/" aria-current="page" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Slice 3 — Filtering &amp; Search</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details class="astro-3ii7xxms"> <sl-sidebar-restore data-index="10"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">slice-4-add-thought-form</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/oneticket-core/monjournal/pr/1053/docs/how/slices/slice-4-add-thought-form/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Slice 4 Add Thought Form</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/oneticket-core/monjournal/pr/1053/docs/how/slices/slice-4-add-thought-form/slice/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Slice 4 — Add Thought Form</span>  </a> </li> </ul>  </details> </li> </ul>  </details> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details class="astro-3ii7xxms"> <sl-sidebar-restore data-index="11"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Ship</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/oneticket-core/monjournal/pr/1053/docs/ship/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Ship</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details class="astro-3ii7xxms"> <sl-sidebar-restore data-index="12"></sl-sidebar-restore> <summary class="astro-3ii7xxms"> <div class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Run</span>  </div> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/oneticket-core/monjournal/pr/1053/docs/run/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Run</span>  </a> </li> </ul>  </details> </li> </ul>   <script aria-hidden="true">
+		(() => {
+			const scroller = document.getElementById('starlight__sidebar');
+			if (!window._starlightScrollRestore || !scroller) return;
+			scroller.scrollTop = window._starlightScrollRestore;
+			delete window._starlightScrollRestore;
+		})();
+	</script> </sl-sidebar-state-persist>  <div class="md:sl-hidden"> <div class="mobile-preferences sl-flex astro-wu23bvmt"> <div class="social-icons astro-wu23bvmt"> <a href="https://github.com/dsissoko/oneticket-core" rel="me" class="sl-flex astro-wy4te6ga"><span class="sr-only astro-wy4te6ga">GitHub</span><svg aria-hidden="true" class="astro-wy4te6ga astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a> </div> <starlight-theme-select>  <label style="--sl-select-width: 6.25em" class="astro-4yphtoen"> <span class="sr-only astro-4yphtoen">Select theme</span> <svg aria-hidden="true" class="icon label-icon astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg> <select value="auto" autocomplete="off" class="astro-4yphtoen"> <option value="dark" class="astro-4yphtoen">Dark</option><option value="light" class="astro-4yphtoen">Light</option><option value="auto" selected class="astro-4yphtoen">Auto</option> </select> <svg aria-hidden="true" class="icon caret astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg> </label>  </starlight-theme-select>  <script>
+	StarlightThemeProvider.updatePickers();
+</script>   </div>  </div> </div> </div> </nav> <div class="main-frame astro-vrdttmbt">  <script type="module">const a=document.getElementById("starlight__sidebar"),n=a?.querySelector("sl-sidebar-state-persist"),o="sl-sidebar-state",i=()=>{let t=[];const e=n?.dataset.hash||"";try{const s=sessionStorage.getItem(o),r=JSON.parse(s||"{}");Array.isArray(r.open)&&r.hash===e&&(t=r.open)}catch{}return{hash:e,open:t,scroll:a?.scrollTop||0}},c=t=>{try{sessionStorage.setItem(o,JSON.stringify(t))}catch{}},d=()=>c(i()),l=(t,e)=>{const s=i();s.open[e]=t,c(s)};n?.addEventListener("click",t=>{if(!(t.target instanceof Element))return;const e=t.target.closest("summary")?.closest("details");if(!e)return;const s=e.querySelector("sl-sidebar-restore"),r=parseInt(s?.dataset.index||"");isNaN(r)||l(!e.open,r)});addEventListener("visibilitychange",()=>{document.visibilityState==="hidden"&&d()});addEventListener("pageHide",d);</script> <div class="lg:sl-flex astro-67yu43on"> <aside class="right-sidebar-container print:hidden astro-67yu43on"> <div class="right-sidebar astro-67yu43on"> <script type="module" src="/oneticket-core/monjournal/pr/1053/docs/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.C181hMzK.js"></script><script type="module" src="/oneticket-core/monjournal/pr/1053/docs/_astro/TableOfContents.astro_astro_type_script_index_0_lang.CKWWgpjV.js"></script><div class="lg:sl-hidden astro-pb3aqygn"><mobile-starlight-toc data-min-h="2" data-max-h="3" class="astro-doynk5tl"><nav aria-labelledby="starlight__on-this-page--mobile" class="astro-doynk5tl"><details id="starlight__mobile-toc" class="astro-doynk5tl"><summary id="starlight__on-this-page--mobile" class="sl-flex astro-doynk5tl"><div class="toggle sl-flex astro-doynk5tl">On this page<svg aria-hidden="true" class="caret astro-doynk5tl astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></div><span class="display-current astro-doynk5tl"></span></summary><div class="dropdown astro-doynk5tl"><ul class="isMobile astro-g2bywc46" style="--depth: 0;"> <li class="astro-g2bywc46" style="--depth: 0;"> <a href="#_top" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Overview</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#overview" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Overview</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#technical-scope" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Technical Scope</span> </a> <ul class="isMobile astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#components" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Components</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#filter-state-management" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Filter State Management</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#filter-application-logic" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Filter Application Logic</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#integration-with-home-component" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Integration with Home Component</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#empty-state" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Empty State</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#implementation-steps" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Implementation Steps</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#acceptance-criteria" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Acceptance Criteria</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#testing-strategy" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Testing Strategy</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#dependencies" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Dependencies</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#related-epics" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Related Epics</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#related-user-stories" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Related User Stories</span> </a>  </li> </ul> </div></details></nav></mobile-starlight-toc></div><div class="right-sidebar-panel sl-hidden lg:sl-block astro-pb3aqygn"><div class="sl-container astro-pb3aqygn"><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">On this page</h2><ul class="astro-g2bywc46" style="--depth: 0;"> <li class="astro-g2bywc46" style="--depth: 0;"> <a href="#_top" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Overview</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#overview" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Overview</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#technical-scope" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Technical Scope</span> </a> <ul class="astro-g2bywc46" style="--depth: 1;"> <li class="astro-g2bywc46" style="--depth: 1;"> <a href="#components" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Components</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#filter-state-management" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Filter State Management</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#filter-application-logic" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Filter Application Logic</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#integration-with-home-component" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Integration with Home Component</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 1;"> <a href="#empty-state" class="astro-g2bywc46" style="--depth: 1;"> <span class="astro-g2bywc46" style="--depth: 1;">Empty State</span> </a>  </li> </ul>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#implementation-steps" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Implementation Steps</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#acceptance-criteria" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Acceptance Criteria</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#testing-strategy" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Testing Strategy</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#dependencies" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Dependencies</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#related-epics" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Related Epics</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#related-user-stories" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Related User Stories</span> </a>  </li> </ul> </nav></starlight-toc></div></div> </div> </aside> <div class="main-pane astro-67yu43on">  <main data-pagefind-body class="astro-bguv2lll" lang="en" dir="ltr">    <div class="content-panel astro-7nkwcw3z"> <div class="sl-container astro-7nkwcw3z"> <h1 id="_top" class="astro-j6tvhyss">Slice 3 — Filtering &amp; Search</h1>  </div> </div>  <div class="content-panel astro-7nkwcw3z"> <div class="sl-container astro-7nkwcw3z"> <div class="sl-markdown-content"> <div class="sl-heading-wrapper level-h2"><h2 id="overview">Overview</h2><a class="sl-anchor-link" href="#overview"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Overview”</span></a></div>
+<p>This slice implements the filtering and search capability for MonJournal. It enables users to refine their view of thoughts by applying multiple filter criteria simultaneously: text search (title + content), date range selection, multi-select tag filtering, and a surprise filter for random thought discovery.</p>
+<p>Slice 3 depends on <strong>Slice 1 (Data Foundation)</strong> which provides the data models, hooks, and filter logic, and <strong>Slice 2 (Thought List Display)</strong> which provides the display components. This slice builds the UI layer for filtering and orchestrates how filters are applied to both list and timeline views.</p>
+<p>The slice implements:</p>
+<ol>
+<li><strong>FilterPanel component</strong> — unified filter UI with text search, date range picker, tag multi-select, and surprise button</li>
+<li><strong>Filter state management</strong> — local component state (useState) in the Home container to manage filter selections</li>
+<li><strong>Filter application logic</strong> — applies filters to thought list and timeline views in real-time</li>
+<li><strong>Text search</strong> — case-insensitive substring matching on title and content</li>
+<li><strong>Date range filtering</strong> — inclusive filtering based on thought <code dir="auto">createdAt</code> timestamp</li>
+<li><strong>Tag filtering</strong> — displays all available tags; shows thoughts matching any selected tag</li>
+<li><strong>Surprise filter</strong> — randomly selects one thought from current filtered results and highlights it</li>
+</ol>
+<p>This slice is <strong>user-facing</strong> and directly implements the exploration and discovery experience of MonJournal.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="technical-scope">Technical Scope</h2><a class="sl-anchor-link" href="#technical-scope"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Technical Scope”</span></a></div>
+<div class="sl-heading-wrapper level-h3"><h3 id="components">Components</h3><a class="sl-anchor-link" href="#components"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Components”</span></a></div>
+<div class="sl-heading-wrapper level-h4"><h4 id="1-filterpanel">1. FilterPanel</h4><a class="sl-anchor-link" href="#1-filterpanel"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “1. FilterPanel”</span></a></div>
+<ul>
+<li><strong>Purpose</strong>: Unified UI container for all filtering controls</li>
+<li><strong>Props</strong>:
+<ul>
+<li><code dir="auto">existingTags: Tag[]</code> — array of all available tags (derived from Slice 1)</li>
+<li><code dir="auto">onFilterChange: (filters: FilterState) => void</code> — callback when filter state changes</li>
+<li><code dir="auto">onSurpriseClick: () => void</code> — callback when user clicks surprise button</li>
+</ul>
+</li>
+<li><strong>Rendering</strong>:
+<ul>
+<li><strong>Text search input</strong>: Single text input field with placeholder “Search title and content”
+<ul>
+<li>Real-time update on input change</li>
+</ul>
+</li>
+<li><strong>Date range picker</strong>: Two date input fields (start and end dates)
+<ul>
+<li>Allows selection of date range (inclusive bounds)</li>
+<li>Both fields optional</li>
+</ul>
+</li>
+<li><strong>Tag multi-select</strong>: Checkbox list or dropdown with selected badges
+<ul>
+<li>Shows all available tags from <code dir="auto">existingTags</code></li>
+<li>Multiple selection allowed</li>
+<li>Visual indication of selected tags</li>
+</ul>
+</li>
+<li><strong>Surprise button</strong>: Button to trigger random thought selection
+<ul>
+<li>Label: “Surprise!” or similar</li>
+<li>Disabled if no filtered results exist</li>
+</ul>
+</li>
+<li><strong>Optional clear/reset button</strong>: Clears all filters to default state</li>
+</ul>
+</li>
+<li><strong>Local state</strong>: Manages <code dir="auto">text</code>, <code dir="auto">dateStart</code>, <code dir="auto">dateEnd</code>, <code dir="auto">selectedTags</code> internally</li>
+<li><strong>Styling</strong>: Responsive layout (vertical stack on mobile, horizontal on desktop if space permits)</li>
+</ul>
+<div class="sl-heading-wrapper level-h4"><h4 id="2-daterangepicker-sub-component-of-filterpanel">2. DateRangePicker (sub-component of FilterPanel)</h4><a class="sl-anchor-link" href="#2-daterangepicker-sub-component-of-filterpanel"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “2. DateRangePicker (sub-component of FilterPanel)”</span></a></div>
+<ul>
+<li><strong>Purpose</strong>: Encapsulate date range selection logic</li>
+<li><strong>Props</strong>:
+<ul>
+<li><code dir="auto">dateStart: number | null</code> — start date timestamp or null</li>
+<li><code dir="auto">dateEnd: number | null</code> — end date timestamp or null</li>
+<li><code dir="auto">onChange: (start: number | null, end: number | null) => void</code></li>
+</ul>
+</li>
+<li><strong>Rendering</strong>:
+<ul>
+<li>Two HTML <code dir="auto">&#x3C;input type="date"></code> fields</li>
+<li>Labels: “From:” and “To:”</li>
+<li>Allow clearing dates (empty field = null)</li>
+</ul>
+</li>
+<li><strong>Validation</strong>: Ensure start date ≤ end date if both are set; optionally warn user</li>
+</ul>
+<div class="sl-heading-wrapper level-h4"><h4 id="3-tagmultiselect-sub-component-of-filterpanel">3. TagMultiSelect (sub-component of FilterPanel)</h4><a class="sl-anchor-link" href="#3-tagmultiselect-sub-component-of-filterpanel"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “3. TagMultiSelect (sub-component of FilterPanel)”</span></a></div>
+<ul>
+<li><strong>Purpose</strong>: Encapsulate tag selection UI</li>
+<li><strong>Props</strong>:
+<ul>
+<li><code dir="auto">availableTags: Tag[]</code> — all available tags</li>
+<li><code dir="auto">selectedTags: string[]</code> — currently selected tag names</li>
+<li><code dir="auto">onChange: (selectedTags: string[]) => void</code></li>
+</ul>
+</li>
+<li><strong>Rendering</strong>:
+<ul>
+<li>List of checkboxes or toggle buttons, one per tag</li>
+<li>Each tag shows colored chip or indicator (from Slice 1 <code dir="auto">getTagColor()</code>)</li>
+<li>Selected state clearly indicated (checked, highlighted)</li>
+<li>Layout: flex wrap or grid to handle many tags</li>
+</ul>
+</li>
+<li><strong>Interaction</strong>: Click to toggle selection</li>
+</ul>
+<div class="sl-heading-wrapper level-h3"><h3 id="filter-state-management">Filter State Management</h3><a class="sl-anchor-link" href="#filter-state-management"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Filter State Management”</span></a></div>
+<div class="sl-heading-wrapper level-h4"><h4 id="filterstate-type-from-slice-1-reused-here">FilterState Type (from Slice 1, reused here)</h4><a class="sl-anchor-link" href="#filterstate-type-from-slice-1-reused-here"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “FilterState Type (from Slice 1, reused here)”</span></a></div>
+<div class="expressive-code"><link rel="stylesheet" href="/oneticket-core/monjournal/pr/1053/docs/_astro/ec.v4551.css"><script type="module" src="/oneticket-core/monjournal/pr/1053/docs/_astro/ec.0vx5m.js"></script><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="typescript"><code><div class="ec-line"><div class="code"><span style="--0:#C792EA;--1:#8844AE">interface</span><span style="--0:#D6DEEB;--1:#403F53"> FilterState {</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#D6DEEB;--1:#403F53">  </span></span><span style="--0:#D6DEEB;--1:#403F53">text</span><span style="--0:#7FDBCA;--1:#096E72">?:</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C5E478;--1:#3B61B0">string</span><span style="--0:#D6DEEB;--1:#403F53">;                    </span><span style="--0:#919F9F;--1:#5D6376">// text search query (case-insensitive)</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#D6DEEB;--1:#403F53">  </span></span><span style="--0:#D6DEEB;--1:#403F53">dateStart</span><span style="--0:#7FDBCA;--1:#096E72">?:</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C5E478;--1:#3B61B0">number</span><span style="--0:#D6DEEB;--1:#403F53">;               </span><span style="--0:#919F9F;--1:#5D6376">// timestamp in ms, or null</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#D6DEEB;--1:#403F53">  </span></span><span style="--0:#D6DEEB;--1:#403F53">dateEnd</span><span style="--0:#7FDBCA;--1:#096E72">?:</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C5E478;--1:#3B61B0">number</span><span style="--0:#D6DEEB;--1:#403F53">;                 </span><span style="--0:#919F9F;--1:#5D6376">// timestamp in ms, or null</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#D6DEEB;--1:#403F53">  </span></span><span style="--0:#D6DEEB;--1:#403F53">selectedTags</span><span style="--0:#7FDBCA;--1:#096E72">?:</span><span style="--0:#D6DEEB;--1:#403F53"> </span><span style="--0:#C5E478;--1:#3B61B0">string</span><span style="--0:#D6DEEB;--1:#403F53">[];          </span><span style="--0:#919F9F;--1:#5D6376">// array of selected tag names (empty = no filter)</span></div></div><div class="ec-line"><div class="code"><span style="--0:#D6DEEB;--1:#403F53">}</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="interface FilterState {  text?: string;                    // text search query (case-insensitive)  dateStart?: number;               // timestamp in ms, or null  dateEnd?: number;                 // timestamp in ms, or null  selectedTags?: string[];          // array of selected tag names (empty = no filter)}"><div></div></button></div></figure></div>
+<div class="sl-heading-wrapper level-h4"><h4 id="filter-state-lifecycle">Filter State Lifecycle</h4><a class="sl-anchor-link" href="#filter-state-lifecycle"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Filter State Lifecycle”</span></a></div>
+<ul>
+<li><strong>Initialization</strong>: <code dir="auto">Home</code> component initializes filter state with <code dir="auto">useState({})</code>
+<ul>
+<li>All filters are optional and default to “no filter applied”</li>
+</ul>
+</li>
+<li><strong>Updates</strong>: <code dir="auto">FilterPanel</code> calls <code dir="auto">onFilterChange(newFilterState)</code> on each user interaction</li>
+<li><strong>Application</strong>: <code dir="auto">Home</code> receives updated state and calls <code dir="auto">filterThoughts(filterState)</code> from Slice 1</li>
+<li><strong>Rendering</strong>: Filtered thoughts passed to <code dir="auto">ThoughtList</code> or <code dir="auto">TimelineView</code> (Slice 2)</li>
+<li><strong>Persistence</strong>: Filters are <strong>NOT</strong> persisted across page reloads (ephemeral session state)</li>
+</ul>
+<div class="sl-heading-wrapper level-h3"><h3 id="filter-application-logic">Filter Application Logic</h3><a class="sl-anchor-link" href="#filter-application-logic"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Filter Application Logic”</span></a></div>
+<div class="sl-heading-wrapper level-h4"><h4 id="text-search-matchestextsearchthought-query-string---boolean">Text Search: <code dir="auto">matchesTextSearch(thought, query: string) -> boolean</code></h4><a class="sl-anchor-link" href="#text-search-matchestextsearchthought-query-string---boolean"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Text Search: matchesTextSearch(thought, query: string) -> boolean”</span></a></div>
+<ul>
+<li><strong>Implementation</strong>: from Slice 1’s <code dir="auto">filterLogic.ts</code></li>
+<li><strong>Behavior</strong>:
+<ul>
+<li>Case-insensitive substring matching</li>
+<li>Matches against both <code dir="auto">thought.title</code> and <code dir="auto">thought.content</code></li>
+<li>Empty query matches all thoughts</li>
+<li>Example: query “deadline” matches title=“Work deadline” or content=“…approaching deadline…”</li>
+</ul>
+</li>
+</ul>
+<div class="sl-heading-wrapper level-h4"><h4 id="date-range-filtering-matchesdaterangethought-start-end---boolean">Date Range Filtering: <code dir="auto">matchesDateRange(thought, start, end) -> boolean</code></h4><a class="sl-anchor-link" href="#date-range-filtering-matchesdaterangethought-start-end---boolean"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Date Range Filtering: matchesDateRange(thought, start, end) -> boolean”</span></a></div>
+<ul>
+<li><strong>Implementation</strong>: from Slice 1’s <code dir="auto">filterLogic.ts</code></li>
+<li><strong>Behavior</strong>:
+<ul>
+<li>Inclusive bounds: <code dir="auto">start ≤ thought.createdAt ≤ end</code></li>
+<li>Missing start: only check <code dir="auto">thought.createdAt ≤ end</code></li>
+<li>Missing end: only check <code dir="auto">start ≤ thought.createdAt</code></li>
+<li>Both missing: match all thoughts (no filter)</li>
+<li>Example: start=“2026-06-01”, end=“2026-06-30” matches all June thoughts</li>
+</ul>
+</li>
+</ul>
+<div class="sl-heading-wrapper level-h4"><h4 id="tag-filtering-matchestagsthought-selectedtags---boolean">Tag Filtering: <code dir="auto">matchesTags(thought, selectedTags[]) -> boolean</code></h4><a class="sl-anchor-link" href="#tag-filtering-matchestagsthought-selectedtags---boolean"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Tag Filtering: matchesTags(thought, selectedTags[]) -> boolean”</span></a></div>
+<ul>
+<li><strong>Implementation</strong>: from Slice 1’s <code dir="auto">filterLogic.ts</code></li>
+<li><strong>Behavior</strong>:
+<ul>
+<li><strong>OR logic</strong>: thought matches if it contains ANY of the selected tags</li>
+<li>Empty <code dir="auto">selectedTags</code>: match all thoughts (no filter)</li>
+<li>Example: if user selects tags [“work”, “personal”], a thought with tags [“work”, “morning”] matches</li>
+<li>Comparison: case-sensitive exact string match of tag names</li>
+</ul>
+</li>
+</ul>
+<div class="sl-heading-wrapper level-h4"><h4 id="surprise-filter-selectrandomthoughtfilteredthoughts---thought">Surprise Filter: <code dir="auto">selectRandomThought(filteredThoughts[]) -> Thought</code></h4><a class="sl-anchor-link" href="#surprise-filter-selectrandomthoughtfilteredthoughts---thought"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Surprise Filter: selectRandomThought(filteredThoughts[]) -> Thought”</span></a></div>
+<ul>
+<li><strong>Implementation</strong>: in <code dir="auto">Home</code> component or utility</li>
+<li><strong>Behavior</strong>:
+<ul>
+<li>Select random index from filtered results: <code dir="auto">Math.floor(Math.random() * filteredThoughts.length)</code></li>
+<li>Return the thought at that index</li>
+<li>Highlight or scroll into view in the current display (list or timeline)</li>
+<li>Disabled button if <code dir="auto">filteredThoughts.length === 0</code></li>
+</ul>
+</li>
+<li><strong>Visual feedback</strong>: Highlight the selected thought (e.g., border highlight, background color, animation)</li>
+</ul>
+<div class="sl-heading-wrapper level-h4"><h4 id="composite-filter-application-applyfiltersthoughts-filterstate---thought">Composite Filter Application: <code dir="auto">applyFilters(thoughts, filterState) -> Thought[]</code></h4><a class="sl-anchor-link" href="#composite-filter-application-applyfiltersthoughts-filterstate---thought"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Composite Filter Application: applyFilters(thoughts, filterState) -> Thought[]”</span></a></div>
+<ul>
+<li><strong>Implementation</strong>: from Slice 1’s <code dir="auto">filterLogic.ts</code></li>
+<li><strong>Composition</strong>: All filters combined with <strong>AND logic</strong>
+<ul>
+<li>A thought must match ALL active filters to appear in results</li>
+<li>Each filter is optional; if not set, it doesn’t exclude any thoughts</li>
+</ul>
+</li>
+<li><strong>Algorithm</strong>:
+<div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">filtered = thoughts</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">if (filterState.text) {</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">  </span></span><span style="--0:#d6deeb;--1:#403f53">filtered = filtered.filter(t => matchesTextSearch(t, filterState.text))</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">}</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">if (filterState.dateStart || filterState.dateEnd) {</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">  </span></span><span style="--0:#d6deeb;--1:#403f53">filtered = filtered.filter(t => matchesDateRange(t, filterState.dateStart, filterState.dateEnd))</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">}</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">if (filterState.selectedTags?.length > 0) {</span></div></div><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#d6deeb;--1:#403f53">  </span></span><span style="--0:#d6deeb;--1:#403f53">filtered = filtered.filter(t => matchesTags(t, filterState.selectedTags))</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">}</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">return filtered</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="filtered = thoughtsif (filterState.text) {  filtered = filtered.filter(t => matchesTextSearch(t, filterState.text))}if (filterState.dateStart || filterState.dateEnd) {  filtered = filtered.filter(t => matchesDateRange(t, filterState.dateStart, filterState.dateEnd))}if (filterState.selectedTags?.length > 0) {  filtered = filtered.filter(t => matchesTags(t, filterState.selectedTags))}return filtered"><div></div></button></div></figure></div>
+</li>
+</ul>
+<div class="sl-heading-wrapper level-h3"><h3 id="integration-with-home-component">Integration with Home Component</h3><a class="sl-anchor-link" href="#integration-with-home-component"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Integration with Home Component”</span></a></div>
+<p>The <code dir="auto">Home</code> component orchestrates the entire filtering flow:</p>
+<ol>
+<li><strong>Initialize filter state</strong>: <code dir="auto">const [filterState, setFilterState] = useState({})</code></li>
+<li><strong>Initialize view mode</strong>: <code dir="auto">const [viewMode, setViewMode] = useState('list')</code></li>
+<li><strong>Fetch thoughts</strong>: <code dir="auto">const { thoughts } = useThoughts()</code></li>
+<li><strong>Apply filters</strong>: <code dir="auto">const filteredThoughts = applyFilters(thoughts, filterState)</code></li>
+<li><strong>Render FilterPanel</strong>:
+<ul>
+<li>Pass <code dir="auto">existingTags</code> (from <code dir="auto">useThoughts().getTags()</code>)</li>
+<li>Pass <code dir="auto">onFilterChange</code> handler that updates <code dir="auto">filterState</code></li>
+<li>Pass <code dir="auto">onSurpriseClick</code> handler that selects random thought</li>
+</ul>
+</li>
+<li><strong>Render view</strong>:
+<ul>
+<li>If <code dir="auto">viewMode === 'list'</code>: render <code dir="auto">ThoughtList</code> with <code dir="auto">filteredThoughts</code></li>
+<li>If <code dir="auto">viewMode === 'timeline'</code>: render <code dir="auto">TimelineView</code> with <code dir="auto">filteredThoughts</code></li>
+</ul>
+</li>
+<li><strong>View toggle</strong>: Include <code dir="auto">ViewModeToggle</code> to switch between list/timeline</li>
+</ol>
+<div class="sl-heading-wrapper level-h3"><h3 id="empty-state">Empty State</h3><a class="sl-anchor-link" href="#empty-state"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Empty State”</span></a></div>
+<ul>
+<li><strong>When</strong>: No thoughts match current filter criteria</li>
+<li><strong>Display</strong>: Friendly message: “No thoughts match your filters. Try adjusting your search or date range.”</li>
+<li><strong>Rendered in</strong>: Both <code dir="auto">ThoughtList</code> and <code dir="auto">TimelineView</code> (Slice 2) already handle this</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="implementation-steps">Implementation Steps</h2><a class="sl-anchor-link" href="#implementation-steps"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Implementation Steps”</span></a></div>
+<ol>
+<li>
+<p><strong>Create FilterPanel component</strong> (<code dir="auto">src/components/FilterPanel.tsx</code>)</p>
+<ul>
+<li>Render text input, date inputs, tag multi-select, buttons</li>
+<li>Manage local state for all filter fields</li>
+<li>Call <code dir="auto">onFilterChange()</code> on each field change</li>
+<li>Call <code dir="auto">onSurpriseClick()</code> on surprise button click</li>
+</ul>
+</li>
+<li>
+<p><strong>Create DateRangePicker sub-component</strong> (<code dir="auto">src/components/DateRangePicker.tsx</code>)</p>
+<ul>
+<li>Two <code dir="auto">&#x3C;input type="date"></code> fields</li>
+<li>Handle date parsing and null values</li>
+<li>Validate that start ≤ end if both are set</li>
+</ul>
+</li>
+<li>
+<p><strong>Create TagMultiSelect sub-component</strong> (<code dir="auto">src/components/TagMultiSelect.tsx</code>)</p>
+<ul>
+<li>Render checkbox or toggle button for each tag</li>
+<li>Use <code dir="auto">TagDisplay</code> from Slice 2 for colored visual representation</li>
+<li>Track selected state, call <code dir="auto">onChange()</code> with updated selection</li>
+</ul>
+</li>
+<li>
+<p><strong>Update Home component</strong> (<code dir="auto">src/pages/Home.tsx</code>)</p>
+<ul>
+<li>Import <code dir="auto">FilterPanel</code> from Slice 3</li>
+<li>Initialize <code dir="auto">filterState</code> with <code dir="auto">useState({})</code></li>
+<li>Add <code dir="auto">onFilterChange</code> handler that updates <code dir="auto">filterState</code></li>
+<li>Call <code dir="auto">applyFilters(thoughts, filterState)</code> from Slice 1 to get filtered results</li>
+<li>Add <code dir="auto">onSurpriseClick</code> handler that:
+<ul>
+<li>Selects random index from <code dir="auto">filteredThoughts</code></li>
+<li>Highlights the selected thought (e.g., ref to DOM element or scroll into view)</li>
+<li>Manages highlight state (optional: clear on scroll or filter change)</li>
+</ul>
+</li>
+<li>Render components in order: <code dir="auto">FilterPanel</code>, <code dir="auto">ViewModeToggle</code>, then <code dir="auto">ThoughtList</code> or <code dir="auto">TimelineView</code></li>
+</ul>
+</li>
+<li>
+<p><strong>Verify filter logic</strong> (from Slice 1)</p>
+<ul>
+<li>Ensure <code dir="auto">matchesTextSearch()</code> is case-insensitive and matches title OR content</li>
+<li>Ensure <code dir="auto">matchesDateRange()</code> is inclusive and handles null bounds correctly</li>
+<li>Ensure <code dir="auto">matchesTags()</code> uses OR logic (any selected tag matches)</li>
+<li>Ensure <code dir="auto">applyFilters()</code> combines with AND logic</li>
+</ul>
+</li>
+</ol>
+<div class="sl-heading-wrapper level-h2"><h2 id="acceptance-criteria">Acceptance Criteria</h2><a class="sl-anchor-link" href="#acceptance-criteria"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Acceptance Criteria”</span></a></div>
+<ol>
+<li>✅ FilterPanel component displays text search input</li>
+<li>✅ Text search filters both title and content with case-insensitive substring matching</li>
+<li>✅ FilterPanel displays date range picker with start and end date fields</li>
+<li>✅ Date range filtering shows only thoughts within range (inclusive)</li>
+<li>✅ FilterPanel displays multi-select tag filter with all available tags</li>
+<li>✅ Tag filter shows thoughts containing ANY selected tag (OR logic)</li>
+<li>✅ FilterPanel displays surprise button to select random thought from filtered results</li>
+<li>✅ Surprise button is disabled when no filtered results exist</li>
+<li>✅ Filters are composable: all active filters work together with AND logic</li>
+<li>✅ Filters apply to list view in real-time as selections change</li>
+<li>✅ Filters apply to timeline view in real-time as selections change</li>
+<li>✅ Empty results show friendly message when no thoughts match filter criteria</li>
+<li>✅ Filter state is managed locally in Home component (not persisted)</li>
+<li>✅ ViewModeToggle allows switching between list and timeline views with active filters applied</li>
+<li>✅ Tag colors in multi-select match those in thought cards (consistent with Slice 1)</li>
+</ol>
+<div class="sl-heading-wrapper level-h2"><h2 id="testing-strategy">Testing Strategy</h2><a class="sl-anchor-link" href="#testing-strategy"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Testing Strategy”</span></a></div>
+<ul>
+<li>
+<p><strong>Unit tests</strong>:</p>
+<ul>
+<li><code dir="auto">matchesTextSearch()</code>: case-insensitive, title/content matching, empty query</li>
+<li><code dir="auto">matchesDateRange()</code>: inclusive bounds, null handling, date comparisons</li>
+<li><code dir="auto">matchesTags()</code>: OR logic, exact match, empty selection</li>
+<li><code dir="auto">applyFilters()</code>: AND composition, ordering of filter application</li>
+</ul>
+</li>
+<li>
+<p><strong>Component tests</strong>:</p>
+<ul>
+<li><code dir="auto">FilterPanel</code>: renders all controls, calls <code dir="auto">onFilterChange()</code> on input change</li>
+<li><code dir="auto">DateRangePicker</code>: parses dates, validates bounds, handles null</li>
+<li><code dir="auto">TagMultiSelect</code>: renders all tags, toggles selection, calls <code dir="auto">onChange()</code></li>
+<li><code dir="auto">Home</code>: initializes filter state, applies filters, updates display</li>
+</ul>
+</li>
+<li>
+<p><strong>Integration tests</strong>:</p>
+<ul>
+<li>Full filter flow: change text → see results update</li>
+<li>Date range filter → filtered results correct</li>
+<li>Tag filter with multiple selections → OR logic verified</li>
+<li>Filters combine (AND logic): apply text + date + tag → correct intersection</li>
+<li>Surprise button: randomly selects from filtered results, highlights</li>
+<li>Switch views (list ↔ timeline) → filters still applied</li>
+</ul>
+</li>
+<li>
+<p><strong>Visual/E2E tests</strong>:</p>
+<ul>
+<li>FilterPanel layout responsive on mobile/desktop</li>
+<li>Tag chips display with correct colors</li>
+<li>Empty state message appears when no results</li>
+<li>Surprise highlight is visually clear</li>
+<li>Filter controls are accessible and keyboard-navigable</li>
+</ul>
+</li>
+<li>
+<p><strong>Edge cases</strong>:</p>
+<ul>
+<li>Empty filter state (no filters applied) → all thoughts shown</li>
+<li>All filters applied simultaneously</li>
+<li>No thoughts match any filter combination → empty state</li>
+<li>Start date > end date (validation/warning)</li>
+<li>Very long search query → performance</li>
+<li>Many tags available (100+) → UI layout</li>
+<li>Surprise button with 1 thought in results (select it)</li>
+<li>Clear filters → back to all thoughts</li>
+</ul>
+</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="dependencies">Dependencies</h2><a class="sl-anchor-link" href="#dependencies"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Dependencies”</span></a></div>
+<ul>
+<li><strong>Slice 1 (Data Foundation)</strong>: Provides <code dir="auto">useThoughts</code>, <code dir="auto">Thought</code>, <code dir="auto">Tag</code>, <code dir="auto">FilterState</code>, <code dir="auto">applyFilters()</code>, <code dir="auto">matchesTextSearch()</code>, <code dir="auto">matchesDateRange()</code>, <code dir="auto">matchesTags()</code></li>
+<li><strong>Slice 2 (Thought List Display)</strong>: Provides <code dir="auto">ThoughtList</code>, <code dir="auto">TimelineView</code>, <code dir="auto">TagDisplay</code>, <code dir="auto">ViewModeToggle</code></li>
+<li><strong>React</strong>: useState, useEffect hooks</li>
+<li><strong>AppShell</strong>: CSS base styles, responsive design utilities</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="related-epics">Related Epics</h2><a class="sl-anchor-link" href="#related-epics"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Related Epics”</span></a></div>
+<ul>
+<li><a href="/oneticket-core/monjournal/pr/1053/docs/what/epics/epic-0-mvp/epic/">Epic 0 — MonJournal MVP</a></li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="related-user-stories">Related User Stories</h2><a class="sl-anchor-link" href="#related-user-stories"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Related User Stories”</span></a></div>
+<ul>
+<li><a href="/oneticket-core/monjournal/pr/1053/docs/what/epics/epic-0-mvp/user-stories/us-002-multi-filter/">US-002 — Multi-Filter</a></li>
+</ul> </div> <footer class="doc-footer astro-jtjyxvqf"> <div class="doc-footer-content astro-jtjyxvqf"> <span class="astro-jtjyxvqf">Branch: <code class="astro-jtjyxvqf">1053/merge</code></span>  <span class="astro-jtjyxvqf">Build: <code class="astro-jtjyxvqf">#509</code></span> <span class="astro-jtjyxvqf">Commit: <code class="astro-jtjyxvqf">5c7b9c7</code></span> <span class="astro-jtjyxvqf">2026-06-05</span> <span class="astro-jtjyxvqf">App: <a href="https://dsissoko.github.io/oneticket-core/monjournal/pr/1053/app" class="astro-jtjyxvqf">https://dsissoko.github.io/oneticket-core/monjournal/pr/1053/app</a></span> </div> </footer>  </div> </div>   </main> </div> </div>  </div> </div>  </body></html>
