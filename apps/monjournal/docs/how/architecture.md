@@ -46,23 +46,36 @@ See [LocalStorage Schema](#localstorage-schema-and-serialization) for detailed f
 
 ## 3. State Management
 
-MonJournal uses **React hooks and Context API** for state management. No external state library (Redux, Zustand, etc.) is needed.
+MonJournal uses **React Context API with custom hooks** for state management. The `ThoughtsContext` provides a shared instance of the `useThoughts` hook to all components, ensuring a single source of truth.
+
+### ThoughtsContext
+
+- **Provider**: `ThoughtsContext` wraps the application (placed after `BrowserRouter` in main.tsx)
+- **Hook**: `useThoughtsContext()` — consumed by any component needing access to shared thoughts state
+- **Guarantees**: All components read/write to the same state, enabling immediate cross-component synchronization
 
 ### State Types
 
-1. **Global Thought State**
-   - Managed by `useThoughts` custom hook
+1. **Global Thought State** (via ThoughtsContext)
+   - Managed by `useThoughts` custom hook wrapped in `ThoughtsContext`
    - Provides: `thoughts`, `addThought`, `getTags`, `filterThoughts`
    - Backed by localStorage
+   - Used by HomeScreen, InlineAddThoughtForm, and all filtering/display components
 
 2. **Filter State**
-   - Local component state (`useState`) in the main home/filter container
-   - Includes: text search, date range, selected tags, view mode
+   - Local component state (`useState`) in HomeScreen
+   - Includes: text search, date range, selected tags
    - Not persisted across sessions
+   - Passed down to FilterPanel via `onFilterChange` callback
 
-3. **UI State**
-   - Component-level: form inputs, toggles, selections
-   - Managed locally with `useState`
+3. **View Mode State**
+   - Local component state (`useState`) in HomeScreen
+   - Toggle between 'list' and 'timeline' views
+   - Passed to ControlZone for UI updates
+
+4. **UI State**
+   - Component-level: form inputs, toggles, selections, expansion states
+   - Managed locally with `useState` in InlineAddThoughtForm, FilterPanel, etc.
 
 ### Why No External Store?
 
@@ -70,6 +83,7 @@ MonJournal uses **React hooks and Context API** for state management. No externa
 - No async actions or side effects beyond localStorage
 - Filters are transient (not saved)
 - Single-page simplicity outweighs any organizational benefits
+- Context API sufficient for synchronizing state across components
 
 ---
 
@@ -77,39 +91,94 @@ MonJournal uses **React hooks and Context API** for state management. No externa
 
 ### Components (React)
 
-1. **ThoughtList** — displays thoughts as compact cards
-   - Input: `thoughts: Thought[]`, `onSurpriseClick?: () => void`
-   - Output: DOM rendering of thought cards with title, truncated content, date, tags
-   - Styling: compact card layout with tag chips
+1. **HomeScreen** — main landing page at `/`
+   - Composes: InlineAddThoughtForm, FilterPanel, ControlZone, ThoughtList, TimelineView
+   - Logic: applies filters, manages view toggle, handles surprise selection
+   - State: filter state, view mode, highlighted thought ID
+   - Data: uses `useThoughtsContext()` for access to thoughts and add/getTags operations
 
-2. **AddThought** — form for creating new thoughts
-   - Input: `onSave: (thought: Thought) => void`
-   - Output: Redirects to home on successful submission
-   - Features: title/content inputs, tag autocomplete, chip display, validation
+2. **InlineAddThoughtForm** — collapsed form on home page for quick thought capture
+   - Input: `onThoughtAdded?: () => void`, optional props for testing/composition
+   - Output: Creates new Thought via `useThoughtsContext().addThought()`
+   - Features: title/content inputs, tag input with autocomplete, collapsible UI (expand/collapse)
+   - State: expanded, title, content, selectedTags, tagInput, validationErrors
 
 3. **FilterPanel** — multi-criteria filter UI
-   - Input: `existingTags: Tag[]`, `onFilterChange: (filters: FilterState) => void`
+   - Input: `onFilterChange: (filters: FilterState) => void`
    - Output: Text search input, date range picker, tag multi-select, surprise button
-   - Local state: filter values (text, dateStart, dateEnd, selectedTags)
+   - Components: TextInput, DateRangePicker, TagMultiSelect
+   - Local state: filter values (textQuery, startDate, endDate, selectedTags)
 
-4. **TimelineView** — groups thoughts by date
-   - Input: `thoughts: Thought[]`
+4. **ControlZone** — view mode toggle and surprise action grouped together
+   - Input: `viewMode: 'list' | 'timeline'`, `onViewModeChange`, `onSurpriseClick`, `disableSurprise?`
+   - Output: Toggle buttons (List/Timeline) and Surprise button
+   - Purpose: Groups view-related controls for cohesive UI
+
+5. **ThoughtList** — displays thoughts as compact cards
+   - Input: `thoughts: Thought[]`, `highlightedThoughtId?: string | null`
+   - Output: DOM rendering of thought cards with title, truncated content, date, tags
+   - Component: renders multiple ThoughtCard components
+   - Styling: card layout with tag display via TagDisplay
+
+6. **TimelineView** — groups thoughts by date
+   - Input: `thoughts: Thought[]`, `highlightedThoughtId?: string | null`
    - Output: Day separators with grouped thought cards
+   - Component: renders multiple TimelineGroup components
    - Sorting: reverse chronological (newest group first)
 
-5. **TagColorAssignment** — visual tag display with colors
-   - Input: `tags: string[]`, `compact?: boolean`
-   - Output: Colored chip elements for each tag
-   - Styling: background color + text, responsive sizing
+7. **DateRangePicker** — encapsulated date range selection
+   - Input: `dateStart`, `dateEnd`, `onChange` callback
+   - Output: Two date input fields for start and end dates
+   - Logic: timestamp ↔ date string conversions, start/end validation
 
-6. **Home** — main container
-   - Composes: ThoughtList + TimelineView + FilterPanel
-   - Logic: applies filters, manages view toggle, coordinates surprise selection
-   - Routing: path `/`
+8. **TagInput** — text input with tag autocomplete
+   - Input: `suggestions: string[]`, `onSelectTag: (tag: string) => void`, other props
+   - Output: Text input that triggers suggestions and emits selected tags
+   - Features: autocomplete list, filtering, keyboard navigation
 
-7. **Layout** — root layout from AppShell
-   - Navigation: links to Home and Add Thought
-   - Content area: main page renderer
+9. **TagMultiSelect** — checkbox list of available tags
+   - Input: `availableTags: Tag[]`, `selectedTags: string[]`, `onChange` callback
+   - Output: Checkboxes with tag color indicators
+   - Features: visual color display, toggle selection
+
+10. **TagDisplay** — visual tag display with colors
+    - Input: `tags: string[]`, `compact?: boolean`
+    - Output: Colored chip elements for each tag
+    - Styling: background color + text, responsive sizing
+
+11. **AddThought** — dedicated form page at `/add` (alternative entry point)
+    - Input: user form submission
+    - Output: Navigates to home after successful creation
+    - Features: full-page form for structured thought capture
+
+12. **AppLayout** — root layout from AppShell (used in Routes)
+    - Navigation: links to Home and Add Thought
+    - Content area: main page renderer
+    - Theme: integrated with ThemeProvider
+
+### Screens
+
+Additional screens accessible via navigation routes:
+
+13. **AboutScreen** — app information at `/about`
+    - Displays: app description, version, credits, links
+    - No interactive state; static content
+    - Route: `/about`
+
+14. **HelpScreen** — user guide and FAQs at `/help`
+    - Displays: usage instructions, feature explanations, troubleshooting
+    - No interactive state; static content
+    - Route: `/help`
+
+15. **DemoScreen** — demo/testing screen at `/demo`
+    - Purpose: Demonstration and testing of app features
+    - May include: sample data, feature showcases, debug controls
+    - Route: `/demo`
+
+16. **NotFoundScreen** — 404 error page at `/*`
+    - Displays: "Page not found" message with navigation links
+    - Fallback for undefined routes
+    - Route: `/*` (catch-all)
 
 ### Hooks (Composable Logic)
 
@@ -145,19 +214,24 @@ MonJournal uses **React hooks and Context API** for state management. No externa
 
 ## 5. Routing with React Router
 
-MonJournal uses **React Router** (from AppShell) with minimal routes:
+MonJournal uses **React Router** (from AppShell) with the following routes:
 
 ```
-/                    → Home (list/timeline view, filters)
-/add                 → Add Thought form
-/about (optional)    → About page (AppShell default)
+/                    → HomeScreen (list/timeline view, inline form, filters)
+/add                 → AddThought (dedicated form page)
+/about               → AboutScreen (app information)
+/help                → HelpScreen (user guide and FAQs)
+/demo                → DemoScreen (demo/testing screen)
+/*                   → NotFoundScreen (404 handling)
 ```
 
 **Routing Strategy**:
-- Client-side routing (SPA)
-- No query params for filters (filters are ephemeral)
-- On successful thought creation: navigate to `/`
+- Client-side routing (SPA) with lazy-loaded screen components
+- No query params for filters (filters are ephemeral, local to HomeScreen)
+- Screens are lazy-loaded via React.lazy() with Suspense fallback (LoadingIndicator)
+- On successful thought creation: navigate to `/` via `useNavigate()`
 - Navigation via `<Link>` and `useNavigate()` hook
+- All routes wrapped in `AppLayout` for consistent header/footer
 
 ---
 
@@ -382,29 +456,54 @@ applyFilters(thoughts, filters) → Thought[]
 ## 11. Component Hierarchy
 
 ```
-<Layout>                           (AppShell root)
-  ├─ <Header>
-  │   └─ Navigation links (Home, Add)
-  └─ <Main>
-      ├─ <Home>                   (path: /)
-      │   ├─ <FilterPanel>
-      │   │   ├─ Text search input
-      │   │   ├─ Date range picker
-      │   │   ├─ Tag multi-select
-      │   │   └─ Surprise button
-      │   ├─ View toggle (List ↔ Timeline)
-      │   ├─ <ThoughtList>        (if viewMode: 'list')
-      │   │   └─ <ThoughtCard>    (repeat)
-      │   │       └─ <TagColorAssignment>
-      │   └─ <TimelineView>       (if viewMode: 'timeline')
-      │       └─ <TimelineGroup>  (repeat by date)
-      │           └─ <ThoughtCard>
-      │               └─ <TagColorAssignment>
-      └─ <AddThought>             (path: /add)
-          ├─ Form: title, content
-          ├─ Tag input w/ autocomplete
-          │   └─ <TagColorAssignment> (for chip preview)
-          └─ Submit button
+<ErrorBoundary>                        (Global error handling)
+  <QueryClientProvider>
+    <BrowserRouter>
+      <ThemeProvider>
+        <ThoughtsProvider>              (Wraps all routes with shared thoughts state)
+          <Suspense fallback={<LoadingIndicator />}>
+            <Routes>
+              <Route element={<AppLayout />}>  (AppShell root layout)
+                ├─ <Route index element={<HomeScreen />} />  (path: /)
+                │   ├─ <Header> (Navigation)
+                │   └─ <Main>
+                │       ├─ <InlineAddThoughtForm>
+                │       │   ├─ Text input (title, content)
+                │       │   ├─ <TagInput> w/ autocomplete
+                │       │   └─ <TagList> (chip preview)
+                │       ├─ <ControlZone>
+                │       │   ├─ View mode toggle (List ↔ Timeline)
+                │       │   └─ Surprise button
+                │       ├─ <FilterPanel>
+                │       │   ├─ Text search input
+                │       │   ├─ <DateRangePicker>
+                │       │   ├─ <TagMultiSelect>
+                │       │   └─ Surprise button
+                │       ├─ <ThoughtList>          (if viewMode: 'list')
+                │       │   └─ <ThoughtCard>    (repeat)
+                │       │       └─ <TagDisplay>
+                │       └─ <TimelineView>       (if viewMode: 'timeline')
+                │           └─ <TimelineGroup>  (repeat by date)
+                │               └─ <ThoughtCard>
+                │                   └─ <TagDisplay>
+                ├─ <Route path="/add" element={<AddThought />} />
+                │   ├─ <Header> (Navigation)
+                │   └─ <Main>
+                │       ├─ Form: title, content
+                │       ├─ <TagInput> w/ autocomplete
+                │       └─ Submit button
+                ├─ <Route path="/about" element={<AboutScreen />} />
+                ├─ <Route path="/help" element={<HelpScreen />} />
+                ├─ <Route path="/demo" element={<DemoScreen />} />
+                └─ <Route path="*" element={<NotFoundScreen />} />
+              </Route>
+            </Routes>
+          </Suspense>
+        </ThoughtsProvider>
+      </ThemeProvider>
+    </BrowserRouter>
+  </QueryClientProvider>
+</ErrorBoundary>
 ```
 
 ---
@@ -454,15 +553,30 @@ applyFilters(thoughts, filters) → Thought[]
 
 ## 13. Error Handling & Edge Cases
 
+### ErrorBoundary Component
+
+- **Location**: Wraps entire app in main.tsx at the root level
+- **Catches**: JavaScript errors in any child component tree
+- **Logging**: All errors logged via `logger.error()` with context
+- **Fallback UI**: Generic error message with "Return Home" button
+- **Recovery**: Users can click button to reload app or manually refresh
+
+### Global Error Handlers
+
+- **Unhandled Promise Rejections**: Caught via `window.addEventListener('unhandledrejection')`
+- **Global Errors**: Caught via `window.addEventListener('error')`
+- **Logging**: All errors logged via logger for debugging
+
 ### localStorage Unavailable
 
 - **Detection**: Try/catch on write, or quota exceeded error
-- **Behavior**: Log warning, allow app to continue with in-memory state
+- **Behavior**: Log warning via logger, allow app to continue with in-memory state
 - **Recovery**: User data lost on page reload (acceptable for V1)
+- **UX**: App remains functional but without persistence
 
 ### Corrupted localStorage Data
 
-- **Detection**: JSON.parse fails
+- **Detection**: JSON.parse fails in useThoughts hook
 - **Behavior**: Log error, reset to empty array
 - **UX**: User sees empty state, can start fresh
 
@@ -480,13 +594,41 @@ applyFilters(thoughts, filters) → Thought[]
 
 ---
 
-## 14. Deployment & Build
+## 14. MSW (Mock Service Worker) Integration
+
+MonJournal uses **MSW** for mocking API calls in demo/preview environments.
+
+### MSW Setup
+
+- **Entry Point**: `/src/mocks/browser.ts` — initializes worker with handlers
+- **Handlers**: `/src/mocks/handlers.ts` — defines mock API endpoints
+- **Control**: `__ENABLE_MSW__` flag defined at build time in `vite.config.ts`
+  - `true` = MSW active (demo, preview, GitHub Pages)
+  - `false` = MSW disabled, real backend used (production)
+
+### MSW Bootstrap
+
+- **Initialization**: `startMockServiceWorker()` async function in main.tsx
+- **Service Worker URL**: Configured with proper BASE_URL for deployment
+- **Unhandled Request Filter**: Excludes navigation (`document` destination), static assets (JS, CSS, images)
+- **Logging**: Warns on unhandled API calls for debugging
+
+### Benefits
+
+- Zero-backend demo deployments (GitHub Pages, Netlify preview)
+- Deterministic testing without network dependency
+- Rapid prototyping and development
+
+---
+
+## 15. Deployment & Build
 
 - **Build Tool**: Vite (from AppShell)
 - **Output**: Static SPA (HTML + JS + CSS)
 - **Hosting**: Any static file server (GitHub Pages, Netlify, Vercel)
 - **Browser Support**: Modern browsers with localStorage support (all current versions)
 - **No Build-Time Configuration**: No environment variables needed (no backend)
+- **Lazy Code Splitting**: Screen components are lazy-loaded to reduce initial bundle size
 
 ---
 
@@ -502,10 +644,15 @@ applyFilters(thoughts, filters) → Thought[]
 |---|---|---|
 | localStorage only, no backend | Privacy, simplicity, fast MVP | No multi-device sync |
 | React hooks + Context, no Redux | Minimal dependencies, sufficient for simple state | Harder scaling if state becomes complex |
+| ThoughtsContext wraps useThoughts | Single source of truth across components, immediate sync | Slight overhead of Provider wrapper |
 | Tags derived, not stored | Single source of truth, auto-cleanup | Tag deletion happens automatically |
 | Deterministic color hash | Consistent UX, no DB needed | No user customization |
 | Immutable thoughts in V1 | Encourages authentic journaling, no edit UI | Can't correct mistakes |
 | No filter persistence | Stateless, simpler logic | User loses filter state on reload |
+| MSW for demo environments | Zero-backend deployment, deterministic testing | Extra layer when real backend is needed |
+| ErrorBoundary at root level | Graceful error handling prevents blank screens | Users see generic error message |
+| Lazy-loaded screen components | Reduced initial bundle size, faster startup | Small delay when navigating to new routes |
+| InlineAddThoughtForm on home page | Better UX — quick capture without navigation | Additional UI complexity on home |
 
 ---
 
