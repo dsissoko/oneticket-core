@@ -1,30 +1,56 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useThoughts } from '../hooks/useThoughts';
 import { applyFilters, FilterState } from '../utils/filterLogic';
 import { ViewModeToggle } from '../components/ViewModeToggle';
+import { FilterPanel } from '../components/FilterPanel';
 import { ThoughtList } from '../components/ThoughtList';
 import { TimelineView } from '../components/TimelineView';
 
 /**
  * Home page component that integrates useThoughts hook with display components.
- * Manages view mode state and applies filtering.
+ * Manages view mode state, filter state, and applies filtering in real-time.
  */
 export function Home(): React.ReactElement {
-  const { thoughts } = useThoughts();
+  const { thoughts, getTags } = useThoughts();
   const [viewMode, setViewMode] = useState<'list' | 'timeline'>('list');
-  const [filterState] = useState<FilterState>({
+  const [filterState, setFilterState] = useState<FilterState>({
     textQuery: '',
     selectedTags: [],
     startDate: null,
     endDate: null,
   });
+  const [highlightedThoughtId, setHighlightedThoughtId] = useState<string | null>(null);
+  const highlightedRef = useRef<HTMLDivElement>(null);
+
+  // Get all available tags
+  const existingTags = getTags();
 
   // Apply filters to thoughts
   const filteredThoughts = applyFilters(thoughts, filterState);
 
-  // Handle surprise click (for future surprise feature)
-  const handleSurpriseClick = (thought: any) => {
-    console.log('Surprise clicked for thought:', thought.id);
+  // Handle filter state change
+  const handleFilterChange = (newFilterState: FilterState) => {
+    setFilterState(newFilterState);
+    // Clear highlight when filters change
+    setHighlightedThoughtId(null);
+  };
+
+  // Handle surprise click - select random thought from filtered results
+  const handleSurpriseClick = () => {
+    if (filteredThoughts.length === 0) {
+      return;
+    }
+
+    const randomIndex = Math.floor(Math.random() * filteredThoughts.length);
+    const selectedThought = filteredThoughts[randomIndex];
+    setHighlightedThoughtId(selectedThought.id);
+
+    // Scroll into view on next render
+    setTimeout(() => {
+      if (highlightedRef.current) {
+        highlightedRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }, 0);
   };
 
   return (
@@ -34,16 +60,29 @@ export function Home(): React.ReactElement {
         <ViewModeToggle currentMode={viewMode} onChange={setViewMode} />
       </div>
 
+      <FilterPanel
+        existingTags={existingTags}
+        onFilterChange={handleFilterChange}
+        onSurpriseClick={handleSurpriseClick}
+        disableSurprise={filteredThoughts.length === 0}
+      />
+
       <div className="home-content">
-        {viewMode === 'list' ? (
+        {filteredThoughts.length === 0 ? (
+          <div className="empty-state">
+            <p>No thoughts match your filters. Try adjusting your search or date range.</p>
+          </div>
+        ) : viewMode === 'list' ? (
           <ThoughtList
             thoughts={filteredThoughts}
-            onSurpriseClick={handleSurpriseClick}
+            highlightedThoughtId={highlightedThoughtId}
+            highlightedRef={highlightedRef}
           />
         ) : (
           <TimelineView
             thoughts={filteredThoughts}
-            onSurpriseClick={handleSurpriseClick}
+            highlightedThoughtId={highlightedThoughtId}
+            highlightedRef={highlightedRef}
           />
         )}
       </div>

@@ -7,6 +7,8 @@ interface TimelineGroupProps {
   date: number;
   thoughts: Thought[];
   onSurpriseClick?: (thought: Thought) => void;
+  highlightedThoughtId?: string | null;
+  highlightedRef?: React.RefObject<HTMLDivElement>;
 }
 
 /**
@@ -16,6 +18,8 @@ export function TimelineGroup({
   date,
   thoughts,
   onSurpriseClick,
+  highlightedThoughtId,
+  highlightedRef,
 }: TimelineGroupProps): React.ReactElement {
   const formattedDate = formatDate(date, 'absolute');
 
@@ -28,13 +32,18 @@ export function TimelineGroup({
       </div>
       <div className="timeline-group-content">
         {thoughts.map((thought) => (
-          <ThoughtCard
+          <div
             key={thought.id}
-            thought={thought}
-            onHighlight={
-              onSurpriseClick ? () => onSurpriseClick(thought) : undefined
-            }
-          />
+            ref={thought.id === highlightedThoughtId ? highlightedRef : undefined}
+            className={thought.id === highlightedThoughtId ? 'highlighted' : ''}
+          >
+            <ThoughtCard
+              thought={thought}
+              onHighlight={
+                onSurpriseClick ? () => onSurpriseClick(thought) : undefined
+              }
+            />
+          </div>
         ))}
       </div>
     </div>
