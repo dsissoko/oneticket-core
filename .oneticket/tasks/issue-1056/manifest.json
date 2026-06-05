@@ -35,7 +35,7 @@
       "role": "architect",
       "content": "CREATE apps/monjournal/docs/how/slices/slice-5-help-screen/slice.md documenting the Help screen feature. This screen provides user guidance and documentation within the app. Include: overview of what the help screen does, technical scope (route /help, component HelpScreen), modules (HelpScreen.tsx), acceptance criteria, testing strategy, and related epics/user stories. Read apps/monjournal/app/src/screens/HelpScreen.tsx to understand what it displays. Use template from .agents/skills/oneticket-doc-structure. Include proper frontmatter with title 'Slice 5 — Help Screen'.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "E",
