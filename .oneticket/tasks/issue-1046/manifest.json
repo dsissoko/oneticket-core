@@ -7,7 +7,7 @@
       "file": "apps/monjournal/app/package.json",
       "content": "Slice 1 — Data Foundation: Establish core data models and persistence layer. Read apps/monjournal/docs/how/slices/slice-1-data-foundation/slice.md and apps/monjournal/docs/how/architecture.md. Scaffold the MonJournal app from AppShell template (use skill oneticket-scaffold-appshell). Create these modules in apps/monjournal/app/src/:\n\n1. models/types.ts — Export Thought, Tag, FilterState interfaces\n2. utils/colorPalette.ts — Export COLORS array (8-12 WCAG AA compliant hex colors)\n3. models/thoughtModel.ts — Export createThought(), validateThought(), Thought type\n4. models/tagModel.ts — Export deriveTags(), getTagColor(), Tag type\n5. hooks/useLocalStorage.ts — Wrapper for localStorage with JSON serialization\n6. hooks/useThoughts.ts — Custom hook with thoughts state, addThought(), getThoughts(), getTags()\n7. utils/filterLogic.ts — Export applyFilters(), matchesTextSearch(), matchesDateRange(), matchesTags()\n\nImplement all modules per the slice spec. Ensure immutability (no update/delete), deterministic color hashing, and proper localStorage persistence. Run tests to verify all acceptance criteria from the slice pass.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
