@@ -6,3 +6,4 @@
 2026-06-05 08:04 | E | apps/monjournal/app/src/hooks/useThoughts.ts
 2026-06-05 08:04 | I | apps/monjournal/app/src/components/form-components.tsx
 2026-06-05 08:07 | G | apps/monjournal/app/src/components/ThoughtCard.tsx
+2026-06-05 08:09 | J | apps/monjournal/app/src/screens/AddThoughtScreen.tsx
