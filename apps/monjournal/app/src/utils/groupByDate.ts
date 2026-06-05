@@ -11,7 +11,7 @@ interface Thought {
   title: string;
   content: string;
   createdAt: number;
-  tags: string[];
+  tags: readonly string[];
 }
 
 /**
