@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useThoughts } from '@/hooks/useThoughts';
+import { useThoughtsContext } from '@/context/ThoughtsContext';
 import { createThought } from '@/models/thoughtModel';
 import { TagInput } from '@/components/TagInput';
 import { TagList } from '@/components/TagList';
@@ -16,7 +16,7 @@ import { TagList } from '@/components/TagList';
  */
 export function AddThought(): React.ReactElement {
   const navigate = useNavigate();
-  const { addThought, getTags } = useThoughts();
+  const { addThought, getTags } = useThoughtsContext();
 
   // Form state
   const [title, setTitle] = useState('');

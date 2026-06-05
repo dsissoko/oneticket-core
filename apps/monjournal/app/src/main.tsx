@@ -8,6 +8,7 @@ import './styles/thought-display.css';
 import { AppLayout, ErrorBoundary, LoadingIndicator } from './components';
 import { queryClient } from './lib/query-client';
 import { logger } from './lib/logger';
+import { ThoughtsProvider } from './context/ThoughtsContext';
 
 // __ENABLE_MSW__ is defined at build time in vite.config.ts → define block.
 // true  = MSW active (demo, preview, GitHub Pages — no backend needed)
@@ -47,19 +48,21 @@ function App(): React.ReactElement {
     <QueryClientProvider client={queryClient}>
       <ErrorBoundary>
         <BrowserRouter basename={import.meta.env.BASE_URL}>
-          <Suspense fallback={<LoadingIndicator />}>
-            <Routes>
-              <Route element={<AppLayout />}>
-                 <Route index element={<HomeScreen />} />
-                 <Route path="/" element={<HomeScreen />} />
-                 <Route path="/add" element={<AddThought />} />
-                 <Route path="/about" element={<AboutScreen />} />
-                 <Route path="/help" element={<HelpScreen />} />
-                 <Route path="/demo" element={<DemoScreen />} />
-                 <Route path="*" element={<NotFoundScreen />} />
-              </Route>
-            </Routes>
-          </Suspense>
+          <ThoughtsProvider>
+            <Suspense fallback={<LoadingIndicator />}>
+              <Routes>
+                <Route element={<AppLayout />}>
+                   <Route index element={<HomeScreen />} />
+                   <Route path="/" element={<HomeScreen />} />
+                   <Route path="/add" element={<AddThought />} />
+                   <Route path="/about" element={<AboutScreen />} />
+                   <Route path="/help" element={<HelpScreen />} />
+                   <Route path="/demo" element={<DemoScreen />} />
+                   <Route path="*" element={<NotFoundScreen />} />
+                </Route>
+              </Routes>
+            </Suspense>
+          </ThoughtsProvider>
         </BrowserRouter>
       </ErrorBoundary>
     </QueryClientProvider>

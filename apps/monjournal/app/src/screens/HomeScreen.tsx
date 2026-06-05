@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useMemo } from 'react';
-import { useThoughts } from '@/hooks/useThoughts';
+import { useThoughtsContext } from '@/context/ThoughtsContext';
 import { FilterPanel } from '@/components/FilterPanel';
 import { ControlZone } from '@/components/ControlZone';
 import { ThoughtList } from '@/components/ThoughtList';
@@ -15,7 +15,7 @@ import { applyFilters, FilterState } from '@/utils/filterLogic';
  * All functionality on a single page with no separate routes needed.
  */
 export function HomeScreen(): React.ReactElement {
-  const { thoughts, addThought, getTags } = useThoughts();
+  const { thoughts, addThought, getTags } = useThoughtsContext();
   const [filters, setFilters] = useState<FilterState>({
     textQuery: '',
     startDate: null,
@@ -67,6 +67,11 @@ export function HomeScreen(): React.ReactElement {
           <InlineAddThoughtForm 
             addThought={addThought}
             getAvailableTags={() => getTags().map((tag) => tag.name)}
+            onThoughtAdded={() => {
+              // Force refresh of the UI by resetting highlights
+              // The addThought from useThoughts hook will trigger re-render
+              setHighlightedThoughtId(null);
+            }}
           />
         </div>
 

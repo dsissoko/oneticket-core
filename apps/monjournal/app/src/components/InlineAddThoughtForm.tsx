@@ -3,7 +3,7 @@ import { ChevronDown, ChevronUp, Save, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Thought, createThought } from '@/models/thoughtModel';
-import { useThoughts } from '@/hooks/useThoughts';
+import { useThoughtsContext } from '@/context/ThoughtsContext';
 import { TagInput } from '@/components/TagInput';
 import { TagList } from '@/components/TagList';
 
@@ -22,11 +22,11 @@ export function InlineAddThoughtForm({
   addThought?: (thought: Thought) => void;
   getAvailableTags?: () => string[];
 }): React.ReactElement {
-  // Fall back to hook if props aren't provided
-  const hookData = useThoughts();
-  const addThought = addThoughtProp || hookData.addThought;
-  const getAvailableTagsFromHook = () => hookData.getTags().map((tag) => tag.name);
-  const getAvailableTags = getAvailableTagsProp || getAvailableTagsFromHook;
+  // Use context as primary source of truth
+  const thoughtsContext = useThoughtsContext();
+  const addThought = addThoughtProp || thoughtsContext.addThought;
+  const getAvailableTagsFromContext = () => thoughtsContext.getTags().map((tag) => tag.name);
+  const getAvailableTags = getAvailableTagsProp || getAvailableTagsFromContext;
 
   const [isExpanded, setIsExpanded] = useState(false);
 
