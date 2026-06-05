@@ -183,7 +183,14 @@ export async function createPR(issueNumber, branch, repo, token, config, manifes
   // Idempotence — check existing PR
   const existing = await getExistingPR(branch, repo, token);
   if (existing) {
-    console.log(`[create-pr] PR already exists: ${existing.html_url} — skipping.`);
+    console.log(`[create-pr] PR already exists: ${existing.html_url} — skipping creation.`);
+    // Direct run (no manifest) — retrigger deploy by cycling the label on the existing PR
+    if (!manifest) {
+      console.log(`[create-pr] Retriggering deploy — cycling ready for review on PR #${existing.number}`);
+      await removeLabel('ready for review', existing.number, repo, token);
+      await applyLabel('ready for review', issueNumber, repo, token);   // signal métier sur l'issue
+      await applyLabel('ready for review', existing.number, repo, token); // trigger deploy sur la PR
+    }
     return;
   }
 
