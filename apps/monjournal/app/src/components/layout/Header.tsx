@@ -40,7 +40,6 @@ export function Header({
   logo = 'MonJournal',
   navLinks = [
     { label: 'Home', href: '/' },
-    { label: 'Add Thought', href: '/add' },
     { label: 'About', href: '/about' },
     { label: 'Help', href: '/help' },
   ],

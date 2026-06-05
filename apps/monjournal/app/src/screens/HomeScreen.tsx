@@ -4,6 +4,7 @@ import { FilterPanel } from '@/components/FilterPanel';
 import { ControlZone } from '@/components/ControlZone';
 import { ThoughtList } from '@/components/ThoughtList';
 import { TimelineView } from '@/components/TimelineView';
+import { InlineAddThoughtForm } from '@/components/InlineAddThoughtForm';
 import { applyFilters, FilterState } from '@/utils/filterLogic';
 
 /**
@@ -62,6 +63,14 @@ export function HomeScreen(): React.ReactElement {
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-2">MonJournal</h1>
           <p className="text-muted-foreground">Your personal thought journal</p>
+        </div>
+
+        {/* Inline Add Thought Form */}
+        <div className="mb-8">
+          <InlineAddThoughtForm onThoughtAdded={() => {
+            // Refresh tags when a new thought is added
+            // This causes the component to re-render with updated data
+          }} />
         </div>
 
         {/* Control Zone (View Mode + Surprise) */}

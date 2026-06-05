@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import { Thought, validateThought } from '../models/thoughtModel';
 import { Tag, deriveTags } from '../models/tagModel';
 import { getItem, setItem } from './useLocalStorage';
+import { generateSampleThoughts } from '../utils/sampleThoughts';
 
 const STORAGE_KEY = 'monjournal_thoughts';
+const SEED_KEY = 'monjournal_seeded';
 
 export interface UseThoughtsReturn {
   thoughts: Thought[];
@@ -25,9 +27,17 @@ export function useThoughts(): UseThoughtsReturn {
     if (isInitialized) return;
 
     try {
-      const stored = getItem(STORAGE_KEY);
+      // Check if this is the first visit
+      const hasBeenSeeded = getItem(SEED_KEY);
+      let stored = getItem(STORAGE_KEY);
 
-      if (!stored) {
+      // If no data exists and never seeded, generate sample data
+      if (!stored && !hasBeenSeeded) {
+        const sampleThoughts = generateSampleThoughts();
+        setItem(STORAGE_KEY, sampleThoughts);
+        setItem(SEED_KEY, true);
+        setThoughts(sampleThoughts);
+      } else if (!stored) {
         // Key doesn't exist or couldn't be read
         setThoughts([]);
       } else if (Array.isArray(stored)) {
