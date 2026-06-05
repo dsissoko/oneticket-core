@@ -99,6 +99,45 @@ If it answers a question → it posts a comment and stops.
 
 ---
 
+## Happy Path
+
+### From scratch — 4 tickets
+
+#### Ticket 1 — Initialize documentation
+Comment: `@po init-doc`
+→ PR opened with the documentation structure.
+Iterate with `@po update` comments if needed. Merge when ready.
+
+#### Ticket 2 — Generate product knowledge and architecture
+Comment: `@po <describe your product, its users, and main features>`
+→ PR opened with product-spec, epics, user stories, architecture, C4 diagrams, slices.
+Iterate with `@po update` comments on the ticket or PR. Merge when ready.
+
+#### Ticket 3 — Bootstrap the app scaffold (optional)
+Comment: `@leaddev init-<template>`
+→ PR opened with the app scaffold.
+Merge before proceeding — Ticket 4 builds on this.
+
+#### Ticket 4 — Implement the app
+Comment: `@leaddev implement the app following the slices in docs/how/slices/`
+→ PR opened when all tasks complete (FAN-OUT/GATHER).
+Iterate with `@dev fix` or `@qa validate` comments on the PR. Merge → app in production.
+
+---
+
+### From existing code — 2 tickets
+
+#### Ticket 1 — Initialize and generate documentation from code
+Comment: `@po reverse-doc <describe what to document>`
+→ PR opened with inferred product-spec, epics, user stories, architecture, C4 diagrams, slices.
+
+#### Ticket 2 — Refine documentation
+Comment: `@po update <what to refine>`
+→ PR opened with targeted updates.
+Iterate until documentation reflects the codebase accurately. Merge when ready.
+
+---
+
 ## Customize OneTicket
 
 OneTicket is designed to be fully customizable. Here are the main axes:
