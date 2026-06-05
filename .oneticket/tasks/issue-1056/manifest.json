@@ -17,7 +17,7 @@
       "role": "architect",
       "content": "CREATE apps/monjournal/docs/how/c4/components.md with a C4 Components diagram using Mermaid. Document the internal component structure of the MonJournal React application. Include components: HomeScreen, AddThought, HelpScreen, DemoScreen, AboutScreen, InlineAddThoughtForm, FilterPanel, ThoughtList, TimelineView, TagInput, ControlZone, and their interactions. Reference apps/monjournal/docs/how/c4/containers.md for context. Include title frontmatter 'title: MonJournal Components' and a descriptive H1 header. Use the template from .agents/skills/oneticket-c4 for reference.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "C",
