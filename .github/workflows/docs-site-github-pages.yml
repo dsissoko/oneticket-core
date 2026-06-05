@@ -206,7 +206,7 @@ jobs:
 
   deploy-preview:
     needs: [resolve-context, build-doc-site]
-    if: github.event_name == 'pull_request' && !failure()
+    if: github.event_name == 'pull_request' && github.event.label.name == 'ready for review' && !failure()
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
