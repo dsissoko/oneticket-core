@@ -1,4 +1,5 @@
 # OneTicket v1.0.0 — Implementation Followup
+<!-- last updated: 2026-06-05 -->
 
 ## Authoring rules
 
