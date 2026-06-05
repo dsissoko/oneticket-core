@@ -42,16 +42,23 @@ export interface EnemyBullet extends BoundingBox {
 export type Bullet = PlayerBullet | EnemyBullet
 
 export interface Segment extends BoundingBox {
+  gridX: number
+  gridY: number
   alive: boolean
+  hitCount: number
+  opacity: number
 }
 
 export interface Shield {
   x: number
   y: number
-  segments: Segment[]
+  width: number
+  height: number
+  segments: Segment[][]
   reset(): void
-  damageSegment(index: number): void
+  damageSegment(gridX: number, gridY: number): boolean
   isDestroyed(): boolean
+  getVisibleSegments(): Segment[]
 }
 
 export interface Formation {

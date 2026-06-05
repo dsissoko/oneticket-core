@@ -2,7 +2,7 @@
  * RenderingSystem — handles all canvas rendering
  */
 
-import type { Formation, Player, Bullet, Shield, MysteryShip } from './types'
+import type { Formation, Player, Bullet, Shield, MysteryShip, Segment } from './types'
 
 export class RenderingSystem {
   private ctx: CanvasRenderingContext2D
@@ -92,18 +92,45 @@ export class RenderingSystem {
   }
 
   /**
-   * Draw shields
+   * Draw shields with opacity-based damage feedback
    */
   drawShields(shields: Shield[]): void {
     shields.forEach((shield) => {
-      this.ctx.fillStyle = '#00FF00'
-
-      shield.segments.forEach((segment) => {
-        if (segment.alive) {
-          this.ctx.fillRect(segment.x, segment.y, segment.width, segment.height)
-        }
-      })
+      this.drawShield(shield)
     })
+  }
+
+  /**
+   * Draw individual shield with all its segments
+   */
+  private drawShield(shield: Shield): void {
+    // Iterate through 4×4 grid of segments
+    for (let gridY = 0; gridY < shield.segments.length; gridY++) {
+      for (let gridX = 0; gridX < shield.segments[gridY].length; gridX++) {
+        const segment = shield.segments[gridY][gridX]
+        if (segment.alive) {
+          this.drawSegment(segment)
+        }
+      }
+    }
+  }
+
+  /**
+   * Draw individual segment with opacity
+   */
+  private drawSegment(segment: Segment): void {
+    // Save current alpha
+    const previousAlpha = this.ctx.globalAlpha
+
+    // Set opacity based on segment damage state
+    this.ctx.globalAlpha = segment.opacity
+
+    // Draw segment in cyan color
+    this.ctx.fillStyle = '#00FFFF'
+    this.ctx.fillRect(segment.x, segment.y, segment.width, segment.height)
+
+    // Restore alpha
+    this.ctx.globalAlpha = previousAlpha
   }
 
   /**

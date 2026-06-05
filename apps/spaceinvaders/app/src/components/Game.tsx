@@ -172,12 +172,20 @@ export function Game(): React.ReactElement {
     state.formation = new FormationImpl(CANVAS_WIDTH)
     state.player = new PlayerImpl(CANVAS_WIDTH, CANVAS_HEIGHT)
     state.bullets = []
-    state.shields = [
-      new ShieldImpl(150, 450),
-      new ShieldImpl(350, 450),
-      new ShieldImpl(550, 450),
-      new ShieldImpl(750, 450)
+
+    // Initialize 4 shields positioned horizontally across canvas
+    // Shield width: 48 pixels (4x4 grid of 12px segments)
+    // Positions: approximately 25%, 41%, 59%, 75% of canvas width
+    // y position: 350 (between formation and player)
+    const shieldWidth = 48
+    const shieldY = 350
+    const shieldPositions = [
+      (CANVAS_WIDTH * 0.25) - (shieldWidth / 2), // 25% centered
+      (CANVAS_WIDTH * 0.41) - (shieldWidth / 2), // 41% centered
+      (CANVAS_WIDTH * 0.59) - (shieldWidth / 2), // 59% centered
+      (CANVAS_WIDTH * 0.75) - (shieldWidth / 2) // 75% centered
     ]
+    state.shields = shieldPositions.map((x) => new ShieldImpl(x, shieldY))
     state.score = 0
     state.lives = 3
     state.waveNumber = 1

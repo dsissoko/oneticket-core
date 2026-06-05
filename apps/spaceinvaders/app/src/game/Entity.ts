@@ -12,6 +12,10 @@ import type {
   MysteryShip,
   PlayerInputState
 } from './types'
+import { ShieldImpl } from './Shield'
+
+// Re-export ShieldImpl for backward compatibility
+export { ShieldImpl } from './Shield'
 
 /**
  * Formation class - represents the grid of enemies
@@ -162,57 +166,7 @@ export class PlayerBulletImpl implements PlayerBullet {
   }
 }
 
-/**
- * Shield class - represents one shield bunker
- */
-export class ShieldImpl implements Shield {
-  x: number
-  y: number
-  segments: Segment[] = []
-
-  constructor(x: number, y: number) {
-    this.x = x
-    this.y = y
-
-    // Create a 4×4 grid of segments (stub)
-    for (let i = 0; i < 16; i++) {
-      const segX = x + (i % 4) * 8
-      const segY = y + Math.floor(i / 4) * 8
-      this.segments.push({
-        x: segX,
-        y: segY,
-        width: 7,
-        height: 7,
-        alive: true
-      })
-    }
-  }
-
-  /**
-   * Damage a segment
-   */
-  damageSegment(index: number): void {
-    if (index >= 0 && index < this.segments.length) {
-      this.segments[index].alive = false
-    }
-  }
-
-  /**
-   * Check if shield is destroyed
-   */
-  isDestroyed(): boolean {
-    return this.segments.every((seg) => !seg.alive)
-  }
-
-  /**
-   * Reset shield to full health
-   */
-  reset(): void {
-    this.segments.forEach((seg) => {
-      seg.alive = true
-    })
-  }
-}
+// Shield is now exported from Shield.ts
 
 /**
  * MysteryShip class
