@@ -4,8 +4,8 @@
     {
       "id": "A",
       "branch": "task/issue-1043-A",
-      "file": "apps/monjournal/app/src/screens/HomeScreen.tsx",
-      "content": "Read docs/how/slices/slice-1-data-foundation/slice.md, slice-2-thought-list-display/slice.md, and slice-3-filtering-search/slice.md. Implement HomeScreen as the main container for MonJournal that: 1) initializes useThoughts hook, 2) manages filterState (text, dateStart, dateEnd, selectedTags) and viewMode ('list'|'timeline') with useState, 3) applies filters via applyFilters() from Slice 1, 4) renders FilterPanel, ViewModeToggle, and conditionally ThoughtList or TimelineView with filtered thoughts, 5) implements onFilterChange handler that updates filterState, 6) implements onSurpriseClick handler that selects random thought from filtered results and highlights it. Use AppShell's responsive layout with Tailwind design tokens.",
+      "file": "apps/monjournal/app/src/models/thoughtModel.ts",
+      "content": "Read docs/how/slices/slice-1-data-foundation/slice.md and docs/how/architecture.md section 'Data Model Implementation'. Implement thoughtModel module with: 1) Thought interface with id, title, content, createdAt, tags properties, 2) createThought(title: string, content: string, tags: string[]): Thought function that generates UUID and timestamp, 3) validateThought(t: any): boolean function that checks required fields. Add unit tests covering UUID generation, immutability, and validation. Use type-safe TypeScript with no any types.",
       "depends_on": [],
       "status": "pending",
       "role": "dev"
@@ -13,8 +13,8 @@
     {
       "id": "B",
       "branch": "task/issue-1043-B",
-      "file": "apps/monjournal/app/src/models/thoughtModel.ts",
-      "content": "Read docs/how/slices/slice-1-data-foundation/slice.md and docs/how/architecture.md section 'Data Model Implementation'. Implement thoughtModel module with: 1) Thought interface with id, title, content, createdAt, tags properties, 2) createThought(title: string, content: string, tags: string[]): Thought function that generates UUID and timestamp, 3) validateThought(t: any): boolean function that checks required fields. Add unit tests covering UUID generation, immutability, and validation. Use type-safe TypeScript with no any types.",
+      "file": "apps/monjournal/app/src/utils/colorPalette.ts",
+      "content": "Read docs/how/slices/slice-1-data-foundation/slice.md. Implement colorPalette module with: 1) COLORS constant export as array of 8-12 distinct hex color codes (e.g., ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E2']), 2) ensure WCAG AA contrast compliance for text (black or white) on each background, 3) add comments with color names. No functions needed, just the constant export.",
       "depends_on": [],
       "status": "pending",
       "role": "dev"
@@ -23,17 +23,17 @@
       "id": "C",
       "branch": "task/issue-1043-C",
       "file": "apps/monjournal/app/src/models/tagModel.ts",
-      "content": "Read docs/how/slices/slice-1-data-foundation/slice.md and docs/how/architecture.md section 'Tag Derivation'. Implement tagModel module with: 1) Tag interface with name and color properties, 2) getTagColor(tagName: string): string function that deterministically hashes tag name to color from palette (same tag → same color always), 3) deriveTags(thoughts: Thought[]): Tag[] function that collects unique tag names from all thoughts and computes colors. Ensure deterministic hash via tagName.charCodeAt(0) % COLORS.length or better consistent hash. Add unit tests covering derivation, color assignment consistency, and empty arrays.",
-      "depends_on": ["B"],
+      "content": "Read docs/how/slices/slice-1-data-foundation/slice.md and docs/how/architecture.md section 'Tag Derivation'. Implement tagModel module with: 1) Tag interface with name and color properties, 2) getTagColor(tagName: string): string function that deterministically hashes tag name to color (same tag → same color always), 3) deriveTags(thoughts: Thought[]): Tag[] function that collects unique tag names and computes colors. Ensure deterministic hash via tagName.charCodeAt(0) % COLORS.length. Add unit tests covering derivation, color assignment consistency, and edge cases. Imports from thoughtModel and colorPalette.",
+      "depends_on": ["A", "B"],
       "status": "pending",
       "role": "dev"
     },
     {
       "id": "D",
       "branch": "task/issue-1043-D",
-      "file": "apps/monjournal/app/src/utils/colorPalette.ts",
-      "content": "Read docs/how/slices/slice-1-data-foundation/slice.md and docs/how/architecture.md section 'Tag Derivation'. Implement colorPalette module with: 1) COLORS constant export as array of 8-12 distinct hex color codes (e.g., ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E2']), 2) ensure WCAG AA contrast compliance for text (black or white) on each background, 3) add comments with color names. No functions needed, just the constant export. Test visually that colors are distinct and accessible.",
-      "depends_on": [],
+      "file": "apps/monjournal/app/src/utils/filterLogic.ts",
+      "content": "Read docs/how/slices/slice-1-data-foundation/slice.md and docs/how/architecture.md section 'Filter State Management'. Implement filterLogic module with: 1) FilterState interface with optional text, dateStart, dateEnd, selectedTags properties, 2) applyFilters(thoughts: Thought[], filters: FilterState): Thought[] that combines filters with AND logic, 3) matchesTextSearch(thought: Thought, query: string): boolean with case-insensitive substring matching on title OR content, 4) matchesDateRange(thought: Thought, start: number | null, end: number | null): boolean with inclusive bounds, 5) matchesTags(thought: Thought, selectedTags: string[]): boolean with OR logic. Add comprehensive unit tests for each function and edge cases.",
+      "depends_on": ["A"],
       "status": "pending",
       "role": "dev"
     },
@@ -41,17 +41,17 @@
       "id": "E",
       "branch": "task/issue-1043-E",
       "file": "apps/monjournal/app/src/hooks/useThoughts.ts",
-      "content": "Read docs/how/slices/slice-1-data-foundation/slice.md and docs/how/architecture.md sections 'State Management' and 'LocalStorage Schema'. Implement useThoughts React hook that: 1) initializes state with thoughts array from localStorage key 'monjournal_thoughts' on mount (or empty array if missing), 2) validates loaded data via validateThought(), 3) returns object { thoughts: Thought[], addThought(t: Thought): void, getTags(): Tag[], getThoughts(): Thought[] }, 4) persists to localStorage whenever addThought is called, 5) handles localStorage unavailable gracefully (log warning, continue with in-memory state), 6) handles corrupted JSON (reset to empty array), 7) uses getTags() from tagModel.deriveTags(). Add integration tests with localStorage mocking.",
-      "depends_on": ["B", "C"],
+      "content": "Read docs/how/slices/slice-1-data-foundation/slice.md and docs/how/architecture.md sections 'State Management' and 'LocalStorage Schema'. Implement useThoughts React hook that: 1) initializes state with thoughts array from localStorage key 'monjournal_thoughts' on mount (or empty array if missing), 2) validates loaded data via validateThought() from thoughtModel, 3) returns object { thoughts: Thought[], addThought(t: Thought): void, getTags(): Tag[], getThoughts(): Thought[] }, 4) persists to localStorage whenever addThought is called, 5) handles localStorage unavailable gracefully (log warning, continue with in-memory state), 6) handles corrupted JSON (reset to empty array), 7) uses deriveTags() from tagModel for getTags(). Add integration tests with localStorage mocking. Imports thoughtModel, tagModel.",
+      "depends_on": ["A", "C"],
       "status": "pending",
       "role": "dev"
     },
     {
       "id": "F",
       "branch": "task/issue-1043-F",
-      "file": "apps/monjournal/app/src/utils/filterLogic.ts",
-      "content": "Read docs/how/slices/slice-1-data-foundation/slice.md and docs/how/architecture.md section 'Filter State Management'. Implement filterLogic module with: 1) FilterState interface with optional text, dateStart, dateEnd, selectedTags properties, 2) applyFilters(thoughts: Thought[], filters: FilterState): Thought[] that combines filters with AND logic, 3) matchesTextSearch(thought: Thought, query: string): boolean with case-insensitive substring matching on title OR content, 4) matchesDateRange(thought: Thought, start: number | null, end: number | null): boolean with inclusive bounds, 5) matchesTags(thought: Thought, selectedTags: string[]): boolean with OR logic (any tag match). Add comprehensive unit tests for each function and edge cases (empty query, null dates, empty tags).",
-      "depends_on": ["B"],
+      "file": "apps/monjournal/app/src/utils/dateUtils.ts",
+      "content": "Read docs/how/slices/slice-2-thought-list-display/slice.md. Implement dateUtils module with: 1) formatDate(timestamp: number, format: 'relative' | 'absolute'): string - relative returns 'X hours ago', 'yesterday', 'X days ago' with humanized output; absolute returns 'June 4, 2026' (locale-aware via Intl.DateTimeFormat), 2) groupThoughtsByDate(thoughts: Thought[]): Map<string, Thought[]> - groups thoughts by creation date (normalized to midnight), dateKey format 'YYYY-MM-DD', sorts thoughts within group by createdAt descending. Add unit tests covering date formatting, grouping, same-day sorting, empty arrays, and edge cases. Imports thoughtModel.",
+      "depends_on": ["A"],
       "status": "pending",
       "role": "dev"
     },
@@ -59,179 +59,53 @@
       "id": "G",
       "branch": "task/issue-1043-G",
       "file": "apps/monjournal/app/src/components/ThoughtCard.tsx",
-      "content": "Read docs/how/slices/slice-2-thought-list-display/slice.md. Implement ThoughtCard component that: 1) accepts props thought: Thought, onHighlight?: () => void, 2) displays thought title (bold), content (truncated to ~100 chars with ellipsis), creation date via formatDate() in relative format ('2 hours ago'), 3) renders tags via TagDisplay component, 4) uses AppShell card layout with hover state, 5) optional highlight state (border/background change on highlight). Add unit tests with snapshot testing.",
-      "depends_on": ["B"],
+      "content": "Read docs/how/slices/slice-2-thought-list-display/slice.md. Implement ThoughtCard component that: 1) accepts props thought: Thought, onHighlight?: () => void, 2) displays thought title (bold), content (truncated to ~100 chars with ellipsis), creation date via formatDate() in relative format ('2 hours ago'), 3) renders tags via TagDisplay component (import from parallel tasks), 4) uses AppShell card layout with hover state, 5) optional highlight state (border/background change). Add unit tests with snapshot testing. Imports thoughtModel, dateUtils, and will import TagDisplay from display-and-filter.",
+      "depends_on": ["A", "F"],
       "status": "pending",
       "role": "dev"
     },
     {
       "id": "H",
       "branch": "task/issue-1043-H",
-      "file": "apps/monjournal/app/src/utils/dateFormat.ts",
-      "content": "Read docs/how/slices/slice-2-thought-list-display/slice.md. Implement dateFormat utility module with: 1) formatDate(timestamp: number, format: 'relative' | 'absolute'): string function, 2) relative format returns 'X hours ago', 'yesterday', 'X days ago' with humanized output, 3) absolute format returns 'June 4, 2026' (locale-aware via Intl.DateTimeFormat), 4) handle edge cases (current time, very old dates). Add unit tests covering recent dates, historical dates, and relative/absolute formatting.",
-      "depends_on": [],
+      "file": "apps/monjournal/app/src/components/display-and-filter.tsx",
+      "content": "Read docs/how/slices/slice-2-thought-list-display/slice.md and slice-3-filtering-search/slice.md. Implement all display and filter components in one file (or split later): 1) TagDisplay component - renders tags as colored chips with getTagColor(), text color based on background brightness, rounded corners, responsive sizing; 2) ThoughtList component - renders array of ThoughtCard sorted by createdAt descending, empty state message, responsive grid layout (mobile: 1 col, desktop: 2 cols), optional highlight state; 3) TimelineView with TimelineGroup - groups thoughts by date using groupThoughtsByDate(), day separators with absolute date format, reverse chronological order, empty state; 4) ViewModeToggle - two buttons/toggle switch ('List' | 'Timeline'), active state highlighted, onChange callback; 5) FilterPanel with DateRangePicker and TagMultiSelect sub-components - text input, date fields, tag checkboxes, surprise button, clear button, onFilterChange callback. Use AppShell design tokens and shadcn/ui primitives. Imports thoughtModel, tagModel, dateUtils, filterLogic. Add component tests for all.",
+      "depends_on": ["A", "C", "F", "D"],
       "status": "pending",
       "role": "dev"
     },
     {
       "id": "I",
       "branch": "task/issue-1043-I",
-      "file": "apps/monjournal/app/src/utils/groupByDate.ts",
-      "content": "Read docs/how/slices/slice-2-thought-list-display/slice.md. Implement groupByDate utility module with: 1) groupThoughtsByDate(thoughts: Thought[]): Map<string, Thought[]> function that groups thoughts by creation date (normalized to midnight), 2) dateKey format 'YYYY-MM-DD' for stable grouping, 3) sort thoughts within each group by createdAt descending, 4) return Map with string keys. Add unit tests for same-day grouping, empty array, single thought, and ordering.",
-      "depends_on": ["B"],
+      "file": "apps/monjournal/app/src/components/form-components.tsx",
+      "content": "Read docs/how/slices/slice-4-add-thought-form/slice.md. Implement all form components in one file: 1) TagInput controlled component - text input with dropdown, filters suggestions by input (case-insensitive), on Enter adds tag if non-empty/not duplicate, on suggestion click adds tag, clears input after add, prevents empty/duplicate tags; 2) TagList component - renders tags as colored chips with getTagColor(), shows tag name, displays remove button (X) on each chip, calls onRemoveTag() on click, uses inline flex layout. Use AppShell design tokens. Imports tagModel and getTagColor. Add component tests.",
+      "depends_on": ["C"],
       "status": "pending",
       "role": "dev"
     },
     {
       "id": "J",
       "branch": "task/issue-1043-J",
-      "file": "apps/monjournal/app/src/components/TagDisplay.tsx",
-      "content": "Read docs/how/slices/slice-2-thought-list-display/slice.md and slice-1-data-foundation/slice.md. Implement TagDisplay component that: 1) accepts props tags: string[], compact?: boolean, 2) renders each tag as colored chip with getTagColor() from tagModel, 3) uses tag color as background, 4) text color black or white based on background brightness (WCAG AA contrast), 5) rounded corners (4px-8px padding), 6) responsive sizing (larger on desktop, compact on mobile if compact=true), 7) inline flex layout. Add unit tests with color rendering and accessibility checks.",
-      "depends_on": ["C"],
+      "file": "apps/monjournal/app/src/screens/AddThoughtScreen.tsx",
+      "content": "Read docs/how/slices/slice-4-add-thought-form/slice.md and slice-1-data-foundation/slice.md. Implement AddThoughtScreen page that: 1) renders form with title input (required), content textarea (required), tag input section (optional), 2) uses useThoughts hook to get suggestions and call addThought(), 3) manages state for title, content, selectedTags, tagInput, validationErrors (debounced input validation), 4) shows inline error messages for empty title/content, 5) on submit calls createThought() and useThoughts.addThought(), displays success message, redirects to home via useNavigate('/'), 6) cancel clears form or navigates back, 7) uses TagInput and TagList components from form-components, 8) responsive form layout. Add integration tests with localStorage mocking. Imports thoughtModel, useThoughts, and form components.",
+      "depends_on": ["E", "I"],
       "status": "pending",
       "role": "dev"
     },
     {
       "id": "K",
       "branch": "task/issue-1043-K",
-      "file": "apps/monjournal/app/src/components/ThoughtList.tsx",
-      "content": "Read docs/how/slices/slice-2-thought-list-display/slice.md. Implement ThoughtList component that: 1) accepts props thoughts: Thought[], onSurpriseClick?: (thought: Thought) => void, 2) renders array of ThoughtCard components sorted by createdAt descending (most recent first), 3) each card displays via ThoughtCard with tags via TagDisplay, 4) empty state message 'No thoughts yet. Start journaling!' when thoughts.length === 0, 5) responsive grid layout (mobile: 1 column, desktop: 2 columns), 6) optional highlight state from onSurpriseClick. Add unit tests for rendering, empty state, sorting.",
-      "depends_on": ["G"],
+      "file": "apps/monjournal/app/src/screens/HomeScreen.tsx",
+      "content": "Read docs/how/slices/slice-1-data-foundation/slice.md, slice-2-thought-list-display/slice.md, and slice-3-filtering-search/slice.md. Implement HomeScreen as the main container for MonJournal that: 1) initializes useThoughts hook, 2) manages filterState (text, dateStart, dateEnd, selectedTags) and viewMode ('list'|'timeline') with useState, 3) applies filters via applyFilters() from filterLogic, 4) renders FilterPanel, ViewModeToggle, and conditionally ThoughtList or TimelineView with filtered thoughts, 5) implements onFilterChange handler that updates filterState, 6) implements onSurpriseClick handler that selects random thought from filtered results and highlights it (scroll to/ref), 7) manages highlight state. Use AppShell's responsive layout with Tailwind design tokens. Imports useThoughts, filterLogic, and display components. Add integration tests.",
+      "depends_on": ["E", "D", "H"],
       "status": "pending",
       "role": "dev"
     },
     {
       "id": "L",
       "branch": "task/issue-1043-L",
-      "file": "apps/monjournal/app/src/components/TimelineView.tsx",
-      "content": "Read docs/how/slices/slice-2-thought-list-display/slice.md. Implement TimelineView component that: 1) accepts props thoughts: Thought[], onSurpriseClick?: (thought: Thought) => void, 2) uses groupThoughtsByDate() to organize by date, 3) renders TimelineGroup for each date group in reverse chronological order (newest first), 4) empty state message when no thoughts, 5) day separator with absolute date format from formatDate(), 6) thoughts within each group in reverse order. Create TimelineGroup sub-component with date header and thought cards. Add unit tests for grouping, empty state, date ordering.",
-      "depends_on": ["G", "H", "I"],
-      "status": "pending",
-      "role": "dev"
-    },
-    {
-      "id": "M",
-      "branch": "task/issue-1043-M",
-      "file": "apps/monjournal/app/src/components/ViewModeToggle.tsx",
-      "content": "Read docs/how/slices/slice-2-thought-list-display/slice.md. Implement ViewModeToggle component that: 1) accepts props currentMode: 'list' | 'timeline', onChange: (mode: 'list' | 'timeline') => void, 2) renders two buttons or toggle switch labeled 'List' and 'Timeline', 3) active button/segment highlighted (via AppShell design tokens), 4) click handler calls onChange with new mode. Use shadcn/ui button or toggle primitives. Add unit tests for state management and click handling.",
-      "depends_on": [],
-      "status": "pending",
-      "role": "dev"
-    },
-    {
-      "id": "N",
-      "branch": "task/issue-1043-N",
-      "file": "apps/monjournal/app/src/components/FilterPanel.tsx",
-      "content": "Read docs/how/slices/slice-3-filtering-search/slice.md. Implement FilterPanel component that: 1) accepts props existingTags: Tag[], onFilterChange: (filters: FilterState) => void, onSurpriseClick: () => void, 2) manages local state for text, dateStart, dateEnd, selectedTags, 3) renders text input ('Search title and content'), date range picker (two input type=\"date\" fields), tag multi-select (checkboxes), surprise button, optional clear button, 4) calls onFilterChange() on each field change, 5) disables surprise button if no results (handled by parent), 6) responsive layout (vertical stack on mobile, horizontal on desktop). Create sub-components DateRangePicker and TagMultiSelect. Add unit tests for input handling and callback firing.",
-      "depends_on": ["C"],
-      "status": "pending",
-      "role": "dev"
-    },
-    {
-      "id": "O",
-      "branch": "task/issue-1043-O",
-      "file": "apps/monjournal/app/src/screens/AddThoughtScreen.tsx",
-      "content": "Read docs/how/slices/slice-4-add-thought-form/slice.md and slice-1-data-foundation/slice.md. Implement AddThoughtScreen page that: 1) renders form with title input (required), content textarea (required), tag input section (optional), 2) uses useThoughts hook to get suggestions and call addThought(), 3) manages state for title, content, selectedTags, tagInput, validationErrors, 4) validates title and content non-empty on submit (debounced input validation), 5) shows inline error messages, 6) on submit calls createThought() and useThoughts.addThought(), displays success message, redirects to home via useNavigate('/'), 7) cancel clears form or navigates back, 8) uses TagInput and TagList components, 9) responsive form layout via AppShell. Add integration tests with localStorage mocking.",
-      "depends_on": ["E"],
-      "status": "pending",
-      "role": "dev"
-    },
-    {
-      "id": "P",
-      "branch": "task/issue-1043-P",
-      "file": "apps/monjournal/app/src/components/TagInput.tsx",
-      "content": "Read docs/how/slices/slice-4-add-thought-form/slice.md. Implement TagInput controlled component with: 1) props value: string, onChange: (text: string) => void, suggestions: string[], onAddTag: (tag: string) => void, disabled?: boolean, 2) renders text input field with dropdown, 3) filters suggestions by current input (case-insensitive substring match), 4) on Enter key: add tag if input non-empty and not duplicate, 5) on suggestion click: add tag, 6) clears input after tag added, 7) prevents empty or duplicate tags. Add unit tests for filtering, add/remove logic, and Enter key handling.",
-      "depends_on": [],
-      "status": "pending",
-      "role": "dev"
-    },
-    {
-      "id": "Q",
-      "branch": "task/issue-1043-Q",
-      "file": "apps/monjournal/app/src/components/TagList.tsx",
-      "content": "Read docs/how/slices/slice-4-add-thought-form/slice.md. Implement TagList component that: 1) accepts props tags: string[], onRemoveTag: (tag: string) => void, 2) renders each tag as colored chip via getTagColor(), 3) shows tag name and background color, 4) displays remove button (X) on each chip, 5) on remove click calls onRemoveTag() with tag name, 6) uses inline flex layout. Add unit tests for rendering and remove callback.",
-      "depends_on": ["C"],
-      "status": "pending",
-      "role": "dev"
-    },
-    {
-      "id": "R",
-      "branch": "task/issue-1043-R",
       "file": "apps/monjournal/app/src/main.tsx",
-      "content": "Read docs/how/architecture.md section 'Routing' and apps/appshell/app/src/main.tsx for reference. Update main.tsx router configuration to: 1) import HomeScreen from screens/HomeScreen, AddThoughtScreen from screens/AddThoughtScreen, 2) add routes: { path: '/', element: <HomeScreen /> }, { path: '/add', element: <AddThoughtScreen /> }, { path: '/about', element: <AboutScreen /> (keep AppShell's AboutScreen), 3) keep all AppShell root layout structure (Layout, ErrorBoundary, ThemeToggle), 4) verify lazy imports work correctly. Do not modify other parts of main.tsx or AppLayout. Test with npm run dev to verify routes render.",
-      "depends_on": ["A", "O"],
-      "status": "pending",
-      "role": "dev"
-    },
-    {
-      "id": "S",
-      "branch": "task/issue-1043-S",
-      "file": "apps/monjournal/app/src/components/layout/Header.tsx",
-      "content": "Read apps/appshell/app/src/components/layout/Header.tsx for reference. Update Header.tsx navigation links to: 1) keep existing Layout structure and styling, 2) add navigation link to Home ('/' route, label 'Home'), 3) add navigation link to Add Thought ('/add' route, label 'Add Thought'), 4) keep About link from AppShell, 5) use AppShell's Link components and Tailwind spacing. Do not modify layout structure or AppLayout. Test navigation works in dev.",
-      "depends_on": ["R"],
-      "status": "pending",
-      "role": "dev"
-    },
-    {
-      "id": "T",
-      "branch": "task/issue-1043-T",
-      "file": "apps/monjournal/app/index.html",
-      "content": "Update index.html title from 'AppShell' to 'MonJournal — Personal Thought Journal'. Keep all other AppShell structure (meta tags, element ids, script tags). No other changes needed.",
-      "depends_on": [],
-      "status": "pending",
-      "role": "dev"
-    },
-    {
-      "id": "U",
-      "branch": "task/issue-1043-U",
-      "file": "apps/monjournal/app/package.json",
-      "content": "Update package.json name field from 'appshell' to 'monjournal'. Keep all other dependencies, scripts, and configuration unchanged. No other changes needed.",
-      "depends_on": [],
-      "status": "pending",
-      "role": "dev"
-    },
-    {
-      "id": "V",
-      "branch": "task/issue-1043-V",
-      "file": "apps/monjournal/app/src/App.tsx",
-      "content": "Verify and if needed update App.tsx to import and render HomeScreen as primary content. Read the current AppShell App.tsx structure. If App.tsx exists and wraps routes, no changes needed — main.tsx is primary. If App.tsx needs to be created, create minimal wrapper that renders routes from main.tsx. Keep AppShell's ErrorBoundary and Layout structure. Test with npm run dev.",
-      "depends_on": ["A"],
-      "status": "pending",
-      "role": "dev"
-    },
-    {
-      "id": "W",
-      "branch": "task/issue-1043-W",
-      "file": "apps/monjournal/app/src/index.css",
-      "content": "Verify AppShell's globals.css and Tailwind config are in place. If not already present, ensure: 1) src/styles/globals.css exists with design tokens (colors, spacing, typography), 2) tailwind.config.ts configured with design tokens, 3) index.css imports globals.css. Do NOT modify design tokens — they are frozen from AppShell. Only verify they exist and are correctly imported. Test with npm run dev to ensure styles load.",
-      "depends_on": [],
-      "status": "pending",
-      "role": "dev"
-    },
-    {
-      "id": "X",
-      "branch": "task/issue-1043-X",
-      "file": "apps/monjournal/app/src/components/index.ts",
-      "content": "Create or update src/components/index.ts barrel file that re-exports all new components for clean imports: ThoughtCard, ThoughtList, TimelineView, TagDisplay, ViewModeToggle, FilterPanel, TagInput, TagList. Format: export { ThoughtCard } from './ThoughtCard'; export { ... } etc. This allows parent code to import from 'src/components' instead of deep paths. Test imports resolve correctly.",
-      "depends_on": ["G", "K", "L", "M", "N", "P", "Q"],
-      "status": "pending",
-      "role": "dev"
-    },
-    {
-      "id": "Y",
-      "branch": "task/issue-1043-Y",
-      "file": "apps/monjournal/app/README.md",
-      "content": "Create or update apps/monjournal/app/README.md with: 1) project title 'MonJournal', 2) description 'Personal thought journal app with localStorage persistence', 3) quick start: npm install, npm run dev, open http://localhost:5173, 4) key features: add thoughts, filter by text/date/tags, timeline view, deterministic tag colors, 5) tech stack: React, Vite, TypeScript, Tailwind, localStorage, 6) no backend/auth. Keep it concise (< 100 lines). Reference docs/how/architecture.md for full details.",
-      "depends_on": [],
-      "status": "pending",
-      "role": "dev"
-    },
-    {
-      "id": "Z",
-      "branch": "task/issue-1043-Z",
-      "file": "apps/monjournal/app/src/__tests__/integration.test.ts",
-      "content": "Create integration test file that verifies: 1) app loads without errors (npm run dev), 2) HomeScreen renders, 3) ThoughtList and TimelineView render with empty state, 4) AddThoughtScreen form renders and submits, 5) new thought appears in list after save, 6) FilterPanel filters work (text search, date range, tags), 7) ViewModeToggle switches views, 8) Surprise button selects random thought. Use Vitest + React Testing Library. Run npm run test to verify all tests pass. Mock localStorage for tests.",
-      "depends_on": ["A", "O", "R"],
+      "content": "Read docs/how/architecture.md section 'Routing' and apps/appshell/app/src/main.tsx for reference. Update main.tsx to: 1) import HomeScreen from screens/HomeScreen, AddThoughtScreen from screens/AddThoughtScreen, keep AboutScreen, 2) add routes: { path: '/', element: <HomeScreen /> }, { path: '/add', element: <AddThoughtScreen /> }, { path: '/about', element: <AboutScreen /> }, 3) keep AppShell root layout structure (Layout, ErrorBoundary, ThemeToggle), 4) update Header.tsx nav links to Home, Add Thought, About, 5) update index.html title to 'MonJournal — Personal Thought Journal', 6) update package.json name to 'monjournal', 7) verify lazy imports work, 8) test with npm run dev. Do not modify AppLayout, ErrorBoundary, or frozen files.",
+      "depends_on": ["K", "J"],
       "status": "pending",
       "role": "dev"
     }
