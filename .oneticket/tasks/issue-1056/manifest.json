@@ -53,7 +53,7 @@
       "role": "architect",
       "content": "CREATE apps/monjournal/docs/how/slices/slice-7-about-screen/slice.md documenting the About screen feature. This screen displays information about MonJournal. Include: overview, technical scope (route /about, component AboutScreen), modules (AboutScreen.tsx), acceptance criteria, testing strategy, and related epics. Read apps/monjournal/app/src/screens/AboutScreen.tsx to understand what is displayed. Use template from .agents/skills/oneticket-doc-structure. Include proper frontmatter with title 'Slice 7 — About Screen'.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "G",
