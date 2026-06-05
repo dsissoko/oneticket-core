@@ -51,15 +51,17 @@ async function getExistingPR(branch, repo, token) {
 // ---------------------------------------------------------------------------
 
 export function parseComment(commentBody) {
-  const match = commentBody.match(/@([a-zA-Z][a-zA-Z0-9_-]*)/);
+  const safeMode = commentBody.includes('--safe');
+  const cleanBody = commentBody.replace('--safe', '').trim();
+  const match = cleanBody.match(/@([a-zA-Z][a-zA-Z0-9_-]*)/);
   if (!match) {
     console.log('[agent-dispatch] No @role found in comment — exiting.');
     return null;
   }
   const role    = match[1].toLowerCase();
-  const request = commentBody.replace(match[0], '').trim();
-  console.log(`[agent-dispatch] role="${role}", request="${request.slice(0, 80)}..."`);
-  return { role, request };
+  const request = cleanBody.replace(match[0], '').trim();
+  console.log(`[agent-dispatch] role="${role}", safeMode=${safeMode}, request="${request.slice(0, 80)}..."`);
+  return { role, request, safeMode };
 }
 
 // ---------------------------------------------------------------------------
@@ -83,7 +85,7 @@ export function resolveProjectContext(config) {
 
 export function buildPrompt({ role, request, branch, issueNumber, repo, docsPath, appPath,
   currentProject, contextBlock, originType, prNumber, replyToCommentId,
-  commentPath, commentLine, commentDiffHunk, config }) {
+  commentPath, commentLine, commentDiffHunk, config, safeMode = false }) {
 
   const lines = [];
 
@@ -143,6 +145,18 @@ export function buildPrompt({ role, request, branch, issueNumber, repo, docsPath
   lines.push(`## Request`);
   lines.push(request || `@${role}`);
   lines.push('');
+
+  // --safe mode — injected when comment contains '--safe'
+  // Forces strictly sequential manifest decomposition — no parallel tasks.
+  if (safeMode) {
+    lines.push(`## Sequential mode (--safe)`);
+    lines.push(`The manifest MUST be strictly sequential — no parallel tasks allowed.`);
+    lines.push(`Every task must declare depends_on pointing to the previous task.`);
+    lines.push(`The dependency chain must be linear: A → B → C → D → ... → N.`);
+    lines.push(`depends_on: [] is only allowed for the very first task (A).`);
+    lines.push(`No two tasks may have the same depends_on value or run concurrently.`);
+    lines.push('');
+  }
 
   // reverse-doc complement — injected when request contains 'reverse-doc'
   // Ensures doc structure exists (guaranteed by check-prerequisites.mjs upstream)
@@ -210,7 +224,7 @@ async function main() {
   const parsed = parseComment(commentBody);
   if (!parsed) return;
 
-  const { role, request } = parsed;
+  const { role, request, safeMode } = parsed;
   const featureBranch = `feature/issue-${issueNumber}`;
 
   // 2. Load config
@@ -228,6 +242,7 @@ async function main() {
     role, request, branch: featureBranch, issueNumber, repo,
     docsPath, appPath, currentProject, contextBlock,
     originType, prNumber, replyToCommentId,
+    commentPath, commentLine, commentDiffHunk, config, safeMode,
     commentPath, commentLine, commentDiffHunk, config,
   });
   console.log(`[agent-dispatch] Prompt built (${prompt.length} chars).`);
