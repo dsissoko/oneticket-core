@@ -6,6 +6,8 @@ import { TimelineGroup } from './TimelineGroup';
 interface TimelineViewProps {
   thoughts: Thought[];
   onSurpriseClick?: (thought: Thought) => void;
+  highlightedThoughtId?: string | null;
+  highlightedRef?: React.RefObject<HTMLDivElement>;
 }
 
 /**
@@ -15,6 +17,8 @@ interface TimelineViewProps {
 export function TimelineView({
   thoughts,
   onSurpriseClick,
+  highlightedThoughtId,
+  highlightedRef,
 }: TimelineViewProps): React.ReactElement {
   const groupedThoughts = groupThoughtsByDate(thoughts);
 
@@ -40,6 +44,8 @@ export function TimelineView({
             date={dateTimestamp}
             thoughts={dayThoughts}
             onSurpriseClick={onSurpriseClick}
+            highlightedThoughtId={highlightedThoughtId}
+            highlightedRef={highlightedRef}
           />
         );
       })}

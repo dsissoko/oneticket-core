@@ -5,6 +5,8 @@ import { ThoughtCard } from './ThoughtCard';
 interface ThoughtListProps {
   thoughts: Thought[];
   onSurpriseClick?: (thought: Thought) => void;
+  highlightedThoughtId?: string | null;
+  highlightedRef?: React.RefObject<HTMLDivElement>;
 }
 
 /**
@@ -13,6 +15,8 @@ interface ThoughtListProps {
 export function ThoughtList({
   thoughts,
   onSurpriseClick,
+  highlightedThoughtId,
+  highlightedRef,
 }: ThoughtListProps): React.ReactElement {
   // Sort thoughts by createdAt descending (most recent first)
   const sortedThoughts = [...thoughts].sort(
@@ -30,13 +34,18 @@ export function ThoughtList({
   return (
     <div className="thought-list">
       {sortedThoughts.map((thought) => (
-        <ThoughtCard
+        <div
           key={thought.id}
-          thought={thought}
-          onHighlight={
-            onSurpriseClick ? () => onSurpriseClick(thought) : undefined
-          }
-        />
+          ref={thought.id === highlightedThoughtId ? highlightedRef : undefined}
+          className={thought.id === highlightedThoughtId ? 'highlighted' : ''}
+        >
+          <ThoughtCard
+            thought={thought}
+            onHighlight={
+              onSurpriseClick ? () => onSurpriseClick(thought) : undefined
+            }
+          />
+        </div>
       ))}
     </div>
   );
