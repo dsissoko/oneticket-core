@@ -14,7 +14,7 @@ function LocationDisplay() {
 }
 
 describe('Internal Navigation', () => {
-  it('clicking About Us navigates to /about', () => {
+  it('clicking About navigates to /about', () => {
     renderWithProviders(
       <>
         <Routes>
@@ -27,7 +27,10 @@ describe('Internal Navigation', () => {
       </>
     );
 
-    fireEvent.click(screen.getByText('About Us'));
+    // Find the About link in the header (not the page heading)
+    const aboutLinks = screen.getAllByText('About');
+    const headerLink = aboutLinks.find(el => el.closest('header')) || aboutLinks[0];
+    fireEvent.click(headerLink);
     expect(screen.getByTestId('location').textContent).toBe('/about');
   });
 
