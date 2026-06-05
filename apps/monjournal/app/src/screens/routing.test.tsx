@@ -26,7 +26,7 @@ function AppRoutes() {
 describe('Routing', () => {
   it('/ renders HomeScreen', () => {
     renderWithProviders(<AppRoutes />, { initialPath: '/' });
-    expect(screen.getByText('Welcome to the foundation.')).toBeInTheDocument();
+    expect(screen.getByText('Welcome to MonJournal')).toBeInTheDocument();
   });
 
   it('/about renders AboutScreen', () => {
