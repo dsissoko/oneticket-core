@@ -331,6 +331,9 @@ async function main() {
   if (mergeError) {
     console.error(`[orchestrate] MERGE FAILURE: ${mergeError.message}`);
 
+    // Abort the failed merge to clean up git state before any further git operations
+    try { run('orchestrate', 'git merge --abort'); } catch (_) {}
+
     task.status = 'merge-failed';
     const manifestGitPath = path.join(TASKS_DIR, `issue-${issueNumber}`, MANIFEST_FILE);
     writeManifest(manifest);
