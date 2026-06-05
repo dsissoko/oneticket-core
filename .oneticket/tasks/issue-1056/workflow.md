@@ -4,3 +4,4 @@
 2026-06-05 15:56 | F | apps/monjournal/docs/how/slices/slice-7-about-screen/slice.md
 2026-06-05 15:56 | E | apps/monjournal/docs/how/slices/slice-6-demo-screen/slice.md
 2026-06-05 15:57 | A | apps/monjournal/docs/how/architecture.md
+2026-06-05 15:58 | G | apps/monjournal/docs/what/epics/epic-0-mvp/epic.md
