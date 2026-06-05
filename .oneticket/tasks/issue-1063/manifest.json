@@ -7,7 +7,7 @@
       "file": "apps/spaceinvaders/docs/how/slices/slice-1-foundation/slice.md",
       "content": "Implement Slice 1 — Foundation: Game Loop, Canvas Setup, UI Framework. Read the slice spec at apps/spaceinvaders/docs/how/slices/slice-1-foundation/slice.md and the architecture at apps/spaceinvaders/docs/how/architecture.md. Implement: (1) GameLoopManager class in src/game/GameLoopManager.ts with requestAnimationFrame loop and delta-time calculations, (2) RenderingSystem class in src/game/RenderingSystem.ts with clear() and text rendering for HUD, (3) InputSystem class in src/game/InputSystem.ts with keyboard scaffolding, (4) StateMachine class in src/game/StateMachine.ts with state transitions, (5) Game.tsx main React component with useState and useRef hooks, (6) HUD.tsx overlay component displaying score/lives/wave, (7) StartScreen.tsx with title and start button, (8) minimal Entity.ts classes (Formation, Player, Bullet, Shield stubs). The HomeScreen.tsx must be replaced with the actual game component. Canvas size: 800×600. Target 60 FPS. Success: canvas renders, game loop runs, state transitions work, input responsive.",
       "depends_on": [],
-      "status": "pending",
+      "status": "in_progress",
       "role": "dev"
     },
     {
@@ -15,7 +15,9 @@
       "branch": "task/issue-1063-B",
       "file": "apps/spaceinvaders/docs/how/slices/slice-2-enemies/slice.md",
       "content": "Implement Slice 2 — Enemy Formation & Rendering. Read the slice spec at apps/spaceinvaders/docs/how/slices/slice-2-enemies/slice.md. Build upon Slice 1 foundation. Implement: (1) Enemy class in src/game/entities/Enemy.ts with type, points, alive flag, (2) Formation class in src/game/entities/Formation.ts with 11×5 grid initialization, lateral movement, edge detection, speed scaling based on wave and alive-enemy count, (3) extend RenderingSystem.drawFormation() and drawEnemy() for three enemy types (small/medium/large) with sprite rendering, (4) integrate Formation.update(deltaTime, waveNumber) into game loop. Data: Enemy positions, type-to-points mapping, speed multipliers per wave. Success: formation renders at correct grid, moves laterally, bounces at edges, drops on bounce, speed scales with waves, all 55 enemies render correctly.",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -24,7 +26,9 @@
       "branch": "task/issue-1063-C",
       "file": "apps/spaceinvaders/docs/how/slices/slice-3-player/slice.md",
       "content": "Implement Slice 3 — Player Control & Firing. Read the slice spec at apps/spaceinvaders/docs/how/slices/slice-3-player/slice.md. Build upon Slice 1 foundation. Implement: (1) Player class in src/game/entities/Player.ts with position, bounds (25×25), invincibility tracking, single bullet-in-flight constraint, (2) PlayerBullet class in src/game/entities/PlayerBullet.ts with position, velocity (upward), off-screen detection, (3) extend InputSystem with full keyboard handlers (arrow keys left/right, spacebar fire) and touch handlers (swipe detection), (4) extend RenderingSystem.drawPlayer() and .drawPlayerBullet(), (5) integrate Player.update() into game loop with input state. Constraints: player movement clamped to canvas width, only one bullet on screen at a time, fire on spacebar. Success: player renders at bottom-center (800/2, 550), responds to arrow keys/swipe, fires bullets upward on spacebar, movement smooth and bounded.",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -33,7 +37,9 @@
       "branch": "task/issue-1063-D",
       "file": "apps/spaceinvaders/docs/how/slices/slice-4-shields/slice.md",
       "content": "Implement Slice 4 — Destructible Shields. Read the slice spec at apps/spaceinvaders/docs/how/slices/slice-4-shields/slice.md. Build upon Slice 1 foundation. Implement: (1) Shield class in src/game/entities/Shield.ts managing 4×4 grid of 16 segments per shield, (2) Segment class with alive/damaged state, (3) Shield initialization: place 4 shields horizontally across canvas (y=350, spaced evenly), (4) damageSegment(index) method to mark segment as destroyed, (5) extend RenderingSystem.drawShields() and .drawShield() to render only alive segments, (6) Shield.reset() for wave resets, (7) integrate Shield array into GameLoopState and game loop rendering. Segment size: 12×12 pixels. Success: 4 shields render in correct positions, shield segments can be damaged (verified visually via missing squares), damaged segments do not render.",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -42,7 +48,11 @@
       "branch": "task/issue-1063-E",
       "file": "apps/spaceinvaders/docs/how/slices/slice-5-collision/slice.md",
       "content": "Implement Slice 5 — Collision Detection & Resolution. Read the slice spec at apps/spaceinvaders/docs/how/slices/slice-5-collision/slice.md. Build upon Slices 2, 3, 4 foundation. Implement: (1) PhysicsSystem class in src/game/PhysicsSystem.ts with checkCollisions() method, (2) AABB collision detection helper: checkAABB(a, b) → boolean, (3) collision checks for all pairs: player bullets ↔ enemies, player bullets ↔ shield segments, enemy bullets ↔ player, enemy bullets ↔ shields, formation ↔ shields, formation ↔ player, (4) collision responses: mark enemy as dead, remove bullet, damage shield segment, trigger game-over on player death, (5) score award on enemy kill (5/10/20 points for small/medium/large), (6) integrate PhysicsSystem.checkCollisions() into game loop after entity updates, call onCollision callbacks to update React state. Success: bullets remove enemies on impact, shields segment visually, enemy bullets destroy player (GameOver), score increments on kills.",
-      "depends_on": ["B", "C", "D"],
+      "depends_on": [
+        "B",
+        "C",
+        "D"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -51,7 +61,9 @@
       "branch": "task/issue-1063-F",
       "file": "apps/spaceinvaders/docs/how/slices/slice-6-enemy-fire/slice.md",
       "content": "Implement Slice 6 — Enemy Fire System. Read the slice spec at apps/spaceinvaders/docs/how/slices/slice-6-enemy-fire/slice.md. Build upon Slice 2 foundation. Implement: (1) EnemyBullet class in src/game/entities/EnemyBullet.ts with pooling support (pre-allocate array of 20 reusable bullets), (2) BulletPool class in src/game/BulletPool.ts for object reuse to minimize GC, (3) enemy fire system: random enemy from bottom row fires once per 1-2 seconds (configurable), (4) extend RenderingSystem.drawEnemyBullets() to render active bullets, (5) enemy bullet movement downward with velocity 200 px/s, (6) off-screen removal after exiting bottom of canvas, (7) integrate enemy fire into game loop update. Fire rate: 1 bullet per 1.5 seconds per enemy (averaged across formation). Success: enemy bullets appear from random bottom-row enemy, move downward, exit cleanly off-screen, pooling prevents memory leaks.",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -60,7 +72,10 @@
       "branch": "task/issue-1063-G",
       "file": "apps/spaceinvaders/docs/how/slices/slice-7-bonus/slice.md",
       "content": "Implement Slice 7 — Mystery Ship & Bonus Encounters. Read the slice spec at apps/spaceinvaders/docs/how/slices/slice-7-bonus/slice.md. Build upon Slices 2 and 5 foundation. Implement: (1) MysteryShip class in src/game/entities/MysteryShip.ts with position, velocity, bounding box, (2) mystery ship spawning logic: appears every 15-25 seconds (random), travels left-to-right across top of screen at y=50, (3) mystery ship collision: player bullet kills it, award 50 bonus points, (4) extend RenderingSystem.drawMysteryShip() for rendering, (5) integrate MysteryShip into GameLoopState and game loop, (6) track mystery ship state (active/inactive). Success: mystery ship appears at random intervals across top of screen, player can shoot for 50-point bonus, collision removes ship.",
-      "depends_on": ["B", "E"],
+      "depends_on": [
+        "B",
+        "E"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -69,7 +84,11 @@
       "branch": "task/issue-1063-H",
       "file": "apps/spaceinvaders/docs/how/slices/slice-8-waves/slice.md",
       "content": "Implement Slice 8 — Wave Progression & Difficulty Scaling. Read the slice spec at apps/spaceinvaders/docs/how/slices/slice-8-waves/slice.md. Build upon all previous slices. Implement: (1) wave progression logic: when all 55 enemies destroyed, transition to Victory state, (2) Victory screen component showing wave number and current score, (3) auto-advance to next wave after 2-second delay, (4) difficulty scaling per wave: formation base speed increases by 15% per wave, enemy bullet fire rate increases by 10% per wave, (5) reset shields and player position for each new wave, maintain lives and score across waves, (6) GameOver state: trigger when lives reach 0 or formation reaches bottom of screen (y > 550), (7) GameOverScreen component showing final score and restart button, (8) integrate all state transitions into StateMachine and game loop. Success: defeating all enemies triggers Victory screen, auto-advances to harder wave 2, game ends on lives=0 or formation invasion, restart button resets to Start.",
-      "depends_on": ["E", "F", "G"],
+      "depends_on": [
+        "E",
+        "F",
+        "G"
+      ],
       "status": "pending",
       "role": "dev"
     }
