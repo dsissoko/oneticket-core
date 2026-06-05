@@ -1,0 +1,61 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ThoughtList > renders list layout correctly (snapshot) 1`] = `
+<ul
+  class="space-y-4 p-4"
+  role="list"
+>
+  <li>
+    <div
+      data-testid="thought-card-1"
+    >
+      <div
+        class="title"
+      >
+        Thought 1
+      </div>
+      <div
+        class="content"
+      >
+        This is the content of the thought
+      </div>
+      <div
+        class="date"
+      >
+        1717534800000
+      </div>
+      <div
+        class="tags"
+      >
+        personal, morning
+      </div>
+    </div>
+  </li>
+  <li>
+    <div
+      data-testid="thought-card-2"
+    >
+      <div
+        class="title"
+      >
+        Thought 2
+      </div>
+      <div
+        class="content"
+      >
+        This is the content of the thought
+      </div>
+      <div
+        class="date"
+      >
+        1717534700000
+      </div>
+      <div
+        class="tags"
+      >
+        personal, morning
+      </div>
+    </div>
+  </li>
+</ul>
+`;
