@@ -44,7 +44,7 @@
       "role": "architect",
       "content": "CREATE apps/monjournal/docs/how/slices/slice-6-demo-screen/slice.md documenting the Demo screen feature. This screen demonstrates MonJournal with sample data. Include: overview, technical scope (route /demo, component DemoScreen), modules (DemoScreen.tsx, sampleThoughts.ts), acceptance criteria, testing strategy, and related epics. Read apps/monjournal/app/src/screens/DemoScreen.tsx and apps/monjournal/app/src/utils/sampleThoughts.ts to understand implementation. Use template from .agents/skills/oneticket-doc-structure. Include proper frontmatter with title 'Slice 6 — Demo Screen'.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "F",
