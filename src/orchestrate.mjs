@@ -224,6 +224,25 @@ async function findTaskPR(taskBranch, featureBranch, repo, token) {
   }
 }
 
+async function findFeaturePR(featureBranch, repo, token) {
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${repo}/pulls?head=${repo.split('/')[0]}:${featureBranch}&state=open`,
+      { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' } }
+    );
+    const prs = await res.json();
+    if (prs.length > 0) {
+      console.log(`[orchestrate] Found feature PR #${prs[0].number} for ${featureBranch}`);
+      return String(prs[0].number);
+    }
+    console.log(`[orchestrate] No open feature PR found for ${featureBranch}`);
+    return null;
+  } catch (err) {
+    console.warn(`[orchestrate] Could not find feature PR for ${featureBranch}: ${err.message}`);
+    return null;
+  }
+}
+
 async function closePR(prNumber, repo, token) {
   try {
     const res = await fetch(
@@ -356,6 +375,12 @@ async function main() {
     await updatePR(issueNumber, featureBranch, repo, ghToken, manifest);
     await applyLabel('ready for review', issueNumber, repo, ghToken, 'orchestrate');
     await removeLabel('in progress', issueNumber, repo, ghToken, 'orchestrate');
+
+    // Also apply label on the feature PR to trigger docs-site deploy preview
+    const featurePrNumber = await findFeaturePR(featureBranch, repo, ghToken);
+    if (featurePrNumber) {
+      await applyLabel('ready for review', featurePrNumber, repo, ghToken, 'orchestrate');
+    }
 
     // Cleanup task logs if configured — always preserved on merge-failed
     if (config.cleanup_on_success !== false) {
