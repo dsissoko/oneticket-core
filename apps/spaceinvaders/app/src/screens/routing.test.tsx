@@ -24,9 +24,10 @@ function AppRoutes() {
 }
 
 describe('Routing', () => {
-  it('/ renders HomeScreen', () => {
+  it('/ renders HomeScreen (Game)', () => {
     renderWithProviders(<AppRoutes />, { initialPath: '/' });
-    expect(screen.getByText('Welcome to the foundation.')).toBeInTheDocument();
+    // Game component renders a canvas with class 'border-4 border-green-400'
+    expect(screen.getByRole('heading', { name: /Space Invaders/i })).toBeInTheDocument();
   });
 
   it('/about renders AboutScreen', () => {

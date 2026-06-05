@@ -14,7 +14,7 @@ function LocationDisplay() {
 }
 
 describe('Internal Navigation', () => {
-  it('clicking About Us navigates to /about', () => {
+  it('clicking About navigates to /about', () => {
     renderWithProviders(
       <>
         <Routes>
@@ -27,7 +27,7 @@ describe('Internal Navigation', () => {
       </>
     );
 
-    fireEvent.click(screen.getByText('About Us'));
+    fireEvent.click(screen.getByText('About'));
     expect(screen.getByTestId('location').textContent).toBe('/about');
   });
 
