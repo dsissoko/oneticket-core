@@ -12,10 +12,12 @@ import type {
   BoundingBox
 } from './types'
 import { Formation as FormationImpl } from './entities/Formation'
+import { ShieldImpl } from './Shield'
 
 // Re-export for backward compatibility
 export { Formation as FormationImpl } from './entities/Formation'
 export { Enemy } from './entities/Enemy'
+export { ShieldImpl } from './Shield'
 
 /**
  * Player class - represents the player's ship
@@ -140,29 +142,31 @@ export class PlayerBulletImpl implements PlayerBullet {
   vx: number = 0
   vy: number = -300
   type: 'player' = 'player'
+  active: boolean = false // Flag for collision and pooling tracking
 
   constructor(x: number, y: number) {
     this.x = x
     this.y = y
+    this.active = true
   }
 
   /**
-   * Update bullet position
-   */
+    * Update bullet position
+    */
   update(deltaTime: number): void {
     this.y += this.vy * (deltaTime / 1000)
   }
 
   /**
-   * Check if bullet is off-screen
-   */
+    * Check if bullet is off-screen
+    */
   isOffScreen(canvasHeight: number): boolean {
     return this.y + this.height < 0
   }
 
   /**
-   * Get bounding box for collision detection
-   */
+    * Get bounding box for collision detection
+    */
   getBoundingBox(): BoundingBox {
     return {
       x: this.x,
@@ -173,65 +177,31 @@ export class PlayerBulletImpl implements PlayerBullet {
   }
 
   /**
-   * Render bullet (delegated to RenderingSystem)
-   */
+    * Render bullet (delegated to RenderingSystem)
+    */
   render(ctx: CanvasRenderingContext2D): void {
     // Drawing is handled by RenderingSystem
     // This method is here for interface completeness
   }
-}
 
-/**
- * Shield class - represents one shield bunker
- */
-export class ShieldImpl implements Shield {
-  x: number
-  y: number
-  segments: Segment[] = []
-
-  constructor(x: number, y: number) {
+  /**
+    * Reset bullet to active state (for pooling)
+    */
+  reset(x: number, y: number): void {
     this.x = x
     this.y = y
-
-    // Create a 4×4 grid of segments (stub)
-    for (let i = 0; i < 16; i++) {
-      const segX = x + (i % 4) * 8
-      const segY = y + Math.floor(i / 4) * 8
-      this.segments.push({
-        x: segX,
-        y: segY,
-        width: 7,
-        height: 7,
-        alive: true
-      })
-    }
+    this.active = true
   }
 
   /**
-   * Damage a segment
-   */
-  damageSegment(index: number): void {
-    if (index >= 0 && index < this.segments.length) {
-      this.segments[index].alive = false
-    }
-  }
-
-  /**
-   * Check if shield is destroyed
-   */
-  isDestroyed(): boolean {
-    return this.segments.every((seg) => !seg.alive)
-  }
-
-  /**
-   * Reset shield to full health
-   */
-  reset(): void {
-    this.segments.forEach((seg) => {
-      seg.alive = true
-    })
+    * Deactivate bullet (remove from game)
+    */
+  deactivate(): void {
+    this.active = false
   }
 }
+
+
 
 /**
  * MysteryShip class
@@ -243,6 +213,7 @@ export class MysteryShipImpl implements MysteryShip {
   height: number = 15
   vx: number = 100 // pixels per second
   active: boolean = false
+  alive: boolean = false // For collision tracking
 
   constructor() {
     this.x = 0
@@ -250,22 +221,23 @@ export class MysteryShipImpl implements MysteryShip {
   }
 
   /**
-   * Activate the mystery ship
-   */
+    * Activate the mystery ship
+    */
   activate(): void {
     this.active = true
+    this.alive = true
   }
 
   /**
-   * Deactivate the mystery ship
-   */
+    * Deactivate the mystery ship
+    */
   deactivate(): void {
     this.active = false
   }
 
   /**
-   * Update position
-   */
+    * Update position
+    */
   update(deltaTime: number, canvasWidth: number): void {
     if (!this.active) return
 
@@ -274,6 +246,19 @@ export class MysteryShipImpl implements MysteryShip {
     // Deactivate if off-screen
     if (this.x > canvasWidth) {
       this.deactivate()
+      this.alive = false
+    }
+  }
+
+  /**
+    * Get bounding box for collision detection
+    */
+  getBoundingBox(): BoundingBox {
+    return {
+      x: this.x,
+      y: this.y,
+      width: this.width,
+      height: this.height
     }
   }
 }

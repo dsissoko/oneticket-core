@@ -2,6 +2,8 @@
  * Enemy class — represents a single enemy in the formation
  */
 
+import type { BoundingBox } from '../types'
+
 export type EnemyType = 'small' | 'medium' | 'large'
 
 export class Enemy {
@@ -40,17 +42,29 @@ export class Enemy {
   }
 
   /**
-   * Get the points value for this enemy
-   */
+    * Get the points value for this enemy
+    */
   getPoints(): number {
     return this.points
   }
 
   /**
-   * Set the bounding box dimensions
-   */
+    * Set the bounding box dimensions
+    */
   setBoundingBox(width: number, height: number): void {
     this.width = width
     this.height = height
+  }
+
+  /**
+    * Get bounding box for collision detection
+    */
+  getBoundingBox(): BoundingBox {
+    return {
+      x: this.x,
+      y: this.y,
+      width: this.width,
+      height: this.height
+    }
   }
 }

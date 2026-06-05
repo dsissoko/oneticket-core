@@ -8,7 +8,10 @@ import { RenderingSystem } from '@/game/RenderingSystem'
 import { InputSystem } from '@/game/InputSystem'
 import { StateMachine } from '@/game/StateMachine'
 import { Formation } from '@/game/entities/Formation'
-import { PlayerImpl, ShieldImpl } from '@/game/Entity'
+import { PlayerImpl } from '@/game/Entity'
+import { ShieldImpl } from '@/game/Shield'
+import { PhysicsSystem } from '@/game/physics/PhysicsSystem'
+import { BulletPool } from '@/game/BulletPool'
 import StartScreen from './StartScreen'
 import HUD from './HUD'
 import type { GameLoopState, GameState } from '@/game/types'
@@ -26,6 +29,8 @@ export function Game(): React.ReactElement {
   const renderingSystemRef = useRef<RenderingSystem | null>(null)
   const inputSystemRef = useRef<InputSystem | null>(null)
   const stateMachineRef = useRef<StateMachine>(new StateMachine('Start'))
+  const physicsSystemRef = useRef<PhysicsSystem | null>(null)
+  const bulletPoolRef = useRef<BulletPool | null>(null)
   const gameStateRef = useRef<GameLoopState>({
     formation: null,
     player: null,
@@ -45,8 +50,8 @@ export function Game(): React.ReactElement {
   const CANVAS_HEIGHT = 600
 
   /**
-   * Initialize game when component mounts
-   */
+    * Initialize game when component mounts
+    */
   useEffect(() => {
     if (!canvasRef.current) return
 
@@ -58,6 +63,21 @@ export function Game(): React.ReactElement {
     try {
       renderingSystemRef.current = new RenderingSystem(canvas)
       inputSystemRef.current = new InputSystem(window)
+
+      // Initialize physics system with callbacks
+      physicsSystemRef.current = new PhysicsSystem({
+        onScoreChange: (newScore) => setScore(newScore),
+        onLivesChange: (newLives) => setLives(newLives),
+        onGameStateChange: (newState) => {
+          if (newState === 'GameOver') {
+            stateMachineRef.current.transitionTo('GameOver')
+            setGameState('GameOver')
+          }
+        }
+      })
+
+      // Initialize bullet pool for enemy bullets
+      bulletPoolRef.current = new BulletPool(10, 150)
 
       // Create game loop manager
       gameLoopRef.current = new GameLoopManager(
@@ -86,8 +106,8 @@ export function Game(): React.ReactElement {
   }, [])
 
   /**
-   * Handle game state updates (called by game loop each frame)
-   */
+    * Handle game state updates (called by game loop each frame)
+    */
   const handleGameUpdate = (deltaTime: number): void => {
     const state = gameStateRef.current
     const stateMachine = stateMachineRef.current
@@ -107,6 +127,7 @@ export function Game(): React.ReactElement {
         if (inputState.fire && !player.bulletInFlight) {
           const bullet = player.fire()
           if (bullet) {
+            (bullet as any).active = true
             state.bullets.push(bullet)
           }
         }
@@ -126,7 +147,8 @@ export function Game(): React.ReactElement {
       if (state.formation) {
         state.formation.update(deltaTime, state.waveNumber)
 
-        // Check if formation reached bottom
+        // Check if formation reached bottom (handled by collision system)
+        // But keep this check as fallback
         if (state.formation.hasReachedBottom()) {
           console.log('Formation reached bottom — GameOver')
           stateMachine.transitionTo('GameOver')
@@ -139,12 +161,49 @@ export function Game(): React.ReactElement {
       state.bullets = state.bullets.filter((bullet) => {
         if (bullet.type === 'player') {
           // Player bullets are managed by Player entity
-          return !bullet.y || bullet.y >= 0 && bullet.y <= CANVAS_HEIGHT
+          return (bullet as any).active && bullet.y >= 0 && bullet.y <= CANVAS_HEIGHT
         } else {
           // Enemy bullets will be handled in later slices
           return bullet.y >= 0 && bullet.y <= CANVAS_HEIGHT
         }
       })
+
+      // ============================================================
+      // COLLISION DETECTION & RESPONSE PHASE
+      // ============================================================
+      if (physicsSystemRef.current && state.player) {
+        // Separate player and enemy bullets
+        const playerBullets = state.bullets.filter((b) => b.type === 'player')
+        const enemyBullets = state.bullets.filter((b) => b.type === 'enemy')
+
+        // Run collision detection and response
+        const physicsResult = physicsSystemRef.current.update(
+          state.formation,
+          state.player,
+          playerBullets as any,
+          enemyBullets as any,
+          state.shields,
+          state.mysteryShip,
+          { score: state.score, lives: state.lives }
+        )
+
+        // Update game state with collision results
+        state.score = physicsResult.score
+        state.lives = physicsResult.lives
+
+        // Update React state
+        setScore(state.score)
+        setLives(state.lives)
+
+        // Handle game over from collision
+        if (physicsResult.gameOverTriggered) {
+          stateMachine.transitionTo('GameOver')
+          setGameState('GameOver')
+        }
+
+        // Remove inactive bullets from game state
+        state.bullets = state.bullets.filter((bullet) => (bullet as any).active)
+      }
     }
   }
 

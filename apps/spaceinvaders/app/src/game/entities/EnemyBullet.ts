@@ -12,6 +12,7 @@ export class EnemyBullet implements BoundingBox {
   width: number = 4
   height: number = 12
   active: boolean = false
+  type: 'enemy' = 'enemy'
 
   constructor(x: number = 0, y: number = 0, vy: number = 150) {
     this.x = x
@@ -20,22 +21,22 @@ export class EnemyBullet implements BoundingBox {
   }
 
   /**
-   * Update bullet position based on deltaTime
-   */
+    * Update bullet position based on deltaTime
+    */
   update(deltaTime: number): void {
     this.y += this.vy * (deltaTime / 1000)
   }
 
   /**
-   * Check if bullet is out of bounds (below canvas)
-   */
+    * Check if bullet is out of bounds (below canvas)
+    */
   isOutOfBounds(canvasHeight: number): boolean {
     return this.y > canvasHeight
   }
 
   /**
-   * Get bounding box for collision detection
-   */
+    * Get bounding box for collision detection
+    */
   getBoundingBox(): BoundingBox {
     return {
       x: this.x,
@@ -46,8 +47,8 @@ export class EnemyBullet implements BoundingBox {
   }
 
   /**
-   * Reset bullet to inactive state and new position
-   */
+    * Reset bullet to inactive state and new position
+    */
   reset(x: number, y: number): void {
     this.x = x
     this.y = y
@@ -55,8 +56,8 @@ export class EnemyBullet implements BoundingBox {
   }
 
   /**
-   * Deactivate bullet (return to pool)
-   */
+    * Deactivate bullet (return to pool)
+    */
   deactivate(): void {
     this.active = false
   }
