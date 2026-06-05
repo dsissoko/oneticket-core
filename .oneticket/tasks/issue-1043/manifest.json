@@ -16,7 +16,7 @@
       "file": "apps/monjournal/app/src/utils/colorPalette.ts",
       "content": "Read docs/how/slices/slice-1-data-foundation/slice.md. Implement colorPalette module with: 1) COLORS constant export as array of 8-12 distinct hex color codes (e.g., ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E2']), 2) ensure WCAG AA contrast compliance for text (black or white) on each background, 3) add comments with color names. No functions needed, just the constant export.",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "dev"
     },
     {
