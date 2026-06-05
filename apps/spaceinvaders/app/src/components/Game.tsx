@@ -7,7 +7,8 @@ import { GameLoopManager } from '@/game/GameLoopManager'
 import { RenderingSystem } from '@/game/RenderingSystem'
 import { InputSystem } from '@/game/InputSystem'
 import { StateMachine } from '@/game/StateMachine'
-import { FormationImpl, PlayerImpl, ShieldImpl } from '@/game/Entity'
+import { Formation } from '@/game/entities/Formation'
+import { PlayerImpl, ShieldImpl } from '@/game/Entity'
 import StartScreen from './StartScreen'
 import HUD from './HUD'
 import type { GameLoopState, GameState } from '@/game/types'
@@ -114,6 +115,13 @@ export function Game(): React.ReactElement {
       // Update formation
       if (state.formation) {
         state.formation.update(deltaTime, state.waveNumber)
+
+        // Check if formation reached bottom
+        if (state.formation.hasReachedBottom()) {
+          console.log('Formation reached bottom — GameOver')
+          stateMachine.transitionTo('GameOver')
+          setGameState('GameOver')
+        }
       }
 
       // Update bullets
@@ -169,7 +177,8 @@ export function Game(): React.ReactElement {
     setGameState('Playing')
 
     // Initialize game entities
-    state.formation = new FormationImpl(CANVAS_WIDTH)
+    state.formation = new Formation(CANVAS_WIDTH, CANVAS_HEIGHT)
+    state.formation.initialize(state.waveNumber)
     state.player = new PlayerImpl(CANVAS_WIDTH, CANVAS_HEIGHT)
     state.bullets = []
     state.shields = [

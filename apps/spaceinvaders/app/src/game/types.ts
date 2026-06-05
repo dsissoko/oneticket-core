@@ -2,6 +2,9 @@
  * Game type definitions and interfaces
  */
 
+import type { Enemy as EnemyClass } from './entities/Enemy'
+import type { Formation as FormationClass } from './entities/Formation'
+
 export type GameState = 'Start' | 'Playing' | 'Victory' | 'GameOver'
 
 export interface PlayerInputState {
@@ -17,9 +20,9 @@ export interface BoundingBox {
   height: number
 }
 
-export interface Enemy extends BoundingBox {
-  alive: boolean
-}
+// Re-export Enemy and Formation as types for compatibility
+export type Enemy = EnemyClass
+export type Formation = FormationClass
 
 export interface Player extends BoundingBox {
   invincible: boolean
@@ -52,15 +55,6 @@ export interface Shield {
   reset(): void
   damageSegment(index: number): void
   isDestroyed(): boolean
-}
-
-export interface Formation {
-  x: number
-  y: number
-  directionX: -1 | 1
-  speed: number
-  enemies: Enemy[]
-  update(deltaTime: number, waveNumber: number): void
 }
 
 export interface MysteryShip extends BoundingBox {
