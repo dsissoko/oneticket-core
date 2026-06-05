@@ -4,11 +4,23 @@
 
 import type { PlayerInputState } from './types'
 
+interface TouchState {
+  startX: number
+  lastX: number
+  swipeThreshold: number
+}
+
 export class InputSystem {
   private inputState: PlayerInputState = {
     left: false,
     right: false,
     fire: false
+  }
+
+  private touchState: TouchState = {
+    startX: 0,
+    lastX: 0,
+    swipeThreshold: 30 // minimum distance to register as swipe
   }
 
   private keyMap: Record<string, keyof PlayerInputState> = {
@@ -18,11 +30,26 @@ export class InputSystem {
     'Control': 'fire'
   }
 
+  private keyDownHandler: (event: KeyboardEvent) => void
+  private keyUpHandler: (event: KeyboardEvent) => void
+  private touchStartHandler: (event: TouchEvent) => void
+  private touchMoveHandler: (event: TouchEvent) => void
+  private touchEndHandler: (event: TouchEvent) => void
+
   constructor(window: Window) {
-    window.addEventListener('keydown', this.onKeyDown.bind(this))
-    window.addEventListener('keyup', this.onKeyUp.bind(this))
-    window.addEventListener('touchstart', this.onTouchStart.bind(this), false)
-    window.addEventListener('touchend', this.onTouchEnd.bind(this), false)
+    // Bind handlers to preserve 'this' context
+    this.keyDownHandler = this.onKeyDown.bind(this)
+    this.keyUpHandler = this.onKeyUp.bind(this)
+    this.touchStartHandler = this.onTouchStart.bind(this)
+    this.touchMoveHandler = this.onTouchMove.bind(this)
+    this.touchEndHandler = this.onTouchEnd.bind(this)
+
+    // Add event listeners
+    window.addEventListener('keydown', this.keyDownHandler)
+    window.addEventListener('keyup', this.keyUpHandler)
+    window.addEventListener('touchstart', this.touchStartHandler, false)
+    window.addEventListener('touchmove', this.touchMoveHandler, false)
+    window.addEventListener('touchend', this.touchEndHandler, false)
   }
 
   /**
@@ -50,17 +77,41 @@ export class InputSystem {
   }
 
   /**
-   * Handle touch start event (scaffolding for mobile)
+   * Handle touch start event
    */
   onTouchStart(event: TouchEvent): void {
     if (event.touches.length === 0) return
 
     const touch = event.touches[0]
-    const clientX = touch.clientX
+    this.touchState.startX = touch.clientX
+    this.touchState.lastX = touch.clientX
 
-    // Detect which side of screen for left/right movement
-    // Left third = move left, right third = move right
-    // (implementation will be refined in later slices)
+    // Fire on touch start
+    this.inputState.fire = true
+  }
+
+  /**
+   * Handle touch move event - detect swipe left/right
+   */
+  onTouchMove(event: TouchEvent): void {
+    if (event.touches.length === 0) return
+
+    const touch = event.touches[0]
+    const currentX = touch.clientX
+    const deltaX = currentX - this.touchState.lastX
+
+    // Detect left swipe
+    if (deltaX < -this.touchState.swipeThreshold) {
+      this.inputState.left = true
+      this.inputState.right = false
+    }
+    // Detect right swipe
+    else if (deltaX > this.touchState.swipeThreshold) {
+      this.inputState.right = true
+      this.inputState.left = false
+    }
+
+    this.touchState.lastX = currentX
   }
 
   /**
@@ -68,7 +119,22 @@ export class InputSystem {
    */
   onTouchEnd(event: TouchEvent): void {
     // Reset touch-based input
-    // (implementation will be refined in later slices)
+    this.inputState.left = false
+    this.inputState.right = false
+    this.inputState.fire = false
+  }
+
+  /**
+   * Detect swipe direction based on start and end positions
+   */
+  detectSwipe(startX: number, endX: number): -1 | 0 | 1 {
+    const deltaX = endX - startX
+
+    if (Math.abs(deltaX) < this.touchState.swipeThreshold) {
+      return 0 // No significant swipe
+    }
+
+    return deltaX < 0 ? -1 : 1 // -1 for left, 1 for right
   }
 
   /**
@@ -93,9 +159,11 @@ export class InputSystem {
    * Cleanup event listeners
    */
   destroy(): void {
-    window.removeEventListener('keydown', this.onKeyDown.bind(this))
-    window.removeEventListener('keyup', this.onKeyUp.bind(this))
-    window.removeEventListener('touchstart', this.onTouchStart.bind(this))
-    window.removeEventListener('touchend', this.onTouchEnd.bind(this))
+    const window = globalThis as unknown as Window
+    window.removeEventListener('keydown', this.keyDownHandler)
+    window.removeEventListener('keyup', this.keyUpHandler)
+    window.removeEventListener('touchstart', this.touchStartHandler)
+    window.removeEventListener('touchmove', this.touchMoveHandler)
+    window.removeEventListener('touchend', this.touchEndHandler)
   }
 }

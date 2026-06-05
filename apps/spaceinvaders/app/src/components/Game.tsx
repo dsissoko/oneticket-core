@@ -103,11 +103,21 @@ export function Game(): React.ReactElement {
         const player = state.player as PlayerImpl
         player.update(deltaTime, inputState)
 
-        // Handle firing
+        // Handle firing - fire only when input is pressed and no bullet in flight
         if (inputState.fire && !player.bulletInFlight) {
           const bullet = player.fire()
           if (bullet) {
             state.bullets.push(bullet)
+          }
+        }
+
+        // Update bullet in flight
+        if (player.bulletInFlight) {
+          player.bulletInFlight.update(deltaTime)
+          // Check if bullet is off-screen
+          if (player.bulletInFlight.isOffScreen(CANVAS_HEIGHT)) {
+            console.log('Bullet off-screen')
+            player.bulletInFlight = null
           }
         }
       }
@@ -124,16 +134,17 @@ export function Game(): React.ReactElement {
         }
       }
 
-      // Update bullets
+      // Update enemy bullets (future implementation)
+      // For now, keep the simple bullet update for collision prep
       state.bullets = state.bullets.filter((bullet) => {
-        bullet.y += bullet.vy * (deltaTime / 1000)
-        return bullet.y >= 0 && bullet.y <= CANVAS_HEIGHT
+        if (bullet.type === 'player') {
+          // Player bullets are managed by Player entity
+          return !bullet.y || bullet.y >= 0 && bullet.y <= CANVAS_HEIGHT
+        } else {
+          // Enemy bullets will be handled in later slices
+          return bullet.y >= 0 && bullet.y <= CANVAS_HEIGHT
+        }
       })
-
-      // Clear fire input after processing (single shot per press)
-      if (inputState.fire && state.player?.bulletInFlight) {
-        inputState.fire = false
-      }
     }
   }
 
