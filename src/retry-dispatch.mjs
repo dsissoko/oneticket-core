@@ -28,6 +28,7 @@ async function main() {
     const issueNumber = process.env.ISSUE_NUMBER;
     if (issueNumber) {
       await applyLabel('blocked', issueNumber, repo, token, 'retry-dispatch');
+      await removeLabel('in progress', issueNumber, repo, token, 'retry-dispatch');
     }
     process.exit(1);
   }

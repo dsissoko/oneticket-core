@@ -320,6 +320,7 @@ async function main() {
     runWithRetry('orchestrate', `git push origin ${featureBranch}`);
 
     await applyLabel('merge error', issueNumber, repo, ghToken, 'orchestrate');
+    await removeLabel('in progress', issueNumber, repo, ghToken, 'orchestrate');
     await postMergeFailureComment(issueNumber, taskId, taskBranch, featureBranch, repo, ghToken);
 
     const failedPrNumber = await findTaskPR(taskBranch, featureBranch, repo, ghToken);

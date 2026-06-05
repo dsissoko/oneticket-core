@@ -223,8 +223,6 @@ export async function createPR(issueNumber, branch, repo, token, config, manifes
   console.log(`[create-pr] PR created: ${data.html_url}`);
 
   await postPRComment(issueNumber, data.html_url, repo, token);
-  await applyLabel('ready for review', issueNumber, repo, token);
-  await removeLabel('in progress', issueNumber, repo, token);
 }
 
 /**

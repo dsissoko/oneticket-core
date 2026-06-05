@@ -17,7 +17,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { dispatchWorkflow } from './utils.mjs';
+import { dispatchWorkflow, removeLabel } from './utils.mjs';
 import { loadConfig } from './config.mjs';
 import { TASKS_DIR, MANIFEST_FILE } from './constants.mjs';
 
@@ -33,7 +33,9 @@ async function main() {
   const manifestPath = path.join(process.cwd(), TASKS_DIR, `issue-${issueNumber}`, MANIFEST_FILE);
 
   if (!fs.existsSync(manifestPath)) {
-    console.log(`[dispatch-fanout] No manifest found for issue #${issueNumber} — skipping FAN-OUT.`);
+    console.log(`[dispatch-fanout] No manifest found for issue #${issueNumber} — direct run complete.`);
+    // Direct run — no FAN-OUT, remove in progress label
+    await removeLabel('in progress', issueNumber, repo, token, 'dispatch-fanout');
     return;
   }
 
