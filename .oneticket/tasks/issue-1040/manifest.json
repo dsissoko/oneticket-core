@@ -85,7 +85,7 @@
       "file": "apps/monjournal/app/src/components/ViewModeToggle.tsx",
       "content": "Read apps/monjournal/docs/how/slices/slice-2-thought-list-display/slice.md section 'Components - ViewModeToggle'. Implement view mode switcher:\n\n1. Create src/components/ViewModeToggle.tsx (React component):\n   - Props: { currentMode: 'list' | 'timeline', onChange: (mode: 'list' | 'timeline') => void }\n   - Render:\n     - Two toggle buttons or toggle switch: \"List\" and \"Timeline\"\n     - Active button/segment highlighted (bold, background color, or border)\n     - Click handler calls onChange() with selected mode\n     - Label indicating current mode (optional)\n   - Styling: segmented control or button group, responsive\n   - Accessibility: ARIA labels, keyboard navigation (Tab/Enter)\n\n2. Unit test:\n   - Render with different modes, verify active state\n   - Verify onClick calls onChange with correct mode\n   - Verify toggle switches between modes\n   - Verify accessibility attributes (role, aria-labels)\n\nNo external dependencies beyond React. Pure UI control.\nNo dependency on useThoughts or data slices.",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "dev"
     },
     {
