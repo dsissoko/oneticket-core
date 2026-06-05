@@ -1,0 +1,135 @@
+/* TagInput Styles */
+.tag-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.tag-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.tag-input:focus {
+  outline: none;
+  border-color: #0969da;
+  box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.1);
+}
+
+.tag-input:disabled {
+  background-color: #f6f8fa;
+  cursor: not-allowed;
+  color: #57606a;
+}
+
+.tag-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tag-suggestion-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.tag-suggestion-item:hover {
+  background-color: #f0f2f5;
+}
+
+.tag-suggestion-item:active {
+  background-color: #e1e4e8;
+}
+
+/* TagList Styles */
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.tag-chip:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.tag-name {
+  flex: 0 1 auto;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tag-remove-button {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+  color: inherit;
+}
+
+.tag-remove-button:hover {
+  opacity: 1;
+}
+
+.tag-remove-button:active {
+  transform: scale(0.95);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .tag-input {
+    padding: 6px 10px;
+    font-size: 16px;
+  }
+
+  .tag-suggestion-item {
+    padding: 6px 10px;
+  }
+
+  .tag-chip {
+    padding: 5px 10px;
+    font-size: 13px;
+  }
+
+  .tag-name {
+    max-width: 120px;
+  }
+}
