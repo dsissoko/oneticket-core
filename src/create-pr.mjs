@@ -25,6 +25,7 @@ import { fileURLToPath } from 'url';
 import fs from 'fs';
 import path from 'path';
 import { loadConfig } from './config.mjs';
+import { applyLabel } from './utils.mjs';
 import { TASKS_DIR, MANIFEST_FILE } from './constants.mjs';
 
 const GH_HEADERS = (token) => ({
@@ -223,6 +224,12 @@ export async function createPR(issueNumber, branch, repo, token, config, manifes
   console.log(`[create-pr] PR created: ${data.html_url}`);
 
   await postPRComment(issueNumber, data.html_url, repo, token);
+
+  // Direct run (no manifest) — apply ready for review immediately
+  // FAN-OUT — ready for review applied by orchestrate.mjs at allDone
+  if (!manifest) {
+    await applyLabel('ready for review', issueNumber, repo, token);
+  }
 }
 
 /**
