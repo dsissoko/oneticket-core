@@ -40,7 +40,7 @@
       "depends_on": [
         "A"
       ],
-      "status": "in_progress",
+      "status": "done",
       "role": "dev"
     },
     {
@@ -64,7 +64,7 @@
       "depends_on": [
         "B"
       ],
-      "status": "merge-failed",
+      "status": "done",
       "role": "dev"
     },
     {
