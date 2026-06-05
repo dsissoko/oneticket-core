@@ -1,0 +1,51 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ThoughtCard > renders card layout correctly (snapshot) 1`] = `
+<div
+  class="
+        p-4
+        border rounded-lg
+        shadow-sm
+        hover:shadow-md
+        transition-shadow duration-150
+        cursor-pointer
+        border-gray-200 bg-white
+      "
+  role="article"
+>
+  <h3
+    class="text-lg font-bold text-gray-900 mb-2 line-clamp-2"
+  >
+    Test Thought
+  </h3>
+  <p
+    class="text-gray-700 text-sm mb-3 leading-relaxed"
+  >
+    This is the content of the thought
+  </p>
+  <div
+    class="flex items-center justify-between gap-2"
+  >
+    <span
+      class="text-xs text-gray-500 whitespace-nowrap"
+    >
+      2 hours ago
+    </span>
+    <div
+      class="flex-1"
+    >
+      <div
+        data-compact="true"
+        data-testid="tag-display"
+      >
+        <span>
+          personal
+        </span>
+        <span>
+          morning
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;
