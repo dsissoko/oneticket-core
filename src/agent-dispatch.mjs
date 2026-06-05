@@ -152,7 +152,7 @@ export function buildPrompt({ role, request, branch, issueNumber, repo, docsPath
     lines.push(`The documentation structure at \`${docsPath}\` has been initialized and is ready.`);
     lines.push(`Load and apply the following skills to execute the reverse documentation workflow:`);
     lines.push('');
-    lines.push(`1. Load skill \`oneticket-retrodoc\` — this is your primary orchestration guide for reverse documentation, code discovery, and ordered generation.`);
+    lines.push(`1. Load skill \`oneticket-reverse-doc\` — this is your primary orchestration guide for reverse documentation, code discovery, and ordered generation.`);
     lines.push(`   It will instruct you to also load: \`oneticket-doc-structure\`, \`oneticket-user-story\`, \`oneticket-epic-breakdown\`, \`oneticket-c4\`, \`oneticket-vertical-slice\` as needed.`);
     lines.push('');
     lines.push(`Key constraints:`);
