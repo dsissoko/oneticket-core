@@ -7,7 +7,7 @@
       "file": "apps/monjournal/app/package.json",
       "content": "Create scaffold configuration files for MonJournal React + Vite app. Generate: .gitignore (canonical from oneticket-stack-vite-react-primer), package.json (React 18.3.1, Vite 5.3.1, @primer/react 36.27.0, vitest), tsconfig.json (ES2022, strict, @/ alias), tsconfig.node.json, vite.config.ts (React plugin, MSW with __ENABLE_MSW__: true, setupFiles to src/test/setup.ts), index.html (title: MonJournal), .eslintrc.json, .npmrc, .gitattributes, .env.example. All files follow oneticket-stack-vite-react-primer skill canonical templates.",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "dev"
     },
     {
