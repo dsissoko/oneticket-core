@@ -163,8 +163,10 @@ jobs:
 
       # [RETRY] anomalyco failure → re-dispatch via retry-dispatch.mjs
       # Exponential backoff + jitter — applies blocked label at retry_max exhaustion
+      # Note: continue-on-error on run-agent means failure() is never true at job level
+      # — use steps.run-agent.outcome == 'failure' instead
       - name: Retry on agent failure
-        if: failure() && steps.run-agent.outcome != 'success'
+        if: steps.run-agent.outcome == 'failure'
         env:
           GITHUB_TOKEN:   ${{ secrets.ONETICKET_GH_PAT }}
           REPO:           ${{ github.repository }}
@@ -177,6 +179,22 @@ jobs:
           PROMPT:         ${{ inputs.prompt }}
           IS_FANOUT_TASK: ${{ inputs.is_fanout_task }}
         run: node src/retry-dispatch.mjs
+
+      # [DETERMINISTIC] Notify agent failure on issue — covers all error types
+      # (CreditsError, rate limit, timeout, etc.) not caught by notify-failure job
+      - name: Notify agent failure
+        if: steps.run-agent.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+        run: |
+          gh issue comment ${{ inputs.issue_number }} \
+            --repo ${{ github.repository }} \
+            --body "## Agent Execute failure
+
+          The agent failed (retry_count=${{ inputs.retry_count }}/${{ inputs.retry_max }}).
+
+          **Branch:** \`${{ inputs.branch }}\`
+          **Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
       # [DETERMINISTIC] Push branch on success
       - name: Push branch
