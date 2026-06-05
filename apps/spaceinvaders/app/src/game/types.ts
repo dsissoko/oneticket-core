@@ -31,6 +31,9 @@ export interface PlayerBullet extends BoundingBox {
   vx: number
   vy: number
   type: 'player'
+  update(deltaTime: number): void
+  isOffScreen(canvasHeight: number): boolean
+  getBoundingBox(): BoundingBox
 }
 
 export interface EnemyBullet extends BoundingBox {

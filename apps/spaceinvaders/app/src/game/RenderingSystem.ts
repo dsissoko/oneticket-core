@@ -58,14 +58,27 @@ export class RenderingSystem {
   }
 
   /**
-   * Draw player ship
+   * Draw player ship with invincibility flash effect
    */
   drawPlayer(player: Player | null): void {
     if (!player) return
 
-    this.ctx.fillStyle = player.invincible ? '#FFFF00' : '#00FF00'
+    // Calculate invincibility flash state
+    let opacity = 1.0
+    if (player.invincible && player.invincibilityTimer > 0) {
+      // Flash at 5 Hz (200 ms cycle)
+      const flashCycle = 200 // milliseconds
+      const cycleProgress = (player.invincibilityTimer % flashCycle) / flashCycle
+      // Alternate between 0.5 and 1.0 opacity every 100ms
+      opacity = cycleProgress < 0.5 ? 0.5 : 1.0
+    }
 
-    // Draw simple triangle for player ship
+    // Set color based on invincibility state
+    const baseColor = '#00FF00'
+    this.ctx.globalAlpha = opacity
+    this.ctx.fillStyle = baseColor
+
+    // Draw simple triangle for player ship (pointing up)
     this.ctx.beginPath()
     this.ctx.moveTo(player.x + player.width / 2, player.y)
     this.ctx.lineTo(player.x, player.y + player.height)
@@ -73,12 +86,8 @@ export class RenderingSystem {
     this.ctx.closePath()
     this.ctx.fill()
 
-    // Draw invincibility indicator if active
-    if (player.invincible) {
-      this.ctx.strokeStyle = '#FFFF00'
-      this.ctx.lineWidth = 2
-      this.ctx.strokeRect(player.x - 5, player.y - 5, player.width + 10, player.height + 10)
-    }
+    // Reset opacity
+    this.ctx.globalAlpha = 1.0
   }
 
   /**
@@ -86,9 +95,25 @@ export class RenderingSystem {
    */
   drawBullets(bullets: Bullet[]): void {
     bullets.forEach((bullet) => {
-      this.ctx.fillStyle = bullet.type === 'player' ? '#00FF00' : '#FF0000'
+      if (bullet.type === 'player') {
+        // Player bullets - white color, small rectangle
+        this.ctx.fillStyle = '#FFFFFF'
+      } else {
+        // Enemy bullets - red color
+        this.ctx.fillStyle = '#FF0000'
+      }
       this.ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height)
     })
+  }
+
+  /**
+   * Draw only player bullets
+   */
+  drawPlayerBullets(bullet: any | null): void {
+    if (!bullet) return
+
+    this.ctx.fillStyle = '#FFFFFF'
+    this.ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height)
   }
 
   /**

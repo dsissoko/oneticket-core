@@ -1,1 +1,2 @@
 2026-06-05 18:31 | A | apps/spaceinvaders/docs/how/slices/slice-1-foundation/slice.md
+2026-06-05 18:37 | C | apps/spaceinvaders/docs/how/slices/slice-3-player/slice.md

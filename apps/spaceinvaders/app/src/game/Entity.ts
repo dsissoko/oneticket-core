@@ -10,7 +10,8 @@ import type {
   Shield,
   Segment,
   MysteryShip,
-  PlayerInputState
+  PlayerInputState,
+  BoundingBox
 } from './types'
 
 /**
@@ -57,45 +58,49 @@ export class FormationImpl implements Formation {
 export class PlayerImpl implements Player {
   x: number
   y: number
-  width: number = 20
-  height: number = 20
+  width: number = 25
+  height: number = 25
   invincible: boolean = false
   invincibilityTimer: number = 0
   bulletInFlight: PlayerBullet | null = null
+  maxSpeed: number = 200 // pixels per second
+  private canvasWidth: number
+  private canvasHeight: number
 
   constructor(canvasWidth: number, canvasHeight: number) {
+    this.canvasWidth = canvasWidth
+    this.canvasHeight = canvasHeight
     // Start at bottom-center
     this.x = canvasWidth / 2 - this.width / 2
     this.y = canvasHeight - 50
   }
 
   /**
-   * Update player position based on input
+   * Update player position and state based on input
    */
   update(deltaTime: number, inputState: PlayerInputState): void {
-    const speed = 200 // pixels per second
-
-    // Move left
+    // Determine movement direction
+    let direction: -1 | 0 | 1 = 0
     if (inputState.left) {
-      this.x -= speed * (deltaTime / 1000)
+      direction = -1
+    } else if (inputState.right) {
+      direction = 1
     }
 
-    // Move right
-    if (inputState.right) {
-      this.x += speed * (deltaTime / 1000)
-    }
+    // Move player
+    this.move(direction, deltaTime)
 
     // Update invincibility timer
-    if (this.invincible) {
-      this.invincibilityTimer -= deltaTime
-      if (this.invincibilityTimer <= 0) {
-        this.invincible = false
-        this.invincibilityTimer = 0
-      }
-    }
+    this.updateInvincibility(deltaTime)
+  }
 
+  /**
+   * Move in a direction with boundary constraints
+   */
+  move(direction: -1 | 0 | 1, deltaTime: number): void {
+    this.x += direction * this.maxSpeed * (deltaTime / 1000)
     // Clamp to screen bounds
-    this.x = Math.max(0, Math.min(this.x, 800 - this.width))
+    this.x = Math.max(0, Math.min(this.x, this.canvasWidth - this.width))
   }
 
   /**
@@ -106,27 +111,56 @@ export class PlayerImpl implements Player {
       return null // Only one bullet at a time
     }
 
-    const bullet: PlayerBullet = {
-      x: this.x + this.width / 2 - 2,
-      y: this.y - 10,
-      width: 4,
-      height: 10,
-      vx: 0,
-      vy: -300, // pixels per second, moving upward
-      type: 'player'
-    }
+    const bullet = new PlayerBulletImpl(
+      this.x + this.width / 2 - 2,
+      this.y
+    )
 
     this.bulletInFlight = bullet
+    console.log(`Bullet fired at y=${bullet.y}`)
     return bullet
   }
 
   /**
-   * Move in a direction
+   * Take damage - set invincibility
    */
-  move(direction: -1 | 0 | 1, deltaTime: number): void {
-    const speed = 200 // pixels per second
-    this.x += direction * speed * (deltaTime / 1000)
-    this.x = Math.max(0, Math.min(this.x, 800 - this.width))
+  takeDamage(): void {
+    this.invincible = true
+    this.invincibilityTimer = 2000 // 2 seconds in milliseconds
+    console.log(`Player hit! Invincibility: ${this.invincibilityTimer} ms`)
+  }
+
+  /**
+   * Update invincibility timer
+   */
+  updateInvincibility(deltaTime: number): void {
+    if (this.invincible) {
+      this.invincibilityTimer -= deltaTime
+      if (this.invincibilityTimer <= 0) {
+        this.invincible = false
+        this.invincibilityTimer = 0
+      }
+    }
+  }
+
+  /**
+   * Get bounding box for collision detection
+   */
+  getBoundingBox(): BoundingBox {
+    return {
+      x: this.x,
+      y: this.y,
+      width: this.width,
+      height: this.height
+    }
+  }
+
+  /**
+   * Render player (delegated to RenderingSystem)
+   */
+  render(ctx: CanvasRenderingContext2D): void {
+    // Drawing is handled by RenderingSystem
+    // This method is here for interface completeness
   }
 }
 
@@ -137,7 +171,7 @@ export class PlayerBulletImpl implements PlayerBullet {
   x: number
   y: number
   width: number = 4
-  height: number = 10
+  height: number = 12
   vx: number = 0
   vy: number = -300
   type: 'player' = 'player'
@@ -158,7 +192,27 @@ export class PlayerBulletImpl implements PlayerBullet {
    * Check if bullet is off-screen
    */
   isOffScreen(canvasHeight: number): boolean {
-    return this.y < 0 || this.y > canvasHeight
+    return this.y + this.height < 0
+  }
+
+  /**
+   * Get bounding box for collision detection
+   */
+  getBoundingBox(): BoundingBox {
+    return {
+      x: this.x,
+      y: this.y,
+      width: this.width,
+      height: this.height
+    }
+  }
+
+  /**
+   * Render bullet (delegated to RenderingSystem)
+   */
+  render(ctx: CanvasRenderingContext2D): void {
+    // Drawing is handled by RenderingSystem
+    // This method is here for interface completeness
   }
 }
 
