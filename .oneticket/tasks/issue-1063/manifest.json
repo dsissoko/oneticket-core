@@ -7,7 +7,7 @@
       "file": "apps/spaceinvaders/docs/how/slices/slice-1-foundation/slice.md",
       "content": "Implement Slice 1 — Foundation: Game Loop, Canvas Setup, UI Framework. Read the slice spec at apps/spaceinvaders/docs/how/slices/slice-1-foundation/slice.md and the architecture at apps/spaceinvaders/docs/how/architecture.md. Implement: (1) GameLoopManager class in src/game/GameLoopManager.ts with requestAnimationFrame loop and delta-time calculations, (2) RenderingSystem class in src/game/RenderingSystem.ts with clear() and text rendering for HUD, (3) InputSystem class in src/game/InputSystem.ts with keyboard scaffolding, (4) StateMachine class in src/game/StateMachine.ts with state transitions, (5) Game.tsx main React component with useState and useRef hooks, (6) HUD.tsx overlay component displaying score/lives/wave, (7) StartScreen.tsx with title and start button, (8) minimal Entity.ts classes (Formation, Player, Bullet, Shield stubs). The HomeScreen.tsx must be replaced with the actual game component. Canvas size: 800×600. Target 60 FPS. Success: canvas renders, game loop runs, state transitions work, input responsive.",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "dev"
     },
     {
