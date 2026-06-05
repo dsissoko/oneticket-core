@@ -8,7 +8,7 @@
       "content": "Read apps/monjournal/docs/how/slices/slice-1-data-foundation/slice.md for the Data Foundation slice specification. Implement all modules and hooks in apps/monjournal/app/src/: (1) thoughtModel.ts with Thought type, createThought(), validateThought(); (2) tagModel.ts with Tag type, deriveTags(), getTagColor(); (3) colorPalette.ts with COLORS array (8-12 WCAG AA colors); (4) useLocalStorage.ts hook with getItem/setItem; (5) useThoughts.ts hook with thoughts state, addThought(), getTags(), getThoughts(); (6) filterLogic.ts with applyFilters(), matchesTextSearch(), matchesDateRange(), matchesTags(). All data models are immutable. Tag colors deterministically computed via hash function. localStorage key: 'monjournal_thoughts'. Validate all acceptance criteria in the slice.",
       "depends_on": [],
       "role": "dev",
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
