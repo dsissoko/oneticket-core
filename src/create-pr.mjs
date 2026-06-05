@@ -25,7 +25,6 @@ import { fileURLToPath } from 'url';
 import fs from 'fs';
 import path from 'path';
 import { loadConfig } from './config.mjs';
-import { applyLabel } from './utils.mjs';
 import { TASKS_DIR, MANIFEST_FILE } from './constants.mjs';
 
 const GH_HEADERS = (token) => ({
