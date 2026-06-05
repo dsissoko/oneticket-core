@@ -1,0 +1,41 @@
+{
+  "issue": 1052,
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-1052-A",
+      "file": "apps/monjournal/docs/how/slices/slice-1-data-foundation/slice.md",
+      "content": "Read apps/monjournal/docs/how/slices/slice-1-data-foundation/slice.md for the Data Foundation slice specification. Implement all modules and hooks in apps/monjournal/app/src/: (1) thoughtModel.ts with Thought type, createThought(), validateThought(); (2) tagModel.ts with Tag type, deriveTags(), getTagColor(); (3) colorPalette.ts with COLORS array (8-12 WCAG AA colors); (4) useLocalStorage.ts hook with getItem/setItem; (5) useThoughts.ts hook with thoughts state, addThought(), getTags(), getThoughts(); (6) filterLogic.ts with applyFilters(), matchesTextSearch(), matchesDateRange(), matchesTags(). All data models are immutable. Tag colors deterministically computed via hash function. localStorage key: 'monjournal_thoughts'. Validate all acceptance criteria in the slice.",
+      "depends_on": [],
+      "role": "dev",
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-1052-B",
+      "file": "apps/monjournal/docs/how/slices/slice-2-thought-list-display/slice.md",
+      "content": "Read apps/monjournal/docs/how/slices/slice-2-thought-list-display/slice.md for the Thought List Display slice specification. Implement all components in apps/monjournal/app/src/components/: (1) TagDisplay.tsx - render tags with colors from Slice 1; (2) ThoughtCard.tsx - display single thought with title, truncated content, date, tags; (3) ThoughtList.tsx - list of ThoughtCards sorted descending by createdAt; (4) TimelineGroup.tsx - container for one day's thoughts; (5) TimelineView.tsx - group thoughts by creation date; (6) ViewModeToggle.tsx - switch between list/timeline. Also implement dateFormat.ts utility (formatDate with relative/absolute) and groupByDate.ts utility. Create Home.tsx component in src/pages/ that integrates useThoughts, FilterPanel, ViewModeToggle, ThoughtList, TimelineView. Validate all acceptance criteria.",
+      "depends_on": ["A"],
+      "role": "dev",
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-1052-C",
+      "file": "apps/monjournal/docs/how/slices/slice-4-add-thought-form/slice.md",
+      "content": "Read apps/monjournal/docs/how/slices/slice-4-add-thought-form/slice.md for the Add Thought Form slice specification. Implement all components in apps/monjournal/app/src/: (1) AddThought.tsx page component in src/pages/ - form with title, content, tag inputs and validation; (2) TagInput.tsx component - autocomplete tag input with suggestion dropdown; (3) TagList.tsx component - display selected tags as colored chips with remove. Use createThought() from Slice 1, getTags() for autocomplete suggestions, getTagColor() for chip colors. On submit: validate title/content, call addThought(), display success message, redirect to '/'. Add route '/add' to app router. Update navigation in Layout/Header to include 'Add Thought' link. Validate all acceptance criteria.",
+      "depends_on": ["A"],
+      "role": "dev",
+      "status": "pending"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-1052-D",
+      "file": "apps/monjournal/docs/how/slices/slice-3-filtering-search/slice.md",
+      "content": "Read apps/monjournal/docs/how/slices/slice-3-filtering-search/slice.md for the Filtering & Search slice specification. Implement FilterPanel and related sub-components in apps/monjournal/app/src/components/: (1) FilterPanel.tsx - unified filter UI with text input, date range picker, tag multi-select, surprise button; (2) DateRangePicker.tsx sub-component - two date inputs; (3) TagMultiSelect.tsx sub-component - checkbox list of available tags. Update Home.tsx to: initialize filterState with useState, manage onFilterChange handler, apply filters via applyFilters() from Slice 1, update onSurpriseClick to select random from filtered results and highlight. Ensure filters compose with AND logic. Verify filter logic (applyFilters, matchesTextSearch, matchesDateRange, matchesTags) from Slice 1 works correctly. Validate all acceptance criteria.",
+      "depends_on": ["B"],
+      "role": "dev",
+      "status": "pending"
+    }
+  ]
+}
