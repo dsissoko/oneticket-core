@@ -124,3 +124,6 @@ Journalers need a simple tool that removes barriers to capturing fleeting ideas 
 - [Slice 2 — Thought List Display](../../how/slices/slice-2-thought-list-display/slice.md)
 - [Slice 3 — Filtering & Search](../../how/slices/slice-3-filtering-search/slice.md)
 - [Slice 4 — Add Thought Form](../../how/slices/slice-4-add-thought-form/slice.md)
+- [Slice 5 — Help Screen](../../how/slices/slice-5-help-screen/slice.md)
+- [Slice 6 — Demo Screen](../../how/slices/slice-6-demo-screen/slice.md)
+- [Slice 7 — About Screen](../../how/slices/slice-7-about-screen/slice.md)
