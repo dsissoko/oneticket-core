@@ -144,6 +144,26 @@ export function buildPrompt({ role, request, branch, issueNumber, repo, docsPath
   lines.push(request || `@${role}`);
   lines.push('');
 
+  // reverse-doc complement — injected when request contains 'reverse-doc'
+  // Ensures doc structure exists (guaranteed by check-prerequisites.mjs upstream)
+  // and loads all relevant documentation skills explicitly.
+  if (request && request.toLowerCase().includes('reverse-doc')) {
+    lines.push(`## Reverse documentation instructions`);
+    lines.push(`The documentation structure at \`${docsPath}\` has been initialized and is ready.`);
+    lines.push(`Load and apply the following skills to execute the reverse documentation workflow:`);
+    lines.push('');
+    lines.push(`1. Load skill \`oneticket-retrodoc\` — this is your primary orchestration guide for reverse documentation, code discovery, and ordered generation.`);
+    lines.push(`   It will instruct you to also load: \`oneticket-doc-structure\`, \`oneticket-user-story\`, \`oneticket-epic-breakdown\`, \`oneticket-c4\`, \`oneticket-vertical-slice\` as needed.`);
+    lines.push('');
+    lines.push(`Key constraints:`);
+    lines.push(`- docs_path: \`${docsPath}\``);
+    if (appPath) lines.push(`- app_path: \`\`${appPath}\`\``);
+    lines.push(`- Never overwrite a non-empty file — always audit first, then update or complete`);
+    lines.push(`- Every generated artifact must be traceable to the code in app_path/src/`);
+    lines.push(`- Commit message: \`docs: @po reverse-doc ${currentProject}\``);
+    lines.push('');
+  }
+
   // Comment history
   if (contextBlock) {
     lines.push(contextBlock);
@@ -151,7 +171,10 @@ export function buildPrompt({ role, request, branch, issueNumber, repo, docsPath
 
   // Pipeline housekeeping — symmetric with FAN-OUT prompt
   lines.push(`## Pipeline housekeeping`);
-  lines.push(`If you produced or modified files, commit them with message: feat: @${role} response for issue #${issueNumber}.`);
+  const commitMsg = (request && request.toLowerCase().includes('reverse-doc'))
+    ? `docs: @po reverse-doc ${currentProject}`
+    : `feat: @${role} response for issue #${issueNumber}`;
+  lines.push(`If you produced or modified files, commit them with message: ${commitMsg}.`);
   lines.push(`Do NOT push. Do NOT create a PR. The pipeline handles this after your run.`);
 
   return lines.join('\n');

@@ -90,6 +90,9 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           REPO:         ${{ github.repository }}
         run: node src/check-prerequisites.mjs
+        # Note: check-prerequisites.mjs calls init-doc.mjs internally if the doc structure
+        # is absent. This guarantees that docs_path is initialized before any agentic run,
+        # including @po reverse-doc — no need to call init-doc.mjs again here.
 
       - name: Build context block
         id: context
