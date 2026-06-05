@@ -4,9 +4,11 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from 'next-themes';
 import './styles/globals.css';
+import './styles/thought-display.css';
 import { AppLayout, ErrorBoundary, LoadingIndicator } from './components';
 import { queryClient } from './lib/query-client';
 import { logger } from './lib/logger';
+import { ThoughtsProvider } from './context/ThoughtsContext';
 
 // __ENABLE_MSW__ is defined at build time in vite.config.ts → define block.
 // true  = MSW active (demo, preview, GitHub Pages — no backend needed)
@@ -34,6 +36,9 @@ const HelpScreen = lazy(() =>
 const DemoScreen = lazy(() =>
   import('./screens/DemoScreen').then((mod) => ({ default: mod.DemoScreen }))
 );
+const AddThought = lazy(() =>
+  import('./screens/AddThought').then((mod) => ({ default: mod.AddThought }))
+);
 const NotFoundScreen = lazy(() =>
   import('./screens/NotFoundScreen').then((mod) => ({ default: mod.NotFoundScreen }))
 );
@@ -43,18 +48,21 @@ function App(): React.ReactElement {
     <QueryClientProvider client={queryClient}>
       <ErrorBoundary>
         <BrowserRouter basename={import.meta.env.BASE_URL}>
-          <Suspense fallback={<LoadingIndicator />}>
-            <Routes>
-              <Route element={<AppLayout />}>
-                <Route index element={<HomeScreen />} />
-                <Route path="/" element={<HomeScreen />} />
-                <Route path="/about" element={<AboutScreen />} />
-                <Route path="/help" element={<HelpScreen />} />
-                <Route path="/demo" element={<DemoScreen />} />
-                <Route path="*" element={<NotFoundScreen />} />
-              </Route>
-            </Routes>
-          </Suspense>
+          <ThoughtsProvider>
+            <Suspense fallback={<LoadingIndicator />}>
+              <Routes>
+                <Route element={<AppLayout />}>
+                   <Route index element={<HomeScreen />} />
+                   <Route path="/" element={<HomeScreen />} />
+                   <Route path="/add" element={<AddThought />} />
+                   <Route path="/about" element={<AboutScreen />} />
+                   <Route path="/help" element={<HelpScreen />} />
+                   <Route path="/demo" element={<DemoScreen />} />
+                   <Route path="*" element={<NotFoundScreen />} />
+                </Route>
+              </Routes>
+            </Suspense>
+          </ThoughtsProvider>
         </BrowserRouter>
       </ErrorBoundary>
     </QueryClientProvider>
