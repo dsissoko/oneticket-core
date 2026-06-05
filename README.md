@@ -99,15 +99,29 @@ The framework handles the rest.
 
 ## Invoking agents
 
-Any comment starting with `@<role>` on a GitHub issue triggers the pipeline.
+Comment `@<role>` on any GitHub issue. The pipeline detects the role and routes to the corresponding agent profile.
 
-| Comment | What happens |
-|---|---|
-| `@po <request>` | PO analyzes, decomposes into tasks, triggers FAN-OUT |
-| `@dev <request>` | Dev implements directly on the feature branch |
-| `@<any role> <request>` | Routes to the corresponding agent profile |
+### Deterministic commands (framework)
 
-If the agent produces a manifest, the FAN-OUT/GATHER pipeline starts automatically. If it answers a question, it posts a comment and stops.
+| Command | Triggers | Effect |
+|---|---|---|
+| `@po init-doc` | Documentation initialization | Creates the doc structure in `apps/<current_project>/docs/` |
+| `@leaddev init-<template>` | App initialization | Bootstraps the app from a template (e.g. `init-appshell`) |
+
+### Agentic conventions (recommended)
+
+| Role | Keyword pattern | Typical use |
+|---|---|---|
+| `@po create` | Create epic or user story | Requires doc structure already initialized |
+| `@po update` | Update existing documentation | Requires existing doc file |
+| `@po reverse-doc` | Generate documentation from code | Requires existing codebase |
+| `@architect create` | Create architecture + C4 diagrams | Requires product spec |
+| `@leaddev <request>` | Decompose into tasks, delegate to @dev | Requires initialized template |
+| `@dev create` | Implement a feature | Requires user story from docs |
+| `@dev update` | Improve existing feature | Requires existing code |
+| `@qa validate` | Review code or documentation | Open PR with changes |
+
+If the agent produces a manifest (DAG of tasks), FAN-OUT/GATHER pipeline executes automatically. If it answers a question directly, it posts a comment and stops.
 
 ---
 
