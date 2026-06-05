@@ -19,7 +19,7 @@
         "A"
       ],
       "role": "dev",
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "C",
@@ -30,7 +30,7 @@
         "A"
       ],
       "role": "dev",
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "D",
