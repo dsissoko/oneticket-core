@@ -8,8 +8,9 @@ import { RenderingSystem } from '@/game/RenderingSystem'
 import { InputSystem } from '@/game/InputSystem'
 import { StateMachine } from '@/game/StateMachine'
 import { Formation } from '@/game/entities/Formation'
-import { PlayerImpl } from '@/game/Entity'
+import { PlayerImpl, MysteryShipImpl } from '@/game/Entity'
 import { ShieldImpl } from '@/game/Shield'
+import { MysteryShipSpawner } from '@/game/entities/MysteryShip'
 import { PhysicsSystem } from '@/game/physics/PhysicsSystem'
 import { BulletPool } from '@/game/BulletPool'
 import StartScreen from './StartScreen'
@@ -37,6 +38,7 @@ export function Game(): React.ReactElement {
     bullets: [],
     shields: [],
     mysteryShip: null,
+    mysteryShipSpawner: null,
     inputState: { left: false, right: false, fire: false },
     score: 0,
     lives: 3,
@@ -156,6 +158,47 @@ export function Game(): React.ReactElement {
         }
       }
 
+      // ============================================================
+      // MYSTERY SHIP UPDATE PHASE
+      // ============================================================
+      // Update mystery ship spawner
+      if (state.mysteryShipSpawner) {
+        const currentTime = performance.now()
+        
+        // Check if we need to spawn a new ship
+        if (!state.mysteryShip || !state.mysteryShip.alive) {
+          if (state.mysteryShipSpawner.isSpawnTime(currentTime)) {
+            const shipParams = state.mysteryShipSpawner.createShip(
+              currentTime,
+              CANVAS_WIDTH
+            )
+            // Create new mystery ship using MysteryShipImpl
+            state.mysteryShip = new MysteryShipImpl(
+              shipParams.x,
+              shipParams.y,
+              shipParams.vx,
+              shipParams.pointValue,
+              currentTime
+            )
+            state.mysteryShipSpawner.scheduleNextSpawn(currentTime)
+          }
+        }
+        
+        // Update active mystery ship position
+        if (state.mysteryShip && state.mysteryShip.alive) {
+          const stillOnScreen = state.mysteryShip.update(
+            deltaTime,
+            CANVAS_WIDTH
+          )
+          if (!stillOnScreen) {
+            console.log(
+              `Mystery ship escaped. Next spawn in ${(state.mysteryShipSpawner.getNextSpawnTime() - currentTime).toFixed(0)}ms`
+            )
+            state.mysteryShip = null
+          }
+        }
+      }
+
       // Update enemy bullets (future implementation)
       // For now, keep the simple bullet update for collision prep
       state.bullets = state.bullets.filter((bullet) => {
@@ -251,6 +294,11 @@ export function Game(): React.ReactElement {
     state.formation.initialize(state.waveNumber)
     state.player = new PlayerImpl(CANVAS_WIDTH, CANVAS_HEIGHT)
     state.bullets = []
+
+    // Initialize mystery ship spawner
+    const currentTime = performance.now()
+    state.mysteryShipSpawner = new MysteryShipSpawner(currentTime)
+    state.mysteryShip = null
 
     // Initialize 4 shields positioned horizontally across canvas
     // Shield width: 48 pixels (4x4 grid of 12px segments)
