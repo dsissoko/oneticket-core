@@ -1,9 +1,9 @@
 import React, { useState, useRef, useCallback, useMemo } from 'react';
 import { useThoughts } from '@/hooks/useThoughts';
 import { FilterPanel } from '@/components/FilterPanel';
+import { ControlZone } from '@/components/ControlZone';
 import { ThoughtList } from '@/components/ThoughtList';
 import { TimelineView } from '@/components/TimelineView';
-import { ViewModeToggle } from '@/components/ViewModeToggle';
 import { applyFilters, FilterState } from '@/utils/filterLogic';
 
 /**
@@ -64,22 +64,27 @@ export function HomeScreen(): React.ReactElement {
           <p className="text-muted-foreground">Your personal thought journal</p>
         </div>
 
-        {/* Filter Panel */}
-        <div className="mb-8">
-          <FilterPanel
-            existingTags={existingTags}
-            onFilterChange={handleFilterChange}
+        {/* Control Zone (View Mode + Surprise) */}
+        <div className="mb-6">
+          <ControlZone
+            viewMode={viewMode}
+            onViewModeChange={setViewMode}
             onSurpriseClick={handleSurpriseClick}
             disableSurprise={filteredThoughts.length === 0}
           />
         </div>
 
-        {/* View Mode Toggle */}
-        <div className="mb-6 flex items-center justify-between">
-          <div className="text-sm text-muted-foreground">
-            Showing {filteredThoughts.length} thought{filteredThoughts.length !== 1 ? 's' : ''}
-          </div>
-          <ViewModeToggle currentMode={viewMode} onChange={setViewMode} />
+        {/* Filter Panel */}
+        <div className="mb-8">
+          <FilterPanel
+            existingTags={existingTags}
+            onFilterChange={handleFilterChange}
+          />
+        </div>
+
+        {/* Results Info */}
+        <div className="mb-6 text-sm text-muted-foreground">
+          Showing {filteredThoughts.length} thought{filteredThoughts.length !== 1 ? 's' : ''}
         </div>
 
         {/* Thought List or Timeline */}

@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useThoughts } from '../hooks/useThoughts';
 import { applyFilters, FilterState } from '../utils/filterLogic';
-import { ViewModeToggle } from '../components/ViewModeToggle';
+import { ControlZone } from '../components/ControlZone';
 import { FilterPanel } from '../components/FilterPanel';
 import { ThoughtList } from '../components/ThoughtList';
 import { TimelineView } from '../components/TimelineView';
@@ -57,14 +57,18 @@ export function Home(): React.ReactElement {
     <div className="home-page">
       <div className="home-header">
         <h1>My Thoughts</h1>
-        <ViewModeToggle currentMode={viewMode} onChange={setViewMode} />
       </div>
+
+      <ControlZone
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
+        onSurpriseClick={handleSurpriseClick}
+        disableSurprise={filteredThoughts.length === 0}
+      />
 
       <FilterPanel
         existingTags={existingTags}
         onFilterChange={handleFilterChange}
-        onSurpriseClick={handleSurpriseClick}
-        disableSurprise={filteredThoughts.length === 0}
       />
 
       <div className="home-content">

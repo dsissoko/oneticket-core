@@ -7,19 +7,16 @@ import { TagMultiSelect } from './TagMultiSelect';
 interface FilterPanelProps {
   existingTags: Tag[];
   onFilterChange: (filters: FilterState) => void;
-  onSurpriseClick: () => void;
-  disableSurprise?: boolean;
 }
 
 /**
- * Unified filter UI container for text search, date range, tag multi-select, and surprise button.
+ * Unified filter UI container for text search, date range, and tag multi-select.
  * Manages local state for all filter fields and calls onFilterChange on each user interaction.
+ * Displayed horizontally to minimize vertical space.
  */
 export function FilterPanel({
   existingTags,
   onFilterChange,
-  onSurpriseClick,
-  disableSurprise = false,
 }: FilterPanelProps): React.ReactElement {
   const [textQuery, setTextQuery] = useState('');
   const [startDate, setStartDate] = useState<number | null>(null);
@@ -82,11 +79,8 @@ export function FilterPanel({
 
   return (
     <div className="filter-panel">
-      <div className="filter-section">
+      <div className="filter-controls">
         <div className="filter-group">
-          <label htmlFor="search-input" className="filter-label">
-            Search
-          </label>
           <input
             id="search-input"
             type="text"
@@ -94,11 +88,11 @@ export function FilterPanel({
             placeholder="Search title and content"
             value={textQuery}
             onChange={handleTextChange}
+            aria-label="Search thoughts"
           />
         </div>
 
         <div className="filter-group">
-          <label className="filter-label">Date Range</label>
           <DateRangePicker
             dateStart={startDate}
             dateEnd={endDate}
@@ -107,7 +101,6 @@ export function FilterPanel({
         </div>
 
         <div className="filter-group">
-          <label className="filter-label">Tags</label>
           <TagMultiSelect
             availableTags={existingTags}
             selectedTags={selectedTags}
@@ -115,21 +108,11 @@ export function FilterPanel({
           />
         </div>
 
-        <div className="filter-buttons">
-          <button
-            className="surprise-button"
-            onClick={onSurpriseClick}
-            disabled={disableSurprise}
-            title={disableSurprise ? 'No thoughts match current filters' : 'Select random thought'}
-          >
-            Surprise!
+        {(textQuery || startDate || endDate || selectedTags.length > 0) && (
+          <button className="clear-button" onClick={handleClearFilters}>
+            Clear Filters
           </button>
-          {(textQuery || startDate || endDate || selectedTags.length > 0) && (
-            <button className="clear-button" onClick={handleClearFilters}>
-              Clear Filters
-            </button>
-          )}
-        </div>
+        )}
       </div>
     </div>
   );
