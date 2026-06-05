@@ -8,7 +8,7 @@
       "role": "architect",
       "content": "UPDATE apps/monjournal/docs/how/architecture.md to reflect the current implementation in apps/monjournal/app/src/. Key changes to document: (1) ThoughtsContext replaces useThoughts hook as primary state management, (2) New screens added: HelpScreen, DemoScreen, AboutScreen at routes /help, /demo, /about, (3) Enhanced components: InlineAddThoughtForm, ControlZone, DateRangePicker, TagInput, TagMultiSelect, (4) MSW integration for mock API, (5) Global error handling with ErrorBoundary. Read the current codebase files to verify actual implementation before updating. Preserve existing sections that remain accurate. Update the Component Hierarchy section, Routing section, and State Management section. Do not overwrite completely—incrementally update to reflect current state.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
