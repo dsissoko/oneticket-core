@@ -1,0 +1,43 @@
+import React from 'react';
+import { Thought } from '../models/thoughtModel';
+import { ThoughtCard } from './ThoughtCard';
+
+interface ThoughtListProps {
+  thoughts: Thought[];
+  onSurpriseClick?: (thought: Thought) => void;
+}
+
+/**
+ * Displays a flat list of thoughts as cards, sorted by most recent first.
+ */
+export function ThoughtList({
+  thoughts,
+  onSurpriseClick,
+}: ThoughtListProps): React.ReactElement {
+  // Sort thoughts by createdAt descending (most recent first)
+  const sortedThoughts = [...thoughts].sort(
+    (a, b) => b.createdAt - a.createdAt
+  );
+
+  if (sortedThoughts.length === 0) {
+    return (
+      <div className="thought-list empty-state">
+        <p>No thoughts to display. Start by adding a new thought!</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="thought-list">
+      {sortedThoughts.map((thought) => (
+        <ThoughtCard
+          key={thought.id}
+          thought={thought}
+          onHighlight={
+            onSurpriseClick ? () => onSurpriseClick(thought) : undefined
+          }
+        />
+      ))}
+    </div>
+  );
+}
