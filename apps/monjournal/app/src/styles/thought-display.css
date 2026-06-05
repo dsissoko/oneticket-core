@@ -231,6 +231,12 @@
   align-items: center;
   gap: 0.5rem;
   flex: 0 1 auto;
+  min-width: 0;
+}
+
+.filter-group-text {
+  flex: 1 1 auto;
+  min-width: 200px;
 }
 
 .filter-input {
@@ -241,6 +247,13 @@
   color: hsl(var(--foreground));
   font-size: 0.9375rem;
   transition: border-color 0.2s ease;
+  min-width: 0;
+  width: 100%;
+}
+
+.filter-input-text {
+  width: 100%;
+  flex-grow: 1;
 }
 
 .filter-input:focus {
@@ -361,6 +374,12 @@
 
   .filter-group {
     gap: 0.375rem;
+    flex: 0 1 auto;
+  }
+
+  .filter-group-text {
+    flex: 1 1 100%;
+    min-width: 100%;
   }
 
   .filter-input {
@@ -368,10 +387,15 @@
     font-size: 0.875rem;
   }
 
+  .filter-input-text {
+    width: 100%;
+  }
+
   .surprise-button,
   .clear-button {
     padding: 0.375rem 0.75rem;
     font-size: 0.8125rem;
+    flex-shrink: 0;
   }
 
   .home-header h1 {
@@ -415,16 +439,58 @@
     width: 100%;
   }
 
+  .filter-panel {
+    padding: 0.5rem;
+  }
+
   .filter-controls {
     flex-direction: column;
+    gap: 0.5rem;
   }
 
   .filter-group {
     width: 100%;
+    flex: 1 1 auto;
+  }
+
+  .filter-group-text {
+    flex: 1 1 100%;
+    min-width: 100%;
   }
 
   .filter-input,
   .clear-button {
     width: 100%;
+  }
+
+  .filter-input-text {
+    width: 100%;
+  }
+
+  .thought-card {
+    padding: 0.5rem;
+  }
+
+  .thought-title {
+    font-size: 0.9375rem;
+  }
+
+  .thought-text {
+    font-size: 0.8125rem;
+  }
+
+  .thought-card-footer {
+    font-size: 0.8125rem;
+  }
+
+  .timeline-separator {
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    margin-top: 0.75rem;
+  }
+
+  .timeline-date {
+    font-size: 0.8125rem;
+    padding: 0.125rem 0.375rem;
   }
 }

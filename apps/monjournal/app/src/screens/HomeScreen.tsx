@@ -15,7 +15,7 @@ import { applyFilters, FilterState } from '@/utils/filterLogic';
  * All functionality on a single page with no separate routes needed.
  */
 export function HomeScreen(): React.ReactElement {
-  const { thoughts, getTags } = useThoughts();
+  const { thoughts } = useThoughts();
   const [filters, setFilters] = useState<FilterState>({
     textQuery: '',
     startDate: null,
@@ -25,9 +25,6 @@ export function HomeScreen(): React.ReactElement {
   const [viewMode, setViewMode] = useState<'list' | 'timeline'>('list');
   const [highlightedThoughtId, setHighlightedThoughtId] = useState<string | null>(null);
   const highlightedRef = useRef<HTMLDivElement>(null);
-
-  // Get all available tags
-  const existingTags = useMemo(() => getTags(), [getTags]);
 
   // Apply filters to thoughts
   const filteredThoughts = useMemo(() => {
@@ -86,7 +83,6 @@ export function HomeScreen(): React.ReactElement {
         {/* Filter Panel */}
         <div className="mb-8">
           <FilterPanel
-            existingTags={existingTags}
             onFilterChange={handleFilterChange}
           />
         </div>

@@ -8,7 +8,7 @@ export interface FilterState {
 }
 
 /**
- * Checks if a thought's title or content contains the search query (case-insensitive).
+ * Checks if a thought's title, content, or tags contain the search query (case-insensitive).
  */
 export function matchesTextSearch(thought: Thought, query: string): boolean {
   if (!query || query.trim() === '') {
@@ -17,7 +17,9 @@ export function matchesTextSearch(thought: Thought, query: string): boolean {
   const lowerQuery = query.toLowerCase();
   const lowerTitle = thought.title.toLowerCase();
   const lowerContent = thought.content.toLowerCase();
-  return lowerTitle.includes(lowerQuery) || lowerContent.includes(lowerQuery);
+  const matchesTitleOrContent = lowerTitle.includes(lowerQuery) || lowerContent.includes(lowerQuery);
+  const matchesTags = thought.tags.some((tag) => tag.toLowerCase().includes(lowerQuery));
+  return matchesTitleOrContent || matchesTags;
 }
 
 /**

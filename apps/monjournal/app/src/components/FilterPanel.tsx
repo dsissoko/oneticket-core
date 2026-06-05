@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import { Tag } from '../models/tagModel';
 import { FilterState } from '../utils/filterLogic';
 import { DateRangePicker } from './DateRangePicker';
-import { TagMultiSelect } from './TagMultiSelect';
 
 interface FilterPanelProps {
-  existingTags: Tag[];
   onFilterChange: (filters: FilterState) => void;
 }
 
@@ -15,13 +12,11 @@ interface FilterPanelProps {
  * Displayed horizontally to minimize vertical space.
  */
 export function FilterPanel({
-  existingTags,
   onFilterChange,
 }: FilterPanelProps): React.ReactElement {
   const [textQuery, setTextQuery] = useState('');
   const [startDate, setStartDate] = useState<number | null>(null);
   const [endDate, setEndDate] = useState<number | null>(null);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   // Helper to emit filter change
   const emitFilterChange = (newFilters: FilterState) => {
@@ -36,7 +31,7 @@ export function FilterPanel({
       textQuery: newText,
       startDate,
       endDate,
-      selectedTags,
+      selectedTags: [],
     });
   };
 
@@ -48,18 +43,7 @@ export function FilterPanel({
       textQuery,
       startDate: newStart,
       endDate: newEnd,
-      selectedTags,
-    });
-  };
-
-  // Handle selected tags change
-  const handleTagsChange = (newSelectedTags: string[]) => {
-    setSelectedTags(newSelectedTags);
-    emitFilterChange({
-      textQuery,
-      startDate,
-      endDate,
-      selectedTags: newSelectedTags,
+      selectedTags: [],
     });
   };
 
@@ -68,7 +52,6 @@ export function FilterPanel({
     setTextQuery('');
     setStartDate(null);
     setEndDate(null);
-    setSelectedTags([]);
     emitFilterChange({
       textQuery: '',
       startDate: null,
@@ -80,15 +63,15 @@ export function FilterPanel({
   return (
     <div className="filter-panel">
       <div className="filter-controls">
-        <div className="filter-group">
+        <div className="filter-group filter-group-text">
           <input
             id="search-input"
             type="text"
-            className="filter-input"
-            placeholder="Search title and content"
+            className="filter-input filter-input-text"
+            placeholder="Search thoughts, tags..."
             value={textQuery}
             onChange={handleTextChange}
-            aria-label="Search thoughts"
+            aria-label="Search thoughts by title, content, or tags"
           />
         </div>
 
@@ -100,15 +83,7 @@ export function FilterPanel({
           />
         </div>
 
-        <div className="filter-group">
-          <TagMultiSelect
-            availableTags={existingTags}
-            selectedTags={selectedTags}
-            onChange={handleTagsChange}
-          />
-        </div>
-
-        {(textQuery || startDate || endDate || selectedTags.length > 0) && (
+        {(textQuery || startDate || endDate) && (
           <button className="clear-button" onClick={handleClearFilters}>
             Clear Filters
           </button>
