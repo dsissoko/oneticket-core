@@ -13,8 +13,15 @@ import { ShieldImpl } from '@/game/Shield'
 import { MysteryShipSpawner } from '@/game/entities/MysteryShip'
 import { PhysicsSystem } from '@/game/physics/PhysicsSystem'
 import { BulletPool } from '@/game/BulletPool'
+import { WaveManager } from '@/game/managers/WaveManager'
+import { ScoreManager } from '@/game/managers/ScoreManager'
+import { LivesManager } from '@/game/managers/LivesManager'
+import { VictoryDetector } from '@/game/systems/VictoryDetector'
+import { RestartHandler } from '@/game/systems/RestartHandler'
+import { WAVE_CONFIG } from '@/game/config/WaveConfig'
 import StartScreen from './StartScreen'
 import HUD from './HUD'
+import VictoryScreen from './VictoryScreen'
 import type { GameLoopState, GameState } from '@/game/types'
 
 export function Game(): React.ReactElement {
@@ -23,6 +30,7 @@ export function Game(): React.ReactElement {
   const [score, setScore] = useState(0)
   const [lives, setLives] = useState(3)
   const [waveNumber, setWaveNumber] = useState(1)
+  const [victoryCountdown, setVictoryCountdown] = useState(0)
 
   // Refs for game loop objects (not triggering re-renders)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -32,6 +40,12 @@ export function Game(): React.ReactElement {
   const stateMachineRef = useRef<StateMachine>(new StateMachine('Start'))
   const physicsSystemRef = useRef<PhysicsSystem | null>(null)
   const bulletPoolRef = useRef<BulletPool | null>(null)
+  const waveManagerRef = useRef<WaveManager>(new WaveManager(1))
+  const scoreManagerRef = useRef<ScoreManager>(new ScoreManager(0))
+  const livesManagerRef = useRef<LivesManager>(new LivesManager(3))
+  const victoryDetectorRef = useRef<VictoryDetector>(new VictoryDetector())
+  const restartHandlerRef = useRef<RestartHandler>(new RestartHandler())
+  const victoryTransitionTimerRef = useRef<number>(0)
   const gameStateRef = useRef<GameLoopState>({
     formation: null,
     player: null,
@@ -247,6 +261,62 @@ export function Game(): React.ReactElement {
         // Remove inactive bullets from game state
         state.bullets = state.bullets.filter((bullet) => (bullet as any).active)
       }
+
+      // ============================================================
+      // VICTORY DETECTION PHASE
+      // ============================================================
+      if (victoryDetectorRef.current && state.formation) {
+        if (victoryDetectorRef.current.checkVictory(state.formation)) {
+          // Victory condition met - all enemies destroyed
+          if (stateMachine.getState() === 'Playing') {
+            console.log(`Wave ${state.waveNumber} complete!`)
+            stateMachine.transitionTo('Victory')
+            setGameState('Victory')
+            victoryTransitionTimerRef.current = WAVE_CONFIG.VICTORY_TRANSITION_DELAY
+            setVictoryCountdown(WAVE_CONFIG.VICTORY_TRANSITION_DELAY)
+          }
+        }
+      }
+    } else if (stateMachine.getState() === 'Victory') {
+      // ============================================================
+      // VICTORY STATE - COUNTDOWN & WAVE PROGRESSION
+      // ============================================================
+      // Decrement victory transition timer
+      victoryTransitionTimerRef.current -= deltaTime
+      setVictoryCountdown(Math.max(0, victoryTransitionTimerRef.current))
+
+      // When timer expires, progress to next wave
+      if (victoryTransitionTimerRef.current <= 0) {
+        console.log('Victory transition complete - progressing to next wave')
+
+        // Increment wave
+        waveManagerRef.current.incrementWave()
+        const newWave = waveManagerRef.current.getWave()
+
+        // Reset lives
+        livesManagerRef.current.resetLives()
+        const newLives = livesManagerRef.current.getLives()
+
+        // Score persists (NOT reset)
+        // Formation respawns with new wave
+        if (gameStateRef.current.formation) {
+          gameStateRef.current.formation.resetForWave(newWave)
+        }
+
+        // Clear all bullets
+        gameStateRef.current.bullets = []
+
+        // Update game state
+        gameStateRef.current.waveNumber = newWave
+        gameStateRef.current.lives = newLives
+        gameStateRef.current.gameState = 'Playing'
+
+        // Transition to Playing
+        stateMachine.transitionTo('Playing')
+        setGameState('Playing')
+        setWaveNumber(newWave)
+        setLives(newLives)
+      }
     }
   }
 
@@ -280,10 +350,17 @@ export function Game(): React.ReactElement {
   }
 
   /**
-   * Handle start button click
-   */
+    * Handle start button click
+    */
   const handleStartGame = (): void => {
     const state = gameStateRef.current
+
+    // Initialize managers for fresh game
+    waveManagerRef.current = new WaveManager(1)
+    scoreManagerRef.current = new ScoreManager(0)
+    livesManagerRef.current = new LivesManager(3)
+    victoryDetectorRef.current = new VictoryDetector()
+    victoryTransitionTimerRef.current = 0
 
     // Transition state machine
     stateMachineRef.current.transitionTo('Playing')
@@ -291,7 +368,7 @@ export function Game(): React.ReactElement {
 
     // Initialize game entities
     state.formation = new Formation(CANVAS_WIDTH, CANVAS_HEIGHT)
-    state.formation.initialize(state.waveNumber)
+    state.formation.initialize(1) // Wave 1
     state.player = new PlayerImpl(CANVAS_WIDTH, CANVAS_HEIGHT)
     state.bullets = []
 
@@ -322,8 +399,34 @@ export function Game(): React.ReactElement {
     setScore(0)
     setLives(3)
     setWaveNumber(1)
+    setVictoryCountdown(0)
 
-    console.log('Game started')
+    console.log('Game started - Wave 1')
+  }
+
+  /**
+    * Handle restart button click (from game over screen)
+    */
+  const handleRestart = (): void => {
+    // Reset all game state
+    restartHandlerRef.current.reset(gameStateRef.current)
+
+    // Reset managers
+    waveManagerRef.current = new WaveManager(1)
+    scoreManagerRef.current = new ScoreManager(0)
+    livesManagerRef.current = new LivesManager(3)
+    victoryDetectorRef.current = new VictoryDetector()
+    victoryTransitionTimerRef.current = 0
+
+    // Reset state machine
+    stateMachineRef.current.reset()
+    setGameState('Start')
+    setScore(0)
+    setLives(3)
+    setWaveNumber(1)
+    setVictoryCountdown(0)
+
+    console.log('Game restarted - returning to Start screen')
   }
 
   return (
@@ -351,19 +454,11 @@ export function Game(): React.ReactElement {
 
         {/* Victory overlay */}
         {gameState === 'Victory' && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-80 z-10">
-            <div className="text-center">
-              <h1 className="text-6xl font-bold text-green-400 mb-4 font-mono">
-                VICTORY!
-              </h1>
-              <p className="text-xl text-green-300 mb-4 font-mono">
-                Wave {waveNumber} Complete
-              </p>
-              <p className="text-2xl text-green-400 font-bold mb-8 font-mono">
-                Score: {score}
-              </p>
-            </div>
-          </div>
+          <VictoryScreen
+            waveNumber={waveNumber}
+            score={score}
+            countdown={victoryCountdown}
+          />
         )}
 
         {/* Game Over overlay */}
@@ -373,9 +468,18 @@ export function Game(): React.ReactElement {
               <h1 className="text-6xl font-bold text-red-500 mb-4 font-mono">
                 GAME OVER
               </h1>
+              <p className="text-xl text-red-400 mb-2 font-mono">
+                Wave Reached: {waveNumber}
+              </p>
               <p className="text-2xl text-red-400 font-bold mb-8 font-mono">
                 Final Score: {score}
               </p>
+              <button
+                onClick={handleRestart}
+                className="px-6 py-3 bg-red-600 text-white font-bold rounded hover:bg-red-700 transition font-mono"
+              >
+                RESTART
+              </button>
             </div>
           </div>
         )}
