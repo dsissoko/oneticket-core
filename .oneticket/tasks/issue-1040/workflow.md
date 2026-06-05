@@ -5,3 +5,4 @@
 2026-06-05 00:48 | K | apps/monjournal/app/src/pages/AddThought.tsx
 2026-06-05 00:39 | D | apps/monjournal/app/src/components/TagDisplay.tsx
 2026-06-05 06:01 | E | apps/monjournal/app/src/components/ThoughtCard.tsx
+2026-06-05 06:04 | J | apps/monjournal/app/src/components/FilterPanel.tsx
