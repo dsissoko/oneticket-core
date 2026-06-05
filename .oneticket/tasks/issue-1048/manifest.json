@@ -1,0 +1,590 @@
+{
+  "issue": 1048,
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-1048-A",
+      "file": "apps/monjournal/app/.gitignore",
+      "content": "Create canonical .gitignore for Vite React project before any other files. Copy exactly from oneticket-stack-vite-react-primer skill: excludes node_modules/, dist/, .vite/, coverage/, .env*, and editor files.",
+      "depends_on": [],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-1048-B",
+      "file": "apps/monjournal/app/package.json",
+      "content": "Create canonical package.json for vite-react-primer stack. Use exact structure from oneticket-stack-vite-react-primer skill with name '@monjournal/frontend', React 18.3.1, Vite 5.3.1, @primer/react 36.27.0, @testing-library packages, and vitest. Include all required scripts: dev, build (tsc &&), preview, lint, test (--passWithNoTests), test:smoke, coverage.",
+      "depends_on": ["A"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-1048-C",
+      "file": "apps/monjournal/app/tsconfig.json",
+      "content": "Create canonical TypeScript configuration from oneticket-stack-vite-react-primer skill. Target ES2022, enable strict mode, noUnusedLocals, noUnusedParameters. Configure @/ path alias pointing to ./src. Include vite/client types. Reference tsconfig.node.json.",
+      "depends_on": ["B"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-1048-D",
+      "file": "apps/monjournal/app/tsconfig.node.json",
+      "content": "Create tsconfig.node.json for Vite tooling. Set target ES2022, module ESNext, moduleResolution bundler, strict true. This file is referenced by tsconfig.json and used for vite.config.ts, vite.env.d.ts type checking.",
+      "depends_on": ["C"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-1048-E",
+      "file": "apps/monjournal/app/vite.config.ts",
+      "content": "Create canonical vite.config.ts from oneticket-stack-vite-react-primer skill. Include React plugin, @/ path alias via path.resolve, base property using VITE_BASE_PATH, test environment jsdom with setupFiles pointing to src/test/setup.ts, MSW setup with proper onUnhandledRequest handler that skips navigation/asset requests, and coverage configuration. Define __ENABLE_MSW__: true for browser demo mode (no real backend).",
+      "depends_on": ["D"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "F",
+      "branch": "task/issue-1048-F",
+      "file": "apps/monjournal/app/index.html",
+      "content": "Create Vite entry point HTML file. Set title to 'MonJournal' (personal thought journal). Include <script type=\"module\" src=\"/src/main.tsx\"></script> in body. Use standard HTML5 structure with <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" /> for mobile support. Include <div id=\"root\"></div>.",
+      "depends_on": ["E"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "G",
+      "branch": "task/issue-1048-G",
+      "file": "apps/monjournal/app/.eslintrc.json",
+      "content": "Create ESLint configuration for React + TypeScript. Extends eslint:recommended, @typescript-eslint/recommended, @typescript-eslint/recommended-requiring-type-checking. Include react-hooks/rules-of-hooks rule. Set parser to @typescript-eslint/parser. Target ES2022 env. Disable eslint-plugin-react (implicit with React 18) but enable eslint-plugin-react-hooks.",
+      "depends_on": ["F"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "H",
+      "branch": "task/issue-1048-H",
+      "file": "apps/monjournal/app/src/main.tsx",
+      "content": "Create React entry point that bootstraps the app. Import React, ReactDOM, App component, and main.css. Render <App /> into root DOM element. Include MSW startup logic from oneticket-stack-vite-react-primer skill: conditionally start worker if __ENABLE_MSW__ is true, with proper Service Worker URL using import.meta.env.BASE_URL, and onUnhandledRequest handler to skip navigation/asset requests.",
+      "depends_on": ["G"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "I",
+      "branch": "task/issue-1048-I",
+      "file": "apps/monjournal/app/src/vite-env.d.ts",
+      "content": "Create Vite environment types file. Include reference to vite/client and declare __ENABLE_MSW__ as boolean for MSW enable/disable flag used in vite.config.ts.",
+      "depends_on": ["H"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "J",
+      "branch": "task/issue-1048-J",
+      "file": "apps/monjournal/app/src/test/setup.ts",
+      "content": "Create Vitest setup file. Import @testing-library/jest-dom for extended matchers. Polyfill CSS.supports for jsdom to support @primer/react. Use Object.defineProperty to set window.CSS.supports = () => false without type casting.",
+      "depends_on": ["I"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "K",
+      "branch": "task/issue-1048-K",
+      "file": "apps/monjournal/app/src/App.tsx",
+      "content": "Create root App component that wraps the application. Import BrowserRouter from react-router-dom with basename={import.meta.env.BASE_URL}. Define Routes with: / → HomeScreen, /add → AddThoughtScreen. Wrap in error boundary. Include Layout component from AppShell that provides Header, nav, and main content area.",
+      "depends_on": ["J"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "L",
+      "branch": "task/issue-1048-L",
+      "file": "apps/monjournal/app/src/models/thoughtModel.ts",
+      "content": "Implement Slice 1 — Data Foundation: Thought data model. Define Thought interface with id (UUID), title, content, createdAt (timestamp ms), tags (string[]). Export createThought(title, content, tags) function that generates UUID and timestamp. Export validateThought(obj: any) function to validate all required fields are present and correctly typed.",
+      "depends_on": ["K"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "M",
+      "branch": "task/issue-1048-M",
+      "file": "apps/monjournal/app/src/utils/colorPalette.ts",
+      "content": "Implement Slice 1 — Data Foundation: Color palette. Export COLORS array with 8-12 distinct, WCAG AA compliant hex colors for tag assignment. Use colors like #FF6B6B, #4ECDC4, #45B7D1, #FFA07A, #98D8C8, #F7DC6F, #BB8FCE, #85C1E2, etc. Ensure sufficient visual distinction and contrast for text readability.",
+      "depends_on": ["L"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "N",
+      "branch": "task/issue-1048-N",
+      "file": "apps/monjournal/app/src/models/tagModel.ts",
+      "content": "Implement Slice 1 — Data Foundation: Tag derivation and color assignment. Define Tag interface with name (string) and color (hex string). Export deriveTags(thoughts: Thought[]) to collect unique tag names from all thoughts and assign deterministic colors. Export getTagColor(tagName: string) that uses a consistent hash function (e.g., charCodeAt sum % length) to map tag names to colors from colorPalette. Same tag name always returns same color.",
+      "depends_on": ["M"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "O",
+      "branch": "task/issue-1048-O",
+      "file": "apps/monjournal/app/src/hooks/useLocalStorage.ts",
+      "content": "Implement Slice 1 — Data Foundation: localStorage wrapper hook. Export useLocalStorage() hook that returns { getItem(key: string), setItem(key: string, value: any) } with JSON serialization/deserialization. Handle errors gracefully (try/catch on parse, return null on missing key). This is an internal utility used by useThoughts.",
+      "depends_on": ["N"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "P",
+      "branch": "task/issue-1048-P",
+      "file": "apps/monjournal/app/src/utils/filterLogic.ts",
+      "content": "Implement Slice 1 — Data Foundation: Filter logic. Export FilterState interface. Export applyFilters(thoughts: Thought[], filters: FilterState) that combines all filters with AND logic. Export matchesTextSearch(thought, query: string) for case-insensitive title/content matching. Export matchesDateRange(thought, start: number|null, end: number|null) for inclusive date filtering. Export matchesTags(thought, selectedTags: string[]) for OR logic (any selected tag matches).",
+      "depends_on": ["O"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "Q",
+      "branch": "task/issue-1048-Q",
+      "file": "apps/monjournal/app/src/hooks/useThoughts.ts",
+      "content": "Implement Slice 1 — Data Foundation: Core data hook. Export useThoughts() hook that returns { thoughts: Thought[], addThought(t: Thought), getTags() → Tag[], getThoughts() → Thought[] }. Initialize from localStorage key 'monjournal_thoughts' on mount. Persist updated array to localStorage on addThought. Compute tags via deriveTags(). Handle localStorage errors gracefully. No update/delete functions (immutable in V1).",
+      "depends_on": ["P"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "R",
+      "branch": "task/issue-1048-R",
+      "file": "apps/monjournal/app/src/components/TagDisplay.tsx",
+      "content": "Implement Slice 2 — Thought List Display: Tag color display component. Props: tags (string[]), compact? (boolean). Render each tag as a colored chip using getTagColor() from Slice 1. Background color from tag, text color auto-adjusted for contrast (black or white). Responsive sizing. Use inline flex layout with 4-8px padding, rounded corners.",
+      "depends_on": ["Q"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "S",
+      "branch": "task/issue-1048-S",
+      "file": "apps/monjournal/app/src/utils/dateFormat.ts",
+      "content": "Implement Slice 2 — Thought List Display: Date formatting utility. Export formatDate(timestamp: number, format: 'relative' | 'absolute') function. Relative: humanized ('2 hours ago', 'yesterday', '3 days ago'). Absolute: locale-aware format ('June 4, 2026'). Use Intl.DateTimeFormat or date-fns library. Return appropriate format for context.",
+      "depends_on": ["R"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "T",
+      "branch": "task/issue-1048-T",
+      "file": "apps/monjournal/app/src/utils/groupByDate.ts",
+      "content": "Implement Slice 2 — Thought List Display: Date grouping utility. Export groupThoughtsByDate(thoughts: Thought[]) function that returns Map<string, Thought[]> where string is YYYY-MM-DD. Groups by creation date (normalized to midnight). Thoughts within each group sorted by createdAt descending (newest first within day).",
+      "depends_on": ["S"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "U",
+      "branch": "task/issue-1048-U",
+      "file": "apps/monjournal/app/src/components/ThoughtCard.tsx",
+      "content": "Implement Slice 2 — Thought List Display: Individual thought card component. Props: thought (Thought), onHighlight? (() => void). Render: bold title as header, truncated content (~100 chars with ellipsis), relative date via formatDate(thought.createdAt, 'relative'), tags via TagDisplay. Card-based layout with padding, border, shadow. Optional highlight state for surprise feature.",
+      "depends_on": ["T"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "V",
+      "branch": "task/issue-1048-V",
+      "file": "apps/monjournal/app/src/components/ThoughtList.tsx",
+      "content": "Implement Slice 2 — Thought List Display: Flat thought list component. Props: thoughts (Thought[]), onSurpriseClick? ((thought) => void). Render array of ThoughtCard components sorted by createdAt descending (most recent first). Empty state message when thoughts.length === 0. Single list view layout.",
+      "depends_on": ["U"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "W",
+      "branch": "task/issue-1048-W",
+      "file": "apps/monjournal/app/src/components/TimelineGroup.tsx",
+      "content": "Implement Slice 2 — Thought List Display: Day grouping component for timeline. Props: date (number timestamp), thoughts (Thought[]), onSurpriseClick? ((thought) => void). Render: day separator header with absolute date ('June 4, 2026'), followed by ThoughtCard list for that day. Separator styling with horizontal line and date label. Thoughts within group sorted by createdAt descending.",
+      "depends_on": ["V"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "X",
+      "branch": "task/issue-1048-X",
+      "file": "apps/monjournal/app/src/components/TimelineView.tsx",
+      "content": "Implement Slice 2 — Thought List Display: Timeline view component. Props: thoughts (Thought[]), onSurpriseClick? ((thought) => void). Use groupThoughtsByDate() to organize thoughts. Render array of TimelineGroup components in reverse chronological order (newest group first). Empty state message when no thoughts exist.",
+      "depends_on": ["W"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "Y",
+      "branch": "task/issue-1048-Y",
+      "file": "apps/monjournal/app/src/components/ViewModeToggle.tsx",
+      "content": "Implement Slice 2 — Thought List Display: View mode toggle control. Props: currentMode ('list' | 'timeline'), onChange ((mode) => void). Render two buttons or toggle switch labeled 'List' and 'Timeline'. Active button/segment visually highlighted. User can switch views. State managed by parent Home component.",
+      "depends_on": ["X"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "Z",
+      "branch": "task/issue-1048-Z",
+      "file": "apps/monjournal/app/src/components/DateRangePicker.tsx",
+      "content": "Implement Slice 3 — Filtering & Search: Date range picker sub-component. Props: dateStart (number|null), dateEnd (number|null), onChange ((start, end) => void). Render two <input type=\"date\"> fields with labels 'From:' and 'To:'. Allow clearing dates (empty field = null). Validate that start ≤ end if both set.",
+      "depends_on": ["Y"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AA",
+      "branch": "task/issue-1048-AA",
+      "file": "apps/monjournal/app/src/components/TagMultiSelect.tsx",
+      "content": "Implement Slice 3 — Filtering & Search: Tag multi-select sub-component. Props: availableTags (Tag[]), selectedTags (string[]), onChange ((selectedTags) => void). Render checkbox list or toggle buttons (one per tag). Show tag with colored indicator via getTagColor(). Selected state clearly indicated. Click to toggle. Flex wrap layout to handle many tags.",
+      "depends_on": ["Z"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AB",
+      "branch": "task/issue-1048-AB",
+      "file": "apps/monjournal/app/src/components/FilterPanel.tsx",
+      "content": "Implement Slice 3 — Filtering & Search: Unified filter UI. Props: existingTags (Tag[]), onFilterChange ((filters) => void), onSurpriseClick (() => void). Render: text search input, DateRangePicker, TagMultiSelect, Surprise button (disabled if no results), optional clear button. Manage local state for text, dateStart, dateEnd, selectedTags. Call onFilterChange on each change. Responsive layout (vertical on mobile, horizontal on desktop).",
+      "depends_on": ["AA"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AC",
+      "branch": "task/issue-1048-AC",
+      "file": "apps/monjournal/app/src/components/TagInput.tsx",
+      "content": "Implement Slice 4 — Add Thought Form: Tag input with autocomplete. Props: value (string), onChange ((text) => void), suggestions (string[]), onAddTag ((tag) => void), disabled? (boolean). Render text input with dropdown of suggestions filtered by input (case-insensitive substring). On Enter or suggestion click: add tag if non-empty and not duplicate. Clear input after add. Do not add duplicate tags.",
+      "depends_on": ["AB"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AD",
+      "branch": "task/issue-1048-AD",
+      "file": "apps/monjournal/app/src/components/TagList.tsx",
+      "content": "Implement Slice 4 — Add Thought Form: Selected tags display component. Props: tags (string[]), onRemoveTag ((tag) => void). Render each tag as colored chip using getTagColor(). Show tag name and background color. Display remove button (X) on each chip. On remove click: call onRemoveTag() with tag name. Inline flex chips layout.",
+      "depends_on": ["AC"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AE",
+      "branch": "task/issue-1048-AE",
+      "file": "apps/monjournal/app/src/screens/HomeScreen.tsx",
+      "content": "Implement Home page (Slices 2 & 3): Main container composing FilterPanel, ViewModeToggle, and display components. Initialize useThoughts() hook. Initialize filterState via useState({}). Initialize viewMode via useState('list'). Apply applyFilters(thoughts, filterState) from Slice 1. Render FilterPanel with onFilterChange handler. Render ViewModeToggle with onChange handler. Conditionally render ThoughtList or TimelineView based on viewMode with filtered thoughts. Implement onSurpriseClick handler that selects random thought from filteredThoughts and highlights it.",
+      "depends_on": ["AD"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AF",
+      "branch": "task/issue-1048-AF",
+      "file": "apps/monjournal/app/src/screens/AddThoughtScreen.tsx",
+      "content": "Implement Slice 4 — Add Thought Form: Form page for creating new thoughts. State: title, content, selectedTags, tagInput, validationErrors. Render form with: title input (required), content textarea (required), TagInput with suggestions from useThoughts().getTags(), TagList of selectedTags, Submit and Cancel buttons. Validation: prevent empty title/content with inline error messages. On submit: call useThoughts.addThought(createThought(title, content, selectedTags)), display optional success message, navigate to / via useNavigate. Include CSS or Primer styling.",
+      "depends_on": ["AE"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AG",
+      "branch": "task/issue-1048-AG",
+      "file": "apps/monjournal/app/src/test/smoke/render.test.tsx",
+      "content": "Create smoke test verifying app renders without crashing. Import App component, render in test environment. Assert root element is rendered. Assert no console errors. This is a minimal runtime sanity check that verifies the entire setup (React, Vite, types, MSW, AppShell) works together before proceeding.",
+      "depends_on": ["AF"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AH",
+      "branch": "task/issue-1048-AH",
+      "file": "apps/monjournal/app/src/mocks/handlers.ts",
+      "content": "Create MSW handlers file. This file is append-only for future mock API handlers. For MonJournal localStorage-only (no backend), initialize as empty array: export const handlers: RequestHandler[] = []. Include comment: '// No API handlers needed for MonJournal V1 (localStorage only)'. This file structure allows future additions without merge conflicts.",
+      "depends_on": ["AG"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AI",
+      "branch": "task/issue-1048-AI",
+      "file": "apps/monjournal/app/src/mocks/browser.ts",
+      "content": "Create MSW worker setup file. Import setupWorker from msw/browser and handlers from ./handlers. Export worker = setupWorker(...handlers). This enables MSW in the browser for future API mocking if backend is added later.",
+      "depends_on": ["AH"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AJ",
+      "branch": "task/issue-1048-AJ",
+      "file": "apps/monjournal/app/public/mockServiceWorker.js",
+      "content": "Generate MSW Service Worker file. Run: npx msw init public/ in the app directory. This creates mockServiceWorker.js that enables MSW in the browser. Commit this file (it is auto-generated but must be in repo). This file is used by vite.config.ts MSW setup with url: import.meta.env.BASE_URL + 'mockServiceWorker.js'.",
+      "depends_on": ["AI"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AK",
+      "branch": "task/issue-1048-AK",
+      "file": "apps/monjournal/app/src/styles/globals.css",
+      "content": "Create global styles file with CSS custom properties for design tokens (colors, spacing, typography). Define: --background, --foreground, --primary, --secondary, --border, --muted. Include base body styles, link styles, scrollbar styling. Reference from Primer design system or AppShell. Keep minimal—rely on AppShell CSS and Primer components for most styling.",
+      "depends_on": ["AJ"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AL",
+      "branch": "task/issue-1048-AL",
+      "file": "apps/monjournal/app/README.md",
+      "content": "Create project README with: title 'MonJournal Frontend', description of the app (personal thought journal, localStorage-based), development instructions (npm install, npm run dev), build/test/lint commands, architecture reference to docs/how/architecture.md, and link to GitHub repo. Keep it concise—main documentation is in the docs/ directory.",
+      "depends_on": ["AK"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AM",
+      "branch": "task/issue-1048-AM",
+      "file": "apps/monjournal/app/.npmrc",
+      "content": "Create .npmrc file to configure npm behavior for the project. Set engine-strict=true to enforce Node version if specified in package.json. Set legacy-peer-deps=false to catch peer dependency issues. Include any org-specific registry settings if applicable. Keep minimal—mostly default npm config.",
+      "depends_on": ["AL"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AN",
+      "branch": "task/issue-1048-AN",
+      "file": "apps/monjournal/app/vite.env.d.ts",
+      "content": "Create Vite environment type definitions. Import vite/client. Declare __ENABLE_MSW__ as boolean constant. This enables TypeScript to recognize the __ENABLE_MSW__ flag defined in vite.config.ts as a global constant.",
+      "depends_on": ["AM"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AO",
+      "branch": "task/issue-1048-AO",
+      "file": "apps/monjournal/app/src/index.css",
+      "content": "Create index CSS file (alternative to globals.css). Import globals.css. Add any app-specific base styles. This file is imported in main.tsx. Keep separation between global design tokens (globals.css, locked) and app-specific adjustments.",
+      "depends_on": ["AN"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AP",
+      "branch": "task/issue-1048-AP",
+      "file": "apps/monjournal/app/src/components/Layout.tsx",
+      "content": "Create Layout wrapper component using AppShell conventions. This is a thin wrapper around AppShell's Layout that provides the grid structure and navigation. Props: children (React.ReactNode). Render AppShell Layout with Header and main content area. Update Header links to point to / (home) and /add (add thought). Keep locked after this task—no future tasks may modify Layout.",
+      "depends_on": ["AO"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AQ",
+      "branch": "task/issue-1048-AQ",
+      "file": "apps/monjournal/app/src/components/ErrorBoundary.tsx",
+      "content": "Create generic error boundary component for safety. Props: children (React.ReactNode). On error: display friendly message 'Something went wrong. Please refresh the page.' and log error to console. Prevent white screen of death. Use React.Component with componentDidCatch. This is a baseline safety net—do not modify after creation.",
+      "depends_on": ["AP"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AR",
+      "branch": "task/issue-1048-AR",
+      "file": "apps/monjournal/app/npm-install-and-verify.sh",
+      "content": "Create helper script to set up the app. Run: npm install, npm run build (tsc && vite build), npm run test, npm run lint. This script verifies all setup is correct before developer starts coding. Can be run manually: bash npm-install-and-verify.sh. On success: 'Setup complete!'. On error: fail immediately with error message.",
+      "depends_on": ["AQ"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AS",
+      "branch": "task/issue-1048-AS",
+      "file": "apps/monjournal/app/src/App.test.tsx",
+      "content": "Create App component test. Render <App /> component. Assert that key elements are present: navigation links to home and add-thought routes exist. Assert no TypeScript errors in compilation. This validates the root App setup and routing structure.",
+      "depends_on": ["AR"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AT",
+      "branch": "task/issue-1048-AT",
+      "file": "apps/monjournal/app/src/models/thoughtModel.test.ts",
+      "content": "Create unit tests for thoughtModel (Slice 1). Test createThought: verifies UUID generation, timestamp auto-set, all fields populated. Test validateThought: verifies required fields checked, type validation for createdAt (number), tags (string array). Edge cases: empty title/content fails validation, missing id/createdAt fails validation.",
+      "depends_on": ["AS"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AU",
+      "branch": "task/issue-1048-AU",
+      "file": "apps/monjournal/app/src/models/tagModel.test.ts",
+      "content": "Create unit tests for tagModel (Slice 1). Test deriveTags: verifies unique tag names extracted from thoughts, colors assigned, same tag name returns same color (deterministic). Test getTagColor: verifies hash function returns consistent color for same tag name across calls. Edge cases: empty thoughts array returns empty tags, duplicate tags deduplicated, case-sensitive matching ('Work' vs 'work').",
+      "depends_on": ["AT"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AV",
+      "branch": "task/issue-1048-AV",
+      "file": "apps/monjournal/app/src/utils/filterLogic.test.ts",
+      "content": "Create unit tests for filterLogic (Slice 1). Test applyFilters: AND composition verified with multiple filters. Test matchesTextSearch: case-insensitive, searches title and content, empty query matches all. Test matchesDateRange: inclusive bounds, null handling. Test matchesTags: OR logic (any selected tag matches), empty selection matches all. Edge cases: no filters returns all thoughts, all filters combined correctly.",
+      "depends_on": ["AU"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AW",
+      "branch": "task/issue-1048-AW",
+      "file": "apps/monjournal/app/src/utils/dateFormat.test.ts",
+      "content": "Create unit tests for dateFormat (Slice 2). Test relative format: recent timestamps return 'minutes ago', 'hours ago', 'yesterday', older return 'N days ago'. Test absolute format: returns locale-aware date string like 'June 4, 2026'. Edge cases: current timestamp, very old timestamp, date boundary conditions (midnight transitions).",
+      "depends_on": ["AV"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AX",
+      "branch": "task/issue-1048-AX",
+      "file": "apps/monjournal/app/src/components/ThoughtCard.test.tsx",
+      "content": "Create component test for ThoughtCard (Slice 2). Render with sample thought data. Assert: title rendered bold, content truncated to ~100 chars with ellipsis, date rendered as relative format, tags rendered via TagDisplay with correct colors. Assert onHighlight callback fires on click. Test content truncation length boundary.",
+      "depends_on": ["AW"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AY",
+      "branch": "task/issue-1048-AY",
+      "file": "apps/monjournal/app/src/components/ThoughtList.test.tsx",
+      "content": "Create component test for ThoughtList (Slice 2). Render with array of thoughts. Assert: all thoughts displayed as ThoughtCard components, sorted by createdAt descending (most recent first). Render empty state when thoughts.length === 0. Assert onSurpriseClick callback fires when surprise is triggered.",
+      "depends_on": ["AX"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "AZ",
+      "branch": "task/issue-1048-AZ",
+      "file": "apps/monjournal/app/src/components/TimelineView.test.tsx",
+      "content": "Create component test for TimelineView (Slice 2). Render with array of thoughts. Assert: thoughts grouped by creation date, groups displayed in reverse chronological order (newest first), day separators rendered with absolute dates ('June 4, 2026'). Assert empty state when no thoughts. Test same-day thoughts grouped together.",
+      "depends_on": ["AY"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "BA",
+      "branch": "task/issue-1048-BA",
+      "file": "apps/monjournal/app/src/components/FilterPanel.test.tsx",
+      "content": "Create component test for FilterPanel (Slice 3). Render with available tags. Assert: text input rendered, date picker rendered (two inputs), tag multi-select rendered, surprise button rendered. Assert onFilterChange called on text input change with text filter state. Assert onFilterChange called on date input change. Assert onFilterChange called on tag selection change. Assert surprise button disabled when no results.",
+      "depends_on": ["AZ"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "BB",
+      "branch": "task/issue-1048-BB",
+      "file": "apps/monjournal/app/src/screens/HomeScreen.test.tsx",
+      "content": "Create integration test for HomeScreen (Slices 2 & 3). Mock useThoughts hook. Render Home component. Assert: FilterPanel rendered, ViewModeToggle rendered, ThoughtList rendered by default. Test filter change updates displayed thoughts. Test view mode toggle switches between ThoughtList and TimelineView. Test surprise button selects random thought from filtered results and highlights it.",
+      "depends_on": ["BA"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "BC",
+      "branch": "task/issue-1048-BC",
+      "file": "apps/monjournal/app/src/screens/AddThoughtScreen.test.tsx",
+      "content": "Create integration test for AddThoughtScreen (Slice 4). Mock useThoughts and useNavigate hooks. Render form. Assert: title input, content input, tag input, tag list rendered. Test form validation: empty title/content shows error. Test adding tags via input and autocomplete. Test removing tags. Test form submit: calls addThought(), shows success message, navigates to /. Test cancel button.",
+      "depends_on": ["BB"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "BD",
+      "branch": "task/issue-1048-BD",
+      "file": "apps/monjournal/app/src/hooks/useThoughts.test.ts",
+      "content": "Create hook test for useThoughts (Slice 1). Mock localStorage. Test: initial load from localStorage on mount, addThought persists to localStorage, getTags returns derivedTags from all thoughts, getThoughts returns all thoughts. Test localStorage error handling: graceful fallback if storage unavailable. Test JSON parse errors on corrupted data: reset to empty array.",
+      "depends_on": ["BC"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "BE",
+      "branch": "task/issue-1048-BE",
+      "file": "apps/monjournal/app/.env.example",
+      "content": "Create environment variable example file. Include: VITE_BASE_PATH=/ (default). Add comment: '# Copy to .env.local and update as needed for deployment'. Keep minimal—MonJournal has no backend configuration.",
+      "depends_on": ["BD"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "BF",
+      "branch": "task/issue-1048-BF",
+      "file": "apps/monjournal/app/src/types/index.ts",
+      "content": "Create central types export file. Re-export all types from models: Thought, Tag, FilterState. This allows other files to import types from @/types instead of scattered model files. Provides a single source of truth for type imports across the app.",
+      "depends_on": ["BE"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "BG",
+      "branch": "task/issue-1048-BG",
+      "file": "apps/monjournal/app/src/components/index.ts",
+      "content": "Create barrel file for component exports. Export all components: ThoughtCard, ThoughtList, TimelineView, TimelineGroup, TagDisplay, FilterPanel, DateRangePicker, TagMultiSelect, TagInput, TagList, ViewModeToggle, Layout, ErrorBoundary. This centralizes exports and makes imports cleaner: import { ThoughtCard } from '@/components'.",
+      "depends_on": ["BF"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "BH",
+      "branch": "task/issue-1048-BH",
+      "file": "apps/monjournal/app/src/hooks/index.ts",
+      "content": "Create barrel file for hook exports. Export all hooks: useThoughts, useLocalStorage. Keep minimal—only custom hooks here, not React built-ins. Allows: import { useThoughts } from '@/hooks'.",
+      "depends_on": ["BG"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "BI",
+      "branch": "task/issue-1048-BI",
+      "file": "apps/monjournal/app/src/utils/index.ts",
+      "content": "Create barrel file for utility exports. Export all utils: colorPalette (COLORS), filterLogic (applyFilters, matchesTextSearch, etc.), dateFormat, groupByDate. Allows: import { applyFilters, COLORS } from '@/utils'.",
+      "depends_on": ["BH"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "BJ",
+      "branch": "task/issue-1048-BJ",
+      "file": "apps/monjournal/app/src/models/index.ts",
+      "content": "Create barrel file for model exports. Export all model types and functions: Thought, Tag, FilterState, createThought, validateThought, deriveTags, getTagColor. Allows: import { createThought, Thought } from '@/models'.",
+      "depends_on": ["BI"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "BK",
+      "branch": "task/issue-1048-BK",
+      "file": "apps/monjournal/app/.gitattributes",
+      "content": "Create .gitattributes for consistent line endings. Set: * text=auto, *.ts text eol=lf, *.tsx text eol=lf, *.json text eol=lf. This ensures consistent line endings across Windows/Mac/Linux development environments.",
+      "depends_on": ["BJ"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "BL",
+      "branch": "task/issue-1048-BL",
+      "file": "apps/monjournal/app/vitest.config.ts",
+      "content": "Create Vitest configuration file (if separate from vite.config.ts). Set globals: true for global test functions, environment: 'jsdom' for DOM testing, setupFiles: ['./src/test/setup.ts']. Include coverage config: provider 'v8', reporter ['text', 'lcov']. This is optional if already configured in vite.config.ts.",
+      "depends_on": ["BK"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "BM",
+      "branch": "task/issue-1048-BM",
+      "file": "apps/monjournal/app/src/main.tsx",
+      "content": "FINAL STEP — Verify all files compile and tests pass. Run: npm install (from apps/monjournal/app/), npm run build (should output tsc check + vite build), npm run test:smoke (verify smoke test passes), npm run lint (no warnings). All should succeed. If any errors: fix before final commit. This is the integration checkpoint that validates the entire scaffold setup.",
+      "depends_on": ["BL"],
+      "status": "pending",
+      "role": "dev"
+    }
+  ]
+}
