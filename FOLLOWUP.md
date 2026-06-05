@@ -20,7 +20,10 @@ One line per item. All detail lives in `product-spec.md`, `AGENTS.md`, or the co
   - Paramétrage auto-delete head branches : GitHub Settings → General → Pull Requests
 - Créer `post-merge.md` — runbook post-merge propre (suppression branche feature, fermeture issue)
 
-### Fix 2 — directive inline (temporisé)
+### init-template — refactoring placeholders
+- Remplacer la logique de casse (KNOWN_COMPOUNDS, toTitleCase, PascalCase) par un remplacement strict `templateName` → `current_project`
+- Corriger le template `appshell` : remplacer toutes les variantes de casse (`AppShell`, `Appshell`) par `appshell` lowercase dans tous les fichiers
+- `replaceInFile` réduit à `content.replaceAll(templateName, projectName)` — aucune logique de casse
 - `buildPrompt` pull_request_review_comment : renforcer "DO NOT use other command" si le comportement se reproduit après tests supplémentaires
 
 ## In Progress
