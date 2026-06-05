@@ -4,6 +4,7 @@
 
 import type { Enemy as EnemyClass } from './entities/Enemy'
 import type { Formation as FormationClass } from './entities/Formation'
+import type { MysteryShipSpawner as MysteryShipSpawnerClass } from './entities/MysteryShip'
 
 export type GameState = 'Start' | 'Playing' | 'Victory' | 'GameOver'
 
@@ -23,6 +24,7 @@ export interface BoundingBox {
 // Re-export Enemy and Formation as types for compatibility
 export type Enemy = EnemyClass
 export type Formation = FormationClass
+export type MysteryShipSpawner = MysteryShipSpawnerClass
 
 export interface Player extends BoundingBox {
   invincible: boolean
@@ -75,6 +77,12 @@ export interface Shield extends BoundingBox {
 export interface MysteryShip extends BoundingBox {
   vx: number
   active: boolean
+  pointValue: number
+  alive: boolean
+  spawnTime: number
+  update(deltaTime: number, canvasWidth: number): boolean
+  getBoundingBox(): BoundingBox
+  getPointValue(): number
 }
 
 export interface CollisionResponse {
@@ -108,6 +116,7 @@ export interface GameLoopState {
   bullets: Bullet[]
   shields: Shield[]
   mysteryShip: MysteryShip | null
+  mysteryShipSpawner: MysteryShipSpawner | null
   inputState: PlayerInputState
   score: number
   lives: number

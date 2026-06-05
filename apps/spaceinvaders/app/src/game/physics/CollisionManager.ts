@@ -167,8 +167,8 @@ export class CollisionManager {
           mysteryShip as BoundingBox
         )
       ) {
-        // Mystery ship bonus: fixed 100 points (can be extended with timing-based bonuses)
-        const bonus = 100
+        // Award mystery ship point value
+        const bonus = mysteryShip.pointValue
 
         const response: CollisionResponse = {
           pointsAwarded: bonus,
@@ -189,7 +189,7 @@ export class CollisionManager {
         ;(mysteryShip as any).alive = false
         ;(bullet as any).active = false
 
-        console.log(`Collision: bullet-mystery, bonus=${bonus}`)
+        console.log(`Collision: bullet-mystery, bonus=${bonus} pts`)
         break
       }
     }

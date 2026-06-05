@@ -204,20 +204,33 @@ export class PlayerBulletImpl implements PlayerBullet {
 
 
 /**
- * MysteryShip class
- */
+  * MysteryShip class (legacy stub - use MysteryShip from entities/MysteryShip.ts)
+  */
 export class MysteryShipImpl implements MysteryShip {
   x: number
   y: number
-  width: number = 30
-  height: number = 15
-  vx: number = 100 // pixels per second
-  active: boolean = false
-  alive: boolean = false // For collision tracking
+  width: number = 40
+  height: number = 20
+  vx: number
+  active: boolean
+  alive: boolean
+  pointValue: number
+  spawnTime: number
 
-  constructor() {
-    this.x = 0
-    this.y = 50
+  constructor(
+    x: number = 0,
+    y: number = 20,
+    vx: number = 100,
+    pointValue: number = 50,
+    spawnTime: number = 0
+  ) {
+    this.x = x
+    this.y = y
+    this.vx = vx
+    this.pointValue = pointValue
+    this.spawnTime = spawnTime
+    this.active = true
+    this.alive = true
   }
 
   /**
@@ -233,21 +246,31 @@ export class MysteryShipImpl implements MysteryShip {
     */
   deactivate(): void {
     this.active = false
+    this.alive = false
   }
 
   /**
-    * Update position
+    * Update position and return alive status
     */
-  update(deltaTime: number, canvasWidth: number): void {
-    if (!this.active) return
+  update(deltaTime: number, canvasWidth: number): boolean {
+    if (!this.active) return false
 
-    this.x += this.vx * (deltaTime / 1000)
+    this.x += this.vx * deltaTime
 
     // Deactivate if off-screen
-    if (this.x > canvasWidth) {
+    if (this.x < -this.width || this.x > canvasWidth) {
       this.deactivate()
-      this.alive = false
+      return false
     }
+
+    return true
+  }
+
+  /**
+    * Get point value
+    */
+  getPointValue(): number {
+    return this.pointValue
   }
 
   /**
