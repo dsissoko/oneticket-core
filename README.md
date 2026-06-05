@@ -2,7 +2,6 @@
 
 GitHub-native autonomous multi-agent framework. Invoke agents by commenting `@role` on any issue — they decompose, execute, and deliver a PR, fully autonomously.
 
-
 ---
 
 ## How it works
@@ -10,13 +9,13 @@ GitHub-native autonomous multi-agent framework. Invoke agents by commenting `@ro
 ```
 @po build me a Breakout game in vanilla JS
       ↓
-  PO decomposes into tasks → manifest
+  @po decomposes into tasks → manifest
       ↓
   FAN-OUT: workers execute tasks in parallel
       ↓
   GATHER: results merge, dependencies resolved
       ↓
-  PR created automatically (direct run or DAG complete)
+  PR created automatically
 ```
 
 All orchestration is deterministic code — zero LLM in the pipeline logic. LLMs only generate content.
@@ -32,23 +31,21 @@ git clone https://github.com/dsissoko/oneticket-core.git my-project
 cd my-project
 ```
 
-Edit `.oneticket/config.yml` — the only file you need to configure:
+Edit `.oneticket/config.yml`:
 
 ```yaml
-# Model used by all agents (opencode/zen models)
-# agent_config.opencode.model is the source of truth
-
+current_project: my-app          # ← your project name (required — Gate 0)
 cli: opencode
 retry_max: 3
 orchestrate_retry_max: 5
+pr_base: main
 oneticket_git_user_name: oneticket-bot
 oneticket_git_user_email: oneticket-bot@users.noreply.github.com
-pr_base: main
 
 agent_config:
   opencode:
     $schema: "https://opencode.ai/config.json"
-    model: opencode/claude-haiku-4-5   # ← change this to your preferred model
+    model: opencode/claude-haiku-4-5   # ← your preferred model
     share: "disabled"
     autoupdate: false
     disabled_providers: [openai, gemini, anthropic]
@@ -66,89 +63,57 @@ agent_config:
 | `OPENCODE_API_KEY` | Your [opencode.ai/auth](https://opencode.ai/auth) API key |
 | `ONETICKET_GH_PAT` | GitHub PAT with `contents:write`, `pull-requests:write`, `issues:write`, `actions:write` |
 
-### 3. Add your agents
+### 3. Make oneticket-skills accessible
 
-Place agent profiles in `.oneticket/agents/`. A profile is a markdown file with APM-compatible frontmatter:
+The agent skills are distributed via [dsissoko/oneticket-skills](https://github.com/dsissoko/oneticket-skills).
+Your `ONETICKET_GH_PAT` must have read access to this repository (if private, request access from the repo owner).
 
-```markdown
----
-name: dev
-description: Senior developer — implements tasks from specifications
-model: opencode/minimax-m2.5
----
-You are a senior developer...
-```
-
-A default set of agents is included out of the box: `@po`, `@leaddev`, `@dev`, `@architect`, `@qa`, `@analyst`.
-
-### 4. Invoke an agent
-
-Comment `@<role>` on any GitHub issue:
+### 4. Create an issue and invoke an agent
 
 ```
-@po build a REST API with authentication and user management
-```
-
-```
-@dev implement the login endpoint from docs/specs/auth.md
+@po init-doc
 ```
 
 The framework handles the rest.
 
 ---
 
-## Invoking agents
+## Commands
 
-Comment `@<role>` on any GitHub issue. The pipeline detects the role and routes to the corresponding agent profile.
+Use these in order when starting a new project from scratch:
 
-### Deterministic commands (framework)
+| Command | What it does |
+|---|---|
+| `@po init-doc` | Initializes the documentation structure (`what/`, `how/`, `ship/`, `run/`) |
+| `@po <describe your product>` | Generates product-spec, epics, user stories |
+| `@architect create` | Generates architecture.md, C4 diagrams, implementation slices |
+| `@leaddev init-<template>` | Bootstraps the app from a template (e.g. `@leaddev init-appshell`) |
+| `@leaddev <implement request>` | Decomposes into tasks, triggers FAN-OUT, delivers a PR |
+| `@dev <request>` | Implements directly on the feature branch (no decomposition) |
+| `@qa validate` | Reviews a PR — code quality, spec conformance, test coverage |
+| `@po reverse-doc <scope>` | Synchronizes documentation with existing code |
 
-| Command | Triggers | Effect |
-|---|---|---|
-| `@po init-doc` | Documentation initialization | Creates the doc structure in `apps/<current_project>/docs/` |
-| `@leaddev init-<template>` | App initialization | Bootstraps the app from a template (e.g. `init-appshell`) |
-
-### Agentic conventions (recommended)
-
-| Role | Keyword pattern | Typical use |
-|---|---|---|
-| `@po create` | Create epic or user story | Requires doc structure already initialized |
-| `@po update` | Update existing documentation | Requires existing doc file |
-| `@po reverse-doc` | Generate documentation from code | Requires existing codebase |
-| `@architect create` | Create architecture + C4 diagrams | Requires product spec |
-| `@leaddev <request>` | Decompose into tasks, delegate to @dev | Requires initialized template |
-| `@dev create` | Implement a feature | Requires user story from docs |
-| `@dev update` | Improve existing feature | Requires existing code |
-| `@qa validate` | Review code or documentation | Open PR with changes |
-
-If the agent produces a manifest (DAG of tasks), FAN-OUT/GATHER pipeline executes automatically. If it answers a question directly, it posts a comment and stops.
+Any `@role` comment on a GitHub issue or PR triggers the pipeline.
+If the agent produces a manifest → FAN-OUT/GATHER starts automatically.
+If it answers a question → it posts a comment and stops.
 
 ---
 
-## Adding agents
+## Customize OneTicket
 
-Create `.oneticket/agents/<role>.agent.md`:
+OneTicket is designed to be fully customizable. Here are the main axes:
 
-```markdown
----
-name: architect
-description: Software architect — designs systems and produces ADRs
-model: opencode/minimax-m2.5
----
-You are a software architect...
-
-## Responsibilities
-- Design system architecture
-- Produce Architecture Decision Records
-- Identify risks and trade-offs
-
-## Constraints
-- Never push
-- Never create PRs
-- Work only on feature/issue-{issue_number}
-```
-
-Then invoke with `@architect design the database schema for this feature`.
+| What | Where |
+|---|---|
+| **Project config** — model, retries, project name, git identity | `.oneticket/config.yml` |
+| **Agent profiles** — role identity, responsibilities, skill routing | `.oneticket/agents/<role>.agent.md` |
+| **Skills** — domain knowledge loaded by agents at runtime | `.oneticket/skills/<name>/SKILL.md` or via APM in `.oneticket/apm.yml` |
+| **APM skill catalog** — versioned skill distribution | `.oneticket/apm.yml` → `dsissoko/oneticket-skills#main` |
+| **Agent instructions** — shared cross-agent rules (team, routing, mode) | `.oneticket/.apm/instructions/*.instructions.md` |
+| **Documentation template** — base structure copied by `init-doc` | `.oneticket/templates/docs/` |
+| **App templates** — scaffold copied by `@leaddev init-<template>` | `apps/<template>/app/` |
+| **Pipeline parameters** — max tasks, retry policy, cleanup | `.oneticket/config.yml` |
+| **Doc site** — Astro Starlight, rendered from `apps/<project>/docs/` | `doc-site/` |
 
 ---
 
@@ -156,46 +121,50 @@ Then invoke with `@architect design the database schema for this feature`.
 
 ```
 .oneticket/
-  config.yml          ← single source of truth for all framework parameters
-  agents/             ← agent profiles (.agent.md, APM-compatible)
-  skills/             ← framework skills (manifest-generation)
-  tasks/              ← manifests and task state (created at runtime)
+  config.yml            ← single source of truth for all framework parameters
+  agents/               ← local agent profiles (.agent.md)
+  skills/               ← local framework skills
+  apm.yml               ← APM dependencies (oneticket-skills catalog)
+  templates/docs/       ← documentation structure template (init-doc)
+  tasks/                ← manifests and task state (runtime only)
 
 .github/workflows/
-  on-issue-comment.yml  ← detects @role, routes to agent-dispatch.mjs
-  on-pr-comment.yml     ← detects @role on PR comments
-  on-pr-review-comment.yml ← detects @role on inline review comments
-  agent-execute.yml     ← single LLM invocation point (anomalyco/opencode)
-  on-gather.yml         ← GATHER: merges task branches, routes or creates PR
+  on-issue-comment.yml       ← detects @role on issues, routes to agent-dispatch.mjs
+  on-pr-comment.yml          ← detects @role on PR comments
+  on-pr-review.yml           ← detects @role on PR review submission
+  agent-execute.yml          ← single LLM invocation point (anomalyco/opencode)
+  on-fanout.yml              ← FAN-OUT: dispatches ready tasks in parallel
+  on-gather.yml              ← GATHER: merges task branches, routes or creates PR
+  docs-site-github-pages.yml ← builds and deploys doc site + app to GitHub Pages
+  release-please.yml         ← automated changelog and version bump
 
 src/
-  constants.mjs         ← framework path constants
-  config.mjs            ← loadConfig() — reads .oneticket/config.yml
-  agent-dispatch.mjs    ← @role routing → prompt → dispatch
-  agent-launcher.mjs    ← FAN-OUT: marks tasks in_progress, dispatches workers
-  orchestrate.mjs       ← GATHER: merge, manifest update, routing
-  launch-fanout.mjs     ← bootstraps FAN-OUT after manifest creation
-  retry-dispatch.mjs    ← retry on anomalyco failure
-  generate-config.mjs   ← generates OPENCODE_CONFIG_CONTENT at runtime
-  print-config.mjs      ← reads config keys for use in workflows
-  utils.mjs             ← shared helpers (git, manifest, dispatch)
+  agent-dispatch.mjs         ← @role routing → prompt construction → dispatch
+  agent-launcher.mjs         ← FAN-OUT: marks tasks in_progress, dispatches workers
+  orchestrate.mjs            ← GATHER: merge, manifest update, PR management
+  launch-fanout.mjs          ← bootstraps FAN-OUT after manifest creation
+  dispatch-fanout.mjs        ← triggers on-fanout.yml when manifest detected
+  dispatch-gather.mjs        ← triggers on-gather.yml from task branches
+  dispatch-review-agents.mjs ← dispatches agents for PR review threads
+  create-pr.mjs              ← PR creation, label cycling, deploy retrigger
+  check-prerequisites.mjs    ← Gate 0 (current_project) + init-doc if missing
+  ensure-issue-branch.mjs    ← creates feature/issue-N if absent (idempotent)
+  init-doc.mjs               ← copies doc template to docs_path (idempotent)
+  init-template.mjs          ← copies app template to apps/<project>/app/
+  notify-agent-failure.mjs   ← posts failure comment + labels on agent error
+  retry-dispatch.mjs         ← exponential backoff retry on agent failure
+  build-context.mjs          ← fetches comment history for prompt context
+  generate-config.mjs        ← generates OPENCODE_CONFIG_CONTENT at runtime
+  utils.mjs                  ← shared helpers (git, manifest, labels, dispatch)
+  config.mjs                 ← loadConfig() — reads .oneticket/config.yml
+  constants.mjs              ← framework path constants
 ```
-
----
-
-## APM compatibility
-
-Agent profiles use the [APM](https://github.com/microsoft/apm) `.agent.md` format. When you're ready to manage agents from a private repository:
-
-1. Add `apm install` step in `.github/workflows/on-issue-comment.yml`
-2. Add `apm install` step in `.github/workflows/agent-execute.yml`
-3. Agents from your APM package will be available alongside the built-in ones
 
 ---
 
 ## Models
 
-Any model available on [opencode.ai/zen](https://opencode.ai/zen) works out of the box — no additional API keys required.
+Any model available on [opencode.ai/zen](https://opencode.ai/zen) works out of the box.
 
 | Model | ID |
 |---|---|
@@ -214,6 +183,7 @@ Full list: `https://opencode.ai/zen/v1/models`
 - GitHub repository with Actions enabled
 - [opencode.ai](https://opencode.ai) account (free tier available)
 - GitHub PAT with repo + actions write permissions
+- Read access to [dsissoko/oneticket-skills](https://github.com/dsissoko/oneticket-skills)
 
 ---
 
@@ -222,7 +192,8 @@ Full list: `https://opencode.ai/zen/v1/models`
 | Milestone | Goal |
 |---|---|
 | **v0.1.0** — released | GitHub-native pipeline fully operational end-to-end |
-| **v0.5.0** — current | AppShell + Breakout apps delivered, product-spec stable, pipeline doc aligned |
+| **v0.5.0** — released | AppShell + Breakout delivered, product-spec stable, pipeline doc aligned |
+| **v0.6.0** — current | reverse-doc, label flow, 50 skills catalog, MonJournal app delivered |
 | **V1** — planned | Routing & handoff matrix, autonomous mode, full-stack skills, APM integration |
 | **V2** — planned | Cloud runtime, persistent sandboxes, multi-sandbox fan-out, observability |
 
