@@ -7,7 +7,7 @@
       "file": "apps/monjournal/app/package.json",
       "content": "Create scaffold configuration files for MonJournal React + Vite app. Generate: .gitignore (canonical from oneticket-stack-vite-react-primer), package.json (React 18.3.1, Vite 5.3.1, @primer/react 36.27.0, vitest), tsconfig.json (ES2022, strict, @/ alias), tsconfig.node.json, vite.config.ts (React plugin, MSW with __ENABLE_MSW__: true, setupFiles to src/test/setup.ts), index.html (title: MonJournal), .eslintrc.json, .npmrc, .gitattributes, .env.example. All files follow oneticket-stack-vite-react-primer skill canonical templates.",
       "depends_on": [],
-      "status": "pending",
+      "status": "in_progress",
       "role": "dev"
     },
     {
@@ -15,7 +15,9 @@
       "branch": "task/issue-1048-B",
       "file": "apps/monjournal/app/src/models/thoughtModel.ts",
       "content": "Implement Slice 1 (Data Foundation) — data models and core utilities. Create: thoughtModel.ts (Thought interface, createThought(), validateThought()), tagModel.ts (Tag interface, deriveTags(), getTagColor() with deterministic hash), colorPalette.ts (COLORS array: 8-12 WCAG AA colors), filterLogic.ts (FilterState interface, applyFilters(), matchesTextSearch, matchesDateRange, matchesTags with AND/OR logic). All pure functions, fully typed, no side effects.",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -24,7 +26,9 @@
       "branch": "task/issue-1048-C",
       "file": "apps/monjournal/app/src/hooks/useThoughts.ts",
       "content": "Implement Slice 1 (Data Foundation) — localStorage persistence hook. Create: useLocalStorage.ts (getItem/setItem with JSON serialization, error handling), useThoughts.ts hook (reads/writes localStorage key 'monjournal_thoughts', returns { thoughts, addThought(), getTags(), getThoughts() }, initializes from storage on mount, persists on addThought, calls deriveTags() for tag derivation). No update/delete functions (immutable in V1). Handle storage errors gracefully.",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -33,7 +37,9 @@
       "branch": "task/issue-1048-D",
       "file": "apps/monjournal/app/src/components/TagDisplay.tsx",
       "content": "Implement Slice 2 (Thought List Display) — tag display and date utilities. Create: TagDisplay.tsx (renders tags as colored chips using getTagColor(), responsive sizing), dateFormat.ts (formatDate() with 'relative' and 'absolute' formats using Intl.DateTimeFormat), groupByDate.ts (groupThoughtsByDate() returns Map<YYYY-MM-DD, Thought[]> with reverse chronological sort). Pure functions, fully typed.",
-      "depends_on": ["C"],
+      "depends_on": [
+        "C"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -42,7 +48,9 @@
       "branch": "task/issue-1048-E",
       "file": "apps/monjournal/app/src/components/ThoughtCard.tsx",
       "content": "Implement Slice 2 (Thought List Display) — thought display components. Create: ThoughtCard.tsx (displays thought title, truncated content ~100 chars, relative date, tags via TagDisplay, optional onHighlight callback), ThoughtList.tsx (renders array of ThoughtCard sorted by createdAt descending, empty state), TimelineGroup.tsx (day separator + thoughts for that day), TimelineView.tsx (uses groupByDate() to organize, renders TimelineGroup array in reverse chronological order, empty state), ViewModeToggle.tsx (toggle between 'list' and 'timeline' views).",
-      "depends_on": ["D"],
+      "depends_on": [
+        "D"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -51,7 +59,9 @@
       "branch": "task/issue-1048-F",
       "file": "apps/monjournal/app/src/components/FilterPanel.tsx",
       "content": "Implement Slice 3 (Filtering & Search) — filter UI components. Create: DateRangePicker.tsx (two <input type=\"date\"> fields, validation start ≤ end), TagMultiSelect.tsx (checkboxes with tag colors, shows selected state), FilterPanel.tsx (unified UI with text input, DateRangePicker, TagMultiSelect, Surprise button disabled if no results, clear button). Manage local state for all filters. Call onFilterChange(filterState) on each change. Responsive layout.",
-      "depends_on": ["E"],
+      "depends_on": [
+        "E"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -60,7 +70,9 @@
       "branch": "task/issue-1048-G",
       "file": "apps/monjournal/app/src/screens/HomeScreen.tsx",
       "content": "Implement Home page container (Slices 2 & 3). Initialize useThoughts() hook. Manage useState for filterState and viewMode. Apply applyFilters(thoughts, filterState) from Slice 1. Render FilterPanel with onFilterChange and onSurpriseClick handlers. Render ViewModeToggle. Conditionally render ThoughtList or TimelineView based on viewMode with filtered thoughts. Implement surprise handler: select random index from filteredThoughts, highlight selected thought.",
-      "depends_on": ["F"],
+      "depends_on": [
+        "F"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -69,7 +81,9 @@
       "branch": "task/issue-1048-H",
       "file": "apps/monjournal/app/src/components/TagInput.tsx",
       "content": "Implement Slice 4 (Add Thought Form) — tag input and form components. Create: TagInput.tsx (text input with dropdown suggestions filtered by input case-insensitively, Add on Enter or click, prevent duplicates, clear input after add), TagList.tsx (renders selected tags as colored chips with remove button), AddThoughtScreen.tsx (form with title input, content textarea, TagInput with suggestions from getTags(), TagList, validation for empty title/content, Submit/Cancel buttons). On submit: call addThought(createThought()), show success message, navigate to /.",
-      "depends_on": ["G"],
+      "depends_on": [
+        "G"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -78,7 +92,9 @@
       "branch": "task/issue-1048-I",
       "file": "apps/monjournal/app/src/App.tsx",
       "content": "Implement root App component and bootstrap. Create: src/main.tsx (React entry point, MSW startup with conditional __ENABLE_MSW__ flag, proper Service Worker URL using import.meta.env.BASE_URL, onUnhandledRequest handler skipping navigation/assets), src/vite-env.d.ts (declare __ENABLE_MSW__ boolean), src/test/setup.ts (Vitest setup: @testing-library/jest-dom, CSS.supports polyfill for jsdom), App.tsx (BrowserRouter with basename, Routes for / → HomeScreen and /add → AddThoughtScreen, ErrorBoundary, Layout wrapper), src/styles/globals.css (CSS variables for design tokens).",
-      "depends_on": ["H"],
+      "depends_on": [
+        "H"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -87,7 +103,9 @@
       "branch": "task/issue-1048-J",
       "file": "apps/monjournal/app/src/mocks/handlers.ts",
       "content": "Implement MSW setup and barrel exports. Create: src/mocks/handlers.ts (empty handlers array for future API mocking), src/mocks/browser.ts (setupWorker with handlers), src/components/index.ts (export all: ThoughtCard, ThoughtList, TimelineView, TagDisplay, FilterPanel, TagInput, TagList, ViewModeToggle, etc.), src/hooks/index.ts (export useThoughts, useLocalStorage), src/utils/index.ts (export COLORS, applyFilters, matchesTextSearch, dateFormat, groupByDate), src/models/index.ts (export Thought, Tag, createThought, deriveTags, getTagColor), src/types/index.ts (re-export Thought, Tag, FilterState).",
-      "depends_on": ["I"],
+      "depends_on": [
+        "I"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -96,7 +114,9 @@
       "branch": "task/issue-1048-K",
       "file": "apps/monjournal/app/src/test/smoke/render.test.tsx",
       "content": "Implement comprehensive unit and integration tests covering all slices. Create smoke test (render App, assert root rendered), unit tests (thoughtModel: createThought/validateThought, tagModel: deriveTags/getTagColor determinism, filterLogic: applyFilters AND composition, matchesTextSearch case-insensitive, matchesDateRange inclusive bounds, matchesTags OR logic, dateFormat: relative/absolute, groupByDate: YYYY-MM-DD grouping), component tests (ThoughtCard: truncation, date format, TagDisplay: colors, ThoughtList: sort order, TimelineView: grouping, FilterPanel: all controls, HomeScreen: filter application), hook tests (useThoughts: localStorage read/write cycle, error handling), integration tests (AddThoughtScreen: submit → localStorage → navigate).",
-      "depends_on": ["J"],
+      "depends_on": [
+        "J"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -105,7 +125,9 @@
       "branch": "task/issue-1048-L",
       "file": "apps/monjournal/app/README.md",
       "content": "Finalize and verify build. Create: README.md (project description, dev/build/test commands), public/mockServiceWorker.js (run: npx msw init public/ to generate). Run final verification: npm install && npm run build (tsc && vite build must succeed), npm run test:smoke (smoke test passes), npm run lint (no warnings). Assert all TypeScript errors resolved. If any errors: fix before commit. This is the integration checkpoint validating entire scaffold setup works together (React, Vite, types, MSW, Primer, AppShell conventions).",
-      "depends_on": ["K"],
+      "depends_on": [
+        "K"
+      ],
       "status": "pending",
       "role": "dev"
     }
