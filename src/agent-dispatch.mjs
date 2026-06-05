@@ -101,23 +101,22 @@ export function buildPrompt({ role, request, branch, issueNumber, repo, docsPath
   lines.push(`## Agent contract`);
   lines.push(`- Prefix every response with: **[Agent: \`@${role}\`]**`);
   lines.push(`- ALWAYS respond at the end of every job — no exception.`);
-  lines.push(`- Your response must include a short summary of what you did: files created or modified, key decisions, and anything the user should know to validate the result visually.`);
 
   if (originType === 'pull_request_review_comment') {
-    lines.push(`- Reply inline using this command:`);
+    lines.push(`- Reply inline to the specific comment that triggered you. Your response must directly address the comment and state what action you took (fixed, explained, skipped + why).`);
+    lines.push(`- Use this command (DO NOT use any other):`);
     lines.push('  ```bash');
-    lines.push(`  gh api repos/${repo}/pulls/${prNumber}/comments --method POST --field body="**[Agent: @${role}]** {your message}" --field in_reply_to=${replyToCommentId}`);
+    lines.push(`  gh api repos/${repo}/pulls/${prNumber}/comments --method POST --field body="**[Agent: @${role}]** {direct answer to the comment + action taken}" --field in_reply_to=${replyToCommentId}`);
     lines.push('  ```');
-    lines.push(`  DO NOT use other command.`);
   } else if (originType === 'pull_request_comment') {
-    lines.push(`- Reply on PR:`);
+    lines.push(`- Reply on the PR with a summary of what you did. Include: files created or modified, key decisions, and what the reviewer should check.`);
     lines.push('  ```bash');
-    lines.push(`  gh api repos/${repo}/issues/${prNumber}/comments --method POST --field body="**[Agent: @${role}]** {your message}"`);
+    lines.push(`  gh api repos/${repo}/issues/${prNumber}/comments --method POST --field body="**[Agent: @${role}]** ✅ Done\\n\\n**Files:** {list}\\n**Decisions:** {key decisions}\\n**To review:** {what to check}"`);
     lines.push('  ```');
   } else {
-    lines.push(`- Reply on issue:`);
+    lines.push(`- Reply on the issue with a summary of what you did. Include: files created or modified, key decisions, and what the user should validate visually.`);
     lines.push('  ```bash');
-    lines.push(`  gh api repos/${repo}/issues/${issueNumber}/comments --method POST --field body="**[Agent: @${role}]** {your message}"`);
+    lines.push(`  gh api repos/${repo}/issues/${issueNumber}/comments --method POST --field body="**[Agent: @${role}]** ✅ Done\\n\\n**Files:** {list}\\n**Decisions:** {key decisions}\\n**To validate:** {what to check visually}"`);
     lines.push('  ```');
   }
   lines.push('');

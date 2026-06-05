@@ -42,7 +42,7 @@ function buildTaskPrompt(task, manifest) {
     `Run this exact bash command (do not modify it):`,
     `echo "$(date -u '+%Y-%m-%d %H:%M') | ${task.id} | ${task.file}" >> ${workflowLog}`,
     `Commit all changes with message: feat: complete task ${task.id}.`,
-    `Do NOT push. Do NOT create a PR. Do nothing else.`,
+    `Do NOT push. Do NOT create a PR. Do NOT post any comment — the pipeline handles progress reporting on the issue.`,
   ].join('\n');
 }
 
