@@ -3,6 +3,7 @@
  */
 
 import type { Formation, Player, Bullet, Shield, MysteryShip } from './types'
+import type { EnemyBullet } from './entities/EnemyBullet'
 
 export class RenderingSystem {
   private ctx: CanvasRenderingContext2D
@@ -97,6 +98,18 @@ export class RenderingSystem {
     bullets.forEach((bullet) => {
       this.ctx.fillStyle = bullet.type === 'player' ? '#00FF00' : '#FF0000'
       this.ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height)
+    })
+  }
+
+  /**
+   * Draw enemy bullets
+   */
+  drawEnemyBullets(bullets: EnemyBullet[]): void {
+    bullets.forEach((bullet) => {
+      if (bullet.active) {
+        this.ctx.fillStyle = '#FF4444' // Red for enemy bullets
+        this.ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height)
+      }
     })
   }
 

@@ -9,6 +9,8 @@ import { InputSystem } from '@/game/InputSystem'
 import { StateMachine } from '@/game/StateMachine'
 import { Formation } from '@/game/entities/Formation'
 import { PlayerImpl, ShieldImpl } from '@/game/Entity'
+import { BulletPool } from '@/game/BulletPool'
+import { FireController } from '@/game/FireController'
 import StartScreen from './StartScreen'
 import HUD from './HUD'
 import type { GameLoopState, GameState } from '@/game/types'
@@ -26,6 +28,8 @@ export function Game(): React.ReactElement {
   const renderingSystemRef = useRef<RenderingSystem | null>(null)
   const inputSystemRef = useRef<InputSystem | null>(null)
   const stateMachineRef = useRef<StateMachine>(new StateMachine('Start'))
+  const bulletPoolRef = useRef<BulletPool | null>(null)
+  const fireControllerRef = useRef<FireController | null>(null)
   const gameStateRef = useRef<GameLoopState>({
     formation: null,
     player: null,
@@ -124,7 +128,18 @@ export function Game(): React.ReactElement {
         }
       }
 
-      // Update bullets
+      // Update fire controller and enemy bullets
+      if (state.formation && fireControllerRef.current && bulletPoolRef.current) {
+        fireControllerRef.current.update(
+          deltaTime,
+          state.formation,
+          bulletPoolRef.current,
+          state.waveNumber
+        )
+        bulletPoolRef.current.update(deltaTime, CANVAS_HEIGHT)
+      }
+
+      // Update player bullets
       state.bullets = state.bullets.filter((bullet) => {
         bullet.y += bullet.vy * (deltaTime / 1000)
         return bullet.y >= 0 && bullet.y <= CANVAS_HEIGHT
@@ -154,6 +169,9 @@ export function Game(): React.ReactElement {
       renderingSystem.drawFormation(state.formation)
       renderingSystem.drawPlayer(state.player)
       renderingSystem.drawBullets(state.bullets)
+      if (bulletPoolRef.current) {
+        renderingSystem.drawEnemyBullets(bulletPoolRef.current.getActiveBullets())
+      }
       renderingSystem.drawShields(state.shields)
       renderingSystem.drawMysteryShip(state.mysteryShip)
       renderingSystem.drawHUD(state.score, state.lives, state.waveNumber)
@@ -191,6 +209,10 @@ export function Game(): React.ReactElement {
     state.lives = 3
     state.waveNumber = 1
     state.gameState = 'Playing'
+
+    // Initialize enemy fire system
+    bulletPoolRef.current = new BulletPool(3, 150) // 3 bullets max, 150 px/s speed
+    fireControllerRef.current = new FireController(1500) // 1.5s base interval
 
     // Update React state
     setScore(0)
