@@ -28,33 +28,42 @@ export class RenderingSystem {
   }
 
   /**
-   * Draw enemy formation (stub for now)
+   * Draw enemy formation and all alive enemies
    */
   drawFormation(formation: Formation | null): void {
     if (!formation) return
 
-    this.ctx.fillStyle = '#00FF00'
-    this.ctx.font = '12px monospace'
+    // Render all alive enemies using their sprites
+    formation.render(this.ctx)
 
-    // Draw stub text showing formation position
-    this.ctx.fillText(`Formation: (${formation.x.toFixed(0)}, ${formation.y.toFixed(0)})`, 10, 30)
+    // Optional: Draw debug overlay (formation bounds)
+    if (import.meta.env.DEV) {
+      const bounds = formation.getBoundingBox()
+      this.ctx.strokeStyle = '#00FF00'
+      this.ctx.lineWidth = 1
+      this.ctx.strokeRect(bounds.x, bounds.y, bounds.width, bounds.height)
 
-    // Draw bounding box around formation
-    const formationBounds = {
-      minX: formation.x,
-      maxX: formation.x + 50, // stub dimensions
-      minY: formation.y,
-      maxY: formation.y + 50
+      // Draw direction arrow
+      const centerX = bounds.x + bounds.width / 2
+      const centerY = bounds.y - 10
+      const arrowSize = 10
+      
+      this.ctx.fillStyle = '#00FF00'
+      this.ctx.beginPath()
+      if (formation.directionX === 1) {
+        // Right arrow
+        this.ctx.moveTo(centerX - arrowSize, centerY - 5)
+        this.ctx.lineTo(centerX + arrowSize, centerY)
+        this.ctx.lineTo(centerX - arrowSize, centerY + 5)
+      } else {
+        // Left arrow
+        this.ctx.moveTo(centerX + arrowSize, centerY - 5)
+        this.ctx.lineTo(centerX - arrowSize, centerY)
+        this.ctx.lineTo(centerX + arrowSize, centerY + 5)
+      }
+      this.ctx.closePath()
+      this.ctx.fill()
     }
-
-    this.ctx.strokeStyle = '#00FF00'
-    this.ctx.lineWidth = 1
-    this.ctx.strokeRect(
-      formationBounds.minX,
-      formationBounds.minY,
-      formationBounds.maxX - formationBounds.minX,
-      formationBounds.maxY - formationBounds.minY
-    )
   }
 
   /**

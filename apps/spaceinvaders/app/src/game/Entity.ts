@@ -3,8 +3,6 @@
  */
 
 import type {
-  Enemy,
-  Formation,
   Player,
   PlayerBullet,
   Shield,
@@ -12,44 +10,11 @@ import type {
   MysteryShip,
   PlayerInputState
 } from './types'
+import { Formation as FormationImpl } from './entities/Formation'
 
-/**
- * Formation class - represents the grid of enemies
- */
-export class FormationImpl implements Formation {
-  x: number
-  y: number
-  directionX: -1 | 1 = 1
-  speed: number = 30 // pixels per second
-  enemies: Enemy[] = []
-
-  constructor(canvasWidth: number) {
-    // Initialize formation at top-center
-    this.x = canvasWidth / 2 - 100
-    this.y = 50
-
-    // Create a simple stub formation
-    // In later slices, this will be a full 11×5 grid
-    for (let i = 0; i < 5; i++) {
-      this.enemies.push({
-        x: this.x + i * 30,
-        y: this.y,
-        width: 20,
-        height: 15,
-        alive: true
-      })
-    }
-  }
-
-  /**
-   * Update formation position (stub)
-   */
-  update(deltaTime: number, waveNumber: number): void {
-    // Stub implementation - will be expanded in later slices
-    // Would move enemies horizontally and drop down on bounce
-    this.x += this.directionX * this.speed * (deltaTime / 1000)
-  }
-}
+// Re-export for backward compatibility
+export { Formation as FormationImpl } from './entities/Formation'
+export { Enemy } from './entities/Enemy'
 
 /**
  * Player class - represents the player's ship
