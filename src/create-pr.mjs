@@ -227,7 +227,8 @@ export async function createPR(issueNumber, branch, repo, token, config, manifes
   // Direct run (no manifest) — apply ready for review immediately
   // FAN-OUT — ready for review applied by orchestrate.mjs at allDone
   if (!manifest) {
-    await applyLabel('ready for review', issueNumber, repo, token);
+    await applyLabel('ready for review', issueNumber, repo, token);  // signal métier sur l'issue
+    await applyLabel('ready for review', data.number, repo, token);  // trigger deploy sur la PR
   }
 }
 
