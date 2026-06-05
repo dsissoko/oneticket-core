@@ -7,7 +7,7 @@
       "file": "apps/monjournal/app/src/models/thoughtModel.ts",
       "content": "Read apps/monjournal/docs/how/slices/slice-1-data-foundation/slice.md sections 'Technical Scope - Data Models' and 'Implementation Steps 1-2'. Implement the data foundation layer for MonJournal:\n\n1. Create src/models/types.ts with interfaces:\n   - Thought: id (UUID string), title (string), content (string), createdAt (number), tags (string[] or empty)\n   - Tag: name (string), color (string hex)\n   - FilterState: text?, dateStart?, dateEnd?, selectedTags?\n\n2. Create src/models/thoughtModel.ts:\n   - Export Thought type\n   - Function createThought(title: string, content: string, tags: string[]): Thought\n     - Auto-generate UUID for id\n     - Set createdAt to current timestamp in ms\n     - Ensure immutability (readonly fields in interface)\n   - Function validateThought(t: any): boolean\n     - Check required fields: id, title, content, createdAt\n     - Validate types (id is string, createdAt is number, tags is array)\n\n3. Create src/utils/colorPalette.ts:\n   - Export COLORS: string[] with 8-12 distinct hex colors\n   - Ensure WCAG AA compliant colors for text contrast\n   - Example palette: [\"#FF6B6B\", \"#4ECDC4\", \"#45B7D1\", \"#FFA07A\", \"#98D8C8\", \"#F7DC6F\", \"#BB8FCE\", \"#85C1E2\"]\n\n4. Create src/models/tagModel.ts:\n   - Export Tag type\n   - Function deriveTags(thoughts: Thought[]): Tag[]\n     - Collect unique tag names from all thoughts\n     - Compute color for each tag using getTagColor()\n     - Return array of Tag objects {name, color}\n   - Function getTagColor(tagName: string): string\n     - Use deterministic hash: charCodeAt(0) % COLORS.length or similar consistent algorithm\n     - Return hex color from COLORS array\n     - Same tag name always produces same color\n\n5. Create src/utils/filterLogic.ts:\n   - Function matchesTextSearch(thought: Thought, query: string): boolean\n     - Case-insensitive substring match in title or content\n   - Function matchesDateRange(thought: Thought, start: number | null, end: number | null): boolean\n     - Inclusive: start <= createdAt <= end\n     - Handle null bounds\n   - Function matchesTags(thought: Thought, selectedTags: string[]): boolean\n     - Empty selectedTags matches all (no filter)\n     - Any thought tag in selectedTags list matches (OR logic)\n   - Function applyFilters(thoughts: Thought[], filters: FilterState): Thought[]\n     - Compose all filters with AND logic\n     - Apply text, dateRange, tags filters in sequence\n\nAll functions must be pure and stateless. Include JSDoc comments. No React hooks in this file.",
       "depends_on": [],
-      "status": "pending",
+      "status": "in_progress",
       "role": "dev"
     },
     {
@@ -15,7 +15,9 @@
       "branch": "task/issue-1040-B",
       "file": "apps/monjournal/app/src/hooks/useThoughts.ts",
       "content": "Read apps/monjournal/docs/how/slices/slice-1-data-foundation/slice.md sections 'Technical Scope - Modules' (items 4-5). Implement the localStorage persistence layer:\n\n1. Create src/hooks/useLocalStorage.ts (utility hook):\n   - Function getItem(key: string): any\n     - Read from localStorage, parse JSON, return value\n     - Return null if key not found\n     - Catch parse errors, log, return null\n   - Function setItem(key: string, value: any): void\n     - Serialize to JSON and write to localStorage\n     - Catch quota exceeded errors, log gracefully\n   - Error handling: never throw, always log to console\n\n2. Create src/hooks/useThoughts.ts (React custom hook):\n   - Returns object: {\n       thoughts: Thought[],\n       addThought(thought: Thought): void,\n       getTags(): Tag[],\n       getThoughts(): Thought[]\n     }\n   - Implementation:\n     - useState to hold thoughts array\n     - useEffect: on mount, read from localStorage key \"monjournal_thoughts\"\n     - If missing or corrupt, initialize to empty array []\n     - Validate each thought using validateThought() from slice A\n     - addThought(t): append to state, call setItem to persist\n     - getTags(): call deriveTags(thoughts) and return\n     - getThoughts(): return thoughts array\n   - LocalStorage schema: store as JSON under key \"monjournal_thoughts\"\n   - Immutability: thoughts array and individual thoughts never mutated\n\n3. Test the hook:\n   - Mock localStorage\n   - Verify initial load from empty storage\n   - Verify addThought persists to localStorage\n   - Verify getTags returns derived tags with correct colors\n   - Verify corrupted JSON resets to empty array\n\nDependency: must import types and functions from task A (types.ts, thoughtModel.ts, tagModel.ts, colorPalette.ts)",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -25,7 +27,7 @@
       "file": "apps/monjournal/app/src/utils/dateFormat.ts",
       "content": "Read apps/monjournal/docs/how/slices/slice-2-thought-list-display/slice.md section 'Utilities - dateFormat.ts'. Implement date formatting utilities:\n\n1. Create src/utils/dateFormat.ts:\n   - Function formatDate(timestamp: number, format: 'relative' | 'absolute'): string\n     - Relative format: \"2 hours ago\", \"yesterday\", \"3 days ago\", \"1 week ago\"\n       - Use humanized relative time\n       - Implementation: calculate difference in ms, convert to human-readable units\n       - Examples: recent times (< 1 min) → \"just now\", (< 1 hour) → \"X minutes ago\", same day → \"today\", yesterday → \"yesterday\", older → \"X days ago\"\n     - Absolute format: \"June 4, 2026\" locale-aware (use Intl.DateTimeFormat or similar)\n       - Output: Month Day, Year (ISO-like but localized)\n       - Consistent formatting across browsers\n\n2. Create src/utils/groupByDate.ts:\n   - Function groupThoughtsByDate(thoughts: Thought[]): Map<string, Thought[]>\n     - Group thoughts by creation date (normalize to midnight, ignore time)\n     - Return Map of [dateKey] → Thought[]\n     - dateKey format: \"YYYY-MM-DD\" for stable grouping\n     - Within each group, sort by createdAt descending (newest first within day)\n     - Handle edge cases: empty array, single thought, same-day thoughts\n\n3. Test both utilities:\n   - formatDate: recent, today, yesterday, week ago, month ago\n   - groupByDate: empty array, single thought, multiple thoughts same day, multiple days\n   - Verify date keys are stable\n\nNo dependencies on other slices. Pure utility functions.",
       "depends_on": [],
-      "status": "pending",
+      "status": "in_progress",
       "role": "dev"
     },
     {
@@ -33,7 +35,9 @@
       "branch": "task/issue-1040-D",
       "file": "apps/monjournal/app/src/components/TagDisplay.tsx",
       "content": "Read apps/monjournal/docs/how/slices/slice-2-thought-list-display/slice.md section 'Components - TagDisplay'. Implement the tag color display component:\n\n1. Create src/components/TagDisplay.tsx (React component):\n   - Props: { tags: string[], compact?: boolean }\n   - Behavior:\n     - Render each tag as a colored chip element\n     - Use getTagColor() from task A (tagModel.ts) to compute background color\n     - Display tag name with contrasting text color (black or white based on background)\n     - Responsive sizing: compact=true for mobile/small layouts, false for desktop\n     - Layout: inline flex wrap to handle many tags\n   - Styling: 4-8px padding, rounded corners, good WCAG AA text contrast\n   - Handle empty tags array gracefully (render nothing)\n   - Use AppShell CSS base styles for consistency\n\n2. Unit test:\n   - Render with multiple tags, verify all tags displayed\n   - Verify getTagColor() called for each tag\n   - Verify empty array renders nothing\n   - Verify compact prop changes sizing\n\nDependency: imports getTagColor() from task A (tagModel.ts), types from task A (types.ts). \nNo dependency on useThoughts hook.",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -42,7 +46,11 @@
       "branch": "task/issue-1040-E",
       "file": "apps/monjournal/app/src/components/ThoughtCard.tsx",
       "content": "Read apps/monjournal/docs/how/slices/slice-2-thought-list-display/slice.md section 'Components - ThoughtCard'. Implement the individual thought card component:\n\n1. Create src/components/ThoughtCard.tsx (React component):\n   - Props: { thought: Thought, onHighlight?: () => void }\n   - Render:\n     - Title as card header (bold)\n     - Content truncated to ~100 characters with ellipsis if longer\n     - Creation date formatted via formatDate(createdAt, 'relative') from task C\n     - Tags rendered via TagDisplay component (task D), compact=true\n     - Optional highlight/selected state for surprise feature (style with border/background)\n   - Styling: card-based layout with padding, border, shadow (from AppShell CSS)\n   - Hover state for interactivity\n   - Accessibility: semantic HTML, readable font sizes\n\n2. Unit test:\n   - Render with various thought lengths, verify truncation\n     - Content < 100 chars: no ellipsis\n     - Content > 100 chars: truncated with ellipsis\n   - Verify date formatting (relative format)\n   - Verify tags rendered with TagDisplay\n   - Verify onHighlight callback works\n   - Snapshot test for card layout\n\nDependency: imports from task C (dateFormat), task D (TagDisplay), task A (types.Thought).",
-      "depends_on": ["A", "C", "D"],
+      "depends_on": [
+        "A",
+        "C",
+        "D"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -51,7 +59,10 @@
       "branch": "task/issue-1040-F",
       "file": "apps/monjournal/app/src/components/ThoughtList.tsx",
       "content": "Read apps/monjournal/docs/how/slices/slice-2-thought-list-display/slice.md section 'Components - ThoughtList'. Implement the main thought list display:\n\n1. Create src/components/ThoughtList.tsx (React component):\n   - Props: { thoughts: Thought[], onSurpriseClick?: (thought: Thought) => void }\n   - Render:\n     - Array of ThoughtCard components (task E) for each thought\n     - Sorted by createdAt descending (most recent first)\n     - Empty state message: \"No thoughts yet. Start by adding a new thought!\" if thoughts.length === 0\n   - Styling: flex layout, responsive spacing (mobile to desktop)\n   - Accessibility: list semantics (<ul>, <li>)\n\n2. Unit test:\n   - Render with 0, 1, 5+ thoughts\n   - Verify empty state message when no thoughts\n   - Verify sort order (descending by createdAt)\n   - Verify ThoughtCard rendered for each thought\n   - Verify onSurpriseClick passed to cards\n\nDependency: imports ThoughtCard (task E), types.Thought (task A).",
-      "depends_on": ["A", "E"],
+      "depends_on": [
+        "A",
+        "E"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -60,7 +71,11 @@
       "branch": "task/issue-1040-G",
       "file": "apps/monjournal/app/src/components/TimelineView.tsx",
       "content": "Read apps/monjournal/docs/how/slices/slice-2-thought-list-display/slice.md sections 'Components - TimelineView, TimelineGroup'. Implement timeline grouped view:\n\n1. Create src/components/TimelineGroup.tsx (React sub-component):\n   - Props: { date: number, thoughts: Thought[], onSurpriseClick?: (thought: Thought) => void }\n   - Render:\n     - Day separator header: format date using formatDate(date, 'absolute') from task C (\"June 4, 2026\")\n     - Horizontal line with date label\n     - List of ThoughtCard components (task E) for that day\n   - Styling: separator with horizontal line, date label centered or left-aligned\n\n2. Create src/components/TimelineView.tsx (React component):\n   - Props: { thoughts: Thought[], onSurpriseClick?: (thought: Thought) => void }\n   - Render:\n     - Use groupThoughtsByDate() from task C to organize thoughts\n     - Array of TimelineGroup components (one per day)\n     - Groups in reverse chronological order (newest group first)\n     - Empty state: \"No thoughts yet. Start by adding a new thought!\" if thoughts.length === 0\n   - Styling: vertical timeline layout, responsive\n   - Accessibility: semantic structure\n\n3. Unit test:\n   - Render with thoughts from multiple days\n   - Verify grouping by date\n     - Same day thoughts → single group\n     - Different days → multiple groups\n   - Verify chronological order (newest first)\n   - Verify empty state when no thoughts\n   - Verify date formatting in separators\n   - Verify ThoughtCard rendered for each thought\n\nDependency: imports from task C (groupByDate, formatDate), task E (ThoughtCard), task A (types.Thought).",
-      "depends_on": ["A", "C", "E"],
+      "depends_on": [
+        "A",
+        "C",
+        "E"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -70,7 +85,7 @@
       "file": "apps/monjournal/app/src/components/ViewModeToggle.tsx",
       "content": "Read apps/monjournal/docs/how/slices/slice-2-thought-list-display/slice.md section 'Components - ViewModeToggle'. Implement view mode switcher:\n\n1. Create src/components/ViewModeToggle.tsx (React component):\n   - Props: { currentMode: 'list' | 'timeline', onChange: (mode: 'list' | 'timeline') => void }\n   - Render:\n     - Two toggle buttons or toggle switch: \"List\" and \"Timeline\"\n     - Active button/segment highlighted (bold, background color, or border)\n     - Click handler calls onChange() with selected mode\n     - Label indicating current mode (optional)\n   - Styling: segmented control or button group, responsive\n   - Accessibility: ARIA labels, keyboard navigation (Tab/Enter)\n\n2. Unit test:\n   - Render with different modes, verify active state\n   - Verify onClick calls onChange with correct mode\n   - Verify toggle switches between modes\n   - Verify accessibility attributes (role, aria-labels)\n\nNo external dependencies beyond React. Pure UI control.\nNo dependency on useThoughts or data slices.",
       "depends_on": [],
-      "status": "pending",
+      "status": "in_progress",
       "role": "dev"
     },
     {
@@ -78,7 +93,13 @@
       "branch": "task/issue-1040-I",
       "file": "apps/monjournal/app/src/pages/Home.tsx",
       "content": "Read apps/monjournal/docs/how/slices/slice-2-thought-list-display/slice.md section 'Integration with useThoughts Hook' and slice-3-filtering-search/slice.md section 'Integration with Home Component'. Implement the main home page:\n\n1. Create src/pages/Home.tsx (React page component):\n   - Initialize useThoughts() hook (task B) to fetch thoughts\n   - Initialize viewMode state: useState('list' | 'timeline')\n   - Initialize filterState: useState(FilterState) from task A\n   - Handler onViewModeChange(mode): updates viewMode state\n   - Handler onFilterChange(filters): updates filterState state\n   - Call applyFilters(thoughts, filterState) from task A to get filtered results\n   - Render:\n     - ViewModeToggle component (task H) with currentMode and onChange\n     - ThoughtList (task F) or TimelineView (task G) depending on viewMode\n       - Pass filtered thoughts to whichever view is active\n     - Pass onSurpriseClick handler (for slice 3)\n   - Layout: responsive container, vertical stack\n\n2. Implement onSurpriseClick handler (placeholder for slice 3):\n   - For now: select random thought from filteredThoughts\n   - Calculate: randomIndex = Math.floor(Math.random() * filteredThoughts.length)\n   - Return thought at that index\n   - Highlight or scroll into view (implementation TBD in slice 3)\n\n3. Unit/integration test:\n   - Verify useThoughts() hook is initialized\n   - Verify viewMode toggle switches views\n   - Verify filters are applied in real-time\n   - Verify filtered thoughts passed to active view\n   - Verify ThoughtList and TimelineView render correctly\n\nDependency: imports useThoughts (task B), ViewModeToggle (task H), ThoughtList (task F), TimelineView (task G), applyFilters (task A), types (task A).",
-      "depends_on": ["A", "B", "F", "G", "H"],
+      "depends_on": [
+        "A",
+        "B",
+        "F",
+        "G",
+        "H"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -87,7 +108,10 @@
       "branch": "task/issue-1040-J",
       "file": "apps/monjournal/app/src/components/FilterPanel.tsx",
       "content": "Read apps/monjournal/docs/how/slices/slice-3-filtering-search/slice.md section 'Components - FilterPanel, DateRangePicker, TagMultiSelect'. Implement the filter UI:\n\n1. Create src/components/DateRangePicker.tsx (React sub-component):\n   - Props: { dateStart: number | null, dateEnd: number | null, onChange: (start: number | null, end: number | null) => void }\n   - Render: two HTML <input type=\"date\"> fields\n     - Labels: \"From:\" and \"To:\"\n     - Allow clearing dates (empty field = null)\n     - On change: parse date, call onChange with timestamps in ms\n   - Validation: warn if start > end\n   - No hard error, but visual indication\n\n2. Create src/components/TagMultiSelect.tsx (React sub-component):\n   - Props: { availableTags: Tag[], selectedTags: string[], onChange: (selectedTags: string[]) => void }\n   - Render:\n     - List of checkboxes or toggle buttons, one per tag\n     - Use TagDisplay from task D to show colored indicators\n     - Selected state clearly indicated (checked checkbox or highlighted button)\n     - Click to toggle: add/remove from selectedTags\n     - Call onChange with updated array\n   - Layout: flex wrap or grid to handle many tags (10+, 100+)\n   - Styling: responsive, accessible\n\n3. Create src/components/FilterPanel.tsx (React component):\n   - Props: { existingTags: Tag[], onFilterChange: (filters: FilterState) => void, onSurpriseClick: () => void }\n   - Local state: { text, dateStart, dateEnd, selectedTags }\n   - Render:\n     - Text search input: placeholder \"Search title and content\"\n     - DateRangePicker sub-component\n     - TagMultiSelect sub-component\n     - \"Surprise!\" button, disabled if no results available\n     - Optional \"Clear Filters\" button\n     - Layout: responsive (vertical stack on mobile, horizontal on desktop)\n   - Handlers:\n     - onTextChange: update text state, call onFilterChange\n     - onDateChange: update dateStart/dateEnd, call onFilterChange\n     - onTagChange: update selectedTags, call onFilterChange\n     - onSurpriseClick: call parent handler\n     - onClearFilters: reset all state, call onFilterChange with empty FilterState\n   - Styling: form layout from AppShell CSS, responsive\n\n4. Unit test:\n   - FilterPanel: renders all controls, calls onFilterChange on input\n   - DateRangePicker: parses dates, validates bounds, handles null\n   - TagMultiSelect: renders all tags, toggles selection, calls onChange\n   - All handlers work correctly\n\nDependency: imports TagDisplay (task D), types (task A).",
-      "depends_on": ["A", "D"],
+      "depends_on": [
+        "A",
+        "D"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -96,7 +120,10 @@
       "branch": "task/issue-1040-K",
       "file": "apps/monjournal/app/src/pages/AddThought.tsx",
       "content": "Read apps/monjournal/docs/how/slices/slice-4-add-thought-form/slice.md sections 'Overview, Technical Scope - Components, Data Flow'. Implement the add thought form:\n\n1. Create src/components/TagInput.tsx (React controlled input component):\n   - Props: { value: string, onChange: (text: string) => void, suggestions: string[], onAddTag: (tag: string) => void, disabled?: boolean }\n   - Render:\n     - Text input field\n     - Dropdown with suggestions filtered by current input (case-insensitive substring)\n     - On Enter key: add tag if input is non-empty and not duplicate\n     - On suggestion click: add tag\n     - Clear input after tag is added\n   - Styling: input + dropdown suggestion list\n\n2. Create src/components/TagList.tsx (React component):\n   - Props: { tags: string[], onRemoveTag: (tag: string) => void }\n   - Render:\n     - Each tag as colored chip with background from getTagColor() (task A)\n     - Display tag name and remove button (X)\n     - Click remove: call onRemoveTag(tag)\n   - Styling: inline flex chips with colors\n   - Handle empty array gracefully\n\n3. Create src/pages/AddThought.tsx (React page component):\n   - State:\n     - title: string\n     - content: string\n     - selectedTags: string[]\n     - tagInput: string (for TagInput controlled value)\n     - errors: { title?: string, content?: string } (validation)\n     - isSubmitting: boolean (prevent duplicate submissions)\n   - Initialize useThoughts() to get existing tags\n   - Render:\n     - Title: \"Add a New Thought\"\n     - Title input field (required)\n     - Content textarea (required)\n     - TagInput component with suggestions from getTags()\n     - TagList showing selected tags\n     - Cancel and Save buttons\n   - Handlers:\n     - onTitleChange: update title, clear error\n     - onContentChange: update content, clear error\n     - onAddTag: add to selectedTags, clear tagInput\n     - onRemoveTag: remove from selectedTags\n     - onTagInputChange: update tagInput\n     - onSave: validate title/content, create Thought via createThought(), call useThoughts.addThought(), show success message, redirect to /\n     - onCancel: clear form or navigate back\n   - Validation:\n     - Title required, non-empty, non-whitespace\n     - Content required, non-empty, non-whitespace\n     - Show inline error messages\n     - Debounce validation (500ms)\n   - Styling: form layout from AppShell CSS, responsive\n   - Accessibility: keyboard navigation (Enter to submit), form labels\n\n4. Unit/integration test:\n   - Form renders all inputs\n   - Validation prevents submission if title/content empty\n   - addThought() called with correct data on save\n   - Navigation to / on successful save\n   - TagInput autocomplete works\n   - TagList displays and removes tags correctly\n\nDependency: imports useThoughts (task B), createThought, getTagColor (task A), types (task A), TagInput, TagList from this file.",
-      "depends_on": ["A", "B"],
+      "depends_on": [
+        "A",
+        "B"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -105,7 +132,11 @@
       "branch": "task/issue-1040-L",
       "file": "apps/monjournal/app/src/App.tsx",
       "content": "Read apps/monjournal/docs/how/architecture.md section '5. Routing with React Router'. Wire up routing and integrate all slices:\n\n1. Update src/App.tsx (main app component):\n   - Ensure React Router is configured from AppShell\n   - Add routes:\n     - Path \"/\" → Home component (task I)\n     - Path \"/add\" → AddThought component (task K)\n     - Keep any existing AppShell routes (/about, etc)\n   - Verify Layout component wraps routes (from AppShell)\n   - Import all page components (Home, AddThought)\n\n2. Update navigation links (in AppShell Layout/Header):\n   - Verify \"Home\" link points to \"/\"\n   - Verify \"Add Thought\" link points to \"/add\"\n   - Use React Router Link component\n\n3. Verify integration:\n   - Home page renders FilterPanel (task J) + ViewModeToggle (task H) + ThoughtList/TimelineView\n   - AddThought page accessible via /add route\n   - Navigation between pages works\n   - All imports are correct (no circular dependencies)\n   - TypeScript compiles without errors\n\n4. Run app and verify:\n   - npm run dev starts without errors\n   - Home page loads with empty thoughts (localStorage integration)\n   - Can navigate to /add\n   - Can add a thought (basic flow)\n   - New thought appears on home page\n\n5. No unit tests required for this file (integration verification via app run).\n\nDependency: integrates all tasks (A-K).",
-      "depends_on": ["I", "J", "K"],
+      "depends_on": [
+        "I",
+        "J",
+        "K"
+      ],
       "status": "pending",
       "role": "dev"
     }
