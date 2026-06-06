@@ -80,6 +80,8 @@ Your live URLs will be:
 🚀 App (PR preview):  https://<user>.github.io/<repo>/my-app/pr/{N}/app/
 ```
 
+> One repository is enough for all your projects — just change `current_project` to switch context and start working on a new app.
+
 ### 2. Meet the prerequisites
 
 In your repository **Settings → Secrets and variables → Actions**, add:
