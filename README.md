@@ -46,6 +46,7 @@ The pipeline posts two live URLs directly in the PR comment:
 | MonJournal | [docs](https://dsissoko.github.io/oneticket-core/monjournal/docs/) | [app](https://dsissoko.github.io/oneticket-core/monjournal/app/) |
 | Breakout | [docs](https://dsissoko.github.io/oneticket-core/breakout/docs/) | [app](https://dsissoko.github.io/oneticket-core/breakout/app/) |
 | SpaceInvaders | [docs](https://dsissoko.github.io/oneticket-core/spaceinvaders/docs/) | [app](https://dsissoko.github.io/oneticket-core/spaceinvaders/app/) |
+| AppShell *(the reusable app template — scaffold any new project with `@leaddev init-appshell`)* | [docs](https://dsissoko.github.io/oneticket-core/appshell/docs/) | [app](https://dsissoko.github.io/oneticket-core/appshell/app/) |
 | OneTicket *(partially built by itself)* | [docs](https://dsissoko.github.io/oneticket-core/framework/docs/) | — |
 
 ---
