@@ -19,6 +19,7 @@ import { LivesManager } from '@/game/managers/LivesManager'
 import { VictoryDetector } from '@/game/systems/VictoryDetector'
 import { RestartHandler } from '@/game/systems/RestartHandler'
 import { WAVE_CONFIG } from '@/game/config/WaveConfig'
+import { useResponsiveViewport } from '@/hooks/useResponsiveViewport'
 import StartScreen from './StartScreen'
 import HUD from './HUD'
 import VictoryScreen from './VictoryScreen'
@@ -31,6 +32,11 @@ export function Game(): React.ReactElement {
   const [lives, setLives] = useState(3)
   const [waveNumber, setWaveNumber] = useState(1)
   const [victoryCountdown, setVictoryCountdown] = useState(0)
+
+  // Get responsive viewport dimensions
+  const viewportState = useResponsiveViewport()
+  const canvasWidth = viewportState.canvasWidth
+  const canvasHeight = viewportState.canvasHeight
 
   // Refs for game loop objects (not triggering re-renders)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -63,22 +69,20 @@ export function Game(): React.ReactElement {
     lastFrameTime: 0
   })
 
-  const CANVAS_WIDTH = 800
-  const CANVAS_HEIGHT = 600
-
   /**
-    * Initialize game when component mounts
+    * Initialize game when component mounts or viewport changes
     */
   useEffect(() => {
     if (!canvasRef.current) return
 
     const canvas = canvasRef.current
-    canvas.width = CANVAS_WIDTH
-    canvas.height = CANVAS_HEIGHT
+    canvas.width = canvasWidth
+    canvas.height = canvasHeight
 
     // Initialize systems
     try {
       renderingSystemRef.current = new RenderingSystem(canvas)
+      renderingSystemRef.current.setCanvasSize(canvasWidth, canvasHeight)
       inputSystemRef.current = new InputSystem(window)
 
       // Initialize physics system with callbacks
@@ -120,7 +124,30 @@ export function Game(): React.ReactElement {
         inputSystemRef.current.destroy()
       }
     }
-  }, [])
+  }, [canvasWidth, canvasHeight])
+
+  /**
+    * Handle viewport changes - trigger canvas redraw on window resize
+    */
+  useEffect(() => {
+    const handleCanvasResize = (): void => {
+      if (!canvasRef.current || !renderingSystemRef.current) return
+
+      const canvas = canvasRef.current
+      canvas.width = canvasWidth
+      canvas.height = canvasHeight
+
+      // Update rendering system with new dimensions
+      renderingSystemRef.current.setCanvasSize(canvasWidth, canvasHeight)
+
+      console.log(
+        `Viewport: ${viewportState.viewportWidth}x${viewportState.viewportHeight}, orientation: ${viewportState.orientation}`
+      )
+      console.log(`Canvas resized to ${canvasWidth}x${canvasHeight}`)
+    }
+
+    handleCanvasResize()
+  }, [canvasWidth, canvasHeight, viewportState])
 
   /**
     * Handle game state updates (called by game loop each frame)
@@ -180,10 +207,10 @@ export function Game(): React.ReactElement {
         // Check if we need to spawn a new ship
         if (!state.mysteryShip || !state.mysteryShip.alive) {
           if (state.mysteryShipSpawner.isSpawnTime(currentTime)) {
-            const shipParams = state.mysteryShipSpawner.createShip(
+             const shipParams = state.mysteryShipSpawner.createShip(
               currentTime,
-              CANVAS_WIDTH
-            )
+              canvasWidth
+             )
             // Create new mystery ship using MysteryShipImpl
             state.mysteryShip = new MysteryShipImpl(
               shipParams.x,
@@ -197,11 +224,11 @@ export function Game(): React.ReactElement {
         }
         
         // Update active mystery ship position
-        if (state.mysteryShip && state.mysteryShip.alive) {
-          const stillOnScreen = state.mysteryShip.update(
-            deltaTime,
-            CANVAS_WIDTH
-          )
+         if (state.mysteryShip && state.mysteryShip.alive) {
+           const stillOnScreen = state.mysteryShip.update(
+             deltaTime,
+             canvasWidth
+           )
           if (!stillOnScreen) {
             console.log(
               `Mystery ship escaped. Next spawn in ${(state.mysteryShipSpawner.getNextSpawnTime() - currentTime).toFixed(0)}ms`
@@ -212,16 +239,16 @@ export function Game(): React.ReactElement {
       }
 
       // Update enemy bullets (future implementation)
-      // For now, keep the simple bullet update for collision prep
-      state.bullets = state.bullets.filter((bullet) => {
-        if (bullet.type === 'player') {
-          // Player bullets are managed by Player entity
-          return (bullet as any).active && bullet.y >= 0 && bullet.y <= CANVAS_HEIGHT
-        } else {
-          // Enemy bullets will be handled in later slices
-          return bullet.y >= 0 && bullet.y <= CANVAS_HEIGHT
-        }
-      })
+       // For now, keep the simple bullet update for collision prep
+       state.bullets = state.bullets.filter((bullet) => {
+         if (bullet.type === 'player') {
+           // Player bullets are managed by Player entity
+           return (bullet as any).active && bullet.y >= 0 && bullet.y <= canvasHeight
+         } else {
+           // Enemy bullets will be handled in later slices
+           return bullet.y >= 0 && bullet.y <= canvasHeight
+         }
+       })
 
       // ============================================================
       // COLLISION DETECTION & RESPONSE PHASE
@@ -366,9 +393,9 @@ export function Game(): React.ReactElement {
     setGameState('Playing')
 
     // Initialize game entities
-    state.formation = new Formation(CANVAS_WIDTH, CANVAS_HEIGHT)
-    state.formation.initialize(1) // Wave 1
-    state.player = new PlayerImpl(CANVAS_WIDTH, CANVAS_HEIGHT)
+     state.formation = new Formation(canvasWidth, canvasHeight)
+     state.formation.initialize(1) // Wave 1
+     state.player = new PlayerImpl(canvasWidth, canvasHeight)
     state.bullets = []
 
     // Initialize mystery ship spawner
@@ -380,14 +407,14 @@ export function Game(): React.ReactElement {
     // Shield width: 48 pixels (4x4 grid of 12px segments)
     // Positions: approximately 25%, 41%, 59%, 75% of canvas width
     // y position: 350 (between formation and player)
-    const shieldWidth = 48
-    const shieldY = 350
-    const shieldPositions = [
-      (CANVAS_WIDTH * 0.25) - (shieldWidth / 2), // 25% centered
-      (CANVAS_WIDTH * 0.41) - (shieldWidth / 2), // 41% centered
-      (CANVAS_WIDTH * 0.59) - (shieldWidth / 2), // 59% centered
-      (CANVAS_WIDTH * 0.75) - (shieldWidth / 2) // 75% centered
-    ]
+     const shieldWidth = 48
+     const shieldY = 350
+     const shieldPositions = [
+       (canvasWidth * 0.25) - (shieldWidth / 2), // 25% centered
+       (canvasWidth * 0.41) - (shieldWidth / 2), // 41% centered
+       (canvasWidth * 0.59) - (shieldWidth / 2), // 59% centered
+       (canvasWidth * 0.75) - (shieldWidth / 2) // 75% centered
+     ]
     state.shields = shieldPositions.map((x) => new ShieldImpl(x, shieldY))
     state.score = 0
     state.lives = 3
@@ -430,8 +457,19 @@ export function Game(): React.ReactElement {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-black">
-      <div className="relative" style={{ width: CANVAS_WIDTH, height: CANVAS_HEIGHT }}>
+    <div
+      id="game-container"
+      style={{
+        width: '100%',
+        height: '100vh',
+        overflow: 'hidden',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#000000'
+      }}
+    >
+      <div className="relative" style={{ width: canvasWidth, height: canvasHeight }}>
         {/* Canvas element */}
         <canvas
           ref={canvasRef}
@@ -486,9 +524,23 @@ export function Game(): React.ReactElement {
       </div>
 
       {/* Debug info */}
-      <div className="mt-4 text-green-400 font-mono text-sm">
-        <p>Canvas: {CANVAS_WIDTH}×{CANVAS_HEIGHT}</p>
-        <p>State: {gameState}</p>
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '10px',
+          right: '10px',
+          color: '#00FF00',
+          fontFamily: 'monospace',
+          fontSize: '12px',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          padding: '5px 10px',
+          borderRadius: '4px'
+        }}
+      >
+        <p style={{ margin: '2px 0' }}>Canvas: {canvasWidth}×{canvasHeight}</p>
+        <p style={{ margin: '2px 0' }}>Viewport: {viewportState.viewportWidth}×{viewportState.viewportHeight}</p>
+        <p style={{ margin: '2px 0' }}>Orientation: {viewportState.orientation}</p>
+        <p style={{ margin: '2px 0' }}>State: {gameState}</p>
       </div>
     </div>
   )
