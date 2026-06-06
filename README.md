@@ -112,8 +112,6 @@ The framework handles the rest.
 
 ## Commands
 
-Use these in order when starting a new project from scratch:
-
 | Command | What it does |
 |---|---|
 | `@po init-doc` | Initializes the documentation structure (`what/`, `how/`, `ship/`, `run/`) |
