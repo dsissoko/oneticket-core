@@ -23,7 +23,7 @@
       "file": "apps/spaceinvaders/app/src/game/InputSystem.ts",
       "content": "Read apps/spaceinvaders/app/src/game/InputSystem.ts and apps/spaceinvaders/docs/how/slices/slice-9-mobile/slice.md. Enhance InputSystem to support zone-based touch input: (1) Add TouchZone interface with x, y, width, height, type properties, (2) Add getTouchZones(): TouchZone[] that returns left zone (40% width, type='movement') and right zone (60% width, type='fire'), (3) Add isTouchInMovementZone(x: number, y: number): boolean, (4) Add isTouchInFireZone(x: number, y: number): boolean, (5) Enhance onTouchStart to detect which zone touch originated in, (6) Enhance onTouchEnd to only trigger fire if touch ended in right zone, (7) Add onTouchMove to handle continuous movement in left zone. Zones should be calculated from canvas width at initialization time.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "D",
