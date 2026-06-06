@@ -46,6 +46,7 @@ export function Game(): React.ReactElement {
   const victoryDetectorRef = useRef<VictoryDetector>(new VictoryDetector())
   const restartHandlerRef = useRef<RestartHandler>(new RestartHandler())
   const victoryTransitionTimerRef = useRef<number>(0)
+  const lastFireTimeRef = useRef<number>(0) // Fire cooldown tracking
   const gameStateRef = useRef<GameLoopState>({
     formation: null,
     player: null,
@@ -134,20 +135,27 @@ export function Game(): React.ReactElement {
     if (stateMachine.getState() === 'Playing') {
       const inputState = inputSystemRef.current?.getInputState() ?? state.inputState
 
-       // Update player
-       if (state.player) {
-         const player = state.player as PlayerImpl
-         player.update(deltaTime, inputState)
+        // Update player
+        if (state.player) {
+          const player = state.player as PlayerImpl
+          player.update(deltaTime, inputState)
 
-         // Handle firing - fire only when input is pressed and player hasn't reached max bullets
-         if (inputState.fire && player.bullets.length < player.maxBullets) {
-           const bullet = player.fire()
-           if (bullet) {
-             (bullet as any).active = true
-             // Bullet is already added to player.bullets by the fire() method
-           }
-         }
-       }
+          // Handle firing - fire only when input is pressed, max bullets not reached, and cooldown elapsed
+          if (inputState.fire && player.bullets.length < player.maxBullets) {
+            const now = Date.now()
+            const timeSinceLastFire = now - lastFireTimeRef.current
+            const FIRE_COOLDOWN = 150 // milliseconds
+
+            if (timeSinceLastFire > FIRE_COOLDOWN) {
+              const bullet = player.fire()
+              if (bullet) {
+                // Push bullet to state.bullets for collision detection
+                state.bullets.push(bullet)
+                lastFireTimeRef.current = now
+              }
+            }
+          }
+        }
 
       // Update formation
       if (state.formation) {
@@ -351,6 +359,7 @@ export function Game(): React.ReactElement {
     livesManagerRef.current = new LivesManager(3)
     victoryDetectorRef.current = new VictoryDetector()
     victoryTransitionTimerRef.current = 0
+    lastFireTimeRef.current = 0 // Reset fire cooldown
 
     // Transition state machine
     stateMachineRef.current.transitionTo('Playing')
@@ -407,6 +416,7 @@ export function Game(): React.ReactElement {
     livesManagerRef.current = new LivesManager(3)
     victoryDetectorRef.current = new VictoryDetector()
     victoryTransitionTimerRef.current = 0
+    lastFireTimeRef.current = 0 // Reset fire cooldown
 
     // Reset state machine
     stateMachineRef.current.reset()
