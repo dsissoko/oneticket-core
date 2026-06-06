@@ -182,6 +182,8 @@ The orchestrator merges the (now empty) task branch, marks it `done`, and dispat
 
 > **How to choose Case A vs Case B:** After applying the failed tasks manually, check the manifest. If no task has `status: pending` or `status: in_progress` → Case A. Otherwise → Case B.
 
+Once the pipeline completes and the final PR is merged, follow [Post-Merge Cleanup](./post-merge.md) to remove residual branches and labels.
+
 ---
 
 ## What not to do
