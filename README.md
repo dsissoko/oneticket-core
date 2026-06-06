@@ -20,7 +20,7 @@ Currently, the pipeline enforces a structured documentation deployed to GitHub P
   PR created automatically
 ```
 
-All orchestration is deterministic code — zero LLM in the pipeline logic. LLMs only generate content.
+All orchestration is deterministic code — zero LLM in the pipeline logic. LLMs only generate content. Agent behavior is guided by 50+ skills available via [dsissoko/oneticket-skills](https://github.com/dsissoko/oneticket-skills) — architecture, C4, epics, user stories, frontend stack, testing, and more.
 
 ### What's in the PR
 
