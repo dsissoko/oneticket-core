@@ -15,7 +15,7 @@
       "file": "apps/spaceinvaders/app/src/game/ViewportManager.ts",
       "content": "Create ViewportManager class that encapsulates viewport calculations. Implement: (1) getViewportDimensions(): { width: number; height: number }, (2) calculateCanvasSize(desiredWidth: number, desiredHeight: number): { width: number; height: number } maintaining 4:3 ratio, (3) getScaleFactor(): number, (4) isPortrait(): boolean. The class should handle both portrait and landscape orientations by preferring to maximize canvas size in the unconstrained dimension while maintaining the 4:3 aspect ratio.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "C",
