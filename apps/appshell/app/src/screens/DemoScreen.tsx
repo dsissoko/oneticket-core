@@ -249,11 +249,11 @@ function ThemeTab() {
 // ─── RealtimeTab ─────────────────────────────────────────────────────────────
 
 const SPEED_OPTIONS = [
-  { label: '100ms', value: 100 },
-  { label: '250ms', value: 250 },
-  { label: '500ms', value: 500 },
-  { label: '1s', value: 1000 },
-  { label: '2s', value: 2000 },
+  { label: '0.5×', value: 2000 },
+  { label: '1×',   value: 1000 },
+  { label: '2×',   value: 500  },
+  { label: '4×',   value: 250  },
+  { label: '10×',  value: 100  },
 ];
 
 const TOTAL_STEPS = 300; // 5 minutes at 1s/step
