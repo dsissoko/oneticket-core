@@ -66,7 +66,7 @@
       "file": "apps/spaceinvaders/app/src/game/types.ts",
       "content": "Read apps/spaceinvaders/app/src/game/types.ts and add ResponseiveGameState type if it doesn't exist. Add or update: (1) ViewportState interface: { viewportWidth: number; viewportHeight: number; orientation: 'portrait' | 'landscape'; scaleFactor: number; canvasWidth: number; canvasHeight: number }, (2) TouchZone interface: { x: number; y: number; width: number; height: number; type: 'movement' | 'fire' }, (3) Add these to exports so they can be imported by other modules.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "I",
