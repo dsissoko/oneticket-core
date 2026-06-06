@@ -20,6 +20,14 @@ export class RenderingSystem {
   }
 
   /**
+   * Set canvas dimensions dynamically for responsive sizing
+   */
+  setCanvasSize(width: number, height: number): void {
+    this.canvasWidth = width
+    this.canvasHeight = height
+  }
+
+  /**
    * Clear the canvas with black background
    */
   clear(): void {
