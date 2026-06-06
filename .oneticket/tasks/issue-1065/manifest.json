@@ -7,7 +7,7 @@
       "file": "apps/spaceinvaders/app/src/hooks/useResponsiveViewport.ts",
       "content": "Read apps/spaceinvaders/docs/how/slices/slice-9-mobile/slice.md and apps/spaceinvaders/docs/what/epics/epic-0-mvp/user-stories/us-008-mobile-responsiveness.md. Create a custom React hook useResponsiveViewport.ts that: (1) Detects viewport dimensions using window.innerWidth and window.innerHeight, (2) Detects device orientation (portrait vs landscape), (3) Calculates responsive canvas size maintaining 4:3 aspect ratio (original 800x600), (4) Returns ViewportState object with viewportWidth, viewportHeight, orientation, scaleFactor, canvasWidth, canvasHeight, (5) Registers window resize and orientationchange listeners and updates state, (6) Cleans up listeners on unmount. The calculated canvas size should fit 100% of viewport in one dimension and maintain 4:3 ratio in the other.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
@@ -15,7 +15,7 @@
       "file": "apps/spaceinvaders/app/src/game/ViewportManager.ts",
       "content": "Create ViewportManager class that encapsulates viewport calculations. Implement: (1) getViewportDimensions(): { width: number; height: number }, (2) calculateCanvasSize(desiredWidth: number, desiredHeight: number): { width: number; height: number } maintaining 4:3 ratio, (3) getScaleFactor(): number, (4) isPortrait(): boolean. The class should handle both portrait and landscape orientations by preferring to maximize canvas size in the unconstrained dimension while maintaining the 4:3 aspect ratio.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "C",
@@ -23,7 +23,7 @@
       "file": "apps/spaceinvaders/app/src/game/InputSystem.ts",
       "content": "Read apps/spaceinvaders/app/src/game/InputSystem.ts and apps/spaceinvaders/docs/how/slices/slice-9-mobile/slice.md. Enhance InputSystem to support zone-based touch input: (1) Add TouchZone interface with x, y, width, height, type properties, (2) Add getTouchZones(): TouchZone[] that returns left zone (40% width, type='movement') and right zone (60% width, type='fire'), (3) Add isTouchInMovementZone(x: number, y: number): boolean, (4) Add isTouchInFireZone(x: number, y: number): boolean, (5) Enhance onTouchStart to detect which zone touch originated in, (6) Enhance onTouchEnd to only trigger fire if touch ended in right zone, (7) Add onTouchMove to handle continuous movement in left zone. Zones should be calculated from canvas width at initialization time.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "D",
@@ -31,14 +31,17 @@
       "file": "apps/spaceinvaders/app/src/game/RenderingSystem.ts",
       "content": "Read apps/spaceinvaders/app/src/game/RenderingSystem.ts and apps/spaceinvaders/docs/how/slices/slice-9-mobile/slice.md. Make RenderingSystem support dynamic canvas sizing: (1) Change canvasWidth and canvasHeight from hardcoded static values to instance properties, (2) Add setCanvasSize(width: number, height: number): void method, (3) Update all drawing operations (drawFormation, drawPlayer, drawBullets, etc.) to use this.canvasWidth and this.canvasHeight instead of hardcoded values, (4) Update HUD text positioning to scale based on canvas dimensions (e.g., score text at canvasWidth/2 for centering), (5) Update clear() to use dynamic dimensions. The rendering should work correctly for any canvas size while maintaining visual proportions.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "E",
       "branch": "task/issue-1065-E",
       "file": "apps/spaceinvaders/app/src/components/Game.tsx",
       "content": "Read apps/spaceinvaders/app/src/components/Game.tsx and apps/spaceinvaders/docs/how/slices/slice-9-mobile/slice.md. Refactor Game component to use responsive viewport: (1) Remove hardcoded CANVAS_WIDTH = 800 and CANVAS_HEIGHT = 600, (2) Import and call useResponsiveViewport() hook from src/hooks/useResponsiveViewport.ts, (3) Pass responsive canvasWidth and canvasHeight from hook to canvas.width and canvas.height, (4) Update renderingSystemRef initialization to use responsive dimensions and call setCanvasSize() with new dimensions, (5) Update inputSystemRef to recalculate touch zones when viewport changes, (6) Wrap canvas in a responsive container div with id='game-container' and styles { width: '100%', height: '100vh', overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center' }, (7) Register window resize listener to trigger canvas redraw on viewport change.",
-      "depends_on": ["A", "D"],
+      "depends_on": [
+        "A",
+        "D"
+      ],
       "status": "pending"
     },
     {
@@ -47,7 +50,7 @@
       "file": "apps/spaceinvaders/app/index.html",
       "content": "Update apps/spaceinvaders/app/index.html to include mobile viewport meta tag. Replace or add the viewport meta tag in <head> to: <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, viewport-fit=cover\">. Also ensure body and html elements have CSS properties to prevent scrolling: { margin: 0, padding: 0, width: 100%, height: 100%, overflow: hidden }.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "G",
@@ -55,7 +58,7 @@
       "file": "apps/spaceinvaders/app/src/styles/responsive.css",
       "content": "Create new file src/styles/responsive.css with mobile-friendly responsive CSS: (1) Set html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }, (2) Set body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #000; }, (3) Set canvas { display: block; max-width: 100%; max-height: 100%; width: 100%; height: 100%; margin: auto; }, (4) Set #game-container { width: 100vw; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; background-color: #000; }. Import this file in src/components/Game.tsx using 'import \"../styles/responsive.css\"'.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "H",
@@ -63,14 +66,23 @@
       "file": "apps/spaceinvaders/app/src/game/types.ts",
       "content": "Read apps/spaceinvaders/app/src/game/types.ts and add ResponseiveGameState type if it doesn't exist. Add or update: (1) ViewportState interface: { viewportWidth: number; viewportHeight: number; orientation: 'portrait' | 'landscape'; scaleFactor: number; canvasWidth: number; canvasHeight: number }, (2) TouchZone interface: { x: number; y: number; width: number; height: number; type: 'movement' | 'fire' }, (3) Add these to exports so they can be imported by other modules.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "I",
       "branch": "task/issue-1065-I",
       "file": "apps/spaceinvaders/app/src/components/Game.tsx",
       "content": "Integration task: Verify that all responsive viewport changes work together. (1) Test that useResponsiveViewport hook properly updates canvas dimensions when window is resized, (2) Verify InputSystem correctly calculates touch zones based on new canvas width, (3) Test that RenderingSystem scales all game entities correctly with new canvas size, (4) Run the game in a browser's mobile emulation mode (DevTools → Device Toolbar) and verify: canvas fits 100% of viewport without scrolling, game is centered, portrait and landscape modes work, orientation changes don't crash the game, (5) Verify all HUD text (score, lives, wave) scales and centers correctly, (6) Verify no console errors or warnings related to sizing.",
-      "depends_on": ["A", "B", "C", "D", "E", "F", "G", "H"],
+      "depends_on": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
       "status": "pending"
     }
   ]
