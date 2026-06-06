@@ -22,6 +22,13 @@ All orchestration is deterministic code — zero LLM in the pipeline logic. LLMs
 
 ---
 
+## Prerequisites
+
+- **opencode.ai account** — API key at [opencode.ai/auth](https://opencode.ai/auth), credits required for parallel agent runs
+- **GitHub PAT** — scopes: `contents:write`, `pull-requests:write`, `issues:write`, `actions:write`
+
+---
+
 ## Quick start
 
 ### 1. Clone and configure
