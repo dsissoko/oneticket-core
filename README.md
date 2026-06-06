@@ -20,6 +20,34 @@ GitHub-native autonomous multi-agent framework. Invoke agents by commenting `@ro
 
 All orchestration is deterministic code — zero LLM in the pipeline logic. LLMs only generate content.
 
+### What's in the PR
+
+Every PR contains two artifacts, both instantly accessible via a live preview:
+
+**Structured documentation** — four sections, generated and kept in sync with the code:
+- `what/` — product vision, epics, user stories
+- `how/` — architecture, C4 diagrams, implementation slices
+- `ship/` — CI/CD, deployment
+- `run/` — operational runbooks
+
+**A deployable frontend app** — built and pushed to GitHub Pages on every PR.
+
+The pipeline posts two live URLs directly in the PR comment:
+
+```
+📖 Doc preview:  https://dsissoko.github.io/oneticket-core/{project}/pr/{N}/docs/
+🚀 App preview:  https://dsissoko.github.io/oneticket-core/{project}/pr/{N}/app/
+```
+
+**Live examples** — all built by OneTicket:
+
+| Project | Doc | App |
+|---|---|---|
+| MonJournal | [docs](https://dsissoko.github.io/oneticket-core/monjournal/docs/) | [app](https://dsissoko.github.io/oneticket-core/monjournal/app/) |
+| Breakout | [docs](https://dsissoko.github.io/oneticket-core/breakout/docs/) | [app](https://dsissoko.github.io/oneticket-core/breakout/app/) |
+| SpaceInvaders | [docs](https://dsissoko.github.io/oneticket-core/spaceinvaders/docs/) | [app](https://dsissoko.github.io/oneticket-core/spaceinvaders/app/) |
+| OneTicket *(partially built by itself)* | [docs](https://dsissoko.github.io/oneticket-core/framework/docs/) | — |
+
 ---
 
 ## Prerequisites
