@@ -186,6 +186,16 @@ OneTicket is designed to be fully customizable. Here are the main axes:
 
 ---
 
+## Merge conflicts — don't panic
+
+Merge conflicts are **normal and expected** in a parallel pipeline. When two tasks modify the same file, the pipeline stops cleanly and labels the issue `merge error` — nothing is lost.
+
+Recovery is straightforward: see the [Merge Conflict Recovery runbook](.oneticket/docs/run/merge-recovery.md).
+
+To eliminate the risk entirely, add `--safe` to any `@leaddev` command — this forces sequential execution (A→B→C) at the cost of speed.
+
+---
+
 ## Pipeline internals
 
 ```
