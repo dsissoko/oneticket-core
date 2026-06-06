@@ -1,0 +1,154 @@
+/**
+ * responsive.css - Mobile and responsive styling for Space Invaders
+ * 
+ * Ensures game canvas fits within viewport without scrolling
+ * and works across portrait/landscape orientations
+ */
+
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #000000;
+  font-family: monospace;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Game container */
+#game-container {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #000000;
+}
+
+/* Canvas and relative wrapper */
+canvas {
+  display: block;
+  max-width: 100vw;
+  max-height: 100vh;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+.relative {
+  position: relative;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Touch action settings for mobile */
+@supports (touch-action: auto) {
+  canvas {
+    touch-action: none;
+  }
+}
+
+/* Mobile-specific viewport settings */
+@media (max-width: 768px) {
+  html,
+  body {
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+
+  #root {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  #game-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Disable zoom on double tap */
+  input,
+  button {
+    font-size: 16px;
+  }
+}
+
+/* Portrait orientation */
+@media (orientation: portrait) and (max-width: 768px) {
+  canvas {
+    width: 100%;
+    height: auto;
+  }
+}
+
+/* Landscape orientation */
+@media (orientation: landscape) {
+  canvas {
+    width: auto;
+    height: 100%;
+  }
+}
+
+/* Prevent text selection on long press (mobile) */
+body {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Hide address bar on mobile browsers */
+@supports (height: 100dvh) {
+  html,
+  body {
+    height: 100dvh;
+  }
+
+  #root {
+    height: 100dvh;
+  }
+
+  #game-container {
+    height: 100dvh;
+  }
+}
+
+/* iOS specific fixes */
+@supports (-webkit-appearance: none) {
+  html,
+  body {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    -webkit-user-select: none;
+  }
+
+  canvas {
+    -webkit-user-select: none;
+  }
+}

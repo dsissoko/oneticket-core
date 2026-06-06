@@ -33,25 +33,21 @@ const ASPECT_RATIO = LOGICAL_WIDTH / LOGICAL_HEIGHT // 1.333...
  * @returns ViewportState object with viewport and canvas dimensions
  */
 export function useResponsiveViewport(): ViewportState {
-  const [viewportState, setViewportState] = useState<ViewportState>(() => {
-    return calculateViewportState()
-  })
-
   /**
-   * Determines device orientation based on viewport dimensions
-   */
+    * Determines device orientation based on viewport dimensions
+    */
   const getOrientation = useCallback((): 'portrait' | 'landscape' => {
     return window.innerHeight >= window.innerWidth ? 'portrait' : 'landscape'
   }, [])
 
   /**
-   * Calculates responsive canvas dimensions maintaining 4:3 aspect ratio
-   * 
-   * Strategy:
-   * - In portrait mode: use full viewport width, calculate height from aspect ratio
-   * - In landscape mode: use full viewport height, calculate width from aspect ratio
-   * - Ensure canvas fits within viewport without scrolling
-   */
+    * Calculates responsive canvas dimensions maintaining 4:3 aspect ratio
+    * 
+    * Strategy:
+    * - In portrait mode: use full viewport width, calculate height from aspect ratio
+    * - In landscape mode: use full viewport height, calculate width from aspect ratio
+    * - Ensure canvas fits within viewport without scrolling
+    */
   const calculateCanvasSize = useCallback(
     (): { canvasWidth: number; canvasHeight: number; scaleFactor: number } => {
       const orientation = getOrientation()
@@ -92,8 +88,8 @@ export function useResponsiveViewport(): ViewportState {
   )
 
   /**
-   * Main function to calculate complete viewport state
-   */
+    * Main function to calculate complete viewport state
+    */
   const calculateViewportState = useCallback((): ViewportState => {
     const orientation = getOrientation()
     const { canvasWidth, canvasHeight, scaleFactor } = calculateCanvasSize()
@@ -107,6 +103,10 @@ export function useResponsiveViewport(): ViewportState {
       canvasHeight,
     }
   }, [getOrientation, calculateCanvasSize])
+
+  const [viewportState, setViewportState] = useState<ViewportState>(() => {
+    return calculateViewportState()
+  })
 
   /**
    * Handle resize and orientation change events
