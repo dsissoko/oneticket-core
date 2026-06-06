@@ -4,6 +4,10 @@
       "release-type": "simple",
       "package-name": "OneTicket",
       "exclude-paths": ["apps/", ".oneticket/tasks/"]
+    },
+    "apps/appshell": {
+      "release-type": "simple",
+      "component": "appshell"
     }
   }
 }
