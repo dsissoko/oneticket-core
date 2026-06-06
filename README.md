@@ -65,10 +65,7 @@ agent_config:
 
 ### 2. Meet the prerequisites
 
-Two secrets are required:
-
-- **opencode.ai account** — credits required for parallel agent runs. Get your API key at [opencode.ai/auth](https://opencode.ai/auth).
-- **GitHub PAT** — required because the native `GITHUB_TOKEN` does not trigger downstream workflows. Scopes: `contents:write`, `pull-requests:write`, `issues:write`, `actions:write`.
+Add the following secrets to your repository settings:
 
 | Secret | Value |
 |---|---|
