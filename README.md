@@ -154,8 +154,7 @@ OneTicket is designed to be fully customizable. Here are the main axes:
 |---|---|
 | **Project config** — model, retries, project name, git identity | `.oneticket/config.yml` |
 | **Agent profiles** — role identity, responsibilities, skill routing | `.oneticket/agents/<role>.agent.md` |
-| **Skills** — domain knowledge loaded by agents at runtime | `.oneticket/skills/<name>/SKILL.md` or via APM in `.oneticket/apm.yml` |
-| **APM skill catalog** — versioned skill distribution | `.oneticket/apm.yml` → `dsissoko/oneticket-skills#main` |
+| **Add custom skills** — domain knowledge loaded by agents at runtime | 1. **APM catalog** (versioned, shared): add repo in `.oneticket/apm.yml` → `dependencies.apm` — installed into `.agents/skills/` at runtime<br>2. **Local** (private, takes precedence): drop `<name>/SKILL.md` in `.oneticket/skills/` — copied into `.agents/skills/` before APM, overrides any same-named external skill |
 | **Agent instructions** — shared cross-agent rules (team, routing, mode) | `.oneticket/.apm/instructions/*.instructions.md` |
 | **Documentation template** — base structure copied by `init-doc` | `.oneticket/templates/docs/` |
 | **App templates** — scaffold copied by `@leaddev init-<template>` | `apps/<template>/app/` |
