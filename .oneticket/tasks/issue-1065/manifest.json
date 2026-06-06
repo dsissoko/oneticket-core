@@ -31,7 +31,7 @@
       "file": "apps/spaceinvaders/app/src/game/RenderingSystem.ts",
       "content": "Read apps/spaceinvaders/app/src/game/RenderingSystem.ts and apps/spaceinvaders/docs/how/slices/slice-9-mobile/slice.md. Make RenderingSystem support dynamic canvas sizing: (1) Change canvasWidth and canvasHeight from hardcoded static values to instance properties, (2) Add setCanvasSize(width: number, height: number): void method, (3) Update all drawing operations (drawFormation, drawPlayer, drawBullets, etc.) to use this.canvasWidth and this.canvasHeight instead of hardcoded values, (4) Update HUD text positioning to scale based on canvas dimensions (e.g., score text at canvasWidth/2 for centering), (5) Update clear() to use dynamic dimensions. The rendering should work correctly for any canvas size while maintaining visual proportions.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "E",
