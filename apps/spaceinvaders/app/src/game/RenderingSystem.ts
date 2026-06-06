@@ -100,30 +100,16 @@ export class RenderingSystem {
   }
 
   /**
-   * Draw all bullets on screen
+   * Draw player bullets as 4×12 white rectangles
    */
   drawBullets(bullets: Bullet[]): void {
+    this.ctx.fillStyle = '#FFFFFF'
     bullets.forEach((bullet) => {
-      if (bullet.type === 'player') {
-        // Player bullets - white color, small rectangle
-        this.ctx.fillStyle = '#FFFFFF'
-      } else {
-        // Enemy bullets - red color
-        this.ctx.fillStyle = '#FF0000'
-      }
       this.ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height)
     })
   }
 
-  /**
-   * Draw only player bullets
-   */
-  drawPlayerBullets(bullet: any | null): void {
-    if (!bullet) return
 
-    this.ctx.fillStyle = '#FFFFFF'
-    this.ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height)
-  }
 
   /**
     * Draw shields

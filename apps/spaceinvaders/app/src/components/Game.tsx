@@ -336,7 +336,7 @@ export function Game(): React.ReactElement {
     if (stateMachineRef.current.getState() === 'Playing') {
       renderingSystem.drawFormation(state.formation)
       renderingSystem.drawPlayer(state.player)
-      renderingSystem.drawBullets(state.bullets)
+      renderingSystem.drawBullets(state.player?.bullets ?? [])
       renderingSystem.drawShields(state.shields)
       renderingSystem.drawMysteryShip(state.mysteryShip)
       renderingSystem.drawHUD(state.score, state.lives, state.waveNumber)
