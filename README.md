@@ -62,36 +62,22 @@ The pipeline posts two live URLs directly in the PR comment:
 
 ## Quick start
 
-### 1. Clone and configure
+### 1. Create your repository
 
-```bash
-git clone https://github.com/dsissoko/oneticket-core.git my-project
-cd my-project
-```
-
-Edit `.oneticket/config.yml`:
+Click **[Use this template](https://github.com/dsissoko/oneticket-core)** to create your own repository, then edit `.oneticket/config.yml` directly on GitHub and set your project name:
 
 ```yaml
-current_project: my-app          # ← your project name (required — Gate 0)
-cli: opencode
-retry_max: 3
-orchestrate_retry_max: 5
-pr_base: main
-oneticket_git_user_name: oneticket-bot
-oneticket_git_user_email: oneticket-bot@users.noreply.github.com
+current_project: my-app   # ← your project name
+```
 
-agent_config:
-  opencode:
-    $schema: "https://opencode.ai/config.json"
-    model: opencode/claude-haiku-4-5   # ← your preferred model
-    share: "disabled"
-    autoupdate: false
-    disabled_providers: [openai, gemini, anthropic]
-    provider:
-      opencode:
-        options:
-          timeout: 900000
-          chunkTimeout: 30000
+Your live URLs will be:
+
+```
+📖 Doc (prod):        https://<user>.github.io/<repo>/my-app/docs/
+🚀 App (prod):        https://<user>.github.io/<repo>/my-app/app/
+
+📖 Doc (PR preview):  https://<user>.github.io/<repo>/my-app/pr/{N}/docs/
+🚀 App (PR preview):  https://<user>.github.io/<repo>/my-app/pr/{N}/app/
 ```
 
 ### 2. Meet the prerequisites
