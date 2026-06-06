@@ -56,12 +56,17 @@ agent_config:
           chunkTimeout: 30000
 ```
 
-### 2. Add GitHub secrets
+### 2. Prerequisites
 
-| Secret | Description |
+Two secrets are required:
+
+- **opencode.ai account** — credits required for parallel agent runs. Get your API key at [opencode.ai/auth](https://opencode.ai/auth).
+- **GitHub PAT** — required because the native `GITHUB_TOKEN` does not trigger downstream workflows. Scopes: `contents:write`, `pull-requests:write`, `issues:write`, `actions:write`.
+
+| Secret | Value |
 |---|---|
-| `OPENCODE_API_KEY` | Your [opencode.ai/auth](https://opencode.ai/auth) API key |
-| `ONETICKET_GH_PAT` | GitHub PAT with `contents:write`, `pull-requests:write`, `issues:write`, `actions:write` |
+| `OPENCODE_API_KEY` | Your opencode.ai API key |
+| `ONETICKET_GH_PAT` | Your GitHub PAT |
 
 ### 3. (Optional) Customize your OneTicket repository
 
