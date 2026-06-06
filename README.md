@@ -56,7 +56,7 @@ agent_config:
           chunkTimeout: 30000
 ```
 
-### 2. Prerequisites
+### 2. Meet the prerequisites
 
 Two secrets are required:
 
