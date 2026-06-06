@@ -50,7 +50,7 @@
       "file": "apps/spaceinvaders/app/index.html",
       "content": "Update apps/spaceinvaders/app/index.html to include mobile viewport meta tag. Replace or add the viewport meta tag in <head> to: <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, viewport-fit=cover\">. Also ensure body and html elements have CSS properties to prevent scrolling: { margin: 0, padding: 0, width: 100%, height: 100%, overflow: hidden }.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "G",
