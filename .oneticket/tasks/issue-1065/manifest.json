@@ -7,7 +7,7 @@
       "file": "apps/spaceinvaders/app/src/hooks/useResponsiveViewport.ts",
       "content": "Read apps/spaceinvaders/docs/how/slices/slice-9-mobile/slice.md and apps/spaceinvaders/docs/what/epics/epic-0-mvp/user-stories/us-008-mobile-responsiveness.md. Create a custom React hook useResponsiveViewport.ts that: (1) Detects viewport dimensions using window.innerWidth and window.innerHeight, (2) Detects device orientation (portrait vs landscape), (3) Calculates responsive canvas size maintaining 4:3 aspect ratio (original 800x600), (4) Returns ViewportState object with viewportWidth, viewportHeight, orientation, scaleFactor, canvasWidth, canvasHeight, (5) Registers window resize and orientationchange listeners and updates state, (6) Cleans up listeners on unmount. The calculated canvas size should fit 100% of viewport in one dimension and maintain 4:3 ratio in the other.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
