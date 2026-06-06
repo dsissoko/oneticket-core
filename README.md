@@ -24,9 +24,7 @@ All orchestration is deterministic code — zero LLM in the pipeline logic. LLMs
 
 ## Prerequisites
 
-Agent runs are powered by [anomalyco/opencode](https://github.com/anomalyco/opencode) — a remarkably capable agentic CLI that executes tasks directly in the CI sandbox. A generic CLI option is planned for a future release.
-
-- **opencode.ai account** — API key at [opencode.ai/auth](https://opencode.ai/auth), credits required for parallel agent runs
+- **opencode.ai account** — Agent runs are powered by [anomalyco/opencode](https://github.com/anomalyco/opencode) — a remarkably capable agentic CLI that executes tasks directly in the CI sandbox. A generic CLI option is planned for a future release. Get your API key at [opencode.ai/auth](https://opencode.ai/auth), credits required for parallel agent runs.
 - **GitHub PAT** — scopes: `contents:write`, `pull-requests:write`, `issues:write`, `actions:write`
 
 ---
