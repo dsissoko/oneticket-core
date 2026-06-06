@@ -7,7 +7,17 @@ import type { PlayerInputState } from './types'
 interface TouchState {
   startX: number
   lastX: number
+  startY: number
   swipeThreshold: number
+  currentZone: 'movement' | 'fire' | null
+}
+
+export interface TouchZone {
+  x: number
+  y: number
+  width: number
+  height: number
+  type: 'movement' | 'fire'
 }
 
 export class InputSystem {
@@ -20,8 +30,12 @@ export class InputSystem {
   private touchState: TouchState = {
     startX: 0,
     lastX: 0,
-    swipeThreshold: 30 // minimum distance to register as swipe
+    startY: 0,
+    swipeThreshold: 30, // minimum distance to register as swipe
+    currentZone: null
   }
+
+  private canvasWidth: number
 
   private keyMap: Record<string, keyof PlayerInputState> = {
     'ArrowLeft': 'left',
@@ -36,7 +50,8 @@ export class InputSystem {
   private touchMoveHandler: (event: TouchEvent) => void
   private touchEndHandler: (event: TouchEvent) => void
 
-  constructor(window: Window) {
+  constructor(window: Window, canvasWidth: number = 800) {
+    this.canvasWidth = canvasWidth
     // Bind handlers to preserve 'this' context
     this.keyDownHandler = this.onKeyDown.bind(this)
     this.keyUpHandler = this.onKeyUp.bind(this)
@@ -77,21 +92,28 @@ export class InputSystem {
   }
 
   /**
-   * Handle touch start event
+   * Handle touch start event - detect which zone touch originated in
    */
   onTouchStart(event: TouchEvent): void {
     if (event.touches.length === 0) return
 
     const touch = event.touches[0]
     this.touchState.startX = touch.clientX
+    this.touchState.startY = touch.clientY
     this.touchState.lastX = touch.clientX
 
-    // Fire on touch start
-    this.inputState.fire = true
+    // Determine which zone the touch started in
+    if (this.isTouchInMovementZone(touch.clientX, touch.clientY)) {
+      this.touchState.currentZone = 'movement'
+    } else if (this.isTouchInFireZone(touch.clientX, touch.clientY)) {
+      this.touchState.currentZone = 'fire'
+    } else {
+      this.touchState.currentZone = null
+    }
   }
 
   /**
-   * Handle touch move event - detect swipe left/right
+   * Handle touch move event - detect continuous movement in left zone
    */
   onTouchMove(event: TouchEvent): void {
     if (event.touches.length === 0) return
@@ -100,28 +122,40 @@ export class InputSystem {
     const currentX = touch.clientX
     const deltaX = currentX - this.touchState.lastX
 
-    // Detect left swipe
-    if (deltaX < -this.touchState.swipeThreshold) {
-      this.inputState.left = true
-      this.inputState.right = false
-    }
-    // Detect right swipe
-    else if (deltaX > this.touchState.swipeThreshold) {
-      this.inputState.right = true
-      this.inputState.left = false
+    // Only handle movement if touch started in movement zone
+    if (this.touchState.currentZone === 'movement') {
+      // Detect left swipe
+      if (deltaX < -this.touchState.swipeThreshold) {
+        this.inputState.left = true
+        this.inputState.right = false
+      }
+      // Detect right swipe
+      else if (deltaX > this.touchState.swipeThreshold) {
+        this.inputState.right = true
+        this.inputState.left = false
+      }
     }
 
     this.touchState.lastX = currentX
   }
 
   /**
-   * Handle touch end event
+   * Handle touch end event - only trigger fire if touch ended in right zone
    */
   onTouchEnd(event: TouchEvent): void {
-    // Reset touch-based input
+    // Only trigger fire if touch started in fire zone
+    if (this.touchState.currentZone === 'fire') {
+      this.inputState.fire = true
+    } else {
+      this.inputState.fire = false
+    }
+
+    // Reset movement-based input
     this.inputState.left = false
     this.inputState.right = false
-    this.inputState.fire = false
+
+    // Clear current zone tracking
+    this.touchState.currentZone = null
   }
 
   /**
@@ -135,6 +169,48 @@ export class InputSystem {
     }
 
     return deltaX < 0 ? -1 : 1 // -1 for left, 1 for right
+  }
+
+  /**
+   * Get touch zones based on canvas width
+   * Left zone (40%) for movement, right zone (60%) for fire
+   */
+  getTouchZones(): TouchZone[] {
+    const movementZoneWidth = this.canvasWidth * 0.4
+    const fireZoneWidth = this.canvasWidth * 0.6
+
+    return [
+      {
+        x: 0,
+        y: 0,
+        width: movementZoneWidth,
+        height: window.innerHeight,
+        type: 'movement'
+      },
+      {
+        x: movementZoneWidth,
+        y: 0,
+        width: fireZoneWidth,
+        height: window.innerHeight,
+        type: 'fire'
+      }
+    ]
+  }
+
+  /**
+   * Check if touch coordinates are in movement zone (left 40%)
+   */
+  isTouchInMovementZone(x: number, y: number): boolean {
+    const movementZoneWidth = this.canvasWidth * 0.4
+    return x >= 0 && x < movementZoneWidth && y >= 0 && y < window.innerHeight
+  }
+
+  /**
+   * Check if touch coordinates are in fire zone (right 60%)
+   */
+  isTouchInFireZone(x: number, y: number): boolean {
+    const movementZoneWidth = this.canvasWidth * 0.4
+    return x >= movementZoneWidth && x < window.innerWidth && y >= 0 && y < window.innerHeight
   }
 
   /**
