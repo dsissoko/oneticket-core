@@ -65,12 +65,10 @@ agent_config:
 
 ### 2. Meet the prerequisites
 
-Add the following secrets to your repository settings:
+In your repository **Settings → Secrets and variables → Actions**, add:
 
-| Secret | Value |
-|---|---|
-| `OPENCODE_API_KEY` | Your opencode.ai API key |
-| `ONETICKET_GH_PAT` | Your GitHub PAT |
+1. `OPENCODE_API_KEY` — your API key from [opencode.ai/auth](https://opencode.ai/auth)
+2. `ONETICKET_GH_PAT` — a GitHub PAT ([create one](https://github.com/settings/tokens/new)) with scopes: `contents:write`, `pull-requests:write`, `issues:write`, `actions:write`
 
 ### 3. (Optional) Customize your OneTicket repository
 
