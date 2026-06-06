@@ -259,15 +259,6 @@ Full list: `https://opencode.ai/zen/v1/models`
 
 ---
 
-## Requirements
-
-- GitHub repository with Actions enabled
-- [opencode.ai](https://opencode.ai) account (free tier available)
-- GitHub PAT with repo + actions write permissions
-- Read access to [dsissoko/oneticket-skills](https://github.com/dsissoko/oneticket-skills)
-
----
-
 ## Roadmap
 
 | Milestone | Goal |
