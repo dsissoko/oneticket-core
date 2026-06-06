@@ -82,12 +82,16 @@ jobs:
             SLUG="$PROJECT"
           fi
 
+          OWNER=$(echo "${{ github.repository }}" | cut -d/ -f1)
+          REPO_NAME=$(echo "${{ github.repository }}" | cut -d/ -f2)
+          PAGES_BASE="https://${OWNER}.github.io/${REPO_NAME}"
+
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             PR=${{ github.event.pull_request.number }}
-            ASTRO_BASE="/oneticket-core/$SLUG/pr/$PR/docs"
+            ASTRO_BASE="/${REPO_NAME}/$SLUG/pr/$PR/docs"
             TARGET="$SLUG/pr/$PR/docs"
             if [ "$SLUG" != "framework" ]; then
-              APP_URL="https://dsissoko.github.io/oneticket-core/$SLUG/pr/$PR/app"
+              APP_URL="${PAGES_BASE}/$SLUG/pr/$PR/app"
               APP_PATH="apps/$PROJECT/app"
               APP_TARGET="$SLUG/pr/$PR/app"
             else
@@ -96,10 +100,10 @@ jobs:
               APP_TARGET=""
             fi
           else
-            ASTRO_BASE="/oneticket-core/$SLUG/docs"
+            ASTRO_BASE="/${REPO_NAME}/$SLUG/docs"
             TARGET="$SLUG/docs"
             if [ "$SLUG" != "framework" ]; then
-              APP_URL="https://dsissoko.github.io/oneticket-core/$SLUG/app"
+              APP_URL="${PAGES_BASE}/$SLUG/app"
               APP_PATH="apps/$PROJECT/app"
               APP_TARGET="$SLUG/app"
             else
@@ -150,7 +154,7 @@ jobs:
         working-directory: doc-site
         env:
           DOC_SOURCE:          ${{ needs.resolve-context.outputs.doc_source }}
-          ASTRO_SITE:          https://dsissoko.github.io/oneticket-core
+          ASTRO_SITE:          https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
           ASTRO_BASE:          ${{ needs.resolve-context.outputs.astro_base }}
           CURRENT_PROJECT:     ${{ needs.resolve-context.outputs.current_project }}
           SITE_DESCRIPTION:    ${{ steps.site-desc.outputs.description }}
@@ -193,7 +197,7 @@ jobs:
         working-directory: ${{ needs.resolve-context.outputs.app_path }}
         run: npm run build
         env:
-          VITE_BASE_PATH: /oneticket-core/${{ needs.resolve-context.outputs.app_target_folder }}/
+          VITE_BASE_PATH: /${{ github.event.repository.name }}/${{ needs.resolve-context.outputs.app_target_folder }}/
           VITE_LOG_LEVEL: debug
 
       - name: Upload app artifact
@@ -248,7 +252,7 @@ jobs:
         with:
           header: doc-preview
           message: |
-            📖 **Doc preview:** https://dsissoko.github.io/oneticket-core/${{ needs.resolve-context.outputs.target_folder }}/
+            📖 **Doc preview:** https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${{ needs.resolve-context.outputs.target_folder }}/
             ${{ needs.resolve-context.outputs.app_url != '' && format('🚀 **App preview:** {0}/', needs.resolve-context.outputs.app_url) || '' }}
 
   deploy-prod:
