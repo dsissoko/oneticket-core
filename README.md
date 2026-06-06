@@ -68,7 +68,7 @@ agent_config:
 In your repository **Settings → Secrets and variables → Actions**, add:
 
 1. `OPENCODE_API_KEY` — your API key from [opencode.ai/auth](https://opencode.ai/auth)
-2. `ONETICKET_GH_PAT` — a GitHub PAT ([create one](https://github.com/settings/tokens/new)) with scopes: `contents:write`, `pull-requests:write`, `issues:write`, `actions:write`
+2. `ONETICKET_GH_PAT` — a GitHub PAT with scopes `contents:write`, `pull-requests:write`, `issues:write`, `actions:write` — create one in your profile **Settings → Developer settings → Personal access tokens** ([github.com/settings](https://github.com/settings))
 
 ### 3. (Optional) Customize your OneTicket repository
 
