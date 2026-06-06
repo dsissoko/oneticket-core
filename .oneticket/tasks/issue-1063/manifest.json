@@ -7,14 +7,16 @@
       "file": "apps/spaceinvaders/app/src/game/types.ts",
       "content": "Update Player interface to support 3 simultaneous bullets instead of single bulletInFlight. Change from 'bulletInFlight: PlayerBullet | null' to 'bullets: PlayerBullet[]'. Add 'maxBullets: number' property. See docs/how/slices/slice-3-player/slice.md lines 25-27 for data structure definition.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "J",
       "branch": "task/issue-1063-J",
       "file": "apps/spaceinvaders/app/src/game/Entity.ts",
       "content": "Refactor PlayerImpl class to use 'bullets: PlayerBullet[]' array with maxBullets=3. Update fire() method to return PlayerBullet | null based on whether bullets.length < maxBullets. Maintain bullet firing logic at (player.x + player.width/2 - bullet.width/2, player.y). Update update() method to call bullets.forEach(b => b.update(deltaTime)) and filter off-screen bullets. See docs/how/slices/slice-3-player/slice.md lines 226-235 for firing logic.",
-      "depends_on": ["I"],
+      "depends_on": [
+        "I"
+      ],
       "status": "pending"
     },
     {
@@ -22,7 +24,9 @@
       "branch": "task/issue-1063-K",
       "file": "apps/spaceinvaders/app/src/game/RenderingSystem.ts",
       "content": "Update drawBullets() method to render all bullets in the player.bullets array. Ensure player bullets are drawn as 4×12 white rectangles at their (x, y) positions. Update the Game loop's render call to pass player.bullets instead of individual bullet. See docs/how/slices/slice-3-player/slice.md line 188 for rendering spec.",
-      "depends_on": ["J"],
+      "depends_on": [
+        "J"
+      ],
       "status": "pending"
     },
     {
@@ -30,7 +34,9 @@
       "branch": "task/issue-1063-L",
       "file": "apps/spaceinvaders/app/src/screens/GameScreen.tsx",
       "content": "Verify or update the Game loop manager to correctly handle player bullet firing and updates. Ensure game loop update() calls player.update(deltaTime, inputState) which orchestrates fire logic and bullet array management. Verify that render() passes player.bullets to rendering system. See docs/how/slices/slice-3-player/slice.md lines 159-191 for complete sequence flow.",
-      "depends_on": ["K"],
+      "depends_on": [
+        "K"
+      ],
       "status": "pending"
     }
   ]
