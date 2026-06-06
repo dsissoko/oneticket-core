@@ -7,7 +7,7 @@
       "file": "apps/spaceinvaders/app/src/game/types.ts",
       "content": "Update Player interface to support 3 simultaneous bullets instead of single bulletInFlight. Change from 'bulletInFlight: PlayerBullet | null' to 'bullets: PlayerBullet[]'. Add 'maxBullets: number' property. See docs/how/slices/slice-3-player/slice.md lines 25-27 for data structure definition.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "J",
