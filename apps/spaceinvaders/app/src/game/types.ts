@@ -126,3 +126,25 @@ export interface GameLoopState {
   deltaTime: number
   lastFrameTime: number
 }
+
+export interface ViewportState {
+  viewportWidth: number
+  viewportHeight: number
+  orientation: 'portrait' | 'landscape'
+  scaleFactor: number
+  canvasWidth: number
+  canvasHeight: number
+}
+
+export interface TouchZone {
+  x: number
+  y: number
+  width: number
+  height: number
+  type: 'movement' | 'fire'
+}
+
+export interface ResponsiveGameState {
+  viewport: ViewportState
+  touchZones: TouchZone[]
+}
