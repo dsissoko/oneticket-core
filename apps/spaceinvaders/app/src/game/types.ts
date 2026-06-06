@@ -29,7 +29,8 @@ export type MysteryShipSpawner = MysteryShipSpawnerClass
 export interface Player extends BoundingBox {
   invincible: boolean
   invincibilityTimer: number
-  bulletInFlight: PlayerBullet | null
+  bullets: PlayerBullet[]
+  maxBullets: number
   takeDamage(): void
   fire(): PlayerBullet | null
   getBoundingBox(): BoundingBox
