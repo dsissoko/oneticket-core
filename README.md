@@ -63,18 +63,15 @@ agent_config:
 | `OPENCODE_API_KEY` | Your [opencode.ai/auth](https://opencode.ai/auth) API key |
 | `ONETICKET_GH_PAT` | GitHub PAT with `contents:write`, `pull-requests:write`, `issues:write`, `actions:write` |
 
-### 3. (Optional) Add your own skills
+### 3. (Optional) Customize your OneTicket repository
 
-Agent skills are distributed via [dsissoko/oneticket-skills](https://github.com/dsissoko/oneticket-skills) — a public repository, installed automatically at runtime via APM before each agent run. No token required.
+OneTicket is designed to be customized. A few common starting points:
 
-To add your own skill catalog, add an entry in `.oneticket/apm.yml`:
+- **Agent behavior** — edit `.oneticket/.apm/instructions/*.instructions.md` to change how agents respond, route, or collaborate
+- **Skills** — add a skill catalog in `.oneticket/apm.yml`, or drop a local skill in `.oneticket/skills/<name>/SKILL.md` to override any APM skill by name
+- **Model and pipeline** — tune `model`, `retry_max`, `max_tasks`, `autonomous_mode` in `.oneticket/config.yml`
 
-```yaml
-dependencies:
-  apm:
-    - dsissoko/oneticket-skills#main      # default catalog
-    - your-org/your-skills-repo#main      # your custom catalog
-```
+See [Customize OneTicket](#customize-oneticket) for the full list of options.
 
 ### 4. Create an issue and invoke an agent
 
