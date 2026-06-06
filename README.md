@@ -2,7 +2,7 @@
 
 GitHub-native autonomous multi-agent framework. Invoke agents by commenting `@role` on any issue — they decompose, execute, and deliver a PR, fully autonomously.
 
-Currently, the pipeline enforces a structured documentation deployed to GitHub Pages and a Node.js-based app stack (`npm run build`). Both are live on every PR. No backend deployment is supported — frontend on GitHub Pages only. Support for other stacks and deployment targets is on the roadmap.
+**v1 scope** — OneTicket currently generates and deploys **Node.js frontend apps** to GitHub Pages, alongside their structured documentation. Both are live on every PR. No backend, no other stack — that's on the roadmap.
 
 ---
 
@@ -183,6 +183,7 @@ OneTicket is designed to be fully customizable. Here are the main axes:
 | **App templates** — scaffold copied by `@leaddev init-<template>` | `apps/<template>/app/` |
 | **Pipeline parameters** — max tasks, retry policy, cleanup | `.oneticket/config.yml` |
 | **Doc site** — Astro Starlight, rendered from `apps/<project>/docs/` | `doc-site/` |
+| **Deployment** — change build stack or deploy target | Replace `build-app` job in `docs-site-github-pages.yml` for a different stack — add a parallel `deploy-*.yml` workflow to target Vercel, Railway, or any VPS without touching the existing workflow |
 
 ---
 
