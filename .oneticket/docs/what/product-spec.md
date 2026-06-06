@@ -430,7 +430,7 @@ on-pr-comment.yml
   → build-context.mjs          (fetches PR comment history, formats the prompt context block)
   → agent-dispatch.mjs         (resolves docs_path/app_path, builds prompt, dispatches agent-execute.yml)
 
-on-pr-review-comment.yml
+on-pr-review.yml
   → build-context.mjs          (fetches diff hunk, line, file, formats the prompt context block)
   → agent-dispatch.mjs         (resolves docs_path/app_path, builds prompt, dispatches agent-execute.yml)
 ```
@@ -439,13 +439,17 @@ on-pr-review-comment.yml
 
 ```text
 agent-execute.yml
-  → oneticket-install.mjs      (copies skills .oneticket/skills/ → .agents/skills/)
-  → generate-config.mjs        (generates opencode config from config.yml → OPENCODE_CONFIG_CONTENT)
-  → anomalyco/opencode         (runs the agent — only non-deterministic step)
-  → retry-dispatch.mjs         (exponential backoff + jitter, sets blocked label on exhaustion)
+  → oneticket-install.mjs --apm-only  (copies .oneticket/apm.yml → apm.yml, .oneticket/.apm/ → .apm/)
+  → apm install                        (installs external skills → .agents/skills/)
+  → apm compile                        (compiles AGENTS.md from .apm/instructions/)
+  → oneticket-install.mjs --skills-only (copies .oneticket/skills/ → .agents/skills/ — overrides APM skills by name)
+  → generate-config.mjs               (generates opencode config from config.yml → OPENCODE_CONFIG_CONTENT)
+  → anomalyco/opencode                 (runs the agent — only non-deterministic step)
+  → notify-agent-failure.mjs          (if agent failed — posts comment + labels dev error on issue + PR)
+  → retry-dispatch.mjs                (exponential backoff + jitter, sets blocked label on exhaustion)
   → deterministic push of the working branch
-  → dispatch-fanout.mjs        (if manifest present — triggers on-fanout.yml)
-  → dispatch-gather.mjs        (if is_fanout_task: true — triggers on-gather.yml)
+  → dispatch-fanout.mjs               (if manifest present — triggers on-fanout.yml)
+  → dispatch-gather.mjs               (if is_fanout_task: true — triggers on-gather.yml)
 ```
 
 ### 14.2 `agent-execute.yml` interface
@@ -522,7 +526,7 @@ init-template.mjs <template>
 
 | Script | Functional content |
 |---|---|
-| `oneticket-install.mjs` | Copies skills `.oneticket/skills/` → `.agents/skills/` and `AGENTS.md` before each run — opencode discovers them natively |
+| `oneticket-install.mjs` | Two-phase pre-run setup: `--apm-only` (before apm install) copies `.oneticket/apm.yml` → `apm.yml` and `.oneticket/.apm/` → `.apm/`; `--skills-only` (after apm compile) copies `.oneticket/skills/` → `.agents/skills/` — local skills override any same-named APM skill |
 | `generate-config.mjs` | Generates the opencode JSON config from `agent_config.<cli>` in `config.yml` — injected via `OPENCODE_CONFIG_CONTENT` |
 | `retry-dispatch.mjs` | Re-dispatches `agent-execute.yml` with exponential backoff + jitter (`2^n * 1000ms + [0,500ms]`) — sets `blocked` label on `retry_max` exhaustion |
 
@@ -567,7 +571,7 @@ init-template.mjs <template>
 | `in progress` | `agent-dispatch.mjs` | `orchestrate.mjs` (when all DONE) | An agentic run is in progress on this issue |
 | `merge error` | `orchestrate.mjs` | Manual | A task branch could not be merged — human intervention required |
 | `blocked` | `retry-dispatch.mjs` | Manual | The agent has exhausted its retry attempts |
-| `ready for review` | — | — | User decision — never set automatically by the pipeline |
+| `ready for review` | `create-pr.mjs` (cycled to retrigger deploy preview) | `agent-dispatch.mjs` (before direct run) | Signals the deploy preview workflow — cycled by the pipeline on FAN-OUT completion |
 
 > The final PR is a user decision — never created automatically by the pipeline.
 
@@ -575,7 +579,7 @@ init-template.mjs <template>
 
 ### 14.8 Robustness
 
-- **`notify-failure`** — all workflows (`on-issue-comment`, `on-pr-comment`, `on-pr-review-comment`, `agent-execute`, `on-gather`) have a `notify-failure` job that posts a comment on the issue when the workflow fails definitively
+- **`notify-failure`** — all workflows (`on-issue-comment`, `on-pr-comment`, `on-pr-review`, `agent-execute`, `on-gather`) have a `notify-failure` job that posts a comment on the issue when the workflow fails definitively. `notify-agent-failure.mjs` handles agent-specific failures (posts comment + applies `dev error` label on issue and PR)
 - **Optimistic manifest retry** — `orchestrate.mjs` handles concurrent manifest access conflicts via hard reset + re-fetch + re-merge (max 5 attempts, `orchestrate_retry_max` in `config.yml`)
 - **Exclude sandbox artefacts** — `agent-execute.yml` injects `.agents/`, `.opencode/`, `opencode.json` into `.git/info/exclude` so the agent does not accidentally commit them
 - **Cross-issue guard** — `validate-task-branch.mjs` prevents any task branch from merging into a feature branch of a different issue
@@ -649,7 +653,7 @@ flowchart TD
     subgraph AMONT["Upstream — Triggering"]
         ISSUE["on-issue-comment.yml"]
         PR["on-pr-comment.yml"]
-        REVIEW["on-pr-review-comment.yml"]
+        REVIEW["on-pr-review.yml"]
     end
 
     subgraph EXEC_BOX["Agentic execution"]

@@ -209,6 +209,7 @@ OneTicket is designed to be fully customizable. Here are the main axes:
   release-please.yml         ← automated changelog and version bump
 
 src/
+  oneticket-install.mjs      ← pre-run setup: --apm-only (before apm install) copies apm.yml + .apm/ — --skills-only (after apm compile) copies local skills, overrides APM skills by name
   agent-dispatch.mjs         ← @role routing → prompt construction → dispatch
   agent-launcher.mjs         ← FAN-OUT: marks tasks in_progress, dispatches workers
   orchestrate.mjs            ← GATHER: merge, manifest update, PR management
