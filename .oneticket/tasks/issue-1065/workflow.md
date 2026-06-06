@@ -3,3 +3,4 @@
 2026-06-06 19:42 | F | apps/spaceinvaders/app/index.html
 2026-06-06 19:42 | D | apps/spaceinvaders/app/src/game/RenderingSystem.ts
 2026-06-06 19:42 | H | apps/spaceinvaders/app/src/game/types.ts
+2026-06-06 19:42 | G | apps/spaceinvaders/app/src/styles/responsive.css

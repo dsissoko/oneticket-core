@@ -3,6 +3,7 @@
  */
 
 import React, { useState, useRef, useEffect } from 'react'
+import '../styles/responsive.css'
 import { GameLoopManager } from '@/game/GameLoopManager'
 import { RenderingSystem } from '@/game/RenderingSystem'
 import { InputSystem } from '@/game/InputSystem'
