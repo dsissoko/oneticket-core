@@ -188,7 +188,7 @@ function LoggerTab() {
       </div>
       <Separator />
       <p className="text-xs text-muted-foreground">
-        Log level: <code className="bg-muted px-1 rounded">{import.meta.env.VITE_LOG_LEVEL || 'debug (default)'}</code>
+        Build-time log level: <code className="bg-muted px-1 rounded">{import.meta.env.VITE_LOG_LEVEL || 'debug'}</code> — fixed at build time, not configurable at runtime (debug → info → warn → error)
       </p>
     </div>
   );
