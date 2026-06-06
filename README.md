@@ -2,7 +2,7 @@
 
 GitHub-native autonomous multi-agent framework. Invoke agents by commenting `@role` on any issue — they decompose, execute, and deliver a PR, fully autonomously.
 
-Currently builds and deploys **frontend apps with their documentation** to GitHub Pages — both live on every PR. Runs entirely on GitHub (Actions for compute, Pages for hosting). Vercel, Railway, VPS, and any deployment target are on the roadmap.
+Currently, the pipeline enforces a structured documentation deployed to GitHub Pages and a Node.js-based app stack (`npm run build`). Both are live on every PR. No backend deployment is supported — frontend on GitHub Pages only. Support for other stacks and deployment targets is on the roadmap.
 
 ---
 
