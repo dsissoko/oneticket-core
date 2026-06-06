@@ -1,8 +1,10 @@
 **/node_modules/
 
-# .agents/, .opencode/, opencode.json — sandbox artefacts generated at CI runtime
-# Protected via .git/info/exclude injected in agent-execute.yml — never committed
-# Dev framework is free to version any of these locally
+# .agents/, .opencode/, apm.yml, apm.lock.yaml, .apm/, AGENTS.md, opencode.json
+# — generated at CI runtime, excluded via .git/info/exclude injected by agent-execute.yml
+# — NOT in .gitignore: the dev is free to version, ignore, or exclude these locally
+#   as they see fit — sandbox always regenerates and excludes them before any agent run,
+#   so local presence has zero impact on the pipeline or PRs
 
 # doc-site build artifacts — generated at CI runtime, never committed
 doc-site/dist/

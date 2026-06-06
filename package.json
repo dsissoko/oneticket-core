@@ -6,9 +6,6 @@
   "engines": {
     "node": ">=20"
   },
-  "scripts": {
-    "test": "node --test test/**/*.mjs"
-  },
   "dependencies": {
     "js-yaml": "^4.1.1"
   }
