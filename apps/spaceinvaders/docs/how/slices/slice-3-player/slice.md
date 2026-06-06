@@ -2,7 +2,7 @@
 
 ## Goal
 
-Implement complete player control system with dual input support (keyboard + touch), movement with boundary constraints, single bullet firing with 1-max constraint, and invincibility frame tracking with visual feedback. This slice delivers a fully playable player cannon that responds to desktop and mobile input and fires bullets at enemies.
+Implement complete player control system with dual input support (keyboard + touch), movement with boundary constraints, multi-bullet firing (max 3 simultaneous), and invincibility frame tracking with visual feedback. This slice delivers a fully playable player cannon that responds to desktop and mobile input and fires bullets rapidly at enemies.
 
 ## Related Epics
 
@@ -22,7 +22,7 @@ Implement complete player control system with dual input support (keyboard + tou
 - **Physics/Collision (Preparation)**: Collision box definitions for bullets and player
 
 ### Data Structures
-- **Player**: x, y, width, height, invincible (boolean), invincibilityTimer (number), bulletInFlight (PlayerBullet | null)
+- **Player**: x, y, width, height, invincible (boolean), invincibilityTimer (number), bullets (PlayerBullet[]), maxBullets (number = 3)
 - **PlayerBullet**: x, y, vx, vy, width, height, type: 'player'
 - **PlayerInputState**: left (boolean), right (boolean), fire (boolean)
 - **TouchState**: lastX (number), swipeThreshold (number)
@@ -38,7 +38,8 @@ class Player {
   height: number
   invincible: boolean
   invincibilityTimer: number
-  bulletInFlight: PlayerBullet | null
+  bullets: PlayerBullet[]    // active bullets (max 3)
+  maxBullets: number         // maximum simultaneous bullets (3)
   maxSpeed: number
   
   constructor(x: number, y: number)
@@ -108,7 +109,8 @@ interface Player {
   height: number         // Player sprite height (e.g., 30 pixels)
   invincible: boolean    // true during invincibility frames after hit
   invincibilityTimer: number  // Countdown timer (2000 ms total)
-  bulletInFlight: PlayerBullet | null  // Currently firing bullet or null
+  bullets: PlayerBullet[]    // active bullets on screen (max 3)
+  maxBullets: number         // max simultaneous bullets = 3
   maxSpeed: number       // Horizontal movement speed (e.g., 200 px/sec)
 }
 ```
@@ -150,7 +152,7 @@ interface TouchState {
 1. Player entity created at bottom-center: x = canvas.width / 2, y = canvas.height - 50
 2. Player width = 40, height = 30 (or sprite dimensions)
 3. Player invincible = false, invincibilityTimer = 0
-4. Player bulletInFlight = null
+4. Player bullets = [], maxBullets = 3
 5. InputSystem attached with keyboard and touch listeners
 6. Player maxSpeed = 200 (pixels per second)
 
@@ -168,13 +170,11 @@ requestAnimationFrame
   │   ├─ move(direction, deltaTime)
   │   │   ├─ x += direction * maxSpeed * deltaTime
   │   │   ├─ Clamp x: [0, canvas.width - player.width]
-  │   ├─ if inputState.fire && bulletInFlight === null
+  │   ├─ if inputState.fire && bullets.length < maxBullets
   │   │   └─ fire() → creates PlayerBullet at (x + width/2 - bullet.width/2, y)
-  │   │       with vy = -300 (upward)
-  │   ├─ if bulletInFlight !== null
-  │   │   ├─ bulletInFlight.update(deltaTime)
-  │   │   ├─ if bulletInFlight.isOffScreen()
-  │   │   │   └─ bulletInFlight = null (ready to fire again)
+  │   │       with vy = -300 (upward), adds to bullets[]
+  │   ├─ bullets.forEach(b => b.update(deltaTime))
+  │   ├─ bullets = bullets.filter(b => !b.isOffScreen())  // remove off-screen
   │   └─ updateInvincibility(deltaTime)
   │       └─ if invincibilityTimer > 0: invincibilityTimer -= deltaTime
   │
@@ -184,9 +184,8 @@ requestAnimationFrame
   │   └─ else
   │       └─ Draw player at full opacity
   │
-  ├─ RenderingSystem.drawBullets([playerBullet])
-  │   └─ if bulletInFlight !== null
-  │       └─ Draw bullet at (x, y)
+  ├─ RenderingSystem.drawBullets(player.bullets)
+  │   └─ player.bullets.forEach(b => draw bullet at (b.x, b.y))
   │
   └─ Canvas re-renders frame
 ```
@@ -209,9 +208,10 @@ KeyUp: Spacebar    → playerInputState.fire = false (optional, can be impulse)
 TouchStart (x, y)
   ├─ touchState.startX = x
   ├─ touchState.lastX = x
-  └─ playerInputState.fire = true (fire button tap)
+  └─ playerInputState.fire = true (tap anywhere = fire)
 
 TouchMove (x, y)
+  ├─ playerInputState.fire = false (moved — not a tap)
   ├─ if (x - touchState.lastX) < -threshold
   │   └─ playerInputState.left = true
   ├─ if (x - touchState.lastX) > threshold
@@ -226,13 +226,12 @@ TouchEnd (x, y)
 
 ### Player Bullet Firing Logic
 ```
-1. Check: if inputState.fire === true && bulletInFlight === null
+1. Check: if inputState.fire === true && bullets.length < maxBullets (3)
 2. Create PlayerBullet at (player.x + player.width/2 - bullet.width/2, player.y)
 3. Set vy = -300 (upward velocity)
-4. Store in bulletInFlight
-5. Each frame: bulletInFlight.update(deltaTime)
-6. Check: if bulletInFlight.y + bulletInFlight.height < 0
-7. If off-screen: bulletInFlight = null (ready for next fire)
+4. Add to bullets[]
+5. Each frame: bullets.forEach(b => b.update(deltaTime))
+6. Remove off-screen: bullets = bullets.filter(b => !b.isOffScreen())
 ```
 
 ### Player Invincibility & Visual Feedback
