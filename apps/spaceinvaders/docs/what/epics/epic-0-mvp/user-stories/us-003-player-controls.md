@@ -2,7 +2,7 @@
 
 ## Story
 
-As a desktop or mobile player, I want to control my cannon using familiar input methods (keyboard, swipe, touch button) so that I can aim and fire at enemies on any platform.
+As a desktop or mobile player, I want to control my cannon using familiar input methods (keyboard, swipe, touch) so that I can aim and fire at enemies on any platform.
 
 ## Expected Behavior
 
@@ -10,18 +10,17 @@ As a desktop or mobile player, I want to control my cannon using familiar input 
 - Arrow Keys (Left/Right): Move player cannon left or right
 - Spacebar: Fire a bullet
 - Player cannot move beyond screen boundaries
-- New bullet only fires when previous bullet has exited the screen or hit a target (max 1 bullet on screen at a time)
+- Up to 3 bullets can be on screen simultaneously — rapid fire is allowed
 
 ### Mobile Controls
 - Swipe Left/Right: Move player cannon left or right
-- On-Screen Fire Button: Tap to fire a bullet
-- Touch-and-hold: Optional continuous movement support
+- Tap anywhere on screen: Fire a bullet immediately
 - Player cannot move beyond screen boundaries
-- New bullet fires only after previous bullet clears (max 1 bullet on screen)
+- Up to 3 bullets can be on screen simultaneously
 
 ### General Behavior
 - Movement is continuous while key is held (desktop) or while swiping (mobile)
-- Firing responds immediately to input
+- Firing responds immediately to input — no wait for bullet to clear
 - Cannon sprite is rendered at correct position each frame
 - Cannon position is constrained to game boundaries
 
@@ -45,17 +44,16 @@ Scenario: Player moves cannon to the right
 
 Scenario: Player fires with spacebar
   Given the game is playing
-  And no bullet is currently on screen
   When I press the spacebar
   Then a bullet spawns at the cannon's position
   And the bullet moves upward toward enemies
 
-Scenario: Player cannot fire multiple bullets
+Scenario: Player can fire multiple bullets rapidly
   Given the game is playing
-  And a bullet is on screen
-  When I press the spacebar again
-  Then no new bullet is created
-  And the player must wait for the existing bullet to clear
+  And fewer than 3 bullets are currently on screen
+  When I press the spacebar
+  Then a new bullet is created immediately
+  And up to 3 bullets can be on screen simultaneously
 
 Scenario: Player moves with swipe gesture (mobile)
   Given the game is playing
@@ -66,12 +64,12 @@ Scenario: Player moves with swipe gesture (mobile)
   Then the player cannon moves right smoothly
   And the cannon stays within screen boundaries
 
-Scenario: Player fires with touch button (mobile)
+Scenario: Player fires by tapping anywhere on screen (mobile)
   Given the game is playing
   And I am using a mobile device
-  When I tap the fire button
-  Then a bullet spawns and moves upward
-  And subsequent taps fire only after bullet clears
+  When I tap anywhere on the screen
+  Then a bullet spawns and moves upward immediately
+  And subsequent taps fire new bullets without waiting
 ```
 
 ## Related Epic
