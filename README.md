@@ -57,7 +57,6 @@ The pipeline posts two live URLs directly in the PR comment:
 
 - **opencode.ai account** — Agent runs are powered by [anomalyco/opencode](https://github.com/anomalyco/opencode) — a remarkably capable agentic CLI that executes tasks directly in the CI sandbox. A generic CLI option is planned for a future release. Get your API key at [opencode.ai/auth](https://opencode.ai/auth). A free model (MiniMax) is available, but a higher-quality model is recommended — expect to build a full app for under $10.
 - **GitHub PAT** — scopes: `contents:write`, `pull-requests:write`, `issues:write`, `actions:write`
-- **GitHub Pages** — enable in your repository **Settings → Pages → Source → GitHub Actions**
 
 ---
 
@@ -89,6 +88,7 @@ In your repository **Settings → Secrets and variables → Actions**, add:
 
 1. `OPENCODE_API_KEY` — your API key from [opencode.ai/auth](https://opencode.ai/auth)
 2. `ONETICKET_GH_PAT` — a GitHub PAT with scopes `contents:write`, `pull-requests:write`, `issues:write`, `actions:write` — create one in your profile **Settings → Developer settings → Personal access tokens** ([github.com/settings](https://github.com/settings))
+3. Enable GitHub Pages — **Settings → Pages → Source → GitHub Actions**
 
 ### 3. (Optional) Customize your OneTicket repository
 
