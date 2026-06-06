@@ -29,7 +29,8 @@ export class PlayerImpl implements Player {
   height: number = 25
   invincible: boolean = false
   invincibilityTimer: number = 0
-  bulletInFlight: PlayerBullet | null = null
+  bullets: PlayerBullet[] = []
+  maxBullets: number = 3
   maxSpeed: number = 200 // pixels per second
   private canvasWidth: number
   private canvasHeight: number
@@ -43,8 +44,8 @@ export class PlayerImpl implements Player {
   }
 
   /**
-   * Update player position and state based on input
-   */
+    * Update player position and state based on input
+    */
   update(deltaTime: number, inputState: PlayerInputState): void {
     // Determine movement direction
     let direction: -1 | 0 | 1 = 0
@@ -56,6 +57,12 @@ export class PlayerImpl implements Player {
 
     // Move player
     this.move(direction, deltaTime)
+
+    // Update all bullets
+    this.bullets.forEach(b => b.update(deltaTime))
+
+    // Filter off-screen bullets
+    this.bullets = this.bullets.filter(b => !b.isOffScreen(this.canvasHeight))
 
     // Update invincibility timer
     this.updateInvincibility(deltaTime)
@@ -71,19 +78,19 @@ export class PlayerImpl implements Player {
   }
 
   /**
-   * Fire a bullet
-   */
+    * Fire a bullet
+    */
   fire(): PlayerBullet | null {
-    if (this.bulletInFlight) {
-      return null // Only one bullet at a time
+    if (this.bullets.length >= this.maxBullets) {
+      return null // Maximum bullets in flight
     }
 
     const bullet = new PlayerBulletImpl(
-      this.x + this.width / 2 - 2,
+      this.x + this.width / 2 - this.width / 2,
       this.y
     )
 
-    this.bulletInFlight = bullet
+    this.bullets.push(bullet)
     console.log(`Bullet fired at y=${bullet.y}`)
     return bullet
   }
