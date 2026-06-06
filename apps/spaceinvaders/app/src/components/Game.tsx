@@ -134,30 +134,20 @@ export function Game(): React.ReactElement {
     if (stateMachine.getState() === 'Playing') {
       const inputState = inputSystemRef.current?.getInputState() ?? state.inputState
 
-      // Update player
-      if (state.player) {
-        const player = state.player as PlayerImpl
-        player.update(deltaTime, inputState)
+       // Update player
+       if (state.player) {
+         const player = state.player as PlayerImpl
+         player.update(deltaTime, inputState)
 
-        // Handle firing - fire only when input is pressed and no bullet in flight
-        if (inputState.fire && !player.bulletInFlight) {
-          const bullet = player.fire()
-          if (bullet) {
-            (bullet as any).active = true
-            state.bullets.push(bullet)
-          }
-        }
-
-        // Update bullet in flight
-        if (player.bulletInFlight) {
-          player.bulletInFlight.update(deltaTime)
-          // Check if bullet is off-screen
-          if (player.bulletInFlight.isOffScreen(CANVAS_HEIGHT)) {
-            console.log('Bullet off-screen')
-            player.bulletInFlight = null
-          }
-        }
-      }
+         // Handle firing - fire only when input is pressed and player hasn't reached max bullets
+         if (inputState.fire && player.bullets.length < player.maxBullets) {
+           const bullet = player.fire()
+           if (bullet) {
+             (bullet as any).active = true
+             // Bullet is already added to player.bullets by the fire() method
+           }
+         }
+       }
 
       // Update formation
       if (state.formation) {
