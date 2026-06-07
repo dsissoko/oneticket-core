@@ -1,0 +1,81 @@
+{
+  "issue": 1088,
+  "branch_base": "feature/issue-1088",
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-1088-A",
+      "file": "apps/spaceinvaders/app/src/App.tsx",
+      "content": "Implémente la Slice 0 (fondation) en lisant: apps/spaceinvaders/docs/how/slices/slice-0-foundation-runtime-and-responsive-canvas/slice.md, apps/spaceinvaders/docs/how/architecture.md et apps/spaceinvaders/docs/how/c4/*.md. Crée le squelette app React+Vite+TypeScript sous apps/spaceinvaders/app avec GameScreen et GameCanvas, intégration AppShell, canvas responsive (CSS width/height 100%), dimensions logiques calculées depuis parentElement.clientWidth/clientHeight au mount + resize, et garde-fous runtime sans crash sur mount/unmount. Mobilise oneticket-technical-skill-picker, oneticket-stack-js-ts et oneticket-stack-vite-react-primer. Ajoute/ajuste les scripts npm nécessaires (dev/build/preview/test) pour permettre la suite des slices.",
+      "role": "dev",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-1088-B",
+      "file": "apps/spaceinvaders/app/src/game/domain/alienWave.ts",
+      "content": "Implémente la Slice 1 en lisant apps/spaceinvaders/docs/how/slices/slice-1-alien-wave-and-enemy-fire/slice.md et apps/spaceinvaders/docs/what/epics/epic-0-mvp/user-stories/us-001-alien-wave-movement-and-fire.md. Ajoute le modèle de vague alien 5x11 (55 aliens), largeur ~70% du playfield, pattern left-right-drop-right-left-drop, gestion des bornes et inversion de direction, tir ennemi aléatoire vers le bas depuis aliens éligibles, puis rendu dans le frame state du moteur. Préserve la cohérence responsive définie en slice 0.",
+      "role": "dev",
+      "depends_on": [
+        "A"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-1088-C",
+      "file": "apps/spaceinvaders/app/src/game/input/InputController.ts",
+      "content": "Implémente la Slice 2 en lisant apps/spaceinvaders/docs/how/slices/slice-2-cannon-controls-player-fire-and-mobile-zones/slice.md, apps/spaceinvaders/docs/what/epics/epic-0-mvp/user-stories/us-002-cannon-controls-and-shooting.md et apps/spaceinvaders/docs/what/epics/epic-0-mvp/user-stories/us-006-responsive-canvas-and-mobile-gesture-zones.md. Ajoute InputController desktop (ArrowLeft/ArrowRight/Space), mobile (tap top 80% = fire, drag horizontal bottom 20% = move), mouvement canon borné, missiles joueur multi-actifs sans limite de quantité, et délai de reload configurable avec clamp [0,5000]ms (défaut 0). Branche ces intents dans GameEngine sans casser la logique slice 1.",
+      "role": "dev",
+      "depends_on": [
+        "B"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-1088-D",
+      "file": "apps/spaceinvaders/app/src/game/domain/shields.ts",
+      "content": "Implémente la Slice 3 en lisant apps/spaceinvaders/docs/how/slices/slice-3-shields-collision-and-progressive-degradation/slice.md et us-003. Ajoute 4 boucliers positionnés entre canon et aliens, 10 impacts chacun, collisions missiles (joueur et aliens) qui détruisent systématiquement le missile, décrémentent la durabilité, et rendent une dégradation visuelle progressive. Garantis absence de durabilité négative et comportement déterministe des collisions.",
+      "role": "dev",
+      "depends_on": [
+        "C"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-1088-E",
+      "file": "apps/spaceinvaders/app/src/game/services/ScoreService.ts",
+      "content": "Implémente la Slice 4 en lisant apps/spaceinvaders/docs/how/slices/slice-4-score-hud-and-best-score-persistence/slice.md et us-005. Ajoute le scoring à la destruction d'aliens, HUD avec current score en haut gauche et best score en haut droite, persistance localStorage (lecture au start, update en fin de partie si record battu), et gestion défensive des valeurs invalides/localStorage indisponible.",
+      "role": "dev",
+      "depends_on": [
+        "D"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "F",
+      "branch": "task/issue-1088-F",
+      "file": "apps/spaceinvaders/app/src/game/ui/EndStateOverlay.tsx",
+      "content": "Implémente la Slice 5 en lisant apps/spaceinvaders/docs/how/slices/slice-5-end-states-victory-game-over-and-restart/slice.md et us-004. Ajoute la machine d'état running/victory/gameOver, conditions terminales (missile alien touche canon, aliens atteignent ligne canon, tous aliens détruits), écran de fin avec score final et bouton Restart, et reset complet du runtime sur restart en conservant le best score persistant.",
+      "role": "dev",
+      "depends_on": [
+        "E"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "G",
+      "branch": "task/issue-1088-G",
+      "file": ".github/workflows/spaceinvaders-preview.yml",
+      "content": "Finalise l'issue #1088 pour livraison MVP: vérifie build et preview GitHub Pages pour SpaceInvaders. Lis apps/spaceinvaders/docs/what/epics/epic-0-mvp/epic.md et apps/spaceinvaders/docs/how/c4/deployment.md. Ajoute ou adapte la configuration de build/deploiement nécessaire pour que l'app SpaceInvaders soit prévisualisable sur GitHub Pages, puis valide localement les commandes npm run build et npm run preview pour apps/spaceinvaders/app. Corrige les chemins/base URL si nécessaire afin d'éviter écran blanc en sous-chemin.",
+      "role": "dev",
+      "depends_on": [
+        "F"
+      ],
+      "status": "pending"
+    }
+  ]
+}
