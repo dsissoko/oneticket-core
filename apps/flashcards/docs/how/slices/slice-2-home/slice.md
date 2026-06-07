@@ -29,3 +29,11 @@ User Story: [US-001 — Home Screen Theme and Mode Selection](us-001-home-screen
 - Mode selector shows "flip"
 - Start button navigates to /session on tap/click
 - Navigation reflects AppShell adaptation
+
+## Related Epics
+
+[Epic 0 — MVP](../epics/epic-0-mvp/epic.md)
+
+## Related User Stories
+
+[US-001 — Home Screen Theme and Mode Selection](../us-001-home-screen.md)
