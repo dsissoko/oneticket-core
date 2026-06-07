@@ -45,7 +45,7 @@ export function FlashcardDisplay({
       >
         {/* Front face — country name */}
         <div
-          className="absolute inset-0 flex items-center justify-center rounded-xl border-2 border-border bg-card text-card-foreground text-center text-2xl font-semibold shadow-md backface-hidden"
+          className="absolute inset-0 flex items-center justify-center rounded-xl border-2 border-border bg-card text-card-foreground text-center text-2xl font-semibold shadow-md backface-hidden animate-in fade-in zoom-in-95"
           style={{ backfaceVisibility: 'hidden' }}
           data-testid="flashcard-front"
         >
