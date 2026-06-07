@@ -31,7 +31,7 @@ export function FlashcardDisplay({
       className={cn('animate-in fade-in zoom-in-95 duration-300', className)}
       data-testid="flashcard-container"
     >
-      <div className="perspective-1000 h-64">
+      <div className="perspective-1000 h-64 w-full">
         <button
           type="button"
           onClick={onFlip}
@@ -55,14 +55,19 @@ export function FlashcardDisplay({
 
         {/* Back face — capital */}
         <div
-          className="absolute inset-0 flex items-center justify-center rounded-xl border-2 border-border bg-card text-card-foreground text-center text-2xl font-semibold shadow-md"
+          className="absolute inset-0 flex items-center justify-center rounded-xl border-2 border-border bg-card text-card-foreground text-center shadow-md"
           style={{
             backfaceVisibility: 'hidden',
             transform: 'rotateY(180deg)',
           }}
           data-testid="flashcard-back"
         >
-          <span className="text-card-foreground">{card.back}</span>
+          <span className={cn(
+            'text-card-foreground whitespace-pre-line leading-relaxed',
+            card.back.includes('\n') ? 'text-sm' : 'text-2xl font-semibold'
+          )}>
+            {card.back}
+          </span>
         </div>
       </button>
       </div>

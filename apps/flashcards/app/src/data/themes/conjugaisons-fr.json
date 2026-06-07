@@ -1,0 +1,85 @@
+{
+  "id": "conjugaisons-fr",
+  "name": "Conjugaisons françaises",
+  "cards": [
+    { "id": "aimer-present", "front": "Aimer — présent", "back": "j'aime\ntu aimes\nil/elle aime\nnous aimons\nvous aimez\nils/elles aiment" },
+    { "id": "aimer-imparfait", "front": "Aimer — imparfait", "back": "j'aimais\ntu aimais\nil/elle aimait\nnous aimions\nvous aimiez\nils/elles aimaient" },
+    { "id": "aimer-futur", "front": "Aimer — futur", "back": "j'aimerai\ntu aimeras\nil/elle aimera\nnous aimerons\nvous aimerez\nils/elles aimeront" },
+
+    { "id": "finir-present", "front": "Finir — présent", "back": "je finis\ntu finis\nil/elle finit\nnous finissons\nvous finissez\nils/elles finissent" },
+    { "id": "finir-imparfait", "front": "Finir — imparfait", "back": "je finissais\ntu finissais\nil/elle finissait\nnous finissions\nvous finissiez\nils/elles finissaient" },
+    { "id": "finir-futur", "front": "Finir — futur", "back": "je finirai\ntu finiras\nil/elle finira\nnous finirons\nvous finirez\nils/elles finiront" },
+
+    { "id": "aller-present", "front": "Aller — présent", "back": "je vais\ntu vas\nil/elle va\nnous allons\nvous allez\nils/elles vont" },
+    { "id": "aller-imparfait", "front": "Aller — imparfait", "back": "j'allais\ntu allais\nil/elle allait\nnous allions\nvous alliez\nils/elles allaient" },
+    { "id": "aller-futur", "front": "Aller — futur", "back": "j'irai\ntu iras\nil/elle ira\nnous irons\nvous irez\nils/elles iront" },
+
+    { "id": "avoir-present", "front": "Avoir — présent", "back": "j'ai\ntu as\nil/elle a\nnous avons\nvous avez\nils/elles ont" },
+    { "id": "avoir-imparfait", "front": "Avoir — imparfait", "back": "j'avais\ntu avais\nil/elle avait\nnous avions\nvous aviez\nils/elles avaient" },
+    { "id": "avoir-futur", "front": "Avoir — futur", "back": "j'aurai\ntu auras\nil/elle aura\nnous aurons\nvous aurez\nils/elles auront" },
+
+    { "id": "etre-present", "front": "Être — présent", "back": "je suis\ntu es\nil/elle est\nnous sommes\nvous êtes\nils/elles sont" },
+    { "id": "etre-imparfait", "front": "Être — imparfait", "back": "j'étais\ntu étais\nil/elle était\nnous étions\nvous étiez\nils/elles étaient" },
+    { "id": "etre-futur", "front": "Être — futur", "back": "je serai\ntu seras\nil/elle sera\nnous serons\nvous serez\nils/elles seront" },
+
+    { "id": "faire-present", "front": "Faire — présent", "back": "je fais\ntu fais\nil/elle fait\nnous faisons\nvous faites\nils/elles font" },
+    { "id": "faire-imparfait", "front": "Faire — imparfait", "back": "je faisais\ntu faisais\nil/elle faisait\nnous faisions\nvous faisiez\nils/elles faisaient" },
+    { "id": "faire-futur", "front": "Faire — futur", "back": "je ferai\ntu feras\nil/elle fera\nnous ferons\nvous ferez\nils/elles feront" },
+
+    { "id": "dire-present", "front": "Dire — présent", "back": "je dis\ntu dis\nil/elle dit\nnous disons\nvous dites\nils/elles disent" },
+    { "id": "dire-imparfait", "front": "Dire — imparfait", "back": "je disais\ntu disais\nil/elle disait\nnous disions\nvous disiez\nils/elles disaient" },
+    { "id": "dire-futur", "front": "Dire — futur", "back": "je dirai\ntu diras\nil/elle dira\nnous dirons\nvous direz\nils/elles diront" },
+
+    { "id": "venir-present", "front": "Venir — présent", "back": "je viens\ntu viens\nil/elle vient\nnous venons\nvous venez\nils/elles viennent" },
+    { "id": "venir-imparfait", "front": "Venir — imparfait", "back": "je venais\ntu venais\nil/elle venait\nnous venions\nvous veniez\nils/elles venaient" },
+    { "id": "venir-futur", "front": "Venir — futur", "back": "je viendrai\ntu viendras\nil/elle viendra\nnous viendrons\nvous viendrez\nils/elles viendront" },
+
+    { "id": "voir-present", "front": "Voir — présent", "back": "je vois\ntu vois\nil/elle voit\nnous voyons\nvous voyez\nils/elles voient" },
+    { "id": "voir-imparfait", "front": "Voir — imparfait", "back": "je voyais\ntu voyais\nil/elle voyait\nnous voyions\nvous voyiez\nils/elles voyaient" },
+    { "id": "voir-futur", "front": "Voir — futur", "back": "je verrai\ntu verras\nil/elle verra\nnous verrons\nvous verrez\nils/elles verront" },
+
+    { "id": "pouvoir-present", "front": "Pouvoir — présent", "back": "je peux\ntu peux\nil/elle peut\nnous pouvons\nvous pouvez\nils/elles peuvent" },
+    { "id": "pouvoir-imparfait", "front": "Pouvoir — imparfait", "back": "je pouvais\ntu pouvais\nil/elle pouvait\nnous pouvions\nvous pouviez\nils/elles pouvaient" },
+    { "id": "pouvoir-futur", "front": "Pouvoir — futur", "back": "je pourrai\ntu pourras\nil/elle pourra\nnous pourrons\nvous pourrez\nils/elles pourront" },
+
+    { "id": "vouloir-present", "front": "Vouloir — présent", "back": "je veux\ntu veux\nil/elle veut\nnous voulons\nvous voulez\nils/elles veulent" },
+    { "id": "vouloir-imparfait", "front": "Vouloir — imparfait", "back": "je voulais\ntu voulais\nil/elle voulait\nnous voulions\nvous vouliez\nils/elles voulaient" },
+    { "id": "vouloir-futur", "front": "Vouloir — futur", "back": "je voudrai\ntu voudras\nil/elle voudra\nnous voudrons\nvous voudrez\nils/elles voudront" },
+
+    { "id": "savoir-present", "front": "Savoir — présent", "back": "je sais\ntu sais\nil/elle sait\nnous savons\nvous savez\nils/elles savent" },
+    { "id": "savoir-imparfait", "front": "Savoir — imparfait", "back": "je savais\ntu savais\nil/elle savait\nnous savions\nvous saviez\nils/elles savaient" },
+    { "id": "savoir-futur", "front": "Savoir — futur", "back": "je saurai\ntu sauras\nil/elle saura\nnous saurons\nvous saurez\nils/elles sauront" },
+
+    { "id": "partir-present", "front": "Partir — présent", "back": "je pars\ntu pars\nil/elle part\nnous partons\nvous partez\nils/elles partent" },
+    { "id": "partir-imparfait", "front": "Partir — imparfait", "back": "je partais\ntu partais\nil/elle partait\nnous partions\nvous partiez\nils/elles partaient" },
+    { "id": "partir-futur", "front": "Partir — futur", "back": "je partirai\ntu partiras\nil/elle partira\nnous partirons\nvous partirez\nils/elles partiront" },
+
+    { "id": "prendre-present", "front": "Prendre — présent", "back": "je prends\ntu prends\nil/elle prend\nnous prenons\nvous prenez\nils/elles prennent" },
+    { "id": "prendre-imparfait", "front": "Prendre — imparfait", "back": "je prenais\ntu prenais\nil/elle prenait\nnous prenions\nvous preniez\nils/elles prenaient" },
+    { "id": "prendre-futur", "front": "Prendre — futur", "back": "je prendrai\ntu prendras\nil/elle prendra\nnous prendrons\nvous prendrez\nils/elles prendront" },
+
+    { "id": "manger-present", "front": "Manger — présent", "back": "je mange\ntu manges\nil/elle mange\nnous mangeons\nvous mangez\nils/elles mangent" },
+    { "id": "manger-imparfait", "front": "Manger — imparfait", "back": "je mangeais\ntu mangeais\nil/elle mangeait\nnous mangions\nvous mangiez\nils/elles mangeaient" },
+    { "id": "manger-futur", "front": "Manger — futur", "back": "je mangerai\ntu mangeras\nil/elle mangera\nnous mangerons\nvous mangerez\nils/elles mangeront" },
+
+    { "id": "jouer-present", "front": "Jouer — présent", "back": "je joue\ntu joues\nil/elle joue\nnous jouons\nvous jouez\nils/elles jouent" },
+    { "id": "jouer-imparfait", "front": "Jouer — imparfait", "back": "je jouais\ntu jouais\nil/elle jouait\nnous jouions\nvous jouiez\nils/elles jouaient" },
+    { "id": "jouer-futur", "front": "Jouer — futur", "back": "je jouerai\ntu joueras\nil/elle jouera\nnous jouerons\nvous jouerez\nils/elles joueront" },
+
+    { "id": "chanter-present", "front": "Chanter — présent", "back": "je chante\ntu chantes\nil/elle chante\nnous chantons\nvous chantez\nils/elles chantent" },
+    { "id": "chanter-imparfait", "front": "Chanter — imparfait", "back": "je chantais\ntu chantais\nil/elle chantait\nnous chantions\nvous chantiez\nils/elles chantaient" },
+    { "id": "chanter-futur", "front": "Chanter — futur", "back": "je chanterai\ntu chanteras\nil/elle chantera\nnous chanterons\nvous chanterez\nils/elles chanteront" },
+
+    { "id": "danser-present", "front": "Danser — présent", "back": "je danse\ntu danses\nil/elle danse\nnous dansons\nvous dansez\nils/elles dansent" },
+    { "id": "danser-imparfait", "front": "Danser — imparfait", "back": "je dansais\ntu dansais\nil/elle dansait\nnous dansions\nvous dansiez\nils/elles dansaient" },
+    { "id": "danser-futur", "front": "Danser — futur", "back": "je danserai\ntu danseras\nil/elle dansera\nnous danserons\nvous danserez\nils/elles danseront" },
+
+    { "id": "lire-present", "front": "Lire — présent", "back": "je lis\ntu lis\nil/elle lit\nnous lisons\nvous lisez\nils/elles lisent" },
+    { "id": "lire-imparfait", "front": "Lire — imparfait", "back": "je lisais\ntu lisais\nil/elle lisait\nnous lisions\nvous lisiez\nils/elles lisaient" },
+    { "id": "lire-futur", "front": "Lire — futur", "back": "je lirai\ntu liras\nil/elle lira\nnous lirons\nvous lirez\nils/elles liront" },
+
+    { "id": "ecrire-present", "front": "Écrire — présent", "back": "j'écris\ntu écris\nil/elle écrit\nnous écrivons\nvous écrivez\nils/elles écrivent" },
+    { "id": "ecrire-imparfait", "front": "Écrire — imparfait", "back": "j'écrivais\ntu écrivais\nil/elle écrivait\nnous écrivions\nvous écriviez\nils/elles écrivaient" },
+    { "id": "ecrire-futur", "front": "Écrire — futur", "back": "j'écrirai\ntu écriras\nil/elle écrira\nnous écrirons\nvous écrirez\nils/elles écriront" }
+  ]
+}

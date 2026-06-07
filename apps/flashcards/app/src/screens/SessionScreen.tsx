@@ -1,32 +1,58 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { Card } from '@/types';
 import { FlashcardDisplay } from '@/components/FlashcardDisplay';
-import { ProgressBar } from '@/components/ProgressBar';
 import { ScoreButtons } from '@/components/ScoreButtons';
 import { useSession } from '@/hooks/useSession';
+import { useThemeContext } from '@/context/ThemeContext';
 
-interface SessionScreenProps {
-  cards: Card[];
+/** Fisher-Yates shuffle — returns a new shuffled array of IDs */
+function shuffleIds(cards: { id: string }[]): string[] {
+  const ids = cards.map(c => c.id);
+  for (let i = ids.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [ids[i], ids[j]] = [ids[j], ids[i]];
+  }
+  return ids;
 }
 
 /**
  * SessionScreen Component
  *
  * Displays a flashcard session with progress tracking and scoring.
- * - Shows current card (country name on front, capital on back)
- * - Progress bar displays current position (X/Y)
- * - Score buttons appear after card flip
- * - Advances through cards on score, navigates to /results when complete
+ * Cards are drawn randomly from remaining (unplayed) cards only.
  */
-export function SessionScreen({ cards }: SessionScreenProps): React.ReactElement {
+export function SessionScreen(): React.ReactElement {
   const navigate = useNavigate();
-  const { currentIndex, recordResult, nextCard } = useSession();
+  const { currentTheme } = useThemeContext();
+  const { results, recordResult, resetSession } = useSession();
   const [isFlipped, setIsFlipped] = useState(false);
+  const [remainingIds, setRemainingIds] = useState<string[]>([]);
+  const prevThemeId = useRef<string | undefined>(undefined);
 
-  const totalCards = cards.length;
-  const currentCard = cards[currentIndex];
-  const isSessionComplete = currentIndex >= totalCards;
+  const allCards = currentTheme?.cards ?? [];
+  const totalCards = allCards.length;
+
+  // Reset on mount — fresh start every time the user navigates to /session
+  useEffect(() => {
+    resetSession();
+    setRemainingIds(shuffleIds(currentTheme?.cards ?? []));
+    setIsFlipped(false);
+    prevThemeId.current = currentTheme?.id;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Reset when theme changes
+  useEffect(() => {
+    if (prevThemeId.current !== undefined && prevThemeId.current !== currentTheme?.id) {
+      resetSession();
+      setRemainingIds(shuffleIds(currentTheme?.cards ?? []));
+      setIsFlipped(false);
+    }
+    prevThemeId.current = currentTheme?.id;
+  }, [currentTheme?.id, resetSession, currentTheme?.cards]);
+
+  const currentCard = allCards.find(c => c.id === remainingIds[0]);
+  const isSessionComplete = remainingIds.length === 0 && totalCards > 0;
 
   const handleFlip = useCallback(() => {
     setIsFlipped((prev) => !prev);
@@ -38,17 +64,17 @@ export function SessionScreen({ cards }: SessionScreenProps): React.ReactElement
         recordResult(currentCard.id, known);
       }
       setIsFlipped(false);
-      nextCard();
-
-      // Navigate to results when all cards have been answered
-      if (currentIndex + 1 >= totalCards) {
-        navigate('/results');
-      }
+      setRemainingIds(prev => {
+        const next = prev.slice(1);
+        if (next.length === 0) {
+          navigate('/results');
+        }
+        return next;
+      });
     },
-    [currentCard, recordResult, nextCard, currentIndex, totalCards, navigate],
+    [currentCard, recordResult, navigate],
   );
 
-  // Guard: if no cards or session complete, redirect to results
   if (totalCards === 0) {
     return (
       <div className="flex items-center justify-center flex-grow bg-background text-foreground">
@@ -57,8 +83,7 @@ export function SessionScreen({ cards }: SessionScreenProps): React.ReactElement
     );
   }
 
-  if (isSessionComplete) {
-    // Navigate immediately if session is already complete
+  if (isSessionComplete || !currentCard) {
     navigate('/results');
     return (
       <div className="flex items-center justify-center flex-grow bg-background text-foreground">
@@ -67,15 +92,23 @@ export function SessionScreen({ cards }: SessionScreenProps): React.ReactElement
     );
   }
 
+  const knownCount = results.filter((r) => r.known).length;
+
   return (
     <div className="flex flex-col items-center justify-center flex-grow bg-background text-foreground gap-8 p-8">
-      <ProgressBar current={currentIndex + 1} total={totalCards} />
+
+      {/* Stats row — score left, position right */}
+      <div className="w-full max-w-sm flex justify-between text-sm font-medium text-muted-foreground">
+        <span>✅ {knownCount} / {totalCards}</span>
+        <span>{results.length} / {totalCards}</span>
+      </div>
 
       <FlashcardDisplay
         key={currentCard.id}
         card={currentCard}
         isFlipped={isFlipped}
         onFlip={handleFlip}
+        className="w-full max-w-sm"
       />
 
       {/* Reserved space for score buttons — always same height to prevent layout shift */}
