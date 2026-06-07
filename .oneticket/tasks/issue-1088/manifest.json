@@ -9,7 +9,7 @@
       "content": "Implémente la Slice 0 (fondation) en lisant: apps/spaceinvaders/docs/how/slices/slice-0-foundation-runtime-and-responsive-canvas/slice.md, apps/spaceinvaders/docs/how/architecture.md et apps/spaceinvaders/docs/how/c4/*.md. Crée le squelette app React+Vite+TypeScript sous apps/spaceinvaders/app avec GameScreen et GameCanvas, intégration AppShell, canvas responsive (CSS width/height 100%), dimensions logiques calculées depuis parentElement.clientWidth/clientHeight au mount + resize, et garde-fous runtime sans crash sur mount/unmount. Mobilise oneticket-technical-skill-picker, oneticket-stack-js-ts et oneticket-stack-vite-react-primer. Ajoute/ajuste les scripts npm nécessaires (dev/build/preview/test) pour permettre la suite des slices.",
       "role": "dev",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
