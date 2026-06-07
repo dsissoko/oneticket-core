@@ -1,0 +1,1 @@
+import{w as e,B as r,L as s}from"./index-rUu9n1EN.js";function t(){return e.jsx("div",{className:"flex-grow flex items-center justify-center bg-background text-foreground px-4",children:e.jsx(r,{asChild:!0,size:"lg",children:e.jsx(s,{to:"/game",children:"Start Game"})})})}export{t as HomeScreen,t as default};
