@@ -1,4 +1,12 @@
 export type GamePhase = 'running' | 'victory' | 'gameOver';
+export type GameEndReason = 'allAliensDestroyed' | 'alienLineReached' | 'cannonHit';
+export type PhaseTransitionReason = GameEndReason | 'restart';
+
+export interface GamePhaseTransition {
+  from: GamePhase;
+  to: GamePhase;
+  reason: PhaseTransitionReason;
+}
 
 export type WaveDirection = -1 | 1;
 
@@ -62,4 +70,9 @@ export interface GameFrameState {
   cannon: CannonState | null;
   playerMissiles: MissileState[];
   shields: ShieldState[];
+  currentScore: number;
+  bestScore: number;
+  finalScore: number | null;
+  endReason: GameEndReason | null;
+  phaseTransition: GamePhaseTransition | null;
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { createGameEngine } from '@/game/game-engine';
 import { createInputController } from '@/game/input-controller';
 import type { GameEngine } from '@/game/game-engine';
-import type { GameFrameState, GamePhase, ShieldState } from '@/game/types';
+import type { GameEndReason, GameFrameState, GamePhase, ShieldState } from '@/game/types';
 import { logger } from '@/lib/logger';
 
 interface CanvasSize {
@@ -53,6 +53,10 @@ export function GameCanvas(): React.ReactElement {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<GameEngine | null>(null);
   const [phase, setPhase] = useState<GamePhase>('running');
+  const [currentScore, setCurrentScore] = useState(0);
+  const [bestScore, setBestScore] = useState(0);
+  const [finalScore, setFinalScore] = useState<number | null>(null);
+  const [endReason, setEndReason] = useState<GameEndReason | null>(null);
 
   useEffect(() => {
     const host = hostRef.current;
@@ -75,6 +79,11 @@ export function GameCanvas(): React.ReactElement {
 
     const renderFrame = (frame: GameFrameState): void => {
       setPhase(frame.phase);
+      setCurrentScore(frame.currentScore);
+      setBestScore(frame.bestScore);
+      setFinalScore(frame.finalScore);
+      setEndReason(frame.endReason);
+
       context.clearRect(0, 0, frame.width, frame.height);
       context.fillStyle = '#0f172a';
       context.fillRect(0, 0, frame.width, frame.height);
@@ -109,18 +118,12 @@ export function GameCanvas(): React.ReactElement {
       }
 
       context.fillStyle = '#e2e8f0';
-      context.font = '16px sans-serif';
+      context.font = '600 18px sans-serif';
+      context.textBaseline = 'top';
       context.textAlign = 'left';
-      context.fillText(`Phase: ${frame.phase}`, 16, 28);
-      context.fillText(`Movement Δ: ${frame.movementDelta.toFixed(2)}`, 16, 52);
-      context.fillText(`Fire events: ${frame.fireCount}`, 16, 76);
-      context.fillText(`Wave drops: ${frame.alienWave.dropCount}`, 16, 100);
-      context.fillText(
-        `Missiles A/P: ${frame.alienWave.missiles.length}/${frame.playerMissiles.length}`,
-        16,
-        124,
-      );
-      context.fillText(`Shields: ${frame.shields.length}`, 16, 148);
+      context.fillText(`Score: ${frame.currentScore}`, 16, 12);
+      context.textAlign = 'right';
+      context.fillText(`Best: ${frame.bestScore}`, Math.max(16, frame.width - 16), 12);
     };
 
     const engine = createGameEngine(renderFrame);
@@ -181,10 +184,21 @@ export function GameCanvas(): React.ReactElement {
     };
   }, []);
 
+  const handleRestart = (): void => {
+    engineRef.current?.restart();
+  };
+
+  const endTitle = phase === 'victory' ? 'Victory!' : 'Game Over';
+  const endReasonLabel: Record<GameEndReason, string> = {
+    allAliensDestroyed: 'All aliens destroyed',
+    alienLineReached: 'Aliens reached the cannon line',
+    cannonHit: 'The cannon was hit',
+  };
+
   return (
     <div
       ref={hostRef}
-      className="flex-grow overflow-hidden"
+      className="relative flex-grow overflow-hidden"
       data-testid="game-canvas-host"
       aria-label="Game canvas host"
     >
@@ -196,6 +210,28 @@ export function GameCanvas(): React.ReactElement {
       <div className="sr-only" data-testid="game-phase">
         {phase}
       </div>
+      <div className="sr-only" data-testid="game-score">
+        {currentScore}
+      </div>
+      <div className="sr-only" data-testid="best-score">
+        {bestScore}
+      </div>
+      {phase !== 'running' ? (
+        <div className="absolute inset-0 flex items-center justify-center bg-slate-950/80 p-4">
+          <div className="flex min-w-64 flex-col items-center gap-3 rounded-lg border border-slate-700 bg-slate-900/95 p-6 text-slate-100">
+            <h2 className="text-2xl font-semibold">{endTitle}</h2>
+            {endReason ? <p>{endReasonLabel[endReason]}</p> : null}
+            <p className="text-lg">Final score: {finalScore ?? currentScore}</p>
+            <button
+              type="button"
+              onClick={handleRestart}
+              className="rounded-md bg-cyan-500 px-4 py-2 font-semibold text-slate-950 hover:bg-cyan-400"
+            >
+              Restart
+            </button>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
