@@ -1,58 +1,58 @@
-import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FlashcardDisplay } from '@/components/FlashcardDisplay';
 import { ScoreButtons } from '@/components/ScoreButtons';
 import { useSession } from '@/hooks/useSession';
 import { useThemeContext } from '@/context/ThemeContext';
 
-/** Fisher-Yates shuffle — returns a new shuffled array */
-function shuffle<T>(arr: T[]): T[] {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
+/** Fisher-Yates shuffle — returns a new shuffled array of IDs */
+function shuffleIds(cards: { id: string }[]): string[] {
+  const ids = cards.map(c => c.id);
+  for (let i = ids.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+    [ids[i], ids[j]] = [ids[j], ids[i]];
   }
-  return a;
+  return ids;
 }
 
 /**
  * SessionScreen Component
  *
  * Displays a flashcard session with progress tracking and scoring.
- * Cards come from the currently selected theme via useTheme.
+ * Cards are drawn randomly from remaining (unplayed) cards only.
  */
 export function SessionScreen(): React.ReactElement {
   const navigate = useNavigate();
   const { currentTheme } = useThemeContext();
-  const { currentIndex, results, recordResult, nextCard, resetSession } = useSession();
+  const { results, recordResult, resetSession } = useSession();
   const [isFlipped, setIsFlipped] = useState(false);
+  const [remainingIds, setRemainingIds] = useState<string[]>([]);
   const prevThemeId = useRef<string | undefined>(undefined);
 
-  // Reset session on mount — fresh start every time the user navigates to /session
+  const allCards = currentTheme?.cards ?? [];
+  const totalCards = allCards.length;
+
+  // Reset on mount — fresh start every time the user navigates to /session
   useEffect(() => {
     resetSession();
+    setRemainingIds(shuffleIds(currentTheme?.cards ?? []));
     setIsFlipped(false);
+    prevThemeId.current = currentTheme?.id;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Reset session when theme changes
+  // Reset when theme changes
   useEffect(() => {
     if (prevThemeId.current !== undefined && prevThemeId.current !== currentTheme?.id) {
       resetSession();
+      setRemainingIds(shuffleIds(currentTheme?.cards ?? []));
       setIsFlipped(false);
     }
     prevThemeId.current = currentTheme?.id;
-  }, [currentTheme?.id, resetSession]);
+  }, [currentTheme?.id, resetSession, currentTheme?.cards]);
 
-  // Shuffle cards once per theme — stable across re-renders
-  const cards = useMemo(
-    () => shuffle(currentTheme?.cards ?? []),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentTheme?.id]
-  );
-  const totalCards = cards.length;
-  const currentCard = cards[currentIndex];
-  const isSessionComplete = currentIndex >= totalCards;
+  const currentCard = allCards.find(c => c.id === remainingIds[0]);
+  const isSessionComplete = remainingIds.length === 0 && totalCards > 0;
 
   const handleFlip = useCallback(() => {
     setIsFlipped((prev) => !prev);
@@ -64,13 +64,15 @@ export function SessionScreen(): React.ReactElement {
         recordResult(currentCard.id, known);
       }
       setIsFlipped(false);
-      nextCard();
-
-      if (currentIndex + 1 >= totalCards) {
-        navigate('/results');
-      }
+      setRemainingIds(prev => {
+        const next = prev.slice(1);
+        if (next.length === 0) {
+          navigate('/results');
+        }
+        return next;
+      });
     },
-    [currentCard, recordResult, nextCard, currentIndex, totalCards, navigate],
+    [currentCard, recordResult, navigate],
   );
 
   if (totalCards === 0) {
@@ -81,7 +83,7 @@ export function SessionScreen(): React.ReactElement {
     );
   }
 
-  if (isSessionComplete) {
+  if (isSessionComplete || !currentCard) {
     navigate('/results');
     return (
       <div className="flex items-center justify-center flex-grow bg-background text-foreground">
