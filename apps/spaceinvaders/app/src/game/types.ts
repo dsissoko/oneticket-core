@@ -36,6 +36,16 @@ export interface CannonState {
   reloadDelayMs: number;
 }
 
+export interface ShieldState {
+  id: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  durability: number;
+  maxDurability: number;
+}
+
 export interface GameIntentSink {
   move: (deltaX: number) => void;
   fire: () => void;
@@ -51,4 +61,5 @@ export interface GameFrameState {
   alienWave: AlienWaveState;
   cannon: CannonState | null;
   playerMissiles: MissileState[];
+  shields: ShieldState[];
 }

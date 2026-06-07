@@ -28,6 +28,8 @@ export interface AlienWaveSystemConfig {
 export interface AlienWaveSystem {
   update: (deltaMs: number, viewportWidth: number, viewportHeight: number) => void;
   getState: () => AlienWaveState;
+  setAliens: (nextAliens: AlienState[]) => void;
+  setMissiles: (nextMissiles: MissileState[]) => void;
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -191,5 +193,11 @@ export function createAlienWaveSystem(
       stepEvents,
       waveWidth,
     }),
+    setAliens: (nextAliens) => {
+      aliens = nextAliens;
+    },
+    setMissiles: (nextMissiles) => {
+      missiles = nextMissiles;
+    },
   };
 }
