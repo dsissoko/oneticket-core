@@ -45,23 +45,23 @@ export function FlashcardDisplay({
       >
         {/* Front face — country name */}
         <div
-          className="absolute inset-0 flex items-center justify-center rounded-xl border-2 border-border bg-card text-center text-2xl font-semibold shadow-md backface-hidden"
+          className="absolute inset-0 flex items-center justify-center rounded-xl border-2 border-border bg-card text-card-foreground text-center text-2xl font-semibold shadow-md backface-hidden"
           style={{ backfaceVisibility: 'hidden' }}
           data-testid="flashcard-front"
         >
-          <span>{card.front}</span>
+          <span className="text-card-foreground">{card.front}</span>
         </div>
 
         {/* Back face — capital */}
         <div
-          className="absolute inset-0 flex items-center justify-center rounded-xl border-2 border-border bg-card text-foreground text-center text-2xl font-semibold shadow-md"
+          className="absolute inset-0 flex items-center justify-center rounded-xl border-2 border-border bg-card text-card-foreground text-center text-2xl font-semibold shadow-md"
           style={{
             backfaceVisibility: 'hidden',
             transform: 'rotateY(180deg)',
           }}
           data-testid="flashcard-back"
         >
-          <span>{card.back}</span>
+          <span className="text-card-foreground">{card.back}</span>
         </div>
       </button>
     </div>
