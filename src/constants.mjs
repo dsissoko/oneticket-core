@@ -37,10 +37,10 @@ export const SKILLS_DIR      = `${ONETICKET_DIR}/skills`;
 // ---------------------------------------------------------------------------
 
 // Maximum number of previous comments to inject in the context block
-export const COMMENT_HISTORY_MAX    = 10;
+export const COMMENT_HISTORY_MAX    = 5;
 
 // Maximum characters per comment body before truncation
-export const COMMENT_BODY_MAX_CHARS = 500;
+export const COMMENT_BODY_MAX_CHARS = 300;
 
 // Section title for comment history in the context block
 export const COMMENT_HISTORY_TITLE  = '## Recent comments';
