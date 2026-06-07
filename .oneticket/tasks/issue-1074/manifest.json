@@ -110,7 +110,7 @@
       "file": "apps/flashcards/app/src/components/ProgressBar.tsx",
       "content": "Read apps/flashcards/docs/how/slices/slice-3-session-results/slice.md. Create src/components/ProgressBar.tsx: displays current position (e.g., '3/10'). Props: current (number), total (number). Use progress styling from globals.css. Write tests alongside.",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "dev"
     },
     {
