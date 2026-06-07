@@ -101,7 +101,7 @@
       "file": "apps/flashcards/app/src/components/ScoreButtons.tsx",
       "content": "Read apps/flashcards/docs/how/slices/slice-3-session-results/slice.md. Create src/components/ScoreButtons.tsx: two buttons 'I knew it' and 'I didn't know'. On click, call onScore(known: boolean). Use @primer/react Button components. Write tests alongside.",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "dev"
     },
     {
