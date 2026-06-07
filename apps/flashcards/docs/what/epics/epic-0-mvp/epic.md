@@ -23,6 +23,8 @@ Enable structured memorization with immediate feedback — learners can practice
 
 ## Related Slices
 
-<!-- @architect fills this section after producing slices — write filename only, no relative path, no ../
-     The build script resolves the correct path automatically.
-     Example: [Slice 1 — Skeleton Foundation](slice-1-skeleton-foundation/slice.md) -->
+[Slice 1 — Foundation](slice-1-foundation/slice.md)
+
+[Slice 2 — Home](slice-2-home/slice.md)
+
+[Slice 3 — Session+Results](slice-3-session-results/slice.md)

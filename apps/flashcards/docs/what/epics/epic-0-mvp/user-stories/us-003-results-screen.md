@@ -20,6 +20,4 @@ Results screen displays the session score as X/Y known (e.g., 7/10). A replay bu
 
 ## Related Slices
 
-<!-- @architect fills this section after producing slices — write filename only, no relative path, no ../
-     The build script resolves the correct path automatically.
-     Example: [Slice 1 — Skeleton Foundation](slice-1-skeleton-foundation/slice.md) -->
+[Slice 3 — Session+Results](slice-3-session-results/slice.md)

@@ -33,3 +33,17 @@ User Stories: [US-001](us-001-home-screen.md), [US-002](us-002-session-flip.md),
 - `npm run dev` starts without errors
 - TypeScript compiles without errors
 - All type exports resolve correctly
+
+## Related Epics
+
+[Epic 0 — MVP](../epics/epic-0-mvp/epic.md)
+
+## Related User Stories
+
+[US-001 — Home Screen Theme and Mode Selection](../us-001-home-screen.md)
+
+[US-002 — Session Card Flip Interaction](../us-002-session-flip.md)
+
+[US-003 — Results Screen Session Score](../us-003-results-screen.md)
+
+[US-004 — Complete Study Flow](../us-004-complete-flow.md)
