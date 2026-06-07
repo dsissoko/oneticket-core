@@ -15,6 +15,15 @@ import { ScoreService } from '@/game/services/ScoreService';
 
 const SCORE_PER_ALIEN = 10;
 
+export type GamePhase = 'running' | 'victory' | 'gameOver';
+
+export type GameEndReason = 'cannonHit' | 'alienLineBreach' | 'allAliensDestroyed';
+
+export type EndStatePayload = {
+  reason: GameEndReason;
+  finalScore: number;
+};
+
 type EnemyMissile = {
   id: string;
   x: number;
@@ -55,6 +64,8 @@ export type GameFrameState = {
     current: number;
     best: number;
   };
+  phase: GamePhase;
+  endState: EndStatePayload | null;
   debug: {
     activeAliens: number;
     playerMissiles: number;
@@ -74,6 +85,8 @@ type EngineState = {
   lastInputSource: InputSource;
   enemyMissiles: EnemyMissile[];
   enemyFireCooldownSeconds: number;
+  phase: GamePhase;
+  endState: EndStatePayload | null;
 };
 
 type GameEngineOptions = {
@@ -110,6 +123,21 @@ export class GameEngine {
     this.scoreService.finalizeRun();
   }
 
+  public restart(): void {
+    if (this.playfield.width <= 0 || this.playfield.height <= 0) {
+      this.state = null;
+      this.previousTimestamp = null;
+      return;
+    }
+
+    this.state = this.createInitialState(this.playfield.width, this.playfield.height);
+    this.previousTimestamp = null;
+
+    if (import.meta.env.DEV) {
+      console.debug('[SpaceInvaders] Runtime restarted');
+    }
+  }
+
   public tick(
     timestamp: number,
     width: number,
@@ -132,6 +160,10 @@ export class GameEngine {
         ? 0
         : Math.min(MAX_DELTA_SECONDS, Math.max(0, (timestamp - this.previousTimestamp) / 1000));
     this.previousTimestamp = timestamp;
+
+    if (this.state.phase !== 'running') {
+      return this.toFrameState(this.state, this.playfield);
+    }
 
     const nextWave = advanceAlienWave(this.state.wave, dtSeconds, safeWidth);
     const nextCannon = this.moveCannon(this.state.cannon, input.moveAxis, dtSeconds, safeWidth);
@@ -185,6 +217,27 @@ export class GameEngine {
       this.state.shields,
     );
 
+    const cannonCollisionResult = this.resolveEnemyMissileCannonCollisions(
+      collisionResult.enemyMissiles,
+      nextCannon,
+    );
+
+    const aliveAliens = playerAlienCollisionResult.aliens.filter((alien) => alien.isAlive);
+
+    const endReason = this.resolveEndReason({
+      aliveAliens,
+      cannonHit: cannonCollisionResult.cannonWasHit,
+      cannonY: nextCannon.y,
+    });
+
+    const endState =
+      endReason === null
+        ? null
+        : {
+            reason: endReason,
+            finalScore: this.scoreService.getCurrentScore(),
+          };
+
     if (collisionResult.durabilityTransitions.length > 0 && import.meta.env.DEV) {
       for (const transition of collisionResult.durabilityTransitions) {
         console.debug(
@@ -204,9 +257,19 @@ export class GameEngine {
       playerReloadRemainingMs: playerFireResult.playerReloadRemainingMs,
       rejectedPlayerShots: playerFireResult.rejectedPlayerShots,
       lastInputSource: input.inputSource,
-      enemyMissiles: collisionResult.enemyMissiles,
+      enemyMissiles: cannonCollisionResult.enemyMissiles,
       enemyFireCooldownSeconds: spawnResult.enemyFireCooldownSeconds,
+      phase: endState === null ? 'running' : endReason === 'allAliensDestroyed' ? 'victory' : 'gameOver',
+      endState,
     };
+
+    if (this.state.phase !== 'running' && this.state.endState) {
+      this.scoreService.finalizeRun();
+
+      if (import.meta.env.DEV) {
+        console.debug(`[SpaceInvaders] End-state transition -> ${this.state.phase} (${this.state.endState.reason})`);
+      }
+    }
 
     return this.toFrameState(this.state, this.playfield);
   }
@@ -225,7 +288,50 @@ export class GameEngine {
       lastInputSource: 'none',
       enemyMissiles: [],
       enemyFireCooldownSeconds: this.getRandomFireCooldownSeconds(),
+      phase: 'running',
+      endState: null,
     };
+  }
+
+  private resolveEnemyMissileCannonCollisions(
+    missiles: EnemyMissile[],
+    cannon: Cannon,
+  ): { enemyMissiles: EnemyMissile[]; cannonWasHit: boolean } {
+    let cannonWasHit = false;
+    const remainingMissiles = missiles.filter((missile) => {
+      const hasHit = this.areRectanglesIntersecting(missile, cannon);
+      cannonWasHit = cannonWasHit || hasHit;
+      return !hasHit;
+    });
+
+    return {
+      enemyMissiles: remainingMissiles,
+      cannonWasHit,
+    };
+  }
+
+  private resolveEndReason({
+    aliveAliens,
+    cannonHit,
+    cannonY,
+  }: {
+    aliveAliens: Alien[];
+    cannonHit: boolean;
+    cannonY: number;
+  }): GameEndReason | null {
+    if (cannonHit) {
+      return 'cannonHit';
+    }
+
+    if (aliveAliens.some((alien) => alien.y + alien.height >= cannonY)) {
+      return 'alienLineBreach';
+    }
+
+    if (aliveAliens.length === 0) {
+      return 'allAliensDestroyed';
+    }
+
+    return null;
   }
 
   private createCannon(width: number, height: number): Cannon {
@@ -418,6 +524,8 @@ export class GameEngine {
         current: this.scoreService.getCurrentScore(),
         best: this.scoreService.getBestScore(),
       },
+      phase: state.phase,
+      endState: state.endState,
       debug: {
         activeAliens,
         playerMissiles: state.playerMissiles.length,
