@@ -43,13 +43,16 @@ The pipeline posts two live URLs directly in the PR comment:
 
 **Live examples** — all built by OneTicket:
 
-| Project | Doc | App |
-|---|---|---|
-| MonJournal — *personal journal, tags, timeline, surprise* | [docs](https://dsissoko.github.io/oneticket-core/monjournal/docs/) | [app](https://dsissoko.github.io/oneticket-core/monjournal/app/) |
-| Breakout — *classic arcade, vanilla JS, no dependencies* | [docs](https://dsissoko.github.io/oneticket-core/breakout/docs/) | [app](https://dsissoko.github.io/oneticket-core/breakout/app/) |
-| SpaceInvaders — *retro shooter, ECS architecture* | [docs](https://dsissoko.github.io/oneticket-core/spaceinvaders/docs/) | [app](https://dsissoko.github.io/oneticket-core/spaceinvaders/app/) |
-| AppShell — *the reusable scaffold, bootstrap any project with `@leaddev init-appshell`* | [docs](https://dsissoko.github.io/oneticket-core/appshell/docs/) | [app](https://dsissoko.github.io/oneticket-core/appshell/app/) |
-| OneTicket — *partially built by itself* | [docs](https://dsissoko.github.io/oneticket-core/framework/docs/) | — |
+| Project | Doc | App | Model | AI Debug |
+|---|---|---|---|---|
+| MonJournal — *personal journal, tags, timeline, surprise* | [docs](https://dsissoko.github.io/oneticket-core/monjournal/docs/) | [app](https://dsissoko.github.io/oneticket-core/monjournal/app/) | claude-haiku-4-5 | — |
+| Breakout — *classic arcade, vanilla JS, no dependencies* | [docs](https://dsissoko.github.io/oneticket-core/breakout/docs/) | [app](https://dsissoko.github.io/oneticket-core/breakout/app/) | claude-haiku-4-5 | — |
+| SpaceInvaders — *retro shooter, ECS architecture* | [docs](https://dsissoko.github.io/oneticket-core/spaceinvaders/docs/) | [app](https://dsissoko.github.io/oneticket-core/spaceinvaders/app/) | claude-haiku-4-5 | ✋ |
+| AppShell — *the reusable scaffold, bootstrap any project with `@leaddev init-appshell`* | [docs](https://dsissoko.github.io/oneticket-core/appshell/docs/) | [app](https://dsissoko.github.io/oneticket-core/appshell/app/) | claude-haiku-4-5 | — |
+| Flashcards — *world capitals, multiplication tables, french conjugations* | [docs](https://dsissoko.github.io/oneticket-core/flashcards/docs/) | [app](https://dsissoko.github.io/oneticket-core/flashcards/app/) | minimax-m2.5 | ✋ |
+| OneTicket — *partially built by itself* | [docs](https://dsissoko.github.io/oneticket-core/framework/docs/) | — | claude-haiku-4-5 | — |
+
+> ✋ *AI Debug — some issues required assistance from a stronger model (claude-sonnet) to resolve*
 
 ---
 
