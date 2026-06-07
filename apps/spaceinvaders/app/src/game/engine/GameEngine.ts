@@ -11,6 +11,9 @@ import {
   type Shield,
 } from '@/game/domain/shields';
 import { NO_INPUT_INTENTS, type GameInputIntents, type InputSource } from '@/game/input/InputController';
+import { ScoreService } from '@/game/services/ScoreService';
+
+const SCORE_PER_ALIEN = 10;
 
 type EnemyMissile = {
   id: string;
@@ -48,6 +51,10 @@ export type GameFrameState = {
   shields: Shield[];
   playerMissiles: PlayerMissile[];
   enemyMissiles: EnemyMissile[];
+  score: {
+    current: number;
+    best: number;
+  };
   debug: {
     activeAliens: number;
     playerMissiles: number;
@@ -71,6 +78,7 @@ type EngineState = {
 
 type GameEngineOptions = {
   playerReloadDelayMs?: number;
+  scoreService?: ScoreService;
 };
 
 const MIN_FIRE_COOLDOWN_SECONDS = 0.45;
@@ -84,6 +92,8 @@ export class GameEngine {
 
   private readonly playerReloadDelayMs: number;
 
+  private readonly scoreService: ScoreService;
+
   private state: EngineState | null = null;
 
   private previousTimestamp: number | null = null;
@@ -93,6 +103,11 @@ export class GameEngine {
   constructor(random: () => number = Math.random, options?: GameEngineOptions) {
     this.random = random;
     this.playerReloadDelayMs = this.clampPlayerReloadDelay(options?.playerReloadDelayMs ?? 0);
+    this.scoreService = options?.scoreService ?? new ScoreService();
+  }
+
+  public endRun(): void {
+    this.scoreService.finalizeRun();
   }
 
   public tick(
@@ -142,8 +157,21 @@ export class GameEngine {
       }))
       .filter((missile) => missile.y + missile.height >= 0);
 
+    const playerAlienCollisionResult = this.resolvePlayerMissileAlienCollisions(
+      movedPlayerMissiles,
+      nextWave.aliens,
+    );
+
+    if (playerAlienCollisionResult.destroyedAliens > 0) {
+      this.scoreService.addPoints(playerAlienCollisionResult.destroyedAliens * SCORE_PER_ALIEN);
+    }
+
     const nextCooldown = this.state.enemyFireCooldownSeconds - dtSeconds;
-    const spawnResult = this.trySpawnEnemyMissile(nextWave.aliens, nextCooldown, safeHeight);
+    const spawnResult = this.trySpawnEnemyMissile(
+      playerAlienCollisionResult.aliens,
+      nextCooldown,
+      safeHeight,
+    );
     const movedMissiles = spawnResult.enemyMissiles
       .map((missile) => ({
         ...missile,
@@ -152,7 +180,7 @@ export class GameEngine {
       .filter((missile) => missile.y - missile.height <= safeHeight);
 
     const collisionResult = resolveMissileShieldCollisions(
-      movedPlayerMissiles,
+      playerAlienCollisionResult.playerMissiles,
       movedMissiles,
       this.state.shields,
     );
@@ -166,7 +194,10 @@ export class GameEngine {
     }
 
     this.state = {
-      wave: nextWave,
+      wave: {
+        ...nextWave,
+        aliens: playerAlienCollisionResult.aliens,
+      },
       cannon: nextCannon,
       shields: collisionResult.shields,
       playerMissiles: collisionResult.playerMissiles,
@@ -182,6 +213,7 @@ export class GameEngine {
 
   private createInitialState(width: number, height: number): EngineState {
     const cannon = this.createCannon(width, height);
+    this.scoreService.resetCurrentScore();
 
     return {
       wave: createAlienWave(width, height),
@@ -316,6 +348,54 @@ export class GameEngine {
     return MIN_FIRE_COOLDOWN_SECONDS + this.random() * (MAX_FIRE_COOLDOWN_SECONDS - MIN_FIRE_COOLDOWN_SECONDS);
   }
 
+  private resolvePlayerMissileAlienCollisions(
+    missiles: PlayerMissile[],
+    aliens: Alien[],
+  ): {
+    playerMissiles: PlayerMissile[];
+    aliens: Alien[];
+    destroyedAliens: number;
+  } {
+    const remainingMissiles: PlayerMissile[] = [];
+    const nextAliens = aliens.map((alien) => ({ ...alien }));
+    let destroyedAliens = 0;
+
+    for (const missile of missiles) {
+      const hitAlienIndex = nextAliens.findIndex(
+        (alien) => alien.isAlive && this.areRectanglesIntersecting(missile, alien),
+      );
+
+      if (hitAlienIndex === -1) {
+        remainingMissiles.push(missile);
+        continue;
+      }
+
+      nextAliens[hitAlienIndex] = {
+        ...nextAliens[hitAlienIndex],
+        isAlive: false,
+      };
+      destroyedAliens += 1;
+    }
+
+    return {
+      playerMissiles: remainingMissiles,
+      aliens: nextAliens,
+      destroyedAliens,
+    };
+  }
+
+  private areRectanglesIntersecting(
+    first: { x: number; y: number; width: number; height: number },
+    second: { x: number; y: number; width: number; height: number },
+  ): boolean {
+    return (
+      first.x < second.x + second.width
+      && first.x + first.width > second.x
+      && first.y < second.y + second.height
+      && first.y + first.height > second.y
+    );
+  }
+
   private clampPlayerReloadDelay(value: number): number {
     if (!Number.isFinite(value)) {
       return MIN_PLAYER_RELOAD_DELAY_MS;
@@ -334,6 +414,10 @@ export class GameEngine {
       shields: state.shields,
       playerMissiles: state.playerMissiles,
       enemyMissiles: state.enemyMissiles,
+      score: {
+        current: this.scoreService.getCurrentScore(),
+        best: this.scoreService.getBestScore(),
+      },
       debug: {
         activeAliens,
         playerMissiles: state.playerMissiles.length,
