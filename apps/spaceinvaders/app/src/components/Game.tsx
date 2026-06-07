@@ -84,7 +84,7 @@ export function Game(): React.ReactElement {
     try {
       renderingSystemRef.current = new RenderingSystem(canvas)
       renderingSystemRef.current.setCanvasSize(canvasWidth, canvasHeight)
-      inputSystemRef.current = new InputSystem(window)
+      inputSystemRef.current = new InputSystem(window, canvasWidth, canvasHeight)
 
       // Initialize physics system with callbacks
       physicsSystemRef.current = new PhysicsSystem({
@@ -470,7 +470,15 @@ export function Game(): React.ReactElement {
         backgroundColor: '#000000'
       }}
     >
-      <div className="relative" style={{ width: canvasWidth, height: canvasHeight }}>
+      <div
+        className="relative"
+        style={{
+          width: '100%',
+          maxWidth: '100%',
+          height: canvasHeight,
+          aspectRatio: `${canvasWidth} / ${canvasHeight}`
+        }}
+      >
         {/* Canvas element */}
         <canvas
           ref={canvasRef}

@@ -20,6 +20,17 @@ export interface TouchZone {
   type: 'movement' | 'fire'
 }
 
+/**
+ * Touch zone configuration
+ * - Movement zone: bottom portion of screen (near player)
+ * - Fire zone: upper portion of screen (for tap and fire)
+ */
+interface TouchZoneConfig {
+  // Y threshold: touches below this Y are in movement zone
+  // Touches above this Y are in fire zone
+  movementZoneYThreshold: number
+}
+
 export class InputSystem {
   private inputState: PlayerInputState = {
     left: false,
@@ -36,6 +47,8 @@ export class InputSystem {
   }
 
   private canvasWidth: number
+  private canvasHeight: number
+  private zoneConfig: TouchZoneConfig
 
   private keyMap: Record<string, keyof PlayerInputState> = {
     'ArrowLeft': 'left',
@@ -50,8 +63,20 @@ export class InputSystem {
   private touchMoveHandler: (event: TouchEvent) => void
   private touchEndHandler: (event: TouchEvent) => void
 
-  constructor(window: Window, canvasWidth: number = 800) {
+  constructor(
+    window: Window,
+    canvasWidth: number = 800,
+    canvasHeight: number = 600,
+    zoneConfig?: Partial<TouchZoneConfig>
+  ) {
     this.canvasWidth = canvasWidth
+    this.canvasHeight = canvasHeight
+    // Default: movement zone is bottom 30% of screen (near player)
+    // Fire zone is top 70% (for tap and fire)
+    this.zoneConfig = {
+      movementZoneYThreshold: canvasHeight * 0.7, // 70% from top
+      ...zoneConfig
+    }
     // Bind handlers to preserve 'this' context
     this.keyDownHandler = this.onKeyDown.bind(this)
     this.keyUpHandler = this.onKeyUp.bind(this)
@@ -172,45 +197,49 @@ export class InputSystem {
   }
 
   /**
-   * Get touch zones based on canvas width
-   * Left zone (40%) for movement, right zone (60%) for fire
+   * Get touch zones based on Y position (vertical split)
+   * - Movement zone: bottom portion of screen (near player at y = canvasHeight - 50)
+   * - Fire zone: upper portion of screen (for tap and fire)
    */
   getTouchZones(): TouchZone[] {
-    const movementZoneWidth = this.canvasWidth * 0.4
-    const fireZoneWidth = this.canvasWidth * 0.6
+    const movementZoneYStart = this.zoneConfig.movementZoneYThreshold
 
     return [
       {
         x: 0,
-        y: 0,
-        width: movementZoneWidth,
-        height: window.innerHeight,
+        y: movementZoneYStart,
+        width: this.canvasWidth,
+        height: this.canvasHeight - movementZoneYStart,
         type: 'movement'
       },
       {
-        x: movementZoneWidth,
+        x: 0,
         y: 0,
-        width: fireZoneWidth,
-        height: window.innerHeight,
+        width: this.canvasWidth,
+        height: movementZoneYStart,
         type: 'fire'
       }
     ]
   }
 
   /**
-   * Check if touch coordinates are in movement zone (left 40%)
+   * Check if touch coordinates are in movement zone (bottom portion, near player)
+   * Uses Y position to determine zone - touches near the player (bottom of screen)
+   * are for swipe movement
    */
   isTouchInMovementZone(x: number, y: number): boolean {
-    const movementZoneWidth = this.canvasWidth * 0.4
-    return x >= 0 && x < movementZoneWidth && y >= 0 && y < window.innerHeight
+    // Movement zone is below the Y threshold (bottom of screen, near player)
+    return y >= this.zoneConfig.movementZoneYThreshold && y <= this.canvasHeight
   }
 
   /**
-   * Check if touch coordinates are in fire zone (right 60%)
+   * Check if touch coordinates are in fire zone (upper portion)
+   * Uses Y position to determine zone - touches above the player
+   * are for tap and fire only (no movement)
    */
   isTouchInFireZone(x: number, y: number): boolean {
-    const movementZoneWidth = this.canvasWidth * 0.4
-    return x >= movementZoneWidth && x < window.innerWidth && y >= 0 && y < window.innerHeight
+    // Fire zone is above the Y threshold (top portion of screen)
+    return y >= 0 && y < this.zoneConfig.movementZoneYThreshold
   }
 
   /**
