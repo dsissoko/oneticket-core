@@ -31,7 +31,7 @@ export function FlashcardDisplay({
       className={cn('animate-in fade-in zoom-in-95 duration-300', className)}
       data-testid="flashcard-container"
     >
-      <div className="perspective-1000 h-64">
+      <div className="perspective-1000 h-64 w-full">
         <button
           type="button"
           onClick={onFlip}

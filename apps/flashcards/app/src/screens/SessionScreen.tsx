@@ -93,6 +93,7 @@ export function SessionScreen(): React.ReactElement {
         card={currentCard}
         isFlipped={isFlipped}
         onFlip={handleFlip}
+        className="w-full max-w-sm"
       />
 
       {/* Reserved space for score buttons — always same height to prevent layout shift */}
