@@ -16,7 +16,7 @@ describe('useTheme', () => {
 
   it('loads world-capitals theme', () => {
     const { result } = renderHook(() => useTheme());
-    expect(result.current.themes).toHaveLength(1);
+    expect(result.current.themes).toHaveLength(2);
     expect(result.current.themes[0].id).toBe('world-capitals');
     expect(result.current.themes[0].name).toBe('World Capitals');
   });

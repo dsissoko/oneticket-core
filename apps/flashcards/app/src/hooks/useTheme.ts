@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { Theme } from '@/types';
 import worldCapitalsTheme from '@/data/themes/world-capitals.json';
+import multiplicationTablesTheme from '@/data/themes/multiplication-tables.json';
 
 const STORAGE_KEY = 'flashcards-selected-theme';
 
-const themes: Theme[] = [worldCapitalsTheme as Theme];
+const themes: Theme[] = [worldCapitalsTheme as Theme, multiplicationTablesTheme as Theme];
 
 interface UseThemeReturn {
   themes: Theme[];
