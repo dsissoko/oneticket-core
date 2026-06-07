@@ -1,0 +1,47 @@
+{
+  "issue": 1090,
+  "tasks": [
+    {
+      "id": "A",
+      "role": "dev",
+      "branch": "task/issue-1090-A",
+      "file": "apps/spaceinvaders/app/src/screens/GameScreen.tsx",
+      "content": "Implement Slice 1 from apps/spaceinvaders/docs/how/slices/slice-1-foundation-runtime-and-responsive-canvas/slice.md, aligned with apps/spaceinvaders/docs/how/architecture.md. Before coding, load skills oneticket-technical-skill-picker, oneticket-stack-js-ts, and oneticket-stack-vite-react-primer. Keep AppShell as the root layout: routes must stay nested under AppLayout. Update Home page so content area contains only one centered \"Start Game\" button that navigates with React Router Link to /game. Add /game route and create GameScreen mounted inside AppLayout (do not bypass header/footer). GameScreen must wrap the canvas area with className exactly including flex-grow flex flex-col overflow-hidden so the game canvas fills AppShell content area exactly like Breakout. Implement responsive canvas host sizing from parent dimensions and initialize game runtime loop scaffold (phase envelope running/victory/gameOver and input boundaries keyboard + touch zones 80% fire/20% movement). Add or update tests covering routing and layout integration for / and /game. Run app tests relevant to routing/screens and ensure lint/build pass.",
+      "depends_on": [],
+      "status": "pending"
+    },
+    {
+      "id": "B",
+      "role": "dev",
+      "branch": "task/issue-1090-B",
+      "file": "apps/spaceinvaders/app/src/features/game/domain/alien-wave-system.ts",
+      "content": "Implement Slice 2 from apps/spaceinvaders/docs/how/slices/slice-2-alien-wave-and-cannon-controls/slice.md on top of task A outputs. Read related user stories US-001 and US-002 under apps/spaceinvaders/docs/what/epics/epic-0-mvp/user-stories/. Add domain/application modules for AlienWaveSystem and CannonSystem, then wire them into GameEngine tick updates and GameCanvas renderer. Requirements: initialize exactly 5x11 aliens occupying about 70% viewport width, horizontal movement with boundary drop progression, randomized alien missile spawning, cannon movement and player missile firing, reload delay guard clamped to [0, 5000], and support concurrent missiles. Ensure keyboard/touch intents from InputController drive movement/fire. Add deterministic tests for wave progression and cannon reload constraints; keep runtime stable inside AppShell GameScreen.",
+      "depends_on": [
+        "A"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "C",
+      "role": "dev",
+      "branch": "task/issue-1090-C",
+      "file": "apps/spaceinvaders/app/src/features/game/domain/collision-system.ts",
+      "content": "Implement Slice 3 from apps/spaceinvaders/docs/how/slices/slice-3-shields-and-collision-outcomes/slice.md on top of task B. Introduce ShieldSystem and CollisionSystem integrated into GameEngine per-tick resolution. Requirements: create exactly 4 shield entities, each with durability 10; on missile/shield collision remove missile immediately and decrement durability by 1 down to 0; support missile collisions with aliens and cannon according to architecture boundaries. Update renderer to visually degrade shields from durability state. Add tests validating collision outcomes and shield durability transitions, including no negative durability and one-tick missile removal.",
+      "depends_on": [
+        "B"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "D",
+      "role": "dev",
+      "branch": "task/issue-1090-D",
+      "file": "apps/spaceinvaders/app/src/features/game/application/score-service.ts",
+      "content": "Implement Slice 4 from apps/spaceinvaders/docs/how/slices/slice-4-score-end-states-and-restart/slice.md on top of task C. Add ScoreService, HUD rendering, end-state presentation, and restart orchestration integrated with GameEngine and localStorage adapter. Requirements: HUD shows current score (top-left) and best score (top-right) while running; alien destruction increments score; best score persists in localStorage and survives restart; phase transitions running->victory/gameOver->running are explicit with reasons (all aliens destroyed, alien line reached, cannon hit). End screen must display final score and a restart action that reinitializes runtime state while preserving best score. Add tests for score updates, persistence reads/writes, end-state transitions, and restart behavior.",
+      "depends_on": [
+        "C"
+      ],
+      "status": "pending"
+    }
+  ]
+}
