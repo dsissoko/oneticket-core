@@ -54,7 +54,7 @@ export function FlashcardDisplay({
 
         {/* Back face — capital */}
         <div
-          className="absolute inset-0 flex items-center justify-center rounded-xl border-2 border-border bg-primary text-center text-2xl font-semibold text-primary-foreground shadow-md"
+          className="absolute inset-0 flex items-center justify-center rounded-xl border-2 border-border bg-card text-foreground text-center text-2xl font-semibold shadow-md"
           style={{
             backfaceVisibility: 'hidden',
             transform: 'rotateY(180deg)',
