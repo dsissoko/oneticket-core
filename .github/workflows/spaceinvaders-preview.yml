@@ -1,0 +1,124 @@
+name: SpaceInvaders Preview
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+    paths:
+      - 'apps/spaceinvaders/app/**'
+      - '.github/workflows/spaceinvaders-preview.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'apps/spaceinvaders/app/**'
+      - '.github/workflows/spaceinvaders-preview.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: spaceinvaders-pages-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      base_path: ${{ steps.ctx.outputs.base_path }}
+      target_folder: ${{ steps.ctx.outputs.target_folder }}
+      public_url: ${{ steps.ctx.outputs.public_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: apps/spaceinvaders/app/package-lock.json
+
+      - name: Resolve deployment context
+        id: ctx
+        run: |
+          REPO_NAME="${{ github.event.repository.name }}"
+          OWNER="${{ github.repository_owner }}"
+          PAGES_BASE="https://${OWNER}.github.io/${REPO_NAME}"
+
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            PR="${{ github.event.pull_request.number }}"
+            BASE_PATH="/${REPO_NAME}/spaceinvaders/pr/${PR}/app/"
+            TARGET_FOLDER="spaceinvaders/pr/${PR}/app"
+          else
+            BASE_PATH="/${REPO_NAME}/spaceinvaders/app/"
+            TARGET_FOLDER="spaceinvaders/app"
+          fi
+
+          echo "base_path=${BASE_PATH}" >> "$GITHUB_OUTPUT"
+          echo "target_folder=${TARGET_FOLDER}" >> "$GITHUB_OUTPUT"
+          echo "public_url=${PAGES_BASE}/${TARGET_FOLDER}/" >> "$GITHUB_OUTPUT"
+
+      - name: Install dependencies
+        working-directory: apps/spaceinvaders/app
+        run: npm ci
+
+      - name: Build
+        working-directory: apps/spaceinvaders/app
+        run: npm run build
+        env:
+          VITE_BASE_PATH: ${{ steps.ctx.outputs.base_path }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: spaceinvaders-static
+          path: apps/spaceinvaders/app/dist/
+          if-no-files-found: error
+
+  deploy-preview:
+    if: github.event_name == 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: spaceinvaders-static
+          path: dist/
+
+      - name: Deploy preview
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          token: ${{ secrets.ONETICKET_GH_PAT }}
+          folder: dist
+          target-folder: ${{ needs.build.outputs.target_folder }}
+          clean: false
+
+      - name: Post preview comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: spaceinvaders-preview
+          message: |
+            🚀 **SpaceInvaders preview:** ${{ needs.build.outputs.public_url }}
+
+  deploy-prod:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: spaceinvaders-static
+          path: dist/
+
+      - name: Deploy production
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          token: ${{ secrets.ONETICKET_GH_PAT }}
+          folder: dist
+          target-folder: ${{ needs.build.outputs.target_folder }}
+          clean: true
+          clean-exclude: |
+            .nojekyll
+            pr
