@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FlashcardDisplay } from '@/components/FlashcardDisplay';
 import { ProgressBar } from '@/components/ProgressBar';
@@ -25,8 +25,18 @@ function shuffle<T>(arr: T[]): T[] {
 export function SessionScreen(): React.ReactElement {
   const navigate = useNavigate();
   const { currentTheme } = useThemeContext();
-  const { currentIndex, recordResult, nextCard } = useSession();
+  const { currentIndex, recordResult, nextCard, resetSession } = useSession();
   const [isFlipped, setIsFlipped] = useState(false);
+  const prevThemeId = useRef<string | undefined>(undefined);
+
+  // Reset session when theme changes
+  useEffect(() => {
+    if (prevThemeId.current !== undefined && prevThemeId.current !== currentTheme?.id) {
+      resetSession();
+      setIsFlipped(false);
+    }
+    prevThemeId.current = currentTheme?.id;
+  }, [currentTheme?.id, resetSession]);
 
   // Shuffle cards once per theme — stable across re-renders
   const cards = useMemo(
