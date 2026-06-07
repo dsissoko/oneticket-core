@@ -58,4 +58,9 @@ export const translations = {
   },
 } as const;
 
-export type Translations = typeof translations['en'];
+export type Translations = {
+  nav: { home: string; about: string };
+  home: { theme: string; mode: string; start: string };
+  score: { knew: string; didntKnow: string };
+  results: { title: string; youKnew: string; replay: string; backToHome: string };
+};
