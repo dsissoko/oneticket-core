@@ -147,44 +147,30 @@ export function GameCanvas({
     });
     const inputController = createInputController(canvas, engine.getIntentSink());
 
-    try {
-      engine.setPhase('running');
-      engine.start();
-    } catch (error) {
-      logger.error('[game-canvas] failed to start game runtime', error);
-    }
-
-    return () => {
-      inputController.cleanup();
-      engine.stop();
-      engineRef.current = null;
-      onRestartReady?.(() => {
-        // no-op when runtime is unmounted
-      });
-    };
-  }, [onRestartReady]);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
     let resizeObserver: ResizeObserver | null = null;
+    let animationFrameId: number | null = null;
 
-    const updateSize = (): void => {
+    const updateSize = (): boolean => {
       const nextSize = getParentSize(canvas);
 
       const devicePixelRatio = window.devicePixelRatio || 1;
       canvas.width = Math.max(1, Math.floor(nextSize.width * devicePixelRatio));
       canvas.height = Math.max(1, Math.floor(nextSize.height * devicePixelRatio));
-      let context: CanvasRenderingContext2D | null = null;
+
+      let nextContext: CanvasRenderingContext2D | null = null;
       try {
-        context = canvas.getContext('2d');
+        nextContext = canvas.getContext('2d');
       } catch (error) {
         logger.error('[game-canvas] canvas 2D context is not available', error);
       }
-      context?.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+      nextContext?.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+
+      if (nextSize.width <= 0 || nextSize.height <= 0) {
+        return false;
+      }
 
       engineRef.current?.resize(nextSize.width, nextSize.height);
+      return true;
     };
 
     updateSize();
@@ -197,11 +183,39 @@ export function GameCanvas({
       window.addEventListener('resize', updateSize);
     }
 
+    const scheduleStart = (attempt = 0): void => {
+      animationFrameId = window.requestAnimationFrame(() => {
+        const hasValidSize = updateSize();
+        if (!hasValidSize && attempt < 5) {
+          scheduleStart(attempt + 1);
+          return;
+        }
+
+        try {
+          engine.setPhase('running');
+          engine.start();
+        } catch (error) {
+          logger.error('[game-canvas] failed to start game runtime', error);
+        }
+      });
+    };
+
+    scheduleStart();
+
     return () => {
+      if (animationFrameId !== null) {
+        window.cancelAnimationFrame(animationFrameId);
+      }
       resizeObserver?.disconnect();
       window.removeEventListener('resize', updateSize);
+      inputController.cleanup();
+      engine.stop();
+      engineRef.current = null;
+      onRestartReady?.(() => {
+        // no-op when runtime is unmounted
+      });
     };
-  }, []);
+  }, [onRestartReady]);
 
   useEffect(() => {
     onPhaseChange?.(phase);
