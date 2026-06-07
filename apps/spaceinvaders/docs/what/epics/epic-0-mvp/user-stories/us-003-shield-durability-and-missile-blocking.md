@@ -35,8 +35,8 @@ Scenario: Visual degradation
 
 ## Related Epic
 
-- [Epic 0 — SpaceInvaders MVP Gameplay Loop](epic-0-mvp/epic.md)
+- [Epic 0 — SpaceInvaders MVP Gameplay Loop](../epic.md)
 
 ## Related Slices
 
-To be linked during slicing.
+- [Slice 3 — Shields and Collision Outcomes](../../../../how/slices/slice-3-shields-and-collision-outcomes/slice.md)

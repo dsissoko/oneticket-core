@@ -80,10 +80,23 @@ SpaceInvaders runs as a browser game module inside the existing AppShell fronten
 
 - [System Context](c4/system-context.md)
 - [Containers](c4/containers.md)
+- [Components](c4/components.md)
+- [Deployment](c4/deployment.md)
 
 ## 12. Related Implementation Slices
 
-To be produced from user stories once implementation slicing is requested.
+- [Slice 1 — Foundation Runtime and Responsive Canvas](slices/slice-1-foundation-runtime-and-responsive-canvas/slice.md)
+- [Slice 2 — Alien Wave and Cannon Controls](slices/slice-2-alien-wave-and-cannon-controls/slice.md)
+- [Slice 3 — Shields and Collision Outcomes](slices/slice-3-shields-and-collision-outcomes/slice.md)
+- [Slice 4 — Score, End States, and Restart](slices/slice-4-score-end-states-and-restart/slice.md)
+
+**Coverage with User Stories:**
+- [US-001 — Alien Wave Movement and Fire](../what/epics/epic-0-mvp/user-stories/us-001-alien-wave-movement-and-fire.md) → Slice 2
+- [US-002 — Cannon Controls and Shooting](../what/epics/epic-0-mvp/user-stories/us-002-cannon-controls-and-shooting.md) → Slice 2
+- [US-003 — Shield Durability and Missile Blocking](../what/epics/epic-0-mvp/user-stories/us-003-shield-durability-and-missile-blocking.md) → Slice 3
+- [US-004 — Game End States and Restart](../what/epics/epic-0-mvp/user-stories/us-004-game-end-states-and-restart.md) → Slice 4
+- [US-005 — Score HUD and Best Score Persistence](../what/epics/epic-0-mvp/user-stories/us-005-score-hud-and-best-score-persistence.md) → Slice 4
+- [US-006 — Responsive Canvas and Mobile Gesture Zones](../what/epics/epic-0-mvp/user-stories/us-006-responsive-canvas-and-mobile-gesture-zones.md) → Slice 1
 
 ## 13. Technical Constraints
 

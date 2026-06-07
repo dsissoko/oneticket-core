@@ -26,13 +26,16 @@ Deliver a complete and responsive Space Invaders MVP experience in AppShell, fro
 
 ## Related User Stories
 
-- [US-001 — Alien Wave Movement and Fire](us-001-alien-wave-movement-and-fire.md)
-- [US-002 — Cannon Controls and Shooting](us-002-cannon-controls-and-shooting.md)
-- [US-003 — Shield Durability and Missile Blocking](us-003-shield-durability-and-missile-blocking.md)
-- [US-004 — Game End States and Restart](us-004-game-end-states-and-restart.md)
-- [US-005 — Score HUD and Best Score Persistence](us-005-score-hud-and-best-score-persistence.md)
-- [US-006 — Responsive Canvas and Mobile Gesture Zones](us-006-responsive-canvas-and-mobile-gesture-zones.md)
+- [US-001 — Alien Wave Movement and Fire](user-stories/us-001-alien-wave-movement-and-fire.md)
+- [US-002 — Cannon Controls and Shooting](user-stories/us-002-cannon-controls-and-shooting.md)
+- [US-003 — Shield Durability and Missile Blocking](user-stories/us-003-shield-durability-and-missile-blocking.md)
+- [US-004 — Game End States and Restart](user-stories/us-004-game-end-states-and-restart.md)
+- [US-005 — Score HUD and Best Score Persistence](user-stories/us-005-score-hud-and-best-score-persistence.md)
+- [US-006 — Responsive Canvas and Mobile Gesture Zones](user-stories/us-006-responsive-canvas-and-mobile-gesture-zones.md)
 
 ## Related Slices
 
-To be defined during architecture slicing.
+- [Slice 1 — Foundation Runtime and Responsive Canvas](../../../how/slices/slice-1-foundation-runtime-and-responsive-canvas/slice.md)
+- [Slice 2 — Alien Wave and Cannon Controls](../../../how/slices/slice-2-alien-wave-and-cannon-controls/slice.md)
+- [Slice 3 — Shields and Collision Outcomes](../../../how/slices/slice-3-shields-and-collision-outcomes/slice.md)
+- [Slice 4 — Score, End States, and Restart](../../../how/slices/slice-4-score-end-states-and-restart/slice.md)

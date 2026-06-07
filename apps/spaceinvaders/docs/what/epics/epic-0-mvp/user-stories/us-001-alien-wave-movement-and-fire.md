@@ -34,8 +34,8 @@ Scenario: Random alien shooting
 
 ## Related Epic
 
-- [Epic 0 — SpaceInvaders MVP Gameplay Loop](epic-0-mvp/epic.md)
+- [Epic 0 — SpaceInvaders MVP Gameplay Loop](../epic.md)
 
 ## Related Slices
 
-To be linked during slicing.
+- [Slice 2 — Alien Wave and Cannon Controls](../../../../how/slices/slice-2-alien-wave-and-cannon-controls/slice.md)

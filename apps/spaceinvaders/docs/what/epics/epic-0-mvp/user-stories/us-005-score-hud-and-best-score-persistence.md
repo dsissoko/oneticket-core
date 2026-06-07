@@ -31,8 +31,8 @@ Scenario: Best score persistence
 
 ## Related Epic
 
-- [Epic 0 — SpaceInvaders MVP Gameplay Loop](epic-0-mvp/epic.md)
+- [Epic 0 — SpaceInvaders MVP Gameplay Loop](../epic.md)
 
 ## Related Slices
 
-To be linked during slicing.
+- [Slice 4 — Score, End States, and Restart](../../../../how/slices/slice-4-score-end-states-and-restart/slice.md)

@@ -42,8 +42,8 @@ Scenario: Mobile gesture controls
 
 ## Related Epic
 
-- [Epic 0 — SpaceInvaders MVP Gameplay Loop](epic-0-mvp/epic.md)
+- [Epic 0 — SpaceInvaders MVP Gameplay Loop](../epic.md)
 
 ## Related Slices
 
-To be linked during slicing.
+- [Slice 1 — Foundation Runtime and Responsive Canvas](../../../../how/slices/slice-1-foundation-runtime-and-responsive-canvas/slice.md)
