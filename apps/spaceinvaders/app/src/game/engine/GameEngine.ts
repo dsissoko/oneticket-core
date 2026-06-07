@@ -5,6 +5,11 @@ import {
   type Alien,
   type AlienWaveState,
 } from '@/game/domain/alienWave';
+import {
+  createShields,
+  resolveMissileShieldCollisions,
+  type Shield,
+} from '@/game/domain/shields';
 import { NO_INPUT_INTENTS, type GameInputIntents, type InputSource } from '@/game/input/InputController';
 
 type EnemyMissile = {
@@ -40,6 +45,7 @@ export type GameFrameState = {
   };
   aliens: Alien[];
   cannon: Cannon;
+  shields: Shield[];
   playerMissiles: PlayerMissile[];
   enemyMissiles: EnemyMissile[];
   debug: {
@@ -54,6 +60,7 @@ export type GameFrameState = {
 type EngineState = {
   wave: AlienWaveState;
   cannon: Cannon;
+  shields: Shield[];
   playerMissiles: PlayerMissile[];
   playerReloadRemainingMs: number;
   rejectedPlayerShots: number;
@@ -144,14 +151,29 @@ export class GameEngine {
       }))
       .filter((missile) => missile.y - missile.height <= safeHeight);
 
+    const collisionResult = resolveMissileShieldCollisions(
+      movedPlayerMissiles,
+      movedMissiles,
+      this.state.shields,
+    );
+
+    if (collisionResult.durabilityTransitions.length > 0 && import.meta.env.DEV) {
+      for (const transition of collisionResult.durabilityTransitions) {
+        console.debug(
+          `[SpaceInvaders] Shield ${transition.shieldId} durability ${transition.fromDurability} -> ${transition.toDurability}`,
+        );
+      }
+    }
+
     this.state = {
       wave: nextWave,
       cannon: nextCannon,
-      playerMissiles: movedPlayerMissiles,
+      shields: collisionResult.shields,
+      playerMissiles: collisionResult.playerMissiles,
       playerReloadRemainingMs: playerFireResult.playerReloadRemainingMs,
       rejectedPlayerShots: playerFireResult.rejectedPlayerShots,
       lastInputSource: input.inputSource,
-      enemyMissiles: movedMissiles,
+      enemyMissiles: collisionResult.enemyMissiles,
       enemyFireCooldownSeconds: spawnResult.enemyFireCooldownSeconds,
     };
 
@@ -159,9 +181,12 @@ export class GameEngine {
   }
 
   private createInitialState(width: number, height: number): EngineState {
+    const cannon = this.createCannon(width, height);
+
     return {
       wave: createAlienWave(width, height),
-      cannon: this.createCannon(width, height),
+      cannon,
+      shields: createShields(width, height),
       playerMissiles: [],
       playerReloadRemainingMs: 0,
       rejectedPlayerShots: 0,
@@ -306,6 +331,7 @@ export class GameEngine {
       playfield,
       aliens: state.wave.aliens,
       cannon: state.cannon,
+      shields: state.shields,
       playerMissiles: state.playerMissiles,
       enemyMissiles: state.enemyMissiles,
       debug: {

@@ -72,6 +72,55 @@ describe('GameEngine slice 1 behavior', () => {
     expect(shot2.playerMissiles.length).toBe(2);
   });
 
+  it('creates 4 shields between aliens and cannon', () => {
+    const engine = new GameEngine(() => 0.5);
+    const frame = engine.tick(0, 1000, 700);
+
+    const lowestAlienY = Math.max(...frame.aliens.map((alien) => alien.y + alien.height));
+    expect(frame.shields).toHaveLength(4);
+    expect(frame.shields.every((shield) => shield.y > lowestAlienY)).toBe(true);
+    expect(frame.shields.every((shield) => shield.y + shield.height < frame.cannon.y)).toBe(true);
+    expect(frame.shields.every((shield) => shield.durability === 10)).toBe(true);
+  });
+
+  it('destroys player missiles when they collide with shields', () => {
+    const engine = new GameEngine(() => 0.5, { playerReloadDelayMs: 999_999 });
+
+    engine.tick(0, 1000, 700);
+    let frame = engine.tick(16, 1000, 700, {
+      moveAxis: 0,
+      firePressed: true,
+      inputSource: 'keyboard',
+    });
+
+    for (let index = 0; index < 30; index += 1) {
+      frame = engine.tick(32 + index * 100, 1000, 700, {
+        moveAxis: 0,
+        firePressed: false,
+        inputSource: 'keyboard',
+      });
+    }
+
+    expect(frame.playerMissiles).toHaveLength(0);
+    expect(frame.shields.some((shield) => shield.durability < 10)).toBe(true);
+  });
+
+  it('applies enemy missile collisions to shields without negative durability', () => {
+    const engine = new GameEngine(() => 0);
+
+    let frame = engine.tick(0, 1000, 700);
+    for (let index = 0; index < 140; index += 1) {
+      frame = engine.tick((index + 1) * 100, 1000, 700, {
+        moveAxis: 0,
+        firePressed: false,
+        inputSource: 'none',
+      });
+    }
+
+    expect(frame.shields.some((shield) => shield.durability < 10)).toBe(true);
+    expect(frame.shields.every((shield) => shield.durability >= 0)).toBe(true);
+  });
+
   it('clamps reload delay and rejects shots during cooldown', () => {
     const engine = new GameEngine(() => 0.5, { playerReloadDelayMs: 999_999 });
 

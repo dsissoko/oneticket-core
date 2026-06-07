@@ -66,6 +66,29 @@ export function GameCanvas(): JSX.Element {
         context.fillRect(alien.x, alien.y, alien.width, alien.height);
       }
 
+      for (const shield of frame.shields) {
+        if (shield.durability <= 0) {
+          continue;
+        }
+
+        const alpha = Math.max(0.18, shield.durability / shield.maxDurability);
+        context.fillStyle = `rgba(138, 255, 162, ${alpha.toFixed(3)})`;
+        context.fillRect(shield.x, shield.y, shield.width, shield.height);
+
+        const totalDamage = shield.maxDurability - shield.durability;
+        context.fillStyle = '#05070e';
+        for (let index = 0; index < totalDamage; index += 1) {
+          const holeXRatio = ((index * 7 + 3) % 10) / 10;
+          const holeYRatio = ((index * 5 + 4) % 8) / 8;
+          const holeWidth = Math.max(2, shield.width * 0.08);
+          const holeHeight = Math.max(2, shield.height * 0.16);
+          const holeX = shield.x + holeXRatio * (shield.width - holeWidth);
+          const holeY = shield.y + holeYRatio * (shield.height - holeHeight);
+
+          context.fillRect(holeX, holeY, holeWidth, holeHeight);
+        }
+      }
+
       context.fillStyle = '#ff6f91';
       for (const missile of frame.enemyMissiles) {
         context.fillRect(missile.x, missile.y, missile.width, missile.height);
