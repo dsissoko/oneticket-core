@@ -41,7 +41,6 @@ export function Header({
   navLinks = [
     { label: 'Home', href: '/' },
     { label: 'About', href: '/about' },
-    { label: 'Help', href: '/help' },
   ],
 }: HeaderProps): React.ReactElement {
   const [isOpen, setIsOpen] = useState(false);

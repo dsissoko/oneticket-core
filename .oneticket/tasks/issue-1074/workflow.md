@@ -8,3 +8,4 @@
 2026-06-07 07:51 | F | apps/flashcards/app/src/screens/HomeScreen.tsx
 2026-06-07 07:51 | G | apps/flashcards/app/src/screens/SessionScreen.tsx
 2026-06-07 07:51 | K | apps/flashcards/app/src/screens/ResultsScreen.tsx
+2026-06-07 07:54 | L | apps/flashcards/app/src/main.tsx
