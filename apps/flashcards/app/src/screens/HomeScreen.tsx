@@ -10,15 +10,20 @@ import type { LearningMode } from '@/hooks/useLearningMode';
  * Displays the currently selected theme name.
  */
 function ThemePicker(): React.ReactElement {
-  const { themes } = useTheme();
-  const themeName = themes[0]?.name ?? 'World Capitals';
+  const { themes, selectedThemeId, selectTheme } = useTheme();
 
   return (
     <div className="space-y-2">
       <label className="text-sm font-medium text-muted-foreground">Theme</label>
-      <div className="rounded-md border bg-muted/50 px-4 py-3 text-sm">
-        {themeName}
-      </div>
+      <select
+        value={selectedThemeId ?? themes[0]?.id ?? ''}
+        onChange={(e) => selectTheme(e.target.value)}
+        className="w-full rounded-md border bg-background px-4 py-3 text-sm cursor-pointer"
+      >
+        {themes.map((t) => (
+          <option key={t.id} value={t.id}>{t.name}</option>
+        ))}
+      </select>
     </div>
   );
 }
