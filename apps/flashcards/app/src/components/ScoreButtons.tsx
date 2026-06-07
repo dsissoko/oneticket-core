@@ -1,4 +1,4 @@
-import { Button } from '@primer/react';
+import { Button } from '@/components/ui/button';
 
 /**
  * ScoreButtons Component
@@ -23,16 +23,16 @@ export function ScoreButtons({ onScore }: ScoreButtonsProps): React.ReactElement
     <div className="flex gap-4 justify-center">
       <Button
         onClick={() => onScore(true)}
-        variant="primary"
-        size="large"
+        variant="default"
+        size="lg"
         aria-label="I knew it"
       >
         I knew it
       </Button>
       <Button
         onClick={() => onScore(false)}
-        variant="danger"
-        size="large"
+        variant="destructive"
+        size="lg"
         aria-label="I didn't know"
       >
         I didn't know

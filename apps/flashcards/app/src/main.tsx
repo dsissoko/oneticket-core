@@ -7,6 +7,7 @@ import './styles/globals.css';
 import { AppLayout, ErrorBoundary, LoadingIndicator } from './components';
 import { queryClient } from './lib/query-client';
 import { logger } from './lib/logger';
+import worldCapitalsData from './data/themes/world-capitals.json';
 
 // __ENABLE_MSW__ is defined at build time in vite.config.ts → define block.
 // true  = MSW active (demo, preview, GitHub Pages — no backend needed)
@@ -48,7 +49,7 @@ function App(): React.ReactElement {
               <Route element={<AppLayout />}>
                 <Route index element={<HomeScreen />} />
                 <Route path="/about" element={<AboutScreen />} />
-                <Route path="/session" element={<SessionScreen />} />
+                <Route path="/session" element={<SessionScreen cards={worldCapitalsData.cards} />} />
                 <Route path="/results" element={<ResultsScreen />} />
                 <Route path="*" element={<NotFoundScreen />} />
               </Route>
