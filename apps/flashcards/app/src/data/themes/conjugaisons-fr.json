@@ -1,0 +1,85 @@
+{
+  "id": "conjugaisons-fr",
+  "name": "Conjugaisons françaises",
+  "cards": [
+    { "id": "aimer-present", "front": "Aimer — présent", "back": "j'aime, tu aimes, il aime" },
+    { "id": "aimer-imparfait", "front": "Aimer — imparfait", "back": "j'aimais, tu aimais, il aimait" },
+    { "id": "aimer-futur", "front": "Aimer — futur", "back": "j'aimerai, tu aimeras, il aimera" },
+
+    { "id": "finir-present", "front": "Finir — présent", "back": "je finis, tu finis, il finit" },
+    { "id": "finir-imparfait", "front": "Finir — imparfait", "back": "je finissais, tu finissais, il finissait" },
+    { "id": "finir-futur", "front": "Finir — futur", "back": "je finirai, tu finiras, il finira" },
+
+    { "id": "aller-present", "front": "Aller — présent", "back": "je vais, tu vas, il va" },
+    { "id": "aller-imparfait", "front": "Aller — imparfait", "back": "j'allais, tu allais, il allait" },
+    { "id": "aller-futur", "front": "Aller — futur", "back": "j'irai, tu iras, il ira" },
+
+    { "id": "avoir-present", "front": "Avoir — présent", "back": "j'ai, tu as, il a" },
+    { "id": "avoir-imparfait", "front": "Avoir — imparfait", "back": "j'avais, tu avais, il avait" },
+    { "id": "avoir-futur", "front": "Avoir — futur", "back": "j'aurai, tu auras, il aura" },
+
+    { "id": "etre-present", "front": "Être — présent", "back": "je suis, tu es, il est" },
+    { "id": "etre-imparfait", "front": "Être — imparfait", "back": "j'étais, tu étais, il était" },
+    { "id": "etre-futur", "front": "Être — futur", "back": "je serai, tu seras, il sera" },
+
+    { "id": "faire-present", "front": "Faire — présent", "back": "je fais, tu fais, il fait" },
+    { "id": "faire-imparfait", "front": "Faire — imparfait", "back": "je faisais, tu faisais, il faisait" },
+    { "id": "faire-futur", "front": "Faire — futur", "back": "je ferai, tu feras, il fera" },
+
+    { "id": "dire-present", "front": "Dire — présent", "back": "je dis, tu dis, il dit" },
+    { "id": "dire-imparfait", "front": "Dire — imparfait", "back": "je disais, tu disais, il disait" },
+    { "id": "dire-futur", "front": "Dire — futur", "back": "je dirai, tu diras, il dira" },
+
+    { "id": "venir-present", "front": "Venir — présent", "back": "je viens, tu viens, il vient" },
+    { "id": "venir-imparfait", "front": "Venir — imparfait", "back": "je venais, tu venais, il venait" },
+    { "id": "venir-futur", "front": "Venir — futur", "back": "je viendrai, tu viendras, il viendra" },
+
+    { "id": "voir-present", "front": "Voir — présent", "back": "je vois, tu vois, il voit" },
+    { "id": "voir-imparfait", "front": "Voir — imparfait", "back": "je voyais, tu voyais, il voyait" },
+    { "id": "voir-futur", "front": "Voir — futur", "back": "je verrai, tu verras, il verra" },
+
+    { "id": "pouvoir-present", "front": "Pouvoir — présent", "back": "je peux, tu peux, il peut" },
+    { "id": "pouvoir-imparfait", "front": "Pouvoir — imparfait", "back": "je pouvais, tu pouvais, il pouvait" },
+    { "id": "pouvoir-futur", "front": "Pouvoir — futur", "back": "je pourrai, tu pourras, il pourra" },
+
+    { "id": "vouloir-present", "front": "Vouloir — présent", "back": "je veux, tu veux, il veut" },
+    { "id": "vouloir-imparfait", "front": "Vouloir — imparfait", "back": "je voulais, tu voulais, il voulait" },
+    { "id": "vouloir-futur", "front": "Vouloir — futur", "back": "je voudrai, tu voudras, il voudra" },
+
+    { "id": "savoir-present", "front": "Savoir — présent", "back": "je sais, tu sais, il sait" },
+    { "id": "savoir-imparfait", "front": "Savoir — imparfait", "back": "je savais, tu savais, il savait" },
+    { "id": "savoir-futur", "front": "Savoir — futur", "back": "je saurai, tu sauras, il saura" },
+
+    { "id": "partir-present", "front": "Partir — présent", "back": "je pars, tu pars, il part" },
+    { "id": "partir-imparfait", "front": "Partir — imparfait", "back": "je partais, tu partais, il partait" },
+    { "id": "partir-futur", "front": "Partir — futur", "back": "je partirai, tu partiras, il partira" },
+
+    { "id": "prendre-present", "front": "Prendre — présent", "back": "je prends, tu prends, il prend" },
+    { "id": "prendre-imparfait", "front": "Prendre — imparfait", "back": "je prenais, tu prenais, il prenait" },
+    { "id": "prendre-futur", "front": "Prendre — futur", "back": "je prendrai, tu prendras, il prendra" },
+
+    { "id": "manger-present", "front": "Manger — présent", "back": "je mange, tu manges, il mange" },
+    { "id": "manger-imparfait", "front": "Manger — imparfait", "back": "je mangeais, tu mangeais, il mangeait" },
+    { "id": "manger-futur", "front": "Manger — futur", "back": "je mangerai, tu mangeras, il mangera" },
+
+    { "id": "jouer-present", "front": "Jouer — présent", "back": "je joue, tu joues, il joue" },
+    { "id": "jouer-imparfait", "front": "Jouer — imparfait", "back": "je jouais, tu jouais, il jouait" },
+    { "id": "jouer-futur", "front": "Jouer — futur", "back": "je jouerai, tu joueras, il jouera" },
+
+    { "id": "chanter-present", "front": "Chanter — présent", "back": "je chante, tu chantes, il chante" },
+    { "id": "chanter-imparfait", "front": "Chanter — imparfait", "back": "je chantais, tu chantais, il chantait" },
+    { "id": "chanter-futur", "front": "Chanter — futur", "back": "je chanterai, tu chanteras, il chantera" },
+
+    { "id": "danser-present", "front": "Danser — présent", "back": "je danse, tu danses, il danse" },
+    { "id": "danser-imparfait", "front": "Danser — imparfait", "back": "je dansais, tu dansais, il dansait" },
+    { "id": "danser-futur", "front": "Danser — futur", "back": "je danserai, tu danseras, il dansera" },
+
+    { "id": "lire-present", "front": "Lire — présent", "back": "je lis, tu lis, il lit" },
+    { "id": "lire-imparfait", "front": "Lire — imparfait", "back": "je lisais, tu lisais, il lisait" },
+    { "id": "lire-futur", "front": "Lire — futur", "back": "je lirai, tu liras, il lira" },
+
+    { "id": "ecrire-present", "front": "Écrire — présent", "back": "j'écris, tu écris, il écrit" },
+    { "id": "ecrire-imparfait", "front": "Écrire — imparfait", "back": "j'écrivais, tu écrivais, il écrivait" },
+    { "id": "ecrire-futur", "front": "Écrire — futur", "back": "j'écrirai, tu écriras, il écrira" }
+  ]
+}
