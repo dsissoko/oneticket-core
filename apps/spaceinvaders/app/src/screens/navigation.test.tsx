@@ -5,7 +5,7 @@ import { describe, it, expect } from 'vitest';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { renderWithProviders } from '../test/utils';
 import { HomeScreen } from './HomeScreen';
-import { AboutScreen } from './AboutScreen';
+import { GameScreen } from './GameScreen';
 import { AppLayout } from '../components/layout/AppLayout';
 
 function LocationDisplay() {
@@ -14,21 +14,21 @@ function LocationDisplay() {
 }
 
 describe('Internal Navigation', () => {
-  it('clicking About Us navigates to /about', () => {
+  it('clicking Start Game navigates to /game', () => {
     renderWithProviders(
       <>
         <Routes>
           <Route element={<AppLayout />}>
             <Route index element={<HomeScreen />} />
-            <Route path="/about" element={<AboutScreen />} />
+            <Route path="/game" element={<GameScreen />} />
           </Route>
         </Routes>
         <LocationDisplay />
       </>
     );
 
-    fireEvent.click(screen.getByText('About Us'));
-    expect(screen.getByTestId('location').textContent).toBe('/about');
+    fireEvent.click(screen.getByText('Start Game'));
+    expect(screen.getByTestId('location').textContent).toBe('/game');
   });
 
   it('all internal links use Link not <a href>', () => {
