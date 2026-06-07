@@ -8,7 +8,7 @@
       "file": "apps/spaceinvaders/app/src/screens/GameScreen.tsx",
       "content": "Implement Slice 1 from apps/spaceinvaders/docs/how/slices/slice-1-foundation-runtime-and-responsive-canvas/slice.md, aligned with apps/spaceinvaders/docs/how/architecture.md. Before coding, load skills oneticket-technical-skill-picker, oneticket-stack-js-ts, and oneticket-stack-vite-react-primer. Keep AppShell as the root layout: routes must stay nested under AppLayout. Update Home page so content area contains only one centered \"Start Game\" button that navigates with React Router Link to /game. Add /game route and create GameScreen mounted inside AppLayout (do not bypass header/footer). GameScreen must wrap the canvas area with className exactly including flex-grow flex flex-col overflow-hidden so the game canvas fills AppShell content area exactly like Breakout. Implement responsive canvas host sizing from parent dimensions and initialize game runtime loop scaffold (phase envelope running/victory/gameOver and input boundaries keyboard + touch zones 80% fire/20% movement). Add or update tests covering routing and layout integration for / and /game. Run app tests relevant to routing/screens and ensure lint/build pass.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
