@@ -5,9 +5,27 @@ import {
   type Alien,
   type AlienWaveState,
 } from '@/game/domain/alienWave';
+import { NO_INPUT_INTENTS, type GameInputIntents, type InputSource } from '@/game/input/InputController';
 
 type EnemyMissile = {
   id: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  speed: number;
+};
+
+type PlayerMissile = {
+  id: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  speed: number;
+};
+
+type Cannon = {
   x: number;
   y: number;
   width: number;
@@ -21,25 +39,43 @@ export type GameFrameState = {
     height: number;
   };
   aliens: Alien[];
+  cannon: Cannon;
+  playerMissiles: PlayerMissile[];
   enemyMissiles: EnemyMissile[];
   debug: {
     activeAliens: number;
+    playerMissiles: number;
     enemyMissiles: number;
+    rejectedPlayerShots: number;
+    lastInputSource: InputSource;
   };
 };
 
 type EngineState = {
   wave: AlienWaveState;
+  cannon: Cannon;
+  playerMissiles: PlayerMissile[];
+  playerReloadRemainingMs: number;
+  rejectedPlayerShots: number;
+  lastInputSource: InputSource;
   enemyMissiles: EnemyMissile[];
   enemyFireCooldownSeconds: number;
+};
+
+type GameEngineOptions = {
+  playerReloadDelayMs?: number;
 };
 
 const MIN_FIRE_COOLDOWN_SECONDS = 0.45;
 const MAX_FIRE_COOLDOWN_SECONDS = 1.35;
 const MAX_DELTA_SECONDS = 0.1;
+const MIN_PLAYER_RELOAD_DELAY_MS = 0;
+const MAX_PLAYER_RELOAD_DELAY_MS = 5000;
 
 export class GameEngine {
   private readonly random: () => number;
+
+  private readonly playerReloadDelayMs: number;
 
   private state: EngineState | null = null;
 
@@ -47,11 +83,17 @@ export class GameEngine {
 
   private playfield = { width: 1, height: 1 };
 
-  constructor(random: () => number = Math.random) {
+  constructor(random: () => number = Math.random, options?: GameEngineOptions) {
     this.random = random;
+    this.playerReloadDelayMs = this.clampPlayerReloadDelay(options?.playerReloadDelayMs ?? 0);
   }
 
-  public tick(timestamp: number, width: number, height: number): GameFrameState {
+  public tick(
+    timestamp: number,
+    width: number,
+    height: number,
+    input: GameInputIntents = NO_INPUT_INTENTS,
+  ): GameFrameState {
     const safeWidth = Math.max(1, Math.floor(width));
     const safeHeight = Math.max(1, Math.floor(height));
 
@@ -70,6 +112,29 @@ export class GameEngine {
     this.previousTimestamp = timestamp;
 
     const nextWave = advanceAlienWave(this.state.wave, dtSeconds, safeWidth);
+    const nextCannon = this.moveCannon(this.state.cannon, input.moveAxis, dtSeconds, safeWidth);
+
+    const nextReloadRemainingMs = Math.max(
+      0,
+      this.state.playerReloadRemainingMs - dtSeconds * 1000,
+    );
+
+    const playerFireResult = this.trySpawnPlayerMissile(
+      nextCannon,
+      this.state.playerMissiles,
+      nextReloadRemainingMs,
+      safeHeight,
+      input.firePressed,
+      this.state.rejectedPlayerShots,
+    );
+
+    const movedPlayerMissiles = playerFireResult.playerMissiles
+      .map((missile) => ({
+        ...missile,
+        y: missile.y - missile.speed * dtSeconds,
+      }))
+      .filter((missile) => missile.y + missile.height >= 0);
+
     const nextCooldown = this.state.enemyFireCooldownSeconds - dtSeconds;
     const spawnResult = this.trySpawnEnemyMissile(nextWave.aliens, nextCooldown, safeHeight);
     const movedMissiles = spawnResult.enemyMissiles
@@ -81,6 +146,11 @@ export class GameEngine {
 
     this.state = {
       wave: nextWave,
+      cannon: nextCannon,
+      playerMissiles: movedPlayerMissiles,
+      playerReloadRemainingMs: playerFireResult.playerReloadRemainingMs,
+      rejectedPlayerShots: playerFireResult.rejectedPlayerShots,
+      lastInputSource: input.inputSource,
       enemyMissiles: movedMissiles,
       enemyFireCooldownSeconds: spawnResult.enemyFireCooldownSeconds,
     };
@@ -91,8 +161,82 @@ export class GameEngine {
   private createInitialState(width: number, height: number): EngineState {
     return {
       wave: createAlienWave(width, height),
+      cannon: this.createCannon(width, height),
+      playerMissiles: [],
+      playerReloadRemainingMs: 0,
+      rejectedPlayerShots: 0,
+      lastInputSource: 'none',
       enemyMissiles: [],
       enemyFireCooldownSeconds: this.getRandomFireCooldownSeconds(),
+    };
+  }
+
+  private createCannon(width: number, height: number): Cannon {
+    const cannonWidth = Math.max(20, width * 0.055);
+    const cannonHeight = Math.max(12, height * 0.035);
+    const bottomMargin = Math.max(8, height * 0.035);
+
+    return {
+      x: width / 2 - cannonWidth / 2,
+      y: Math.max(0, height - cannonHeight - bottomMargin),
+      width: cannonWidth,
+      height: cannonHeight,
+      speed: Math.max(140, width * 0.55),
+    };
+  }
+
+  private moveCannon(cannon: Cannon, moveAxis: number, dtSeconds: number, playfieldWidth: number): Cannon {
+    const clampedAxis = Math.min(1, Math.max(-1, moveAxis));
+    const nextX = cannon.x + clampedAxis * cannon.speed * dtSeconds;
+
+    return {
+      ...cannon,
+      x: Math.min(playfieldWidth - cannon.width, Math.max(0, nextX)),
+    };
+  }
+
+  private trySpawnPlayerMissile(
+    cannon: Cannon,
+    playerMissiles: PlayerMissile[],
+    playerReloadRemainingMs: number,
+    playfieldHeight: number,
+    firePressed: boolean,
+    rejectedPlayerShots: number,
+  ): Pick<
+    EngineState,
+    'playerMissiles' | 'playerReloadRemainingMs' | 'rejectedPlayerShots'
+  > {
+    if (!firePressed) {
+      return {
+        playerMissiles,
+        playerReloadRemainingMs,
+        rejectedPlayerShots,
+      };
+    }
+
+    if (playerReloadRemainingMs > 0) {
+      return {
+        playerMissiles,
+        playerReloadRemainingMs,
+        rejectedPlayerShots: rejectedPlayerShots + 1,
+      };
+    }
+
+    const missileHeight = Math.max(10, playfieldHeight * 0.025);
+    const missileWidth = Math.max(2, missileHeight * 0.22);
+    const missile: PlayerMissile = {
+      id: `player-missile-${Date.now()}-${Math.floor(this.random() * 100_000)}`,
+      x: cannon.x + cannon.width / 2 - missileWidth / 2,
+      y: cannon.y - missileHeight,
+      width: missileWidth,
+      height: missileHeight,
+      speed: Math.max(180, playfieldHeight * 0.65),
+    };
+
+    return {
+      playerMissiles: [...playerMissiles, missile],
+      playerReloadRemainingMs: this.playerReloadDelayMs,
+      rejectedPlayerShots,
     };
   }
 
@@ -147,16 +291,29 @@ export class GameEngine {
     return MIN_FIRE_COOLDOWN_SECONDS + this.random() * (MAX_FIRE_COOLDOWN_SECONDS - MIN_FIRE_COOLDOWN_SECONDS);
   }
 
+  private clampPlayerReloadDelay(value: number): number {
+    if (!Number.isFinite(value)) {
+      return MIN_PLAYER_RELOAD_DELAY_MS;
+    }
+
+    return Math.min(MAX_PLAYER_RELOAD_DELAY_MS, Math.max(MIN_PLAYER_RELOAD_DELAY_MS, Math.round(value)));
+  }
+
   private toFrameState(state: EngineState, playfield: { width: number; height: number }): GameFrameState {
     const activeAliens = state.wave.aliens.filter((alien) => alien.isAlive).length;
 
     return {
       playfield,
       aliens: state.wave.aliens,
+      cannon: state.cannon,
+      playerMissiles: state.playerMissiles,
       enemyMissiles: state.enemyMissiles,
       debug: {
         activeAliens,
+        playerMissiles: state.playerMissiles.length,
         enemyMissiles: state.enemyMissiles.length,
+        rejectedPlayerShots: state.rejectedPlayerShots,
+        lastInputSource: state.lastInputSource,
       },
     };
   }

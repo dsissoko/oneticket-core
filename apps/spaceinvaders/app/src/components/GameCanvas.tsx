@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { GameEngine } from '@/game/engine/GameEngine';
+import { InputController } from '@/game/input/InputController';
 
 type LogicalDimensions = {
   width: number;
@@ -11,6 +12,7 @@ export function GameCanvas(): JSX.Element {
   const logicalDimensionsRef = useRef<LogicalDimensions>({ width: 1, height: 1 });
   const animationFrameRef = useRef<number | null>(null);
   const gameEngineRef = useRef<GameEngine>(new GameEngine());
+  const inputControllerRef = useRef<InputController>(new InputController());
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -27,6 +29,7 @@ export function GameCanvas(): JSX.Element {
     }
 
     let isUnmounted = false;
+    const detachInput = inputControllerRef.current.attach(canvas);
 
     const updateLogicalDimensions = (): void => {
       if (isUnmounted) return;
@@ -47,7 +50,8 @@ export function GameCanvas(): JSX.Element {
 
     const drawFrame = (timestamp: number): void => {
       const { width, height } = logicalDimensionsRef.current;
-      const frame = gameEngineRef.current.tick(timestamp, width, height);
+      const inputIntents = inputControllerRef.current.consumeIntents();
+      const frame = gameEngineRef.current.tick(timestamp, width, height, inputIntents);
 
       context.clearRect(0, 0, frame.playfield.width, frame.playfield.height);
       context.fillStyle = '#05070e';
@@ -67,11 +71,20 @@ export function GameCanvas(): JSX.Element {
         context.fillRect(missile.x, missile.y, missile.width, missile.height);
       }
 
+      context.fillStyle = '#8fe3ff';
+      for (const missile of frame.playerMissiles) {
+        context.fillRect(missile.x, missile.y, missile.width, missile.height);
+      }
+
+      context.fillStyle = '#ffd166';
+      context.fillRect(frame.cannon.x, frame.cannon.y, frame.cannon.width, frame.cannon.height);
+
       context.fillStyle = '#7fffd4';
       context.font = '16px monospace';
       context.fillText(`logical: ${frame.playfield.width}x${frame.playfield.height}`, 16, 28);
       context.fillText(`aliens: ${frame.debug.activeAliens}`, 16, 52);
       context.fillText(`enemy missiles: ${frame.debug.enemyMissiles}`, 16, 76);
+      context.fillText(`player missiles: ${frame.debug.playerMissiles}`, 16, 100);
 
       if (!isUnmounted) {
         animationFrameRef.current = window.requestAnimationFrame(drawFrame);
@@ -96,6 +109,7 @@ export function GameCanvas(): JSX.Element {
 
     return () => {
       isUnmounted = true;
+      detachInput();
       window.removeEventListener('resize', handleResize);
 
       if (animationFrameRef.current !== null) {
