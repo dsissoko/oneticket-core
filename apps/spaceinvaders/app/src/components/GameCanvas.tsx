@@ -18,6 +18,15 @@ function getParentSize(element: HTMLElement | null): CanvasSize {
   };
 }
 
+interface GameCanvasProps {
+  onPhaseChange?: (phase: GamePhase) => void;
+  onScoreChange?: (currentScore: number) => void;
+  onBestScoreChange?: (bestScore: number) => void;
+  onFinalScoreChange?: (finalScore: number | null) => void;
+  onEndReasonChange?: (endReason: GameEndReason | null) => void;
+  onRestartReady?: (restart: () => void) => void;
+}
+
 function renderShield(
   context: CanvasRenderingContext2D,
   shield: ShieldState,
@@ -48,8 +57,14 @@ function renderShield(
   context.restore();
 }
 
-export function GameCanvas(): React.ReactElement {
-  const hostRef = useRef<HTMLDivElement>(null);
+export function GameCanvas({
+  onPhaseChange,
+  onScoreChange,
+  onBestScoreChange,
+  onFinalScoreChange,
+  onEndReasonChange,
+  onRestartReady,
+}: GameCanvasProps): React.ReactElement {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<GameEngine | null>(null);
   const [phase, setPhase] = useState<GamePhase>('running');
@@ -59,10 +74,9 @@ export function GameCanvas(): React.ReactElement {
   const [endReason, setEndReason] = useState<GameEndReason | null>(null);
 
   useEffect(() => {
-    const host = hostRef.current;
     const canvas = canvasRef.current;
-    if (!host || !canvas) {
-      logger.error('[game-canvas] host/canvas is not mounted');
+    if (!canvas) {
+      logger.error('[game-canvas] canvas is not mounted');
       return;
     }
 
@@ -128,7 +142,10 @@ export function GameCanvas(): React.ReactElement {
 
     const engine = createGameEngine(renderFrame);
     engineRef.current = engine;
-    const inputController = createInputController(host, engine.getIntentSink());
+    onRestartReady?.(() => {
+      engineRef.current?.restart();
+    });
+    const inputController = createInputController(canvas, engine.getIntentSink());
 
     try {
       engine.setPhase('running');
@@ -141,18 +158,20 @@ export function GameCanvas(): React.ReactElement {
       inputController.cleanup();
       engine.stop();
       engineRef.current = null;
+      onRestartReady?.(() => {
+        // no-op when runtime is unmounted
+      });
     };
-  }, []);
+  }, [onRestartReady]);
 
   useEffect(() => {
-    const host = hostRef.current;
     const canvas = canvasRef.current;
-    if (!host || !canvas) return;
+    if (!canvas) return;
 
     let resizeObserver: ResizeObserver | null = null;
 
     const updateSize = (): void => {
-      const nextSize = getParentSize(host);
+      const nextSize = getParentSize(canvas);
 
       const devicePixelRatio = window.devicePixelRatio || 1;
       canvas.width = Math.max(1, Math.floor(nextSize.width * devicePixelRatio));
@@ -171,8 +190,8 @@ export function GameCanvas(): React.ReactElement {
     updateSize();
     if (typeof ResizeObserver !== 'undefined') {
       resizeObserver = new ResizeObserver(updateSize);
-      if (host.parentElement) {
-        resizeObserver.observe(host.parentElement);
+      if (canvas.parentElement) {
+        resizeObserver.observe(canvas.parentElement);
       }
     } else {
       window.addEventListener('resize', updateSize);
@@ -184,55 +203,37 @@ export function GameCanvas(): React.ReactElement {
     };
   }, []);
 
-  const handleRestart = (): void => {
-    engineRef.current?.restart();
-  };
+  useEffect(() => {
+    onPhaseChange?.(phase);
+  }, [onPhaseChange, phase]);
 
-  const endTitle = phase === 'victory' ? 'Victory!' : 'Game Over';
-  const endReasonLabel: Record<GameEndReason, string> = {
-    allAliensDestroyed: 'All aliens destroyed',
-    alienLineReached: 'Aliens reached the cannon line',
-    cannonHit: 'The cannon was hit',
-  };
+  useEffect(() => {
+    onScoreChange?.(currentScore);
+  }, [onScoreChange, currentScore]);
+
+  useEffect(() => {
+    onBestScoreChange?.(bestScore);
+  }, [bestScore, onBestScoreChange]);
+
+  useEffect(() => {
+    onFinalScoreChange?.(finalScore);
+  }, [finalScore, onFinalScoreChange]);
+
+  useEffect(() => {
+    onEndReasonChange?.(endReason);
+  }, [endReason, onEndReasonChange]);
 
   return (
-    <div
-      ref={hostRef}
-      className="relative flex-grow overflow-hidden"
-      data-testid="game-canvas-host"
-      aria-label="Game canvas host"
-    >
-      <canvas
-        ref={canvasRef}
-        className="w-full h-full touch-none"
-        aria-label="Space Invaders game canvas"
-      />
-      <div className="sr-only" data-testid="game-phase">
-        {phase}
-      </div>
-      <div className="sr-only" data-testid="game-score">
-        {currentScore}
-      </div>
-      <div className="sr-only" data-testid="best-score">
-        {bestScore}
-      </div>
-      {phase !== 'running' ? (
-        <div className="absolute inset-0 flex items-center justify-center bg-slate-950/80 p-4">
-          <div className="flex min-w-64 flex-col items-center gap-3 rounded-lg border border-slate-700 bg-slate-900/95 p-6 text-slate-100">
-            <h2 className="text-2xl font-semibold">{endTitle}</h2>
-            {endReason ? <p>{endReasonLabel[endReason]}</p> : null}
-            <p className="text-lg">Final score: {finalScore ?? currentScore}</p>
-            <button
-              type="button"
-              onClick={handleRestart}
-              className="rounded-md bg-cyan-500 px-4 py-2 font-semibold text-slate-950 hover:bg-cyan-400"
-            >
-              Restart
-            </button>
-          </div>
-        </div>
-      ) : null}
-    </div>
+    <canvas
+      ref={canvasRef}
+      aria-label="Space Invaders game canvas"
+      style={{
+        display: 'block',
+        width: '100%',
+        height: '100%',
+        touchAction: 'none',
+      }}
+    />
   );
 }
 
