@@ -1,0 +1,18 @@
+{
+  "id": "world-capitals",
+  "name": "World Capitals",
+  "cards": [
+    { "id": "card-1", "front": "France", "back": "Paris" },
+    { "id": "card-2", "front": "Japan", "back": "Tokyo" },
+    { "id": "card-3", "front": "Australia", "back": "Canberra" },
+    { "id": "card-4", "front": "Brazil", "back": "Brasília" },
+    { "id": "card-5", "front": "Canada", "back": "Ottawa" },
+    { "id": "card-6", "front": "Germany", "back": "Berlin" },
+    { "id": "card-7", "front": "Egypt", "back": "Cairo" },
+    { "id": "card-8", "front": "India", "back": "New Delhi" },
+    { "id": "card-9", "front": "China", "back": "Beijing" },
+    { "id": "card-10", "front": "Argentina", "back": "Buenos Aires" },
+    { "id": "card-11", "front": "Italy", "back": "Rome" },
+    { "id": "card-12", "front": "South Korea", "back": "Seoul" }
+  ]
+}
