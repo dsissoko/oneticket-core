@@ -14,10 +14,12 @@ export interface ViewportState {
 
 /**
  * Constants for canvas sizing
+ * Increased LOGICAL_HEIGHT from 600 to 700 to give more vertical room for invaders on mobile
+ * New aspect ratio: 800/700 ≈ 1.14 (was 1.33 = 4:3)
  */
 const LOGICAL_WIDTH = 800
-const LOGICAL_HEIGHT = 600
-const ASPECT_RATIO = LOGICAL_WIDTH / LOGICAL_HEIGHT // 1.333...
+const LOGICAL_HEIGHT = 700
+const ASPECT_RATIO = LOGICAL_WIDTH / LOGICAL_HEIGHT // ~1.14
 
 /**
  * Custom hook to manage responsive viewport state and canvas sizing
