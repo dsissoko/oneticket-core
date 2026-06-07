@@ -16,7 +16,7 @@
       "file": "apps/flashcards/app/src/data/themes/world-capitals.json",
       "content": "Read apps/flashcards/docs/how/slices/slice-1-foundation/slice.md. Create the directory apps/flashcards/app/src/data/themes/ and write world-capitals.json with: id='world-capitals', name='World Capitals', and a cards array with at least 10 country/capital pairs. Each card has id, front (country name), back (capital city). This is the theme data for the app.",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "dev"
     },
     {
