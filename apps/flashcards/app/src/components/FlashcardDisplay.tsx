@@ -55,14 +55,19 @@ export function FlashcardDisplay({
 
         {/* Back face — capital */}
         <div
-          className="absolute inset-0 flex items-center justify-center rounded-xl border-2 border-border bg-card text-card-foreground text-center text-2xl font-semibold shadow-md"
+          className="absolute inset-0 flex items-center justify-center rounded-xl border-2 border-border bg-card text-card-foreground text-center shadow-md"
           style={{
             backfaceVisibility: 'hidden',
             transform: 'rotateY(180deg)',
           }}
           data-testid="flashcard-back"
         >
-          <span className="text-card-foreground">{card.back}</span>
+          <span className={cn(
+            'text-card-foreground whitespace-pre-line leading-relaxed',
+            card.back.includes('\n') ? 'text-sm' : 'text-2xl font-semibold'
+          )}>
+            {card.back}
+          </span>
         </div>
       </button>
       </div>
