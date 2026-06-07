@@ -36,7 +36,7 @@ export function FlashcardDisplay({
         onClick={onFlip}
         onKeyDown={handleKeyDown}
         aria-label={isFlipped ? 'Show country name' : 'Show capital'}
-        className="relative h-64 w-full cursor-pointer style-none bg-transparent p-0 [transform-style:preserve-3d] transition-transform duration-500 [transform:rotateY(180deg)]"
+        className="relative h-64 w-full cursor-pointer style-none bg-transparent p-0 [transform-style:preserve-3d] transition-transform duration-500"
         style={{
           transformStyle: 'preserve-3d',
           transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
