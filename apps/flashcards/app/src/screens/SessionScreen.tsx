@@ -1,29 +1,24 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { Card } from '@/types';
 import { FlashcardDisplay } from '@/components/FlashcardDisplay';
 import { ProgressBar } from '@/components/ProgressBar';
 import { ScoreButtons } from '@/components/ScoreButtons';
 import { useSession } from '@/hooks/useSession';
-
-interface SessionScreenProps {
-  cards: Card[];
-}
+import { useThemeContext } from '@/context/ThemeContext';
 
 /**
  * SessionScreen Component
  *
  * Displays a flashcard session with progress tracking and scoring.
- * - Shows current card (country name on front, capital on back)
- * - Progress bar displays current position (X/Y)
- * - Score buttons appear after card flip
- * - Advances through cards on score, navigates to /results when complete
+ * Cards come from the currently selected theme via useTheme.
  */
-export function SessionScreen({ cards }: SessionScreenProps): React.ReactElement {
+export function SessionScreen(): React.ReactElement {
   const navigate = useNavigate();
+  const { currentTheme } = useThemeContext();
   const { currentIndex, recordResult, nextCard } = useSession();
   const [isFlipped, setIsFlipped] = useState(false);
 
+  const cards = currentTheme?.cards ?? [];
   const totalCards = cards.length;
   const currentCard = cards[currentIndex];
   const isSessionComplete = currentIndex >= totalCards;
@@ -40,7 +35,6 @@ export function SessionScreen({ cards }: SessionScreenProps): React.ReactElement
       setIsFlipped(false);
       nextCard();
 
-      // Navigate to results when all cards have been answered
       if (currentIndex + 1 >= totalCards) {
         navigate('/results');
       }
@@ -48,7 +42,6 @@ export function SessionScreen({ cards }: SessionScreenProps): React.ReactElement
     [currentCard, recordResult, nextCard, currentIndex, totalCards, navigate],
   );
 
-  // Guard: if no cards or session complete, redirect to results
   if (totalCards === 0) {
     return (
       <div className="flex items-center justify-center flex-grow bg-background text-foreground">
@@ -58,7 +51,6 @@ export function SessionScreen({ cards }: SessionScreenProps): React.ReactElement
   }
 
   if (isSessionComplete) {
-    // Navigate immediately if session is already complete
     navigate('/results');
     return (
       <div className="flex items-center justify-center flex-grow bg-background text-foreground">

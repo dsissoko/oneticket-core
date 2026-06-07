@@ -2,44 +2,36 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useTheme } from '@/hooks/useTheme';
+import { useTranslation } from '@/i18n/I18nContext';
+import { useThemeContext } from '@/context/ThemeContext';
 import type { LearningMode } from '@/hooks/useLearningMode';
 
-/**
- * ThemePicker component
- * Displays the currently selected theme name.
- */
 function ThemePicker(): React.ReactElement {
-  const { themes, selectedThemeId, selectTheme } = useTheme();
+  const { themes, selectedThemeId, selectTheme } = useThemeContext();
+  const { t } = useTranslation();
 
   return (
     <div className="space-y-2">
-      <label className="text-sm font-medium text-muted-foreground">Theme</label>
+      <label className="text-sm font-medium text-muted-foreground">{t.home.theme}</label>
       <select
         value={selectedThemeId ?? themes[0]?.id ?? ''}
         onChange={(e) => selectTheme(e.target.value)}
         className="w-full rounded-md border bg-background px-4 py-3 text-sm cursor-pointer"
       >
-        {themes.map((t) => (
-          <option key={t.id} value={t.id}>{t.name}</option>
+        {themes.map((th) => (
+          <option key={th.id} value={th.id}>{th.name}</option>
         ))}
       </select>
     </div>
   );
 }
 
-/**
- * ModeSelector component
- * Displays the selected learning mode.
- */
-function ModeSelector({
-  mode = 'flip',
-}: {
-  mode?: LearningMode;
-}): React.ReactElement {
+function ModeSelector({ mode = 'flip' }: { mode?: LearningMode }): React.ReactElement {
+  const { t } = useTranslation();
+
   return (
     <div className="space-y-2">
-      <label className="text-sm font-medium text-muted-foreground">Mode</label>
+      <label className="text-sm font-medium text-muted-foreground">{t.home.mode}</label>
       <div className="rounded-md border bg-muted/50 px-4 py-3 text-sm">
         {mode}
       </div>
@@ -47,14 +39,9 @@ function ModeSelector({
   );
 }
 
-/**
- * HomeScreen Component
- *
- * Landing page of the application served at `/`.
- * Displays theme picker, mode selector, and Start button.
- */
 export function HomeScreen(): React.ReactElement {
-  const { currentTheme } = useTheme();
+  const { currentTheme } = useThemeContext();
+  const { t } = useTranslation();
 
   return (
     <div className="flex items-center justify-center flex-grow bg-background text-foreground py-12">
@@ -72,7 +59,7 @@ export function HomeScreen(): React.ReactElement {
           </div>
           <div className="flex justify-center">
             <Button asChild size="lg">
-              <Link to="/session">Start</Link>
+              <Link to="/session">{t.home.start}</Link>
             </Button>
           </div>
         </CardContent>

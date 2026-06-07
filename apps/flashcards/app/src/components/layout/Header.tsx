@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu } from 'lucide-react'; // lucide-react v1+
+import { Menu } from 'lucide-react';
 import { ThemeToggle } from '../ThemeToggle';
+import { LanguageSwitcher } from '../LanguageSwitcher';
+import { useTranslation } from '@/i18n/I18nContext';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -9,41 +11,14 @@ import {
   DropdownMenuItem,
 } from '../ui/dropdown-menu';
 
-/**
- * HeaderProps Interface
- *
- * @interface
- * @property {string} [logo] - Logo text or image alt text (default: "Flashcards")
- * @property {Array<{label: string; href: string}>} [navLinks] - Navigation links array
- */
-interface HeaderProps {
-  logo?: string;
-  navLinks?: Array<{ label: string; href: string }>;
-}
-
-/**
- * Header Component
- *
- * Protected: Navigation header - do not modify without review
- *
- * Displays the application header with logo (clickable, links to home)
- * and responsive navigation links. Uses Tailwind for responsive design.
- * Mobile menu uses Radix UI DropdownMenu (Portal-based) to avoid clipping
- * issues in CSS grid layouts.
- *
- * @component
- * @param {HeaderProps} props - Component props
- * @example
- * return <Header logo="Flashcards" navLinks={[{ label: "Home", href: "/" }]} />
- */
-export function Header({
-  logo = 'Flashcards',
-  navLinks = [
-    { label: 'Home', href: '/' },
-    { label: 'About', href: '/about' },
-  ],
-}: HeaderProps): React.ReactElement {
+export function Header({ logo = 'Flashcards' }: { logo?: string }): React.ReactElement {
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useTranslation();
+
+  const navLinks = [
+    { label: t.nav.home, href: '/' },
+    { label: t.nav.about, href: '/about' },
+  ];
 
   return (
     <header className="sticky top-0 z-50 bg-background border-b border-border">
@@ -68,11 +43,14 @@ export function Header({
             </Link>
           ))}
           <div className="border-l border-border h-6" />
+          <LanguageSwitcher />
+          <div className="border-l border-border h-6" />
           <ThemeToggle />
         </div>
 
-        {/* Mobile menu — Radix UI DropdownMenu (Portal-based, no clipping) */}
+        {/* Mobile menu */}
         <div className="sm:hidden flex items-center gap-2">
+          <LanguageSwitcher />
           <ThemeToggle />
           <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
             <DropdownMenuTrigger asChild>
