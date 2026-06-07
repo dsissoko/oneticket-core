@@ -54,6 +54,15 @@ export function Game(): React.ReactElement {
   const restartHandlerRef = useRef<RestartHandler>(new RestartHandler())
   const victoryTransitionTimerRef = useRef<number>(0)
   const lastFireTimeRef = useRef<number>(0) // Fire cooldown tracking
+
+  // Touch state — Breakout pattern: store in ref, read in game loop each frame
+  const touchRef = useRef<{
+    active: boolean
+    startX: number
+    currentX: number
+    startY: number
+    hasFired: boolean
+  }>({ active: false, startX: 0, currentX: 0, startY: 0, hasFired: false })
   const gameStateRef = useRef<GameLoopState>({
     formation: null,
     player: null,
@@ -84,7 +93,26 @@ export function Game(): React.ReactElement {
     try {
       renderingSystemRef.current = new RenderingSystem(canvas)
       renderingSystemRef.current.setCanvasSize(canvasWidth, canvasHeight)
-      inputSystemRef.current = new InputSystem(window, canvasWidth, canvasHeight)
+      inputSystemRef.current = new InputSystem(window)
+
+      // Touch listeners on canvas — Breakout pattern (prevents page scroll)
+      const onTouchStart = (e: TouchEvent) => {
+        if (e.touches.length === 0) return
+        const touch = e.touches[0]
+        touchRef.current = { active: true, startX: touch.clientX, currentX: touch.clientX, startY: touch.clientY, hasFired: false }
+        e.preventDefault()
+      }
+      const onTouchMove = (e: TouchEvent) => {
+        if (!touchRef.current.active || e.touches.length === 0) return
+        touchRef.current.currentX = e.touches[0].clientX
+        e.preventDefault()
+      }
+      const onTouchEnd = () => {
+        touchRef.current.active = false
+      }
+      canvas.addEventListener('touchstart', onTouchStart, { passive: false })
+      canvas.addEventListener('touchmove', onTouchMove, { passive: false })
+      canvas.addEventListener('touchend', onTouchEnd)
 
       // Initialize physics system with callbacks
       physicsSystemRef.current = new PhysicsSystem({
@@ -161,6 +189,37 @@ export function Game(): React.ReactElement {
 
     // Only update entities if game is in Playing state
     if (stateMachine.getState() === 'Playing') {
+      // Apply touch input each frame — Breakout pattern
+      if (inputSystemRef.current && canvasRef.current) {
+        const touch = touchRef.current
+        if (touch.active) {
+          const rect = canvasRef.current.getBoundingClientRect()
+          const normalizedY = (touch.startY - rect.top) / rect.height
+          const deltaX = touch.currentX - touch.startX
+
+          if (normalizedY > 0.7) {
+            // Bottom 30% — movement zone
+            inputSystemRef.current.setLeft(deltaX < -5)
+            inputSystemRef.current.setRight(deltaX > 5)
+            inputSystemRef.current.setFire(false)
+            touchRef.current.startX = touch.currentX // smooth tracking
+          } else {
+            // Top 70% — fire zone (tap)
+            inputSystemRef.current.setLeft(false)
+            inputSystemRef.current.setRight(false)
+            if (!touch.hasFired) {
+              inputSystemRef.current.setFire(true)
+              touchRef.current.hasFired = true
+            }
+          }
+        } else {
+          // Touch ended — reset touch-driven inputs (keyboard inputs untouched)
+          inputSystemRef.current.setLeft(false)
+          inputSystemRef.current.setRight(false)
+          inputSystemRef.current.setFire(false)
+        }
+      }
+
       const inputState = inputSystemRef.current?.getInputState() ?? state.inputState
 
         // Update player
