@@ -1,0 +1,306 @@
+{
+  "id": "conjugaisons-fr",
+  "name": "Conjugaisons françaises",
+  "cards": [
+    {
+      "id": "aimer-present",
+      "front": "Aimer — présent",
+      "back": "j'aime\ntu aimes\nil/elle aime\nnous aimons\nvous aimez\nils/elles aiment"
+    },
+    {
+      "id": "aimer-imparfait",
+      "front": "Aimer — imparfait",
+      "back": "j'aimais\ntu aimais\nil/elle aimait\nnous aimions\nvous aimiez\nils/elles aimaient"
+    },
+    {
+      "id": "aimer-futur",
+      "front": "Aimer — futur",
+      "back": "j'aimerai\ntu aimeras\nil/elle aimera\nnous aimerons\nvous aimerez\nils/elles aimeront"
+    },
+    {
+      "id": "finir-present",
+      "front": "Finir — présent",
+      "back": "je finis\ntu finis\nil/elle finit\nnous finissons\nvous finissez\nils/elles finissent"
+    },
+    {
+      "id": "finir-imparfait",
+      "front": "Finir — imparfait",
+      "back": "je finissais\ntu finissais\nil/elle finissait\nnous finissions\nvous finissiez\nils/elles finissaient"
+    },
+    {
+      "id": "finir-futur-ils",
+      "front": "Finir — futur — ils",
+      "back": "ils finiront"
+    },
+    {
+      "id": "aller-present-tu",
+      "front": "Aller — présent — tu",
+      "back": "tu vas"
+    },
+    {
+      "id": "aller-imparfait",
+      "front": "Aller — imparfait",
+      "back": "j'allais\ntu allais\nil/elle allait\nnous allions\nvous alliez\nils/elles allaient"
+    },
+    {
+      "id": "aller-futur-nous",
+      "front": "Aller — futur — nous",
+      "back": "nous irons"
+    },
+    {
+      "id": "avoir-present-il",
+      "front": "Avoir — présent — il",
+      "back": "il a"
+    },
+    {
+      "id": "avoir-imparfait-nous",
+      "front": "Avoir — imparfait — nous",
+      "back": "nous avions"
+    },
+    {
+      "id": "avoir-futur-il",
+      "front": "Avoir — futur — il",
+      "back": "il aura"
+    },
+    {
+      "id": "etre-present",
+      "front": "Être — présent",
+      "back": "je suis\ntu es\nil/elle est\nnous sommes\nvous êtes\nils/elles sont"
+    },
+    {
+      "id": "etre-imparfait-il",
+      "front": "Être — imparfait — il",
+      "back": "il était"
+    },
+    {
+      "id": "etre-futur-je",
+      "front": "Être — futur — je",
+      "back": "je serai"
+    },
+    {
+      "id": "faire-present",
+      "front": "Faire — présent",
+      "back": "je fais\ntu fais\nil/elle fait\nnous faisons\nvous faites\nils/elles font"
+    },
+    {
+      "id": "faire-imparfait-vous",
+      "front": "Faire — imparfait — vous",
+      "back": "vous faisiez"
+    },
+    {
+      "id": "faire-futur-tu",
+      "front": "Faire — futur — tu",
+      "back": "tu feras"
+    },
+    {
+      "id": "dire-present-nous",
+      "front": "Dire — présent — nous",
+      "back": "nous disons"
+    },
+    {
+      "id": "dire-imparfait-il",
+      "front": "Dire — imparfait — il",
+      "back": "il disait"
+    },
+    {
+      "id": "dire-futur-ils",
+      "front": "Dire — futur — ils",
+      "back": "ils diront"
+    },
+    {
+      "id": "venir-present",
+      "front": "Venir — présent",
+      "back": "je viens\ntu viens\nil/elle vient\nnous venons\nvous venez\nils/elles viennent"
+    },
+    {
+      "id": "venir-imparfait",
+      "front": "Venir — imparfait",
+      "back": "je venais\ntu venais\nil/elle venait\nnous venions\nvous veniez\nils/elles venaient"
+    },
+    {
+      "id": "venir-futur-il",
+      "front": "Venir — futur — il",
+      "back": "il viendra"
+    },
+    {
+      "id": "voir-present-vous",
+      "front": "Voir — présent — vous",
+      "back": "vous voyez"
+    },
+    {
+      "id": "voir-imparfait-il",
+      "front": "Voir — imparfait — il",
+      "back": "il voyait"
+    },
+    {
+      "id": "voir-futur-il",
+      "front": "Voir — futur — il",
+      "back": "il verra"
+    },
+    {
+      "id": "pouvoir-present",
+      "front": "Pouvoir — présent",
+      "back": "je peux\ntu peux\nil/elle peut\nnous pouvons\nvous pouvez\nils/elles peuvent"
+    },
+    {
+      "id": "pouvoir-imparfait",
+      "front": "Pouvoir — imparfait",
+      "back": "je pouvais\ntu pouvais\nil/elle pouvait\nnous pouvions\nvous pouviez\nils/elles pouvaient"
+    },
+    {
+      "id": "pouvoir-futur",
+      "front": "Pouvoir — futur",
+      "back": "je pourrai\ntu pourras\nil/elle pourra\nnous pourrons\nvous pourrez\nils/elles pourront"
+    },
+    {
+      "id": "vouloir-present-tu",
+      "front": "Vouloir — présent — tu",
+      "back": "tu veux"
+    },
+    {
+      "id": "vouloir-imparfait",
+      "front": "Vouloir — imparfait",
+      "back": "je voulais\ntu voulais\nil/elle voulait\nnous voulions\nvous vouliez\nils/elles voulaient"
+    },
+    {
+      "id": "vouloir-futur-nous",
+      "front": "Vouloir — futur — nous",
+      "back": "nous voudrons"
+    },
+    {
+      "id": "savoir-present",
+      "front": "Savoir — présent",
+      "back": "je sais\ntu sais\nil/elle sait\nnous savons\nvous savez\nils/elles savent"
+    },
+    {
+      "id": "savoir-imparfait-vous",
+      "front": "Savoir — imparfait — vous",
+      "back": "vous saviez"
+    },
+    {
+      "id": "savoir-futur",
+      "front": "Savoir — futur",
+      "back": "je saurai\ntu sauras\nil/elle saura\nnous saurons\nvous saurez\nils/elles sauront"
+    },
+    {
+      "id": "partir-present-ils",
+      "front": "Partir — présent — ils",
+      "back": "ils partent"
+    },
+    {
+      "id": "partir-imparfait-il",
+      "front": "Partir — imparfait — il",
+      "back": "il partait"
+    },
+    {
+      "id": "partir-futur",
+      "front": "Partir — futur",
+      "back": "je partirai\ntu partiras\nil/elle partira\nnous partirons\nvous partirez\nils/elles partiront"
+    },
+    {
+      "id": "prendre-present-je",
+      "front": "Prendre — présent — je",
+      "back": "je prends"
+    },
+    {
+      "id": "prendre-imparfait",
+      "front": "Prendre — imparfait",
+      "back": "je prenais\ntu prenais\nil/elle prenait\nnous prenions\nvous preniez\nils/elles prenaient"
+    },
+    {
+      "id": "prendre-futur-vous",
+      "front": "Prendre — futur — vous",
+      "back": "vous prendrez"
+    },
+    {
+      "id": "manger-present-nous",
+      "front": "Manger — présent — nous",
+      "back": "nous mangeons"
+    },
+    {
+      "id": "manger-imparfait-tu",
+      "front": "Manger — imparfait — tu",
+      "back": "tu mangeais"
+    },
+    {
+      "id": "manger-futur-nous",
+      "front": "Manger — futur — nous",
+      "back": "nous mangerons"
+    },
+    {
+      "id": "jouer-present",
+      "front": "Jouer — présent",
+      "back": "je joue\ntu joues\nil/elle joue\nnous jouons\nvous jouez\nils/elles jouent"
+    },
+    {
+      "id": "jouer-imparfait-ils",
+      "front": "Jouer — imparfait — ils",
+      "back": "ils jouaient"
+    },
+    {
+      "id": "jouer-futur-tu",
+      "front": "Jouer — futur — tu",
+      "back": "tu joueras"
+    },
+    {
+      "id": "chanter-present-ils",
+      "front": "Chanter — présent — ils",
+      "back": "ils chantent"
+    },
+    {
+      "id": "chanter-imparfait-ils",
+      "front": "Chanter — imparfait — ils",
+      "back": "ils chantaient"
+    },
+    {
+      "id": "chanter-futur-il",
+      "front": "Chanter — futur — il",
+      "back": "il chantera"
+    },
+    {
+      "id": "danser-present-je",
+      "front": "Danser — présent — je",
+      "back": "je danse"
+    },
+    {
+      "id": "danser-imparfait-je",
+      "front": "Danser — imparfait — je",
+      "back": "je dansais"
+    },
+    {
+      "id": "danser-futur-je",
+      "front": "Danser — futur — je",
+      "back": "je danserai"
+    },
+    {
+      "id": "lire-present-je",
+      "front": "Lire — présent — je",
+      "back": "je lis"
+    },
+    {
+      "id": "lire-imparfait-vous",
+      "front": "Lire — imparfait — vous",
+      "back": "vous lisiez"
+    },
+    {
+      "id": "lire-futur-je",
+      "front": "Lire — futur — je",
+      "back": "je lirai"
+    },
+    {
+      "id": "ecrire-present",
+      "front": "Écrire — présent",
+      "back": "j'écris\ntu écris\nil/elle écrit\nnous écrivons\nvous écrivez\nils/elles écrivent"
+    },
+    {
+      "id": "ecrire-imparfait-il",
+      "front": "Écrire — imparfait — il",
+      "back": "il écrivait"
+    },
+    {
+      "id": "ecrire-futur-il",
+      "front": "Écrire — futur — il",
+      "back": "il écrira"
+    }
+  ]
+}

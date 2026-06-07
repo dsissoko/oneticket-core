@@ -43,13 +43,16 @@ The pipeline posts two live URLs directly in the PR comment:
 
 **Live examples** — all built by OneTicket:
 
-| Project | Doc | App |
-|---|---|---|
-| MonJournal — *personal journal, tags, timeline, surprise* | [docs](https://dsissoko.github.io/oneticket-core/monjournal/docs/) | [app](https://dsissoko.github.io/oneticket-core/monjournal/app/) |
-| Breakout — *classic arcade, vanilla JS, no dependencies* | [docs](https://dsissoko.github.io/oneticket-core/breakout/docs/) | [app](https://dsissoko.github.io/oneticket-core/breakout/app/) |
-| SpaceInvaders — *retro shooter, ECS architecture* | [docs](https://dsissoko.github.io/oneticket-core/spaceinvaders/docs/) | [app](https://dsissoko.github.io/oneticket-core/spaceinvaders/app/) |
-| AppShell — *the reusable scaffold, bootstrap any project with `@leaddev init-appshell`* | [docs](https://dsissoko.github.io/oneticket-core/appshell/docs/) | [app](https://dsissoko.github.io/oneticket-core/appshell/app/) |
-| OneTicket — *partially built by itself* | [docs](https://dsissoko.github.io/oneticket-core/framework/docs/) | — |
+| Project | Doc | App | Model | External debug |
+|---|---|---|---|---|
+| MonJournal — *personal journal, tags, timeline, surprise* | [docs](https://dsissoko.github.io/oneticket-core/monjournal/docs/) | [app](https://dsissoko.github.io/oneticket-core/monjournal/app/) | claude-haiku-4-5 | — |
+| Breakout — *classic arcade, vanilla JS, no dependencies* | [docs](https://dsissoko.github.io/oneticket-core/breakout/docs/) | [app](https://dsissoko.github.io/oneticket-core/breakout/app/) | claude-haiku-4-5 | — |
+| SpaceInvaders — *retro shooter, ECS architecture* | [docs](https://dsissoko.github.io/oneticket-core/spaceinvaders/docs/) | [app](https://dsissoko.github.io/oneticket-core/spaceinvaders/app/) | claude-haiku-4-5 | ✋ |
+| AppShell — *the reusable scaffold, bootstrap any project with `@leaddev init-appshell`* | [docs](https://dsissoko.github.io/oneticket-core/appshell/docs/) | [app](https://dsissoko.github.io/oneticket-core/appshell/app/) | claude-haiku-4-5 | — |
+| Flashcards — *world capitals, multiplication tables, french conjugations* | [docs](https://dsissoko.github.io/oneticket-core/flashcards/docs/) | [app](https://dsissoko.github.io/oneticket-core/flashcards/app/) | minimax-m2.5 | ✋ |
+| OneTicket — *partially built by itself* | [docs](https://dsissoko.github.io/oneticket-core/framework/docs/) | — | claude-haiku-4-5 | — |
+
+> ✋ *External debug — required human or stronger model intervention to fix issues*
 
 ---
 
@@ -57,6 +60,7 @@ The pipeline posts two live URLs directly in the PR comment:
 
 - **opencode.ai account** — Agent runs are powered by [anomalyco/opencode](https://github.com/anomalyco/opencode) — a remarkably capable agentic CLI that executes tasks directly in the CI sandbox. A generic CLI option is planned for a future release. Get your API key at [opencode.ai/auth](https://opencode.ai/auth). A free model (MiniMax) is available, but a higher-quality model is recommended — expect to build a full app for under $10.
 - **GitHub PAT** — scopes: `contents:write`, `pull-requests:write`, `issues:write`, `actions:write`
+- **GitHub Pages** — must be enabled on your repository
 
 ---
 
@@ -89,6 +93,7 @@ In your repository **Settings → Secrets and variables → Actions**, add:
 1. `OPENCODE_API_KEY` — your API key from [opencode.ai/auth](https://opencode.ai/auth)
 2. `ONETICKET_GH_PAT` — a GitHub PAT with scopes `contents:write`, `pull-requests:write`, `issues:write`, `actions:write` — create one in your profile **Settings → Developer settings → Personal access tokens** ([github.com/settings](https://github.com/settings))
 3. Enable GitHub Pages — **Settings → Pages → Source → GitHub Actions**
+4. (Optional but recommended) Enable automatic branch deletion — **Settings → General → Pull Requests → Automatically delete head branches** — keeps your repository clean as feature and task branches accumulate fast.
 
 ### 3. (Optional) Customize your OneTicket repository
 

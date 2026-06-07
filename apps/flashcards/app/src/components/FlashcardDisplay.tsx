@@ -1,0 +1,76 @@
+import * as React from 'react';
+import { cn } from '@/lib/utils';
+import type { Card } from '@/types';
+
+interface FlashcardDisplayProps {
+  card: Card;
+  isFlipped: boolean;
+  onFlip: () => void;
+  className?: string;
+}
+
+/**
+ * FlashcardDisplay renders a card with front (country) and back (capital).
+ * Tap/click triggers a 3D flip animation revealing the answer.
+ */
+export function FlashcardDisplay({
+  card,
+  isFlipped,
+  onFlip,
+  className,
+}: FlashcardDisplayProps) {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onFlip();
+    }
+  };
+
+  return (
+    <div
+      className={cn('animate-in fade-in zoom-in-95 duration-300', className)}
+      data-testid="flashcard-container"
+    >
+      <div className="perspective-1000 h-64 w-full">
+        <button
+          type="button"
+          onClick={onFlip}
+          onKeyDown={handleKeyDown}
+          aria-label={isFlipped ? 'Show country name' : 'Show capital'}
+          className="relative h-full w-full cursor-pointer bg-transparent p-0"
+          style={{
+            transformStyle: 'preserve-3d',
+            transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+            transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+          }}
+        >
+        {/* Front face — country name */}
+        <div
+          className="absolute inset-0 flex items-center justify-center rounded-xl border-2 border-border bg-card text-card-foreground text-center text-2xl font-semibold shadow-md backface-hidden"
+          style={{ backfaceVisibility: 'hidden' }}
+          data-testid="flashcard-front"
+        >
+          <span className="text-card-foreground">{card.front}</span>
+        </div>
+
+        {/* Back face — capital */}
+        <div
+          className="absolute inset-0 flex items-center justify-center rounded-xl border-2 border-border bg-card text-card-foreground text-center shadow-md"
+          style={{
+            backfaceVisibility: 'hidden',
+            transform: 'rotateY(180deg)',
+          }}
+          data-testid="flashcard-back"
+        >
+          <span className={cn(
+            'text-card-foreground whitespace-pre-line leading-relaxed',
+            card.back.includes('\n') ? 'text-sm' : 'text-2xl font-semibold'
+          )}>
+            {card.back}
+          </span>
+        </div>
+      </button>
+      </div>
+    </div>
+  );
+}
