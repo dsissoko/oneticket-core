@@ -114,7 +114,8 @@ export function readManifest(issueNumber) {
   if (!fs.existsSync(manifestPath)) {
     throw new Error(`${MANIFEST_FILE} not found: ${manifestPath}`);
   }
-  const raw = fs.readFileSync(manifestPath, 'utf8');
+  const raw = fs.readFileSync(manifestPath, 'utf8')
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, ''); // strip invalid JSON control chars
   try {
     return JSON.parse(raw);
   } catch (err) {

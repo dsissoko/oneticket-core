@@ -40,7 +40,9 @@ async function main() {
   }
 
   // Guard: skip if all tasks already done — manifest is stale (not yet cleaned up)
-  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  const raw = fs.readFileSync(manifestPath, 'utf8')
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, ''); // strip invalid JSON control chars
+  const manifest = JSON.parse(raw);
   const allDone = manifest.tasks && manifest.tasks.every(t => t.status === 'done');
   if (allDone) {
     console.log(`[dispatch-fanout] Manifest for issue #${issueNumber} is allDone — skipping FAN-OUT.`);
