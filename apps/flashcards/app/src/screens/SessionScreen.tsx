@@ -28,6 +28,13 @@ export function SessionScreen(): React.ReactElement {
   const [isFlipped, setIsFlipped] = useState(false);
   const prevThemeId = useRef<string | undefined>(undefined);
 
+  // Reset session on mount — fresh start every time the user navigates to /session
+  useEffect(() => {
+    resetSession();
+    setIsFlipped(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Reset session when theme changes
   useEffect(() => {
     if (prevThemeId.current !== undefined && prevThemeId.current !== currentTheme?.id) {
