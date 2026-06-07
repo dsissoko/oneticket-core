@@ -64,3 +64,58 @@ body,
   height: 100%;
   display: block;
 }
+
+.game-canvas-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.end-state-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgb(5 8 14 / 78%);
+}
+
+.end-state-overlay__card {
+  width: min(90%, 360px);
+  border: 1px solid #23314b;
+  border-radius: 12px;
+  padding: 20px;
+  background: #0b1220;
+  text-align: center;
+  box-shadow: 0 24px 40px rgb(0 0 0 / 40%);
+}
+
+.end-state-overlay__title {
+  margin: 0;
+  color: #f8fafc;
+}
+
+.end-state-overlay__reason {
+  margin: 12px 0 0;
+  color: #9db1d8;
+}
+
+.end-state-overlay__score {
+  margin: 16px 0;
+  color: #ffd166;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.end-state-overlay__restart {
+  border: 1px solid #5fa8ff;
+  border-radius: 8px;
+  padding: 10px 14px;
+  background: #183455;
+  color: #f1f7ff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.end-state-overlay__restart:hover {
+  background: #1f3d64;
+}

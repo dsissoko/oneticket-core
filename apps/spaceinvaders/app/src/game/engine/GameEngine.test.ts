@@ -165,4 +165,85 @@ describe('GameEngine slice 1 behavior', () => {
     expect(frame.score.current).toBeGreaterThan(0);
     expect(frame.score.best).toBeGreaterThanOrEqual(0);
   });
+
+  it('transitions to gameOver when an enemy missile hits the cannon', () => {
+    const engine = new GameEngine(() => 0.5);
+
+    const firstFrame = engine.tick(0, 1000, 700);
+    const engineState = (engine as unknown as { state: { enemyMissiles: Array<Record<string, number | string>> } })
+      .state;
+    engineState.enemyMissiles = [
+      {
+        id: 'test-hit',
+        x: firstFrame.cannon.x,
+        y: firstFrame.cannon.y,
+        width: firstFrame.cannon.width,
+        height: firstFrame.cannon.height,
+        speed: 0,
+      },
+    ];
+
+    const frame = engine.tick(16, 1000, 700, {
+      moveAxis: 0,
+      firePressed: false,
+      inputSource: 'none',
+    });
+
+    expect(frame.phase).toBe('gameOver');
+    expect(frame.endState?.reason).toBe('cannonHit');
+    expect(frame.endState?.finalScore).toBe(frame.score.current);
+  });
+
+  it('transitions to gameOver when aliens reach the cannon line', () => {
+    const engine = new GameEngine(() => 0.5);
+
+    const firstFrame = engine.tick(0, 1000, 700);
+    const engineState = (engine as unknown as { state: { wave: { aliens: Array<Record<string, unknown>> } } }).state;
+
+    const firstAlien = engineState.wave.aliens[0] as {
+      isAlive: boolean;
+      y: number;
+      height: number;
+      [key: string]: unknown;
+    };
+
+    engineState.wave.aliens = [
+      {
+        ...firstAlien,
+        isAlive: true,
+        y: firstFrame.cannon.y - firstAlien.height,
+      },
+    ];
+
+    const frame = engine.tick(16, 1000, 700);
+
+    expect(frame.phase).toBe('gameOver');
+    expect(frame.endState?.reason).toBe('alienLineBreach');
+  });
+
+  it('transitions to victory when all aliens are destroyed and restarts cleanly', () => {
+    const engine = new GameEngine(() => 0.5);
+
+    engine.tick(0, 1000, 700);
+    const engineState = (engine as unknown as { state: { wave: { aliens: Array<Record<string, unknown>> } } }).state;
+    engineState.wave.aliens = engineState.wave.aliens.map((alien) => ({
+      ...alien,
+      isAlive: false,
+    }));
+
+    const victoryFrame = engine.tick(16, 1000, 700);
+
+    expect(victoryFrame.phase).toBe('victory');
+    expect(victoryFrame.endState?.reason).toBe('allAliensDestroyed');
+
+    engine.restart();
+    const restartedFrame = engine.tick(32, 1000, 700);
+
+    expect(restartedFrame.phase).toBe('running');
+    expect(restartedFrame.endState).toBeNull();
+    expect(restartedFrame.debug.activeAliens).toBe(ALIEN_ROWS * ALIEN_COLUMNS);
+    expect(restartedFrame.playerMissiles).toHaveLength(0);
+    expect(restartedFrame.enemyMissiles).toHaveLength(0);
+    expect(restartedFrame.score.current).toBe(0);
+  });
 });

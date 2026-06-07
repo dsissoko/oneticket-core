@@ -1,6 +1,11 @@
-import { useEffect, useRef } from 'react';
-import { GameEngine } from '@/game/engine/GameEngine';
+import { useEffect, useRef, useState } from 'react';
+import {
+  type EndStatePayload,
+  GameEngine,
+  type GamePhase,
+} from '@/game/engine/GameEngine';
 import { InputController } from '@/game/input/InputController';
+import { EndStateOverlay } from '@/game/ui/EndStateOverlay';
 
 type LogicalDimensions = {
   width: number;
@@ -13,6 +18,11 @@ export function GameCanvas(): JSX.Element {
   const animationFrameRef = useRef<number | null>(null);
   const gameEngineRef = useRef<GameEngine>(new GameEngine());
   const inputControllerRef = useRef<InputController>(new InputController());
+  const [phase, setPhase] = useState<GamePhase>('running');
+  const [endState, setEndState] = useState<EndStatePayload | null>(null);
+  const phaseRef = useRef<GamePhase>('running');
+  const endStateRef = useRef<EndStatePayload | null>(null);
+  const restartRequestedRef = useRef(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -49,9 +59,21 @@ export function GameCanvas(): JSX.Element {
     };
 
     const drawFrame = (timestamp: number): void => {
+      if (restartRequestedRef.current) {
+        gameEngineRef.current.restart();
+        restartRequestedRef.current = false;
+      }
+
       const { width, height } = logicalDimensionsRef.current;
       const inputIntents = inputControllerRef.current.consumeIntents();
       const frame = gameEngineRef.current.tick(timestamp, width, height, inputIntents);
+
+      if (frame.phase !== phaseRef.current || frame.endState !== endStateRef.current) {
+        phaseRef.current = frame.phase;
+        endStateRef.current = frame.endState;
+        setPhase(frame.phase);
+        setEndState(frame.endState);
+      }
 
       context.clearRect(0, 0, frame.playfield.width, frame.playfield.height);
       context.fillStyle = '#05070e';
@@ -153,5 +175,16 @@ export function GameCanvas(): JSX.Element {
     };
   }, []);
 
-  return <canvas aria-label="SpaceInvaders game canvas" className="game-canvas" ref={canvasRef} />;
+  const handleRestart = (): void => {
+    restartRequestedRef.current = true;
+  };
+
+  return (
+    <div className="game-canvas-frame">
+      <canvas aria-label="SpaceInvaders game canvas" className="game-canvas" ref={canvasRef} />
+      {phase !== 'running' && endState && (
+        <EndStateOverlay endState={endState} phase={phase} onRestart={handleRestart} />
+      )}
+    </div>
+  );
 }
