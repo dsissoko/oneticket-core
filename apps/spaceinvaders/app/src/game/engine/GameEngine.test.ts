@@ -142,4 +142,27 @@ describe('GameEngine slice 1 behavior', () => {
     expect(blockedShot.playerMissiles.length).toBe(1);
     expect(blockedShot.debug.rejectedPlayerShots).toBe(1);
   });
+
+  it('increments score when aliens are destroyed by player missiles', () => {
+    const engine = new GameEngine(() => 0.5, { playerReloadDelayMs: 0 });
+
+    let frame = engine.tick(0, 1000, 700);
+    const initialAliveAliens = frame.debug.activeAliens;
+
+    for (let index = 0; index < 260; index += 1) {
+      frame = engine.tick((index + 1) * 60, 1000, 700, {
+        moveAxis: 0,
+        firePressed: true,
+        inputSource: 'keyboard',
+      });
+
+      if (frame.debug.activeAliens < initialAliveAliens) {
+        break;
+      }
+    }
+
+    expect(frame.debug.activeAliens).toBeLessThan(initialAliveAliens);
+    expect(frame.score.current).toBeGreaterThan(0);
+    expect(frame.score.best).toBeGreaterThanOrEqual(0);
+  });
 });

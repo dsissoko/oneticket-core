@@ -102,12 +102,22 @@ export function GameCanvas(): JSX.Element {
       context.fillStyle = '#ffd166';
       context.fillRect(frame.cannon.x, frame.cannon.y, frame.cannon.width, frame.cannon.height);
 
+      context.fillStyle = '#f8fafc';
+      context.font = 'bold 18px monospace';
+      context.textBaseline = 'top';
+      context.textAlign = 'left';
+      context.fillText(`SCORE ${frame.score.current}`, 16, 12);
+
+      context.textAlign = 'right';
+      context.fillText(`BEST ${frame.score.best}`, frame.playfield.width - 16, 12);
+
       context.fillStyle = '#7fffd4';
-      context.font = '16px monospace';
-      context.fillText(`logical: ${frame.playfield.width}x${frame.playfield.height}`, 16, 28);
-      context.fillText(`aliens: ${frame.debug.activeAliens}`, 16, 52);
-      context.fillText(`enemy missiles: ${frame.debug.enemyMissiles}`, 16, 76);
-      context.fillText(`player missiles: ${frame.debug.playerMissiles}`, 16, 100);
+      context.font = '14px monospace';
+      context.textAlign = 'left';
+      context.fillText(`logical: ${frame.playfield.width}x${frame.playfield.height}`, 16, 42);
+      context.fillText(`aliens: ${frame.debug.activeAliens}`, 16, 62);
+      context.fillText(`enemy missiles: ${frame.debug.enemyMissiles}`, 16, 82);
+      context.fillText(`player missiles: ${frame.debug.playerMissiles}`, 16, 102);
 
       if (!isUnmounted) {
         animationFrameRef.current = window.requestAnimationFrame(drawFrame);
@@ -132,6 +142,7 @@ export function GameCanvas(): JSX.Element {
 
     return () => {
       isUnmounted = true;
+      gameEngineRef.current.endRun();
       detachInput();
       window.removeEventListener('resize', handleResize);
 
