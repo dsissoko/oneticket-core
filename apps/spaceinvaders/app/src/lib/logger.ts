@@ -22,7 +22,6 @@ const configuredLevel = import.meta.env.VITE_LOG_LEVEL as log.LogLevelDesc | und
 const effectiveLevel: log.LogLevelDesc = configuredLevel || 'debug';
 
 if (!configuredLevel) {
-  // eslint-disable-next-line no-console
   console.warn('[logger] VITE_LOG_LEVEL not set — falling back to "debug"');
 }
 

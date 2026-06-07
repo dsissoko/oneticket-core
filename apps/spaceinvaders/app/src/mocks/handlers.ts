@@ -8,7 +8,7 @@ import { mockUsers as initialUsers } from './data/users';
  */
 
 // In-memory store — resets on page reload (MSW runs in the browser)
-let users: User[] = [...initialUsers];
+const users: User[] = [...initialUsers];
 
 export const handlers = [
   // GET /api/users

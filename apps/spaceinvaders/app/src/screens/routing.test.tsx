@@ -8,6 +8,7 @@ import { AppLayout } from '../components/layout/AppLayout';
 import { HomeScreen } from './HomeScreen';
 import { AboutScreen } from './AboutScreen';
 import { HelpScreen } from './HelpScreen';
+import { GameScreen } from './GameScreen';
 import { NotFoundScreen } from './NotFoundScreen';
 
 function AppRoutes() {
@@ -17,6 +18,7 @@ function AppRoutes() {
         <Route index element={<HomeScreen />} />
         <Route path="/about" element={<AboutScreen />} />
         <Route path="/help" element={<HelpScreen />} />
+        <Route path="/game" element={<GameScreen />} />
         <Route path="*" element={<NotFoundScreen />} />
       </Route>
     </Routes>
@@ -26,7 +28,15 @@ function AppRoutes() {
 describe('Routing', () => {
   it('/ renders HomeScreen', () => {
     renderWithProviders(<AppRoutes />, { initialPath: '/' });
-    expect(screen.getByText('Welcome to the foundation.')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Start Game' })).toBeInTheDocument();
+  });
+
+  it('/game renders GameScreen inside AppLayout', () => {
+    renderWithProviders(<AppRoutes />, { initialPath: '/game' });
+
+    expect(screen.getByText(/© 2026 SpaceInvaders/)).toBeInTheDocument();
+    expect(screen.getByTestId('game-screen-root')).toBeInTheDocument();
+    expect(screen.getByLabelText('Space Invaders game canvas')).toBeInTheDocument();
   });
 
   it('/about renders AboutScreen', () => {
