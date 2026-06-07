@@ -28,7 +28,8 @@ export function FlashcardDisplay({
 
   return (
     <div
-      className={cn('perspective-1000', className)}
+      key={card.id}
+      className={cn('perspective-1000 animate-in fade-in zoom-in-95', className)}
       data-testid="flashcard-container"
     >
       <button
@@ -45,7 +46,7 @@ export function FlashcardDisplay({
       >
         {/* Front face — country name */}
         <div
-          className="absolute inset-0 flex items-center justify-center rounded-xl border-2 border-border bg-card text-card-foreground text-center text-2xl font-semibold shadow-md backface-hidden animate-in fade-in zoom-in-95"
+          className="absolute inset-0 flex items-center justify-center rounded-xl border-2 border-border bg-card text-card-foreground text-center text-2xl font-semibold shadow-md backface-hidden"
           style={{ backfaceVisibility: 'hidden' }}
           data-testid="flashcard-front"
         >
