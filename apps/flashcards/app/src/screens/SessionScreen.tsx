@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FlashcardDisplay } from '@/components/FlashcardDisplay';
-import { ProgressBar } from '@/components/ProgressBar';
 import { ScoreButtons } from '@/components/ScoreButtons';
 import { useSession } from '@/hooks/useSession';
 import { useThemeContext } from '@/context/ThemeContext';
@@ -25,7 +24,7 @@ function shuffle<T>(arr: T[]): T[] {
 export function SessionScreen(): React.ReactElement {
   const navigate = useNavigate();
   const { currentTheme } = useThemeContext();
-  const { currentIndex, recordResult, nextCard, resetSession } = useSession();
+  const { currentIndex, results, recordResult, nextCard, resetSession } = useSession();
   const [isFlipped, setIsFlipped] = useState(false);
   const prevThemeId = useRef<string | undefined>(undefined);
 
@@ -84,9 +83,16 @@ export function SessionScreen(): React.ReactElement {
     );
   }
 
+  const knownCount = results.filter((r) => r.known).length;
+
   return (
     <div className="flex flex-col items-center justify-center flex-grow bg-background text-foreground gap-8 p-8">
-      <ProgressBar current={currentIndex + 1} total={totalCards} />
+
+      {/* Stats row — score left, position right */}
+      <div className="w-full max-w-sm flex justify-between text-sm font-medium text-muted-foreground">
+        <span>✅ {knownCount} / {totalCards}</span>
+        <span>{currentIndex + 1} / {totalCards}</span>
+      </div>
 
       <FlashcardDisplay
         key={currentCard.id}
