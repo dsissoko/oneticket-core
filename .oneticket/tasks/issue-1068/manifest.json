@@ -7,7 +7,7 @@
       "file": "apps/flashcards/docs/what/product-spec.md",
       "content": "Read .oneticket/templates/product-spec.md. Create apps/flashcards/docs/what/product-spec.md with:\n- SITE_DESCRIPTION: 'Flashcard app for learning world capitals with flip mode and local progress tracking.'\n- Vision: learn world capitals efficiently via spaced-repetition-ready flashcard system\n- Users: learners studying geography\n- Problems: memorization without structure, no progress tracking\n- Product Goals: display cards from built-in theme, track session progress, extensible theme/mode architecture\n- Out of Scope: backend, user accounts, spaced-repetition algorithm (structure only)\n- Business Concepts: Theme, Card, LearningMode, SessionResult\n- Product Capabilities: theme selection, flip interaction, session scoring, results summary\n- Workflows: Home → Session → Results → replay\n- Business Rules: no backend, localStorage only, algo in isolated hook\n- Success Criteria: user can complete a session with score visible",
       "depends_on": [],
-      "status": "pending",
+      "status": "in_progress",
       "role": "analyst"
     },
     {
@@ -15,7 +15,9 @@
       "branch": "task/issue-1068-B",
       "file": "apps/flashcards/docs/what/epics/epic-0-mvp/epic.md",
       "content": "Read .oneticket/templates/epic.md. Read apps/flashcards/docs/what/product-spec.md.\nCreate apps/flashcards/docs/what/epics/epic-0-mvp/epic.md:\n- Goal: MVP flashcard app with World Capitals theme, flip mode, session scoring\n- Business Value: enable structured memorization with immediate feedback\n- Scope: Home screen (theme/mode selection), Session screen (flip + score buttons), Results screen (summary + replay)\n- Related User Stories: leave placeholder sections for @analyst to fill after us-*.md are created",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending",
       "role": "analyst"
     },
@@ -24,7 +26,9 @@
       "branch": "task/issue-1068-C",
       "file": "apps/flashcards/docs/what/epics/epic-0-mvp/user-stories/us-001-home-screen.md",
       "content": "Read .oneticket/templates/us.md. Read apps/flashcards/docs/what/product-spec.md. Read apps/flashcards/docs/what/epics/epic-0-mvp/epic.md.\nCreate ALL 4 user stories in apps/flashcards/docs/what/epics/epic-0-mvp/user-stories/:\n\n1. us-001-home-screen.md: 'As a learner, I want to select a theme and learning mode so that I can start a study session.' AC: theme picker shows World Capitals, mode selector shows flip, Start button navigates to /session.\n\n2. us-002-session-flip.md: 'As a learner, I want to see a card and flip it to reveal the answer so that I can test my knowledge.' AC: card shows country name, tap/click flips to show capital, progress bar visible, I knew it / I didn't know buttons appear after flip.\n\n3. us-003-results-screen.md: 'As a learner, I want to see my session score and replay option so that I can track my learning progress.' AC: score displays X/Y known, replay button restarts session, back to home option.\n\n4. us-004-complete-flow.md: 'As a learner, I want to go through Home → Session → Results → replay so that I can study flashcards continuously.' AC: all 3 screens link correctly, session data persists in localStorage, replay resets session.\n\nEach file gets Related Epic (epic-0-mvp.md) section.",
-      "depends_on": ["B"],
+      "depends_on": [
+        "B"
+      ],
       "status": "pending",
       "role": "analyst"
     },
@@ -33,7 +37,10 @@
       "branch": "task/issue-1068-D",
       "file": "apps/flashcards/docs/how/architecture.md",
       "content": "Read apps/flashcards/docs/what/product-spec.md. Read all us-*.md files in apps/flashcards/docs/what/epics/epic-0-mvp/user-stories/.\nCreate apps/flashcards/docs/how/architecture.md with:\n- Stack: React + Vite + TypeScript + MSW + localStorage\n- AppShell as scaffold base, adapted for flashcards\n- Screens: Home (/), Session (/session), Results (/results)\n- Components: FlashcardDisplay, ThemePicker, ModeSelector, ProgressBar, ScoreButtons, SessionResults\n- Key Types: LearningMode = 'flip' | 'spaced-repetition', Theme { id, name, cards }, Card { id, front, back }, SessionResult { cardId, known, timestamp }\n- Routes: /, /session, /results\n- Navigation: Home, About (remove Help, Demo)\n- Hooks: useLearningMode (isolates algo logic), useTheme, useSession\n- Constraints: no backend, localStorage only, algo in hook, GitHub Pages",
-      "depends_on": ["A", "C"],
+      "depends_on": [
+        "A",
+        "C"
+      ],
       "status": "pending",
       "role": "architect"
     },
@@ -42,7 +49,9 @@
       "branch": "task/issue-1068-E",
       "file": "apps/flashcards/docs/how/c4/system-context.md",
       "content": "Read apps/flashcards/docs/how/architecture.md.\nCreate apps/flashcards/docs/how/c4/system-context.md with Mermaid diagram:\n- Person: Learner\n- System: Flashcard App (React SPA on GitHub Pages)\n- External: localStorage (browser), MSW (mock API)\n- Interactions: Learner browses to app, selects theme/mode, studies cards, sees results",
-      "depends_on": ["D"],
+      "depends_on": [
+        "D"
+      ],
       "status": "pending",
       "role": "architect"
     },
@@ -51,7 +60,9 @@
       "branch": "task/issue-1068-F",
       "file": "apps/flashcards/docs/how/c4/containers.md",
       "content": "Read apps/flashcards/docs/how/architecture.md.\nCreate apps/flashcards/docs/how/c4/containers.md with Mermaid diagram:\n- Web Application container: React SPA with client-side routing (/, /session, /results)\n- State: React Context for session state, localStorage for persistence\n- MSW handlers: theme data (world-capitals.json), session results\n- Components: HomeScreen, SessionScreen, ResultsScreen, FlashcardDisplay, ThemePicker, ModeSelector",
-      "depends_on": ["D"],
+      "depends_on": [
+        "D"
+      ],
       "status": "pending",
       "role": "architect"
     },
@@ -60,7 +71,10 @@
       "branch": "task/issue-1068-G",
       "file": "apps/flashcards/docs/how/slices/slice-1-foundation/slice.md",
       "content": "Read apps/flashcards/docs/how/architecture.md. Read all us-*.md in apps/flashcards/docs/what/epics/epic-0-mvp/user-stories/.\nCreate apps/flashcards/docs/how/slices/slice-1-foundation/slice.md:\n- Vertical slice for project scaffold, routing, theme data, type definitions, core hooks\n- Files: src/data/themes/world-capitals.json, src/types/index.ts, src/hooks/useLearningMode.ts, src/hooks/useTheme.ts, src/App.tsx routing setup, src/screens/HomeScreen.tsx (empty shell)\n\nCreate apps/flashcards/docs/how/slices/slice-2-home/slice.md:\n- Vertical slice for Home screen implementation\n- Files: src/screens/HomeScreen.tsx (theme picker, mode selector, Start button), AppShell nav adaptation\n\nCreate apps/flashcards/docs/how/slices/slice-3-session-results/slice.md:\n- Vertical slice for Session + Results screens\n- Files: src/screens/SessionScreen.tsx, src/screens/ResultsScreen.tsx, src/components/FlashcardDisplay.tsx, src/components/ScoreButtons.tsx, src/components/ProgressBar.tsx, src/hooks/useSession.ts",
-      "depends_on": ["D", "C"],
+      "depends_on": [
+        "D",
+        "C"
+      ],
       "status": "pending",
       "role": "architect"
     },
@@ -69,7 +83,11 @@
       "branch": "task/issue-1068-H",
       "file": "apps/flashcards/docs/how/slices/cross-references.md",
       "content": "Read all slice files in apps/flashcards/docs/how/slices/ and all us-*.md in apps/flashcards/docs/what/epics/epic-0-mvp/user-stories/ and epic.md.\nUpdate each file's ## Related Slices section with filename-only links:\n- epic.md: add [Slice 1 — Foundation](slice-1-foundation/slice.md), [Slice 2 — Home](slice-2-home/slice.md), [Slice 3 — Session+Results](slice-3-session-results/slice.md)\n- us-001-home-screen.md: add [Slice 2 — Home](slice-2-home/slice.md)\n- us-002-session-flip.md: add [Slice 3 — Session+Results](slice-3-session-results/slice.md)\n- us-003-results-screen.md: add [Slice 3 — Session+Results](slice-3-session-results/slice.md)\n- us-004-complete-flow.md: add all slices\n- Each slice.md: add [Epic 0 — MVP](../epics/epic-0-mvp/epic.md) and relevant US files\n\nWrite ONLY the ## Related Slices and ## Related Epics / ## Related User Stories sections — do not modify other content.",
-      "depends_on": ["B", "C", "G"],
+      "depends_on": [
+        "B",
+        "C",
+        "G"
+      ],
       "status": "pending",
       "role": "architect"
     }
