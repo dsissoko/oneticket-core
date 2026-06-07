@@ -98,7 +98,7 @@ export function SessionScreen(): React.ReactElement {
       {/* Stats row — score left, position right */}
       <div className="w-full max-w-sm flex justify-between text-sm font-medium text-muted-foreground">
         <span>✅ {knownCount} / {totalCards}</span>
-        <span>{currentIndex + 1} / {totalCards}</span>
+        <span>{results.length} / {totalCards}</span>
       </div>
 
       <FlashcardDisplay
