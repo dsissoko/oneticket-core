@@ -78,9 +78,10 @@ export function SessionScreen({ cards }: SessionScreenProps): React.ReactElement
         onFlip={handleFlip}
       />
 
-      {isFlipped && (
-        <ScoreButtons onScore={handleScore} />
-      )}
+      {/* Reserved space for score buttons — always same height to prevent layout shift */}
+      <div className="h-12 flex items-center justify-center">
+        {isFlipped && <ScoreButtons onScore={handleScore} />}
+      </div>
     </div>
   );
 }
