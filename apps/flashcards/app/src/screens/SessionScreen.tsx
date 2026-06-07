@@ -72,6 +72,7 @@ export function SessionScreen({ cards }: SessionScreenProps): React.ReactElement
       <ProgressBar current={currentIndex + 1} total={totalCards} />
 
       <FlashcardDisplay
+        key={currentCard.id}
         card={currentCard}
         isFlipped={isFlipped}
         onFlip={handleFlip}

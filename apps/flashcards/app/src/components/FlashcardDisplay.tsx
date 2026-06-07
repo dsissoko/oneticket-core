@@ -28,22 +28,22 @@ export function FlashcardDisplay({
 
   return (
     <div
-      key={card.id}
-      className={cn('perspective-1000 animate-in fade-in zoom-in-95', className)}
+      className={cn('animate-in fade-in zoom-in-95 duration-300', className)}
       data-testid="flashcard-container"
     >
-      <button
-        type="button"
-        onClick={onFlip}
-        onKeyDown={handleKeyDown}
-        aria-label={isFlipped ? 'Show country name' : 'Show capital'}
-        className="relative h-64 w-full cursor-pointer style-none bg-transparent p-0 [transform-style:preserve-3d] transition-transform duration-500"
-        style={{
-          transformStyle: 'preserve-3d',
-          transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
-          transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-        }}
-      >
+      <div className="perspective-1000 h-64">
+        <button
+          type="button"
+          onClick={onFlip}
+          onKeyDown={handleKeyDown}
+          aria-label={isFlipped ? 'Show country name' : 'Show capital'}
+          className="relative h-full w-full cursor-pointer bg-transparent p-0"
+          style={{
+            transformStyle: 'preserve-3d',
+            transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+            transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+          }}
+        >
         {/* Front face — country name */}
         <div
           className="absolute inset-0 flex items-center justify-center rounded-xl border-2 border-border bg-card text-card-foreground text-center text-2xl font-semibold shadow-md backface-hidden"
@@ -65,6 +65,7 @@ export function FlashcardDisplay({
           <span className="text-card-foreground">{card.back}</span>
         </div>
       </button>
+      </div>
     </div>
   );
 }
