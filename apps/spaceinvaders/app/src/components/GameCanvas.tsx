@@ -49,12 +49,43 @@ export function GameCanvas(): React.ReactElement {
       context.fillStyle = '#0f172a';
       context.fillRect(0, 0, frame.width, frame.height);
 
+      context.fillStyle = '#f8fafc';
+      for (const alien of frame.alienWave.aliens) {
+        context.fillRect(alien.x, alien.y, alien.width, alien.height);
+      }
+
+      context.fillStyle = '#fb7185';
+      for (const missile of frame.alienWave.missiles) {
+        context.fillRect(missile.x - 1, missile.y, 2, 12);
+      }
+
+      if (frame.cannon) {
+        context.fillStyle = '#22d3ee';
+        context.fillRect(
+          frame.cannon.x - frame.cannon.width / 2,
+          frame.cannon.y - frame.cannon.height / 2,
+          frame.cannon.width,
+          frame.cannon.height,
+        );
+      }
+
+      context.fillStyle = '#22c55e';
+      for (const missile of frame.playerMissiles) {
+        context.fillRect(missile.x - 1, missile.y - 12, 2, 12);
+      }
+
       context.fillStyle = '#e2e8f0';
       context.font = '16px sans-serif';
       context.textAlign = 'left';
       context.fillText(`Phase: ${frame.phase}`, 16, 28);
       context.fillText(`Movement Δ: ${frame.movementDelta.toFixed(2)}`, 16, 52);
       context.fillText(`Fire events: ${frame.fireCount}`, 16, 76);
+      context.fillText(`Wave drops: ${frame.alienWave.dropCount}`, 16, 100);
+      context.fillText(
+        `Missiles A/P: ${frame.alienWave.missiles.length}/${frame.playerMissiles.length}`,
+        16,
+        124,
+      );
     };
 
     const engine = createGameEngine(renderFrame);
