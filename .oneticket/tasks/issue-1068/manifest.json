@@ -1,0 +1,105 @@
+{
+  "issue": 1068,
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-1068-A",
+      "file": "apps/flashcards/docs/what/product-spec.md",
+      "content": "Create apps/flashcards/docs/what/product-spec.md using template .oneticket/templates/product-spec.md.\n\nProduct name: Flashcard App\nTagline/summary: A flashcard learning app for world capitals with flip mode and session scoring.\n\nProblem: People want to learn world capitals efficiently but lack a simple, engaging tool.\nTarget users: Students and lifelong learners studying geography.\n\nMain capabilities for V1:\n1. Display flashcards from a built-in World Capitals theme (195 countries)\n2. Flip mode: tap/click card to reveal answer (capital) from question (country)\n3. Track session progress with \"I knew it\" / \"I didn't know\" buttons\n4. End-of-session results screen with score summary and replay option\n5. Theme selector on home screen (structure ready for more themes)\n6. Learning mode selector on home screen (flip only, structure ready for spaced-repetition)\n\nKey types:\n- LearningMode = 'flip' | 'spaced-repetition'\n- Theme { id, name, cards: Card[] }\n- Card { id, front, back }\n- SessionResult { cardId, known: boolean, timestamp }\n\nScreens:\n- Home (/): theme picker + learning mode selector + Start button\n- Session (/session): centered card, flip on tap/click, progress bar, I knew it / I didn't know buttons\n- Results (/results): score summary, replay button\n\nConstraints:\n- No backend — MSW + localStorage only\n- React + Vite + TypeScript stack\n- AppShell as scaffold base\n- Learning mode logic isolated in a hook (algo never hardcoded in components)\n- GitHub Pages deployment\n\nData: src/data/themes/world-capitals.json — format { id, front: \"France\", back: \"Paris\" }\n\nAppShell adaptations:\n- Keep: Home, About\n- Remove: Help nav link\n- Remove: DemoScreen (/demo), HelpScreen (/help)\n\nUse the template and fill in all sections. Include `title:` frontmatter.",
+      "depends_on": [],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-1068-B",
+      "file": "apps/flashcards/docs/what/epics/epic-0-mvp/epic.md",
+      "content": "Create apps/flashcards/docs/what/epics/epic-0-mvp/epic.md using template .oneticket/templates/epic.md.\n\nEpic name: MVP — Flashcard Session\nEpic goal: Enable a user to start a flashcard session, flip through cards, track their knowledge, and see results.\n\nEpics/epics/epic-0-mvp/epic.md\nContext: This epic implements the core flashcard loop described in product-spec.md.\n\nUser stories in scope (produce in next task):\n- US-001: Home screen with theme/mode selection\n- US-002: Flashcard session with flip and scoring\n- US-003: Session results screen\n\nUse the template. Include `title:` frontmatter. Do NOT write ## Related Slices — that will be added by the cross-reference task.",
+      "depends_on": ["A"],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-1068-C",
+      "file": "apps/flashcards/docs/what/epics/epic-0-mvp/user-stories/us-001-home-screen.md",
+      "content": "Create three user story files under apps/flashcards/docs/what/epics/epic-0-mvp/user-stories/:\n1. us-001-home-screen.md\n2. us-002-flashcard-session.md\n3. us-003-session-results.md\n\nUse template .oneticket/templates/us.md for each.\n\n--- US-001: Home Screen ---\nTitle: Home screen with theme and mode selection\nAs a user, I want to select a theme and learning mode on the home screen, so that I can start a study session tailored to my needs.\n\nAcceptance criteria (Gherkin):\n- Given I am on the home screen (/)\n- When the page loads\n- Then I see a theme picker with \"World Capitals\" selected by default\n- And I see a learning mode selector with \"Flip\" selected by default\n- And I see a \"Start\" button\n- When I tap Start\n- Then I navigate to /session\n\n--- US-002: Flashcard Session ---\nTitle: Flashcard session with flip and scoring\nAs a user, I want to see a flashcard, flip it to reveal the answer, and indicate whether I knew it, so that I can study effectively.\n\nAcceptance criteria (Gherkin):\n- Given I am on /session\n- When the page loads\n- Then I see a progress bar showing current card / total cards\n- And I see the card question (country name) centered on screen\n- When I tap/click the card\n- Then the card flips to reveal the answer (capital)\n- When the answer is visible\n- Then I see \"I knew it\" and \"I didn't know\" buttons\n- When I tap \"I knew it\"\n- Then the session score increments\n- And the next card appears\n- When I tap \"I didn't know\"\n- Then the next card appears without incrementing score\n- When I complete all cards\n- Then I navigate to /results\n\n--- US-003: Session Results ---\nTitle: Session results screen with score and replay\nAs a user, I want to see my score summary and be able to replay, so that I can track my progress.\n\nAcceptance criteria (Gherkin):\n- Given I have completed a flashcard session\n- When I am on /results\n- Then I see the total number of cards reviewed\n- And I see the number of cards I knew\n- And I see the number of cards I didn't know\n- And I see a \"Replay\" button that restarts the session\n- When I tap Replay\n- Then I navigate to /session with the same theme and mode\n\nUse the template for each file. Include `title:` frontmatter in each. Do NOT write ## Related Slices.",
+      "depends_on": ["B"],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-1068-D",
+      "file": "apps/flashcards/docs/how/architecture.md",
+      "content": "Create apps/flashcards/docs/how/architecture.md using template .oneticket/templates/architecture.md.\n\nContext: This is a React + Vite + TypeScript SPA with MSW + localStorage, scaffolded from AppShell.\n\nTech stack:\n- React 18 + Vite + TypeScript\n- MSW for API mocking (service worker)\n- localStorage for session persistence\n- React Router for navigation\n- AppShell as scaffold base\n\nMain components:\n- HomeScreen (/): theme picker, learning mode selector, Start button\n- FlashcardSession (/session): card display, flip animation, progress bar, scoring buttons\n- SessionResults (/results): score summary, replay button\n- useFlipMode hook: encapsulates flip learning algorithm (never hardcoded in components)\n- useTheme hook: manages theme data loading\n- useSession hook: manages session state and localStorage persistence\n\nData flow:\n- Theme data loaded from src/data/themes/world-capitals.json via MSW mock\n- Session results stored in localStorage\n- Routes: /, /session, /results\n\nAppShell adaptations:\n- Navigation: keep Home, About; remove Help, Demo\n- Remove DemoScreen (/demo) and HelpScreen (/help)\n\nConstraints:\n- No backend — all data mocked with MSW\n- GitHub Pages deployment (static SPA)\n- Learning mode logic isolated in hooks\n\nUse the template. Include `title:` frontmatter. Do NOT write ## Related Slices.",
+      "depends_on": ["A", "C"],
+      "status": "pending",
+      "role": "architect"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-1068-E",
+      "file": "apps/flashcards/docs/how/c4/system-context.md",
+      "content": "Create apps/flashcards/docs/how/c4/system-context.md using Mermaid diagrams.\n\nSystem: Flashcard App\nDescription: A static SPA for learning world capitals via flashcard sessions with flip mode and local scoring.\n\nBoundaries:\n- The app is a single React SPA served from GitHub Pages\n- No backend — all data is local (JSON + localStorage)\n- MSW mocks the theme data API\n\nExternal actors:\n- User: interacts with the SPA through a browser\n- Browser: serves the app and stores session data in localStorage\n\nSystem context: User → Flashcard App (SPA) → localStorage / MSW (mocked data)\n\nDraw a context diagram showing:\n- User at top\n- Flashcard App (React SPA) in center\n- localStorage (session data) on left\n- MSW (theme data) on right\n\nUse Mermaid flowchart. Include `title:` frontmatter.",
+      "depends_on": ["D"],
+      "status": "pending",
+      "role": "architect"
+    },
+    {
+      "id": "F",
+      "branch": "task/issue-1068-F",
+      "file": "apps/flashcards/docs/how/c4/containers.md",
+      "content": "Create apps/flashcards/docs/how/c4/containers.md using Mermaid diagrams.\n\nThis is a single-page React app with three routes.\n\nContainers to document:\n1. HomeContainer — renders theme picker, learning mode selector, Start button\n2. SessionContainer — renders card, flip logic, progress bar, scoring buttons, uses useFlipMode hook\n3. ResultsContainer — renders score summary, replay button\n\nData flows:\n- HomeContainer → navigates to /session on Start\n- SessionContainer → reads theme data via useTheme → writes session results to localStorage via useSession\n- ResultsContainer → reads session results from localStorage → navigates to /session on Replay\n\nMSW setup: service worker intercepts fetch requests for /api/themes/world-capitals and returns JSON from src/data/themes/world-capitals.json\n\nDraw a container diagram showing the SPA as one box with three internal components and external localStorage.\n\nUse Mermaid. Include `title:` frontmatter.",
+      "depends_on": ["D"],
+      "status": "pending",
+      "role": "architect"
+    },
+    {
+      "id": "G",
+      "branch": "task/issue-1068-G",
+      "file": "apps/flashcards/docs/how/slices/slice-1-foundation/slice.md",
+      "content": "Create apps/flashcards/docs/how/slices/slice-1-foundation/slice.md using template .oneticket/templates/slice.md.\n\nSlice name: Foundation — AppShell scaffold and routing\n\nScope:\n- Initialize the project on feature/issue-1068 branch from AppShell template\n- Configure React Router with routes: /, /session, /results\n- Configure MSW service worker with handlers for theme data\n- Create src/data/themes/world-capitals.json with all 195 countries (id, front: country, back: capital)\n- Create the three screen components: HomeScreen, FlashcardSession, SessionResults\n- Scaffold basic navigation (keep Home, About; remove Help link)\n- Remove DemoScreen and HelpScreen routes\n\nTech:\n- Vite + React 18 + TypeScript\n- React Router v6\n- MSW v2 for mocking\n- localStorage for persistence\n\nFiles to create/modify:\n- src/main.tsx — app entry with router\n- src/App.tsx — shell with nav\n- src/data/themes/world-capitals.json — 195 entries\n- src/mocks/handlers.ts — MSW handlers for theme API\n- src/mocks/browser.ts — MSW browser setup\n- src/pages/HomeScreen.tsx\n- src/pages/FlashcardSession.tsx\n- src/pages/SessionResults.tsx\n- src/routes.ts — route definitions\n\nUse the template. Include `title:` frontmatter. Do NOT write ## Related Epics or ## Related User Stories.",
+      "depends_on": ["D", "C"],
+      "status": "pending",
+      "role": "architect"
+    },
+    {
+      "id": "H",
+      "branch": "task/issue-1068-H",
+      "file": "apps/flashcards/docs/how/slices/slice-2-home-screen/slice.md",
+      "content": "Create apps/flashcards/docs/how/slices/slice-2-home-screen/slice.md using template .oneticket/templates/slice.md.\n\nSlice name: Home Screen — theme and mode selection\n\nScope:\n- Implement HomeScreen with:\n  - Theme picker (dropdown or radio, one option: World Capitals)\n  - Learning mode selector (dropdown or radio, one option: Flip)\n  - Start button that navigates to /session with selected theme/mode\n- Replace AppShell welcome card content with flashcard-specific UI\n\nState management:\n- useTheme hook loads themes from MSW-mocked API\n- useLearningMode hook stores selected mode in component state (passed to session)\n- No localStorage needed on home screen\n\nFiles:\n- src/pages/HomeScreen.tsx — main component\n- src/hooks/useTheme.ts — loads and returns themes\n- src/hooks/useLearningMode.ts — manages mode selection\n\nUse the template. Include `title:` frontmatter. Do NOT write ## Related Epics or ## Related User Stories.",
+      "depends_on": ["D", "C"],
+      "status": "pending",
+      "role": "architect"
+    },
+    {
+      "id": "I",
+      "branch": "task/issue-1068-I",
+      "file": "apps/flashcards/docs/how/slices/slice-3-session/slice.md",
+      "content": "Create apps/flashcards/docs/how/slices/slice-3-session/slice.md using template .oneticket/templates/slice.md.\n\nSlice name: Session — card flip and scoring\n\nScope:\n- Implement FlashcardSession page with:\n  - Progress bar (current card index / total)\n  - Card component that flips on click/tap (CSS flip animation)\n  - \"I knew it\" and \"I didn't know\" buttons (visible after flip)\n  - Navigation to /results when session ends\n- Implement useFlipMode hook that encapsulates all flip learning logic\n- Implement useSession hook that manages session state and writes SessionResult[] to localStorage\n\nLearning mode isolation:\n- useFlipMode hook receives cards[] and returns { currentCard, flip, submitAnswer, progress }\n- The algorithm (sequencing, scoring) is in the hook, never in the component\n- Structure is ready for spaced-repetition mode to be added as another hook\n\nTypes:\n- SessionResult { cardId, known: boolean, timestamp }\n\nFiles:\n- src/pages/FlashcardSession.tsx\n- src/components/Card.tsx — flip animation component\n- src/components/ProgressBar.tsx\n- src/components/ScoreButtons.tsx\n- src/hooks/useFlipMode.ts\n- src/hooks/useSession.ts\n\nUse the template. Include `title:` frontmatter. Do NOT write ## Related Epics or ## Related User Stories.",
+      "depends_on": ["D", "C"],
+      "status": "pending",
+      "role": "architect"
+    },
+    {
+      "id": "J",
+      "branch": "task/issue-1068-J",
+      "file": "apps/flashcards/docs/how/slices/slice-4-results/slice.md",
+      "content": "Create apps/flashcards/docs/how/slices/slice-4-results/slice.md using template .oneticket/templates/slice.md.\n\nSlice name: Results — score summary and replay\n\nScope:\n- Implement SessionResults page with:\n  - Total cards reviewed count\n  - Cards known count\n  - Cards unknown count\n  - Replay button that navigates to /session with same theme/mode\n- Read session results from localStorage via useSession hook\n- Clear session data on replay (or let it be overwritten)\n\nFiles:\n- src/pages/SessionResults.tsx\n- src/hooks/useSession.ts (already created in slice-3, but document the read side here)\n\nUse the template. Include `title:` frontmatter. Do NOT write ## Related Epics or ## Related User Stories.",
+      "depends_on": ["D", "C"],
+      "status": "pending",
+      "role": "architect"
+    },
+    {
+      "id": "K",
+      "branch": "task/issue-1068-K",
+      "file": "apps/flashcards/docs/how/architecture.md",
+      "content": "Cross-reference all knowledge base files.\n\nRead all files produced by tasks B, C, G, H, I, J and update:\n1. In epic.md (task B): add `## Related Slices` section with links to each slice file\n2. In each us-*.md (task C): add `## Related Slices` section with links to relevant slice files\n3. In each slice-*.md (tasks G, H, I, J): add `## Related Epics` section linking to epic-0-mvp/epic.md, and `## Related User Stories` section linking to relevant us-*.md files\n\nUse filename-only links (no ../):
+- From epic: [Slice 1 — Foundation](slice-1-foundation/slice.md)\n- From us: [Slice 1 — Foundation](slice-1-foundation/slice.md)\n- From slice: [Epic 0 — MVP](epic-0-mvp/epic.md), [US-001 — Home Screen](us-001-home-screen.md)\n\nThis task depends on tasks B, C, G, H, I, J — must run after all of them complete.\n\nfiles to modify:\n- apps/flashcards/docs/what/epics/epic-0-mvp/epic.md\n- apps/flashcards/docs/what/epics/epic-0-mvp/user-stories/us-001-home-screen.md\n- apps/flashcards/docs/what/epics/epic-0-mvp/user-stories/us-002-flashcard-session.md\n- apps/flashcards/docs/what/epics/epic-0-mvp/user-stories/us-003-session-results.md\n- apps/flashcards/docs/how/slices/slice-1-foundation/slice.md\n- apps/flashcards/docs/how/slices/slice-2-home-screen/slice.md\n- apps/flashcards/docs/how/slices/slice-3-session/slice.md\n- apps/flashcards/docs/how/slices/slice-4-results/slice.md",
+      "depends_on": ["B", "C", "G", "H", "I", "J"],
+      "status": "pending",
+      "role": "architect"
+    }
+  ]
+}
