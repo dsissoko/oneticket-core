@@ -89,6 +89,7 @@ In your repository **Settings → Secrets and variables → Actions**, add:
 1. `OPENCODE_API_KEY` — your API key from [opencode.ai/auth](https://opencode.ai/auth)
 2. `ONETICKET_GH_PAT` — a GitHub PAT with scopes `contents:write`, `pull-requests:write`, `issues:write`, `actions:write` — create one in your profile **Settings → Developer settings → Personal access tokens** ([github.com/settings](https://github.com/settings))
 3. Enable GitHub Pages — **Settings → Pages → Source → GitHub Actions**
+4. (Optional but recommended) Enable automatic branch deletion — **Settings → General → Pull Requests → Automatically delete head branches** — keeps your repository clean as feature and task branches accumulate fast.
 
 ### 3. (Optional) Customize your OneTicket repository
 
