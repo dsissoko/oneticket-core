@@ -27,6 +27,7 @@ export interface CannonSystem {
     fireIntentCount: number,
   ) => void;
   getState: () => { cannon: CannonState | null; missiles: MissileState[] };
+  setMissiles: (nextMissiles: MissileState[]) => void;
 }
 
 export function clampReloadDelayMs(reloadDelayMs: number): number {
@@ -132,6 +133,9 @@ export function createCannonSystem(
         },
         missiles,
       };
+    },
+    setMissiles: (nextMissiles) => {
+      missiles = nextMissiles;
     },
   };
 }

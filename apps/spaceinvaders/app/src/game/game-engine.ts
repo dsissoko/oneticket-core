@@ -1,6 +1,8 @@
 import { logger } from '@/lib/logger';
 import { createAlienWaveSystem } from '@/features/game/application/alien-wave-system';
 import { createCannonSystem } from '@/features/game/application/cannon-system';
+import { createShieldSystem } from '@/features/game/application/shield-system';
+import { createCollisionSystem } from '@/features/game/application/collision-system';
 import type { GameFrameState, GameIntentSink, GamePhase } from './types';
 
 type FrameListener = (frame: GameFrameState) => void;
@@ -23,6 +25,8 @@ export function createGameEngine(onFrame: FrameListener): GameEngine {
   let fireCount = 0;
   const alienWaveSystem = createAlienWaveSystem();
   const cannonSystem = createCannonSystem();
+  const shieldSystem = createShieldSystem();
+  const collisionSystem = createCollisionSystem();
 
   const tick = (timestampMs: number): void => {
     const deltaMs = lastTimestampMs === null ? 0 : Math.max(0, timestampMs - lastTimestampMs);
@@ -33,6 +37,27 @@ export function createGameEngine(onFrame: FrameListener): GameEngine {
 
     const alienWave = alienWaveSystem.getState();
     const cannonSnapshot = cannonSystem.getState();
+    shieldSystem.updateLayout(width, height, cannonSnapshot.cannon, alienWave.aliens);
+
+    const collisionResolution = collisionSystem.resolve({
+      playerMissiles: cannonSnapshot.missiles,
+      alienMissiles: alienWave.missiles,
+      aliens: alienWave.aliens,
+      cannon: cannonSnapshot.cannon,
+      shields: shieldSystem.getState(),
+    });
+
+    for (const shieldId of collisionResolution.shieldImpacts) {
+      shieldSystem.applyShieldImpact(shieldId);
+    }
+
+    cannonSystem.setMissiles(collisionResolution.playerMissiles);
+    alienWaveSystem.setMissiles(collisionResolution.alienMissiles);
+    alienWaveSystem.setAliens(collisionResolution.aliens);
+
+    const resolvedAlienWave = alienWaveSystem.getState();
+    const resolvedCannonState = cannonSystem.getState();
+    const resolvedShields = shieldSystem.getState();
 
     const frame: GameFrameState = {
       phase,
@@ -41,9 +66,10 @@ export function createGameEngine(onFrame: FrameListener): GameEngine {
       timestampMs,
       movementDelta,
       fireCount,
-      alienWave,
-      cannon: cannonSnapshot.cannon,
-      playerMissiles: cannonSnapshot.missiles,
+      alienWave: resolvedAlienWave,
+      cannon: resolvedCannonState.cannon,
+      playerMissiles: resolvedCannonState.missiles,
+      shields: resolvedShields,
     };
 
     onFrame(frame);

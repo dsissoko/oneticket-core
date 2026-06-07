@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { createGameEngine } from '@/game/game-engine';
 import { createInputController } from '@/game/input-controller';
 import type { GameEngine } from '@/game/game-engine';
-import type { GameFrameState, GamePhase } from '@/game/types';
+import type { GameFrameState, GamePhase, ShieldState } from '@/game/types';
 import { logger } from '@/lib/logger';
 
 interface CanvasSize {
@@ -16,6 +16,36 @@ function getParentSize(element: HTMLElement | null): CanvasSize {
     width: parent?.clientWidth ?? 0,
     height: parent?.clientHeight ?? 0,
   };
+}
+
+function renderShield(
+  context: CanvasRenderingContext2D,
+  shield: ShieldState,
+): void {
+  if (shield.durability <= 0 || shield.width <= 0 || shield.height <= 0) {
+    return;
+  }
+
+  const durabilityRatio = shield.durability / shield.maxDurability;
+  const damageRatio = 1 - durabilityRatio;
+  const shieldLeft = shield.x - shield.width / 2;
+  const shieldTop = shield.y - shield.height / 2;
+
+  context.save();
+  context.fillStyle = `rgba(74, 222, 128, ${0.35 + durabilityRatio * 0.65})`;
+  context.fillRect(shieldLeft, shieldTop, shield.width, shield.height);
+
+  const holeCount = Math.floor(damageRatio * 6);
+  for (let index = 0; index < holeCount; index += 1) {
+    const holeWidth = Math.max(4, shield.width * 0.12);
+    const holeHeight = Math.max(3, shield.height * 0.2);
+    const progress = (index + 1) / (holeCount + 1);
+    const holeX = shieldLeft + progress * (shield.width - holeWidth);
+    const holeY = shieldTop + (index % 2 === 0 ? shield.height * 0.2 : shield.height * 0.55);
+    context.clearRect(holeX, holeY, holeWidth, holeHeight);
+  }
+
+  context.restore();
 }
 
 export function GameCanvas(): React.ReactElement {
@@ -74,6 +104,10 @@ export function GameCanvas(): React.ReactElement {
         context.fillRect(missile.x - 1, missile.y - 12, 2, 12);
       }
 
+      for (const shield of frame.shields) {
+        renderShield(context, shield);
+      }
+
       context.fillStyle = '#e2e8f0';
       context.font = '16px sans-serif';
       context.textAlign = 'left';
@@ -86,6 +120,7 @@ export function GameCanvas(): React.ReactElement {
         16,
         124,
       );
+      context.fillText(`Shields: ${frame.shields.length}`, 16, 148);
     };
 
     const engine = createGameEngine(renderFrame);
