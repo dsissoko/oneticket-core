@@ -7,7 +7,7 @@
       "file": "apps/flashcards/docs/what/product-spec.md",
       "content": "Read .oneticket/templates/product-spec.md. Create apps/flashcards/docs/what/product-spec.md with:\n- SITE_DESCRIPTION: 'Flashcard app for learning world capitals with flip mode and local progress tracking.'\n- Vision: learn world capitals efficiently via spaced-repetition-ready flashcard system\n- Users: learners studying geography\n- Problems: memorization without structure, no progress tracking\n- Product Goals: display cards from built-in theme, track session progress, extensible theme/mode architecture\n- Out of Scope: backend, user accounts, spaced-repetition algorithm (structure only)\n- Business Concepts: Theme, Card, LearningMode, SessionResult\n- Product Capabilities: theme selection, flip interaction, session scoring, results summary\n- Workflows: Home → Session → Results → replay\n- Business Rules: no backend, localStorage only, algo in isolated hook\n- Success Criteria: user can complete a session with score visible",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "analyst"
     },
     {
