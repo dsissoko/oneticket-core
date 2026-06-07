@@ -28,11 +28,11 @@ const HomeScreen = lazy(() =>
 const AboutScreen = lazy(() =>
   import('./screens/AboutScreen').then((mod) => ({ default: mod.AboutScreen }))
 );
-const HelpScreen = lazy(() =>
-  import('./screens/HelpScreen').then((mod) => ({ default: mod.HelpScreen }))
+const SessionScreen = lazy(() =>
+  import('./screens/SessionScreen').then((mod) => ({ default: mod.SessionScreen }))
 );
-const DemoScreen = lazy(() =>
-  import('./screens/DemoScreen').then((mod) => ({ default: mod.DemoScreen }))
+const ResultsScreen = lazy(() =>
+  import('./screens/ResultsScreen').then((mod) => ({ default: mod.ResultsScreen }))
 );
 const NotFoundScreen = lazy(() =>
   import('./screens/NotFoundScreen').then((mod) => ({ default: mod.NotFoundScreen }))
@@ -47,10 +47,9 @@ function App(): React.ReactElement {
             <Routes>
               <Route element={<AppLayout />}>
                 <Route index element={<HomeScreen />} />
-                <Route path="/" element={<HomeScreen />} />
                 <Route path="/about" element={<AboutScreen />} />
-                <Route path="/help" element={<HelpScreen />} />
-                <Route path="/demo" element={<DemoScreen />} />
+                <Route path="/session" element={<SessionScreen />} />
+                <Route path="/results" element={<ResultsScreen />} />
                 <Route path="*" element={<NotFoundScreen />} />
               </Route>
             </Routes>
