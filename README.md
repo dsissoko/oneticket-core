@@ -43,7 +43,7 @@ The pipeline posts two live URLs directly in the PR comment:
 
 **Live examples** — all built by OneTicket:
 
-| Project | Doc | App | Model | AI Debug |
+| Project | Doc | App | Model | External debug |
 |---|---|---|---|---|
 | MonJournal — *personal journal, tags, timeline, surprise* | [docs](https://dsissoko.github.io/oneticket-core/monjournal/docs/) | [app](https://dsissoko.github.io/oneticket-core/monjournal/app/) | claude-haiku-4-5 | — |
 | Breakout — *classic arcade, vanilla JS, no dependencies* | [docs](https://dsissoko.github.io/oneticket-core/breakout/docs/) | [app](https://dsissoko.github.io/oneticket-core/breakout/app/) | claude-haiku-4-5 | — |
@@ -52,7 +52,7 @@ The pipeline posts two live URLs directly in the PR comment:
 | Flashcards — *world capitals, multiplication tables, french conjugations* | [docs](https://dsissoko.github.io/oneticket-core/flashcards/docs/) | [app](https://dsissoko.github.io/oneticket-core/flashcards/app/) | minimax-m2.5 | ✋ |
 | OneTicket — *partially built by itself* | [docs](https://dsissoko.github.io/oneticket-core/framework/docs/) | — | claude-haiku-4-5 | — |
 
-> ✋ *AI Debug — some issues required assistance from a stronger model (claude-sonnet) to resolve*
+> ✋ *External debug — required human or stronger model intervention to fix issues*
 
 ---
 
