@@ -4,3 +4,4 @@
 2026-06-07 06:48 | D | apps/flashcards/docs/how/architecture.md
 2026-06-07 06:49 | E | apps/flashcards/docs/how/c4/system-context.md
 2026-06-07 06:49 | F | apps/flashcards/docs/how/c4/containers.md
+2026-06-07 06:49 | G | apps/flashcards/docs/how/slices/slice-1-foundation/slice.md
