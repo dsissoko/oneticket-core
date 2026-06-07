@@ -1,10 +1,20 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FlashcardDisplay } from '@/components/FlashcardDisplay';
 import { ProgressBar } from '@/components/ProgressBar';
 import { ScoreButtons } from '@/components/ScoreButtons';
 import { useSession } from '@/hooks/useSession';
 import { useThemeContext } from '@/context/ThemeContext';
+
+/** Fisher-Yates shuffle — returns a new shuffled array */
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
 /**
  * SessionScreen Component
@@ -18,7 +28,12 @@ export function SessionScreen(): React.ReactElement {
   const { currentIndex, recordResult, nextCard } = useSession();
   const [isFlipped, setIsFlipped] = useState(false);
 
-  const cards = currentTheme?.cards ?? [];
+  // Shuffle cards once per theme — stable across re-renders
+  const cards = useMemo(
+    () => shuffle(currentTheme?.cards ?? []),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentTheme?.id]
+  );
   const totalCards = cards.length;
   const currentCard = cards[currentIndex];
   const isSessionComplete = currentIndex >= totalCards;
