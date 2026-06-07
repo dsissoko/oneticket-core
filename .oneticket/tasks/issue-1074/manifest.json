@@ -65,7 +65,7 @@
         "C",
         "D"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "dev"
     },
     {
@@ -80,7 +80,7 @@
         "D",
         "E"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "dev"
     },
     {
@@ -125,7 +125,7 @@
         "D",
         "E"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "dev"
     },
     {
