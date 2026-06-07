@@ -80,10 +80,18 @@ SpaceInvaders runs as a browser game module inside the existing AppShell fronten
 
 - [System Context](c4/system-context.md)
 - [Containers](c4/containers.md)
+- [Components](c4/components.md)
+- [Deployment](c4/deployment.md)
+- [Dynamic Gameplay Flow](c4/dynamic-game-loop.md)
 
 ## 12. Related Implementation Slices
 
-To be produced from user stories once implementation slicing is requested.
+- [Slice 0 — Foundation Runtime and Responsive Canvas](slices/slice-0-foundation-runtime-and-responsive-canvas/slice.md)
+- [Slice 1 — Alien Wave and Enemy Fire](slices/slice-1-alien-wave-and-enemy-fire/slice.md)
+- [Slice 2 — Cannon Controls, Player Fire, and Mobile Zones](slices/slice-2-cannon-controls-player-fire-and-mobile-zones/slice.md)
+- [Slice 3 — Shields, Collision, and Progressive Degradation](slices/slice-3-shields-collision-and-progressive-degradation/slice.md)
+- [Slice 4 — Score HUD and Best Score Persistence](slices/slice-4-score-hud-and-best-score-persistence/slice.md)
+- [Slice 5 — End States: Victory, Game Over, and Restart](slices/slice-5-end-states-victory-game-over-and-restart/slice.md)
 
 ## 13. Technical Constraints
 

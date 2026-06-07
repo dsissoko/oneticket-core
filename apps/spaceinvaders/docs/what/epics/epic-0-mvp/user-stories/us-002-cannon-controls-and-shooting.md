@@ -38,8 +38,8 @@ Scenario: Reload delay constraints
 
 ## Related Epic
 
-- [Epic 0 — SpaceInvaders MVP Gameplay Loop](epic-0-mvp/epic.md)
+- [Epic 0 — SpaceInvaders MVP Gameplay Loop](../epic.md)
 
 ## Related Slices
 
-To be linked during slicing.
+- [Slice 2 — Cannon Controls, Player Fire, and Mobile Zones](../../../../how/slices/slice-2-cannon-controls-player-fire-and-mobile-zones/slice.md)

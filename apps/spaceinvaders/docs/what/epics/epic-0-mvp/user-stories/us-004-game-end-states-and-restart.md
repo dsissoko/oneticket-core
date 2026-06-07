@@ -39,8 +39,8 @@ Scenario: All aliens destroyed
 
 ## Related Epic
 
-- [Epic 0 — SpaceInvaders MVP Gameplay Loop](epic-0-mvp/epic.md)
+- [Epic 0 — SpaceInvaders MVP Gameplay Loop](../epic.md)
 
 ## Related Slices
 
-To be linked during slicing.
+- [Slice 5 — End States: Victory, Game Over, and Restart](../../../../how/slices/slice-5-end-states-victory-game-over-and-restart/slice.md)
