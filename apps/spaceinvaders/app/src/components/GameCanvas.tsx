@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { GameEngine } from '@/game/engine/GameEngine';
 
 type LogicalDimensions = {
   width: number;
@@ -9,6 +10,7 @@ export function GameCanvas(): JSX.Element {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const logicalDimensionsRef = useRef<LogicalDimensions>({ width: 1, height: 1 });
   const animationFrameRef = useRef<number | null>(null);
+  const gameEngineRef = useRef<GameEngine>(new GameEngine());
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -43,17 +45,33 @@ export function GameCanvas(): JSX.Element {
       canvas.height = height;
     };
 
-    const drawFrame = (): void => {
+    const drawFrame = (timestamp: number): void => {
       const { width, height } = logicalDimensionsRef.current;
+      const frame = gameEngineRef.current.tick(timestamp, width, height);
 
-      context.clearRect(0, 0, width, height);
+      context.clearRect(0, 0, frame.playfield.width, frame.playfield.height);
       context.fillStyle = '#05070e';
-      context.fillRect(0, 0, width, height);
+      context.fillRect(0, 0, frame.playfield.width, frame.playfield.height);
+
+      context.fillStyle = '#95ff85';
+      for (const alien of frame.aliens) {
+        if (!alien.isAlive) {
+          continue;
+        }
+
+        context.fillRect(alien.x, alien.y, alien.width, alien.height);
+      }
+
+      context.fillStyle = '#ff6f91';
+      for (const missile of frame.enemyMissiles) {
+        context.fillRect(missile.x, missile.y, missile.width, missile.height);
+      }
 
       context.fillStyle = '#7fffd4';
       context.font = '16px monospace';
-      context.fillText(`logical: ${width}x${height}`, 16, 28);
-      context.fillText('SpaceInvaders runtime foundation', 16, 52);
+      context.fillText(`logical: ${frame.playfield.width}x${frame.playfield.height}`, 16, 28);
+      context.fillText(`aliens: ${frame.debug.activeAliens}`, 16, 52);
+      context.fillText(`enemy missiles: ${frame.debug.enemyMissiles}`, 16, 76);
 
       if (!isUnmounted) {
         animationFrameRef.current = window.requestAnimationFrame(drawFrame);
