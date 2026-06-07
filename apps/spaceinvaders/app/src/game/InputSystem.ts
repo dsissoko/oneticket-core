@@ -1,7 +1,6 @@
 /**
  * InputSystem — handles keyboard input only.
  * Touch input is managed directly in Game.tsx via canvas listeners (Breakout pattern).
- * Touch state is passed here via setLeft/setRight/setFire methods called each frame.
  */
 
 import type { PlayerInputState } from './types'
@@ -40,9 +39,7 @@ export class InputSystem {
 
   onKeyUp(event: KeyboardEvent): void {
     const action = this.keyMap[event.key]
-    if (action) {
-      this.inputState[action] = false
-    }
+    if (action) this.inputState[action] = false
   }
 
   /** Called from Game.tsx game loop each frame with touch-derived state */
