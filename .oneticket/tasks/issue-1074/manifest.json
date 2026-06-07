@@ -7,7 +7,7 @@
       "file": "apps/flashcards/app/src/types/index.ts",
       "content": "Read apps/flashcards/docs/how/architecture.md section 'Key Types'. Replace the existing types/index.ts with the flashcard type definitions: LearningMode ('flip' | 'spaced-repetition'), Theme (id, name, cards[]), Card (id, front, back), SessionResult (cardId, known, timestamp). Export all types. Ensure TypeScript strict mode compiles without errors.",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "dev"
     },
     {
