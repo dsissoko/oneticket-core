@@ -17,6 +17,14 @@ Object.defineProperty(window, 'matchMedia', {
   }),
 });
 
+// Polyfill ResizeObserver — not implemented in jsdom
+class ResizeObserverMock {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+globalThis.ResizeObserver = ResizeObserverMock;
+
 // Setup MSW for tests
 import { setupServer } from 'msw/node';
 import { handlers } from './src/mocks/handlers';
