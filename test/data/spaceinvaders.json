@@ -3,7 +3,7 @@
   "repo": "dsissoko/oneticket-core",
   "config": {
     "current_project": "spaceinvaders",
-    "model": "opencode/gpt-5.3-codex"
+    "model": "opencode/qwen3.6-plus"
   },
   "tickets": {
     "doc": {
