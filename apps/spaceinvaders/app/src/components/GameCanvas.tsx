@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useCallback } from 'react';
-import { GameState, GamePhase, Alien, Projectile } from '../types';
+import { GameState, GamePhase, Alien, Projectile, Shield } from '../types';
 
 interface GameCanvasProps {}
 
@@ -20,6 +20,16 @@ const PROJECTILE_HEIGHT = 12;
 const PLAYER_PROJECTILE_COLOR = '#fbbf24';
 const ALIEN_PROJECTILE_COLOR = '#ef4444';
 
+// Shield constants
+const SHIELD_COLOR = '#22c55e';
+const SHIELD_COUNT = 4;
+const SHIELD_HEALTH = 10;
+const SHIELD_WIDTH_RATIO = 0.08; // 8% of canvas width
+const SHIELD_HEIGHT_RATIO = 0.04; // 4% of canvas height
+const SHIELD_Y_RATIO = 0.60; // 60% of canvas height from top
+const SHIELD_NOTCH_WIDTH_RATIO = 0.3; // notch is 30% of shield width
+const SHIELD_NOTCH_HEIGHT_RATIO = 0.4; // notch is 40% of shield height
+
 function createInitialState(): GameState {
   const aliens: GameState['aliens'] = [];
   for (let row = 0; row < ALIEN_ROWS; row++) {
@@ -29,9 +39,6 @@ function createInitialState(): GameState {
   }
 
   const shields: GameState['shields'] = [];
-  for (let i = 0; i < 4; i++) {
-    shields.push({ x: 100 + i * 180, y: 400, health: 10, maxHealth: 10 });
-  }
 
   return {
     phase: 'menu' as GamePhase,
@@ -68,6 +75,28 @@ function initAlienFormation(aliens: Alien[], canvasWidth: number, canvasHeight: 
       index++;
     }
   }
+}
+
+function initShields(canvasWidth: number, canvasHeight: number): Shield[] {
+  const shieldWidth = canvasWidth * SHIELD_WIDTH_RATIO;
+  const shieldY = canvasHeight * SHIELD_Y_RATIO;
+
+  // Calculate total width needed for all shields
+  const totalShieldWidth = SHIELD_COUNT * shieldWidth;
+  // Available space for gaps (between shields and edges)
+  const gapCount = SHIELD_COUNT + 1;
+  const gapWidth = (canvasWidth - totalShieldWidth) / gapCount;
+
+  const shields: Shield[] = [];
+  for (let i = 0; i < SHIELD_COUNT; i++) {
+    shields.push({
+      x: gapWidth + i * (shieldWidth + gapWidth) + shieldWidth / 2, // center x
+      y: shieldY,
+      health: SHIELD_HEALTH,
+      maxHealth: SHIELD_HEALTH,
+    });
+  }
+  return shields;
 }
 
 export const GameCanvas: React.FC<GameCanvasProps> = () => {
@@ -253,9 +282,38 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
     const barrelHeight = cannonHeight * 0.8;
     const cannonY = canvas.height - bottomMargin - cannonHeight - barrelHeight;
 
-    // Player missiles vs alive aliens
+    const shieldWidth = canvas.width * SHIELD_WIDTH_RATIO;
+    const shieldHeight = canvas.height * SHIELD_HEIGHT_RATIO;
+
+    // Helper: check if projectile hits any shield
+    const checkShieldCollision = (proj: Projectile): boolean => {
+      for (const shield of gameState.shields) {
+        if (shield.health <= 0) continue;
+
+        const shieldLeft = shield.x - shieldWidth / 2;
+        const shieldRight = shield.x + shieldWidth / 2;
+        const shieldTop = shield.y;
+        const shieldBottom = shield.y + shieldHeight;
+
+        if (
+          proj.x >= shieldLeft &&
+          proj.x <= shieldRight &&
+          proj.y >= shieldTop &&
+          proj.y <= shieldBottom
+        ) {
+          shield.health = Math.max(0, shield.health - 1);
+          return true;
+        }
+      }
+      return false;
+    };
+
+    // Player missiles vs alive aliens (with shield check first)
     const survivingPlayerProjectiles: Projectile[] = [];
     for (const proj of gameState.playerProjectiles) {
+      // Check shield collision first
+      if (checkShieldCollision(proj)) continue;
+
       let hit = false;
       for (const alien of gameState.aliens) {
         if (!alien.alive) continue;
@@ -283,10 +341,13 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
     }
     gameState.playerProjectiles = survivingPlayerProjectiles;
 
-    // Alien missiles vs cannon
+    // Alien missiles vs cannon (with shield check first)
     const survivingAlienProjectiles: Projectile[] = [];
     let cannonHit = false;
     for (const proj of gameState.alienProjectiles) {
+      // Check shield collision first
+      if (checkShieldCollision(proj)) continue;
+
       let hit = false;
       // Cannon bounds
       const cannonLeft = cannon.x;
@@ -343,6 +404,67 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
     }
   }, []);
 
+  const renderShields = useCallback((ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, gameState: GameState) => {
+    if (gameState.phase !== 'playing') return;
+
+    const shieldWidth = canvas.width * SHIELD_WIDTH_RATIO;
+    const shieldHeight = canvas.height * SHIELD_HEIGHT_RATIO;
+    const notchWidth = shieldWidth * SHIELD_NOTCH_WIDTH_RATIO;
+    const notchHeight = shieldHeight * SHIELD_NOTCH_HEIGHT_RATIO;
+
+    for (const shield of gameState.shields) {
+      if (shield.health <= 0) continue;
+
+      const left = shield.x - shieldWidth / 2;
+      const top = shield.y;
+
+      // Progressive degradation: draw shield with gaps based on health
+      ctx.fillStyle = SHIELD_COLOR;
+
+      const healthRatio = shield.health / shield.maxHealth;
+
+      if (healthRatio > 0.7) {
+        // Health 8-10: Full shield with classic notch
+        // Main body
+        ctx.fillRect(left, top, shieldWidth, shieldHeight - notchHeight);
+        // Left pillar
+        ctx.fillRect(left, top + shieldHeight - notchHeight, (shieldWidth - notchWidth) / 2, notchHeight);
+        // Right pillar
+        ctx.fillRect(left + (shieldWidth + notchWidth) / 2, top + shieldHeight - notchHeight, (shieldWidth - notchWidth) / 2, notchHeight);
+      } else if (healthRatio > 0.4) {
+        // Health 5-7: Small gaps appearing
+        const blockSize = shieldWidth / 6;
+        // Draw as blocks with some missing
+        for (let row = 0; row < 3; row++) {
+          for (let col = 0; col < 6; col++) {
+            // Skip some blocks to create gaps
+            if (row === 2 && col >= 2 && col <= 3) continue; // notch
+            if (row === 1 && col === 3) continue; // small gap
+            if (row === 0 && (col === 1 || col === 4)) continue; // small gaps
+            ctx.fillRect(left + col * blockSize, top + row * (shieldHeight / 3), blockSize, shieldHeight / 3);
+          }
+        }
+      } else if (healthRatio > 0.1) {
+        // Health 2-4: Larger gaps, mostly destroyed
+        const blockSize = shieldWidth / 6;
+        for (let row = 0; row < 3; row++) {
+          for (let col = 0; col < 6; col++) {
+            // Skip more blocks
+            if (row === 2) continue; // bottom row gone
+            if (row === 1 && (col === 1 || col === 2 || col === 3 || col === 4)) continue; // middle gaps
+            if (row === 0 && (col === 0 || col === 2 || col === 3 || col === 5)) continue; // top gaps
+            ctx.fillRect(left + col * blockSize, top + row * (shieldHeight / 3), blockSize, shieldHeight / 3);
+          }
+        }
+      } else {
+        // Health 1: Almost destroyed, just a few remnants
+        const blockSize = shieldWidth / 6;
+        ctx.fillRect(left, top, blockSize, shieldHeight / 3);
+        ctx.fillRect(left + 5 * blockSize, top + shieldHeight / 3, blockSize, shieldHeight / 3);
+      }
+    }
+  }, []);
+
   const render = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -361,9 +483,10 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
     // Render aliens during 'playing' phase
     if (gameState.phase === 'playing') {
       renderAliens(ctx, canvas, gameState);
+      renderShields(ctx, canvas, gameState);
       renderProjectiles(ctx, gameState);
     }
-  }, [renderCannon, renderAliens, renderProjectiles]);
+  }, [renderCannon, renderAliens, renderShields, renderProjectiles]);
 
   const updateCannon = useCallback((deltaTime: number, canvas: HTMLCanvasElement, gameState: GameState) => {
     const keys = keysRef.current;
@@ -402,6 +525,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
       // Detect menu → playing transition to initialize alien formation
       if (gameState.phase === 'playing' && prevPhaseRef.current === 'menu') {
         initAlienFormation(gameState.aliens, canvas.width, canvas.height);
+        gameState.shields = initShields(canvas.width, canvas.height);
         gameState.alienDirection = 1;
         gameState.alienSpeed = ALIEN_BASE_SPEED;
       }
