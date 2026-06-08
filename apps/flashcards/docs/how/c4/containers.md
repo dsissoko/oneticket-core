@@ -1,3 +1,7 @@
+---
+title: Container C4 Diagram — Flashcards App
+---
+
 # Container C4 Diagram — Flashcards App
 
 ## System Context
@@ -57,6 +61,7 @@ C4Container
 | `ModeSelector` | Chooses learning mode (flip, spaced-repetition) |
 | `ProgressBar` | Shows session advancement (X/Y) |
 | `ScoreButtons` | "I knew it" / "I didn't know" post-flip |
+| `ScoreCard` | Renders VexFlow SVG on front, triggers Tone.js playback on flip |
 
 ### External Integrations
 
@@ -65,3 +70,34 @@ C4Container
 | Local Storage | Persist session results and user preferences |
 | MSW (world-capitals.json) | Serve flashcard theme data |
 | MSW (session results) | Mock storage for session outcomes |
+| VexFlow | Renders musical notation as SVG for score display |
+| Tone.js | Synthesizes audio playback via Web Audio API |
+
+## Score Rendering Pipeline
+
+The `ScoreCard` component renders musical notation on the front of a flashcard using VexFlow:
+
+1. **`renderScore(data)`** — Accepts score data (notes, clef, key signature, time signature) from the card deck.
+2. **VexFlow SVG** — VexFlow translates the score data into an SVG representation of standard musical notation.
+3. **DOM injection** — The generated SVG is injected into the `ScoreCard` container element, replacing any previous rendering.
+
+```
+renderScore(data) → VexFlow SVG → DOM injection
+```
+
+This pipeline runs on card mount and on every flip to the front side.
+
+## Audio Playback Pipeline
+
+The `ScoreCard` component triggers audio playback when the card is flipped, using Tone.js:
+
+1. **`playScore(data)`** — Accepts the same score data and extracts pitch/duration sequences.
+2. **Tone.js synth** — Tone.js creates a synthesizer (default: polyphonic synth) and schedules note events.
+3. **Web Audio API** — Tone.js routes the synthesized audio through the browser's Web Audio API graph.
+4. **Browser speakers** — Audio output reaches the user through the default audio output device.
+
+```
+playScore(data) → Tone.js synth → Web Audio API → browser speakers
+```
+
+This pipeline is triggered on card flip (front → back transition) and can be replayed via a dedicated play button.
