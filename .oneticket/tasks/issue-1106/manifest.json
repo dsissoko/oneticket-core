@@ -1,0 +1,59 @@
+{
+  "issue": 1106,
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-1106-A",
+      "file": "apps/spaceinvaders/app/src/types/index.ts",
+      "content": "Slice 1 — Foundation: Read apps/spaceinvaders/docs/how/slices/slice-1-foundation/slice.md and apps/spaceinvaders/docs/how/architecture.md. Update apps/spaceinvaders/app/src/types/index.ts with complete SpaceInvaders game state types. Define: GameState interface with phase ('menu'|'playing'|'gameover'|'victory'), score, bestScore, cannon (x, width, height), aliens (array of {x, y, alive}), playerProjectiles and alienProjectiles (arrays of {x, y, vy, direction}), shields (array of {x, y, health, maxHealth}), alienDirection (number), alienSpeed (number), lastFireTime (number), reloadDelay (number). Read apps/spaceinvaders/app/src/components/GameCanvas.tsx — the canvas infrastructure (resize, game loop, event listeners) is already in place from Breakout scaffold. Enhance GameCanvas.tsx to use the new types: initialize a complete GameState with refs, update the render function to clear canvas with dark background (#0a0a0a) and log 'SpaceInvaders game loop started' on mount. The game loop should track deltaTime properly. Keep the existing resize, ResizeObserver, keyboard handlers (keysRef as Set<string>), and touch handler structure intact. Do not modify AppLayout, Header, Footer, ErrorBoundary, HomeScreen, or any non-game files.",
+      "depends_on": [],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-1106-B",
+      "file": "apps/spaceinvaders/app/src/components/GameCanvas.tsx",
+      "content": "Slice 2 — Player Cannon: Read apps/spaceinvaders/docs/how/slices/slice-2-player-cannon/slice.md. In apps/spaceinvaders/app/src/components/GameCanvas.tsx, implement player cannon rendering and input handling. Cannon: render as a green (#22c55e) rectangle at the bottom of the canvas, width ≈ 3% of canvas width, height ≈ 2% of canvas width, positioned 5% from bottom edge. Add a small triangle on top for the barrel. Input handling: Keyboard — ArrowLeft/ArrowRight move cannon horizontally at 400px/sec, clamped to canvas bounds. Touch — bottom 20% of canvas is movement zone: track touch start X, on touchmove calculate delta and move cannon proportionally, reset startX each frame for smooth tracking. Add configurable reloadDelay state (default 0ms, max 5000ms) tracked via lastFireTime ref. Space bar and tap on top 80% of canvas should set a 'wantsToFire' flag (consumed by combat system later). Render the cannon during 'playing' and 'menu' phases. Read apps/spaceinvaders/app/src/types/index.ts for current GameState shape.",
+      "depends_on": ["A"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-1106-C",
+      "file": "apps/spaceinvaders/app/src/components/GameCanvas.tsx",
+      "content": "Slice 3 — Alien Formation: Read apps/spaceinvaders/docs/how/slices/slice-3-alien-formation/slice.md. In apps/spaceinvaders/app/src/components/GameCanvas.tsx, implement the 5×11 alien grid with movement. On game start (menu→playing transition), initialize 55 aliens in a grid: wave width ≈ 70% of canvas width, positioned in the upper 40% of canvas. Each alien is a simple pixel-art style shape (green #4ade80 square with small details) — single sprite type for all. Movement: alien wave moves left/right at a base speed (e.g., 30px/sec). On each frame, update all alien x positions by alienDirection * alienSpeed * deltaTime. When any alive alien hits the canvas edge (left < 10px or right > canvas.width - 10px), reverse alienDirection and drop all aliens down by one row (increase y by alien row height). Track alienSpeed — increase slightly as fewer aliens remain. Render all alive aliens during 'playing' phase. Read apps/spaceinvaders/app/src/types/index.ts for GameState shape. Read apps/spaceinvaders/app/src/components/GameCanvas.tsx for existing cannon and game loop code.",
+      "depends_on": ["B"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-1106-D",
+      "file": "apps/spaceinvaders/app/src/components/GameCanvas.tsx",
+      "content": "Slice 4 — Combat System: Read apps/spaceinvaders/docs/how/slices/slice-4-combat-system/slice.md. In apps/spaceinvaders/app/src/components/GameCanvas.tsx, implement projectiles, collision detection, and scoring. Player missiles: on fire event (space/tap) and if currentTime - lastFireTime >= reloadDelay, create a player projectile at cannon top-center with upward velocity (-500px/sec). Render as a thin white/yellow line (#fbbf24). Alien fire: each frame, random chance for an alive alien to fire (probability proportional to number of alive aliens / 55, capped). Alien missiles travel downward at 250px/sec, rendered as red lines (#ef4444). Collision detection: check each projectile against all alive aliens (player missiles) and cannon (alien missiles). On player missile hits alien: remove alien (set alive=false), remove projectile, increment score by 10. On alien missile hits cannon: transition to gameover state. Remove off-screen projectiles. Read apps/spaceinvaders/app/src/types/index.ts for GameState. Read existing GameCanvas.tsx for cannon, alien, and game loop code.",
+      "depends_on": ["C"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-1106-E",
+      "file": "apps/spaceinvaders/app/src/components/GameCanvas.tsx",
+      "content": "Slice 5 — Shield System: Read apps/spaceinvaders/docs/how/slices/slice-5-shield-system/slice.md. In apps/spaceinvaders/app/src/components/GameCanvas.tsx, implement 4 destructible shields. On game start, create 4 shields evenly spaced horizontally between cannon and aliens, positioned at ≈ 60% of canvas height from top. Each shield: width ≈ 8% of canvas width, height ≈ 4% of canvas height, health = 10, maxHealth = 10. Render shields as green (#22c55e) rectangles with a notch at the bottom (classic Space Invaders shield shape). Progressive degradation: as health decreases, render the shield with increasing visual damage — at health 7-9 show small gaps, at 4-6 show larger gaps, at 1-3 show mostly destroyed, at 0 remove entirely. Collision: check both player and alien projectiles against shields. On hit: decrement shield health, remove projectile, do NOT let projectile pass through. Shield absorbs the hit completely. Read apps/spaceinvaders/app/src/types/index.ts for GameState. Read existing GameCanvas.tsx for all prior game logic.",
+      "depends_on": ["D"],
+      "status": "pending",
+      "role": "dev"
+    },
+    {
+      "id": "F",
+      "branch": "task/issue-1106-F",
+      "file": "apps/spaceinvaders/app/src/components/GameCanvas.tsx",
+      "content": "Slice 6 — Game Flow: Read apps/spaceinvaders/docs/how/slices/slice-6-game-flow/slice.md. In apps/spaceinvaders/app/src/components/GameCanvas.tsx, implement the complete game state machine, HUD, end screens, and localStorage persistence. State machine: 'menu' → click/tap/space starts game → 'playing' → cannon hit → 'gameover' OR all aliens destroyed → 'victory'. HUD during playing: current score top-left (white text, 16px), best score top-right (white text, 16px). Game Over screen: semi-transparent dark overlay, 'GAME OVER' in large white bold text centered, 'Score: X' below, 'RESTART' button (blue rectangle with white text). Victory screen: similar overlay, 'VICTORY!' in large text, 'All aliens destroyed!' message, 'RESTART' button. Click/tap on RESTART button resets game to menu state with fresh alien grid, score=0, shields restored. localStorage: on gameover or victory, save best score (max of current and previous) under key 'spaceinvaders_bestScore'. On app mount, load best score from localStorage. Read apps/spaceinvaders/app/src/types/index.ts for GameState. Read existing GameCanvas.tsx for all prior game logic.",
+      "depends_on": ["E"],
+      "status": "pending",
+      "role": "dev"
+    }
+  ]
+}
