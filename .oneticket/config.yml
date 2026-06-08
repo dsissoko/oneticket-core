@@ -103,7 +103,7 @@ agent_config:
       opencode:
         options:
           timeout: 900000
-          chunkTimeout: 30000
+          chunkTimeout: 60000
 
   # Planned for future use:
   # claude:
