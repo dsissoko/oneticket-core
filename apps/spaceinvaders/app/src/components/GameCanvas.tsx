@@ -30,6 +30,29 @@ const SHIELD_Y_RATIO = 0.60; // 60% of canvas height from top
 const SHIELD_NOTCH_WIDTH_RATIO = 0.3; // notch is 30% of shield width
 const SHIELD_NOTCH_HEIGHT_RATIO = 0.4; // notch is 40% of shield height
 
+// localStorage helpers
+const STORAGE_KEY = 'spaceinvaders_bestScore';
+
+function loadBestScore(): number {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? parseInt(stored, 10) : 0;
+  } catch {
+    return 0;
+  }
+}
+
+function saveBestScore(score: number): void {
+  try {
+    const current = loadBestScore();
+    if (score > current) {
+      localStorage.setItem(STORAGE_KEY, String(score));
+    }
+  } catch {
+    // localStorage unavailable — silently ignore
+  }
+}
+
 function createInitialState(): GameState {
   const aliens: GameState['aliens'] = [];
   for (let row = 0; row < ALIEN_ROWS; row++) {
@@ -43,7 +66,7 @@ function createInitialState(): GameState {
   return {
     phase: 'menu' as GamePhase,
     score: 0,
-    bestScore: 0,
+    bestScore: loadBestScore(),
     cannon: { x: 400, width: 60, height: 20 },
     aliens,
     playerProjectiles: [],
@@ -97,6 +120,22 @@ function initShields(canvasWidth: number, canvasHeight: number): Shield[] {
     });
   }
   return shields;
+}
+
+function resetToMenu(gameState: GameState, canvasWidth: number, _canvasHeight: number): void {
+  gameState.phase = 'menu';
+  gameState.score = 0;
+  gameState.bestScore = loadBestScore();
+  gameState.cannon.x = canvasWidth / 2 - gameState.cannon.width / 2;
+  gameState.playerProjectiles = [];
+  gameState.alienProjectiles = [];
+  gameState.alienDirection = 1;
+  gameState.alienSpeed = ALIEN_BASE_SPEED;
+  // Reset aliens
+  for (let i = 0; i < gameState.aliens.length; i++) {
+    gameState.aliens[i] = { x: 0, y: 0, alive: false };
+  }
+  gameState.shields = [];
 }
 
 export const GameCanvas: React.FC<GameCanvasProps> = () => {
@@ -375,6 +414,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
       if (gameState.score > gameState.bestScore) {
         gameState.bestScore = gameState.score;
       }
+      saveBestScore(gameState.bestScore);
     }
   }, []);
 
@@ -465,6 +505,121 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
     }
   }, []);
 
+  const renderHUD = useCallback((ctx: CanvasRenderingContext2D, gameState: GameState) => {
+    if (gameState.phase !== 'playing') return;
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '16px monospace';
+    ctx.textBaseline = 'top';
+
+    // Current score top-left
+    ctx.textAlign = 'left';
+    ctx.fillText(`Score: ${gameState.score}`, 16, 16);
+
+    // Best score top-right
+    ctx.textAlign = 'right';
+    ctx.fillText(`Best: ${gameState.bestScore}`, ctx.canvas.width - 16, 16);
+  }, []);
+
+  const renderMenuScreen = useCallback((ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    // Title
+    ctx.font = 'bold 48px monospace';
+    ctx.fillText('SPACE INVADERS', canvas.width / 2, canvas.height * 0.3);
+
+    // Start prompt
+    ctx.font = '20px monospace';
+    ctx.fillText('Click, Tap, or Press Space to Start', canvas.width / 2, canvas.height * 0.5);
+  }, []);
+
+  const renderEndScreen = useCallback((ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, gameState: GameState) => {
+    const isVictory = gameState.phase === 'victory';
+
+    // Semi-transparent dark overlay
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    // Title
+    ctx.font = 'bold 48px monospace';
+    ctx.fillText(isVictory ? 'VICTORY!' : 'GAME OVER', canvas.width / 2, canvas.height * 0.25);
+
+    // Subtitle
+    ctx.font = '20px monospace';
+    if (isVictory) {
+      ctx.fillText('All aliens destroyed!', canvas.width / 2, canvas.height * 0.35);
+    }
+
+    // Score
+    ctx.font = '24px monospace';
+    ctx.fillText(`Score: ${gameState.score}`, canvas.width / 2, canvas.height * (isVictory ? 0.45 : 0.38));
+
+    // Best score
+    ctx.font = '16px monospace';
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText(`Best: ${gameState.bestScore}`, canvas.width / 2, canvas.height * (isVictory ? 0.53 : 0.46));
+
+    // Restart button
+    const buttonWidth = 160;
+    const buttonHeight = 44;
+    const buttonX = canvas.width / 2 - buttonWidth / 2;
+    const buttonY = canvas.height * (isVictory ? 0.63 : 0.56);
+
+    ctx.fillStyle = '#2563eb';
+    ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 18px monospace';
+    ctx.fillText('RESTART', canvas.width / 2, buttonY + buttonHeight / 2);
+  }, []);
+
+  const getRestartButtonBounds = useCallback((canvas: HTMLCanvasElement, phase: GamePhase) => {
+    const buttonWidth = 160;
+    const buttonHeight = 44;
+    const isVictory = phase === 'victory';
+    const buttonX = canvas.width / 2 - buttonWidth / 2;
+    const buttonY = canvas.height * (isVictory ? 0.63 : 0.56);
+    return { x: buttonX, y: buttonY, width: buttonWidth, height: buttonHeight };
+  }, []);
+
+  const handleCanvasClick = useCallback((e: MouseEvent) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const gameState = _gameStateRef.current;
+    const rect = canvas.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const clickY = e.clientY - rect.top;
+
+    // Menu → playing transition on any click
+    if (gameState.phase === 'menu') {
+      gameState.phase = 'playing';
+      return;
+    }
+
+    // Restart button click on game over / victory
+    if (gameState.phase === 'gameover' || gameState.phase === 'victory') {
+      const btn = getRestartButtonBounds(canvas, gameState.phase);
+      if (
+        clickX >= btn.x &&
+        clickX <= btn.x + btn.width &&
+        clickY >= btn.y &&
+        clickY <= btn.y + btn.height
+      ) {
+        saveBestScore(gameState.bestScore);
+        resetToMenu(gameState, canvas.width, canvas.height);
+      }
+    }
+  }, [getRestartButtonBounds]);
+
   const render = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -486,7 +641,20 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
       renderShields(ctx, canvas, gameState);
       renderProjectiles(ctx, gameState);
     }
-  }, [renderCannon, renderAliens, renderShields, renderProjectiles]);
+
+    // HUD during playing
+    renderHUD(ctx, gameState);
+
+    // Menu screen
+    if (gameState.phase === 'menu') {
+      renderMenuScreen(ctx, canvas);
+    }
+
+    // End screens (game over / victory)
+    if (gameState.phase === 'gameover' || gameState.phase === 'victory') {
+      renderEndScreen(ctx, canvas, gameState);
+    }
+  }, [renderCannon, renderAliens, renderShields, renderProjectiles, renderHUD, renderMenuScreen, renderEndScreen]);
 
   const updateCannon = useCallback((deltaTime: number, canvas: HTMLCanvasElement, gameState: GameState) => {
     const keys = keysRef.current;
@@ -536,6 +704,18 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
       updateProjectiles(deltaTime, gameState);
       alienFire(gameState);
       checkCollisions(gameState, canvas);
+
+      // Victory detection: all aliens destroyed
+      if (gameState.phase === 'playing') {
+        const aliveAliens = gameState.aliens.filter(a => a.alive);
+        if (aliveAliens.length === 0) {
+          gameState.phase = 'victory';
+          if (gameState.score > gameState.bestScore) {
+            gameState.bestScore = gameState.score;
+          }
+          saveBestScore(gameState.bestScore);
+        }
+      }
     }
 
     render();
@@ -560,6 +740,12 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       e.preventDefault();
       keysRef.current.add(e.key);
+
+      // Menu → playing transition on space
+      const gameState = _gameStateRef.current;
+      if ((e.key === ' ' || e.key === 'Space') && gameState.phase === 'menu') {
+        gameState.phase = 'playing';
+      }
     };
     const handleKeyUp = (e: KeyboardEvent) => {
       keysRef.current.delete(e.key);
@@ -611,11 +797,46 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
 
     const handleTouchEnd = (e: TouchEvent) => {
       e.preventDefault();
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+
+      const gameState = _gameStateRef.current;
+
+      // If no touch start X was tracked, this might be a tap for menu/restart
+      if (touchStartXRef.current === null) {
+        const touch = e.changedTouches[0];
+        const rect = canvas.getBoundingClientRect();
+        const tapX = touch.clientX - rect.left;
+        const tapY = touch.clientY - rect.top;
+
+        // Menu → playing on tap
+        if (gameState.phase === 'menu') {
+          gameState.phase = 'playing';
+          touchStartXRef.current = null;
+          return;
+        }
+
+        // Restart button tap
+        if (gameState.phase === 'gameover' || gameState.phase === 'victory') {
+          const btn = getRestartButtonBounds(canvas, gameState.phase);
+          if (
+            tapX >= btn.x &&
+            tapX <= btn.x + btn.width &&
+            tapY >= btn.y &&
+            tapY <= btn.y + btn.height
+          ) {
+            saveBestScore(gameState.bestScore);
+            resetToMenu(gameState, canvas.width, canvas.height);
+          }
+        }
+      }
+
       touchStartXRef.current = null;
     };
 
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
+    canvas.addEventListener('click', handleCanvasClick);
     canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
     canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
     canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
@@ -629,11 +850,12 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
       observer.disconnect();
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
+      canvas.removeEventListener('click', handleCanvasClick);
       canvas.removeEventListener('touchstart', handleTouchStart);
       canvas.removeEventListener('touchmove', handleTouchMove);
       canvas.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [resize, gameLoop, updateCannon, createPlayerProjectile]);
+  }, [resize, gameLoop, updateCannon, createPlayerProjectile, handleCanvasClick, getRestartButtonBounds]);
 
   return (
     <canvas
