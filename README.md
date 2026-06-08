@@ -54,6 +54,20 @@ The pipeline posts two live URLs directly in the PR comment:
 
 > ✋ *External debug — required human or stronger model intervention to fix issues*
 
+### Token & cost details
+
+| App | Model | Tokens in | Tokens out | Cost |
+|---|---|---|---|---|
+| SpaceInvaders | `qwen3.6-plus` | ~2.5M | ~19K | $1.41 |
+| SpaceInvaders | `gpt-5.3-codex` BYOK | ~1.1M | ~15K | $1.28 |
+| MonJournal | — | — | — | pending |
+| Breakout | — | — | — | pending |
+| AppShell | — | — | — | pending |
+| Flashcards | — | — | — | pending |
+| OneTicket | — | — | — | pending |
+
+> Costs are [Zen](https://opencode.ai/docs/zen) pay-as-you-go. BYOK sessions billed directly by provider.
+
 ---
 
 ## Prerequisites
