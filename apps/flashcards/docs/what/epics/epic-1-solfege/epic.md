@@ -41,3 +41,7 @@ Enable music students to learn note recognition visually and auditorily with bil
 - [Slice 5 — Tone.js Audio Playback](slice-5-tonejs-playback/slice.md)
 - [Slice 6 — Solfège Card Data](slice-6-solfege-data/slice.md)
 - [Slice 7 — ScoreCard UI Integration](slice-7-scorecard-ui/slice.md)
+
+## Related Epics
+
+- [Epic 2 — Animated Score Learning](epic-2-animated-score/epic.md)

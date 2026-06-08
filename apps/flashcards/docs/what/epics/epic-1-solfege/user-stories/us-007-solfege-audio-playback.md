@@ -22,6 +22,10 @@ On card flip, `playScore({clef, notes})` plays the note sequentially using Tone.
 
 [Epic 1 — Solfège](epic-1-solfege/epic.md)
 
+## Related Epics
+
+- [Epic 2 — Animated Score Learning](epic-2-animated-score/epic.md)
+
 ## Related Slices
 
 <!-- @architect fills this section after producing slices — write filename only, no relative path, no ../
