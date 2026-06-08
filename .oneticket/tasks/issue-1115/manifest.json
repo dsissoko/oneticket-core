@@ -7,7 +7,7 @@
       "file": "apps/flashcards/docs/what/product-spec.md",
       "content": "Update apps/flashcards/docs/what/product-spec.md to add solfège capabilities. Read the existing file first — do NOT overwrite. Add 'Solfège' to Product Goals, add 'Score rendering' and 'Audio playback' to Product Capabilities, add 'VexFlow' and 'Tone.js' to Business Concepts, and update Users to mention music learners alongside geography learners. Preserve all existing content. Ensure the file has a title: frontmatter field at the top.",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "analyst"
     },
     {
