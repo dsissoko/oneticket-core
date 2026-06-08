@@ -247,7 +247,7 @@ cmd_create_ticket() {
 # Command: post comment
 # ---------------------------------------------------------------------------
 cmd_post_comment() {
-  local app="$1" ticket="$2" comment_id="$3"
+  local app="$1" ticket="$2" comment_id="$3" yes="${4:-}"
   require_data "${app}"
 
   # Get issue number from state
@@ -257,15 +257,17 @@ cmd_post_comment() {
   # Warn if already posted
   if comment_already_posted "${app}" "${ticket}" "${comment_id}"; then
     warn "Comment '${comment_id}' already posted on issue #${issue_number}"
-    read -r -p "Post again? [y/N] " confirm
-    [[ "${confirm}" =~ ^[Yy]$ ]] || { info "Skipped."; return 0; }
+    if [[ "${yes}" != "--yes" ]]; then
+      read -r -p "Post again? [y/N] " confirm
+      [[ "${confirm}" =~ ^[Yy]$ ]] || { info "Skipped."; return 0; }
+    fi
   fi
 
   local repo; repo="$(get_repo "${app}")"
   local text; text="$(get_comment_text "${app}" "${ticket}" "${comment_id}")"
 
   # Stop before any agent invocation (text starts with @)
-  if [[ "${text}" == @* ]]; then
+  if [[ "${text}" == @* ]] && [[ "${yes}" != "--yes" ]]; then
     echo ""
     echo "📋 Comment to post on issue #${issue_number}:"
     echo "─────────────────────────────────────────────"
@@ -289,11 +291,11 @@ cmd_post_comment() {
 # ---------------------------------------------------------------------------
 usage() {
   echo "Usage:"
-  echo "  ./bootstrap.sh prepare <app> <model>        — update config.yml + create PR"
-  echo "  ./bootstrap.sh <app> doc                    — create doc ticket"
-  echo "  ./bootstrap.sh <app> doc <comment-id>       — post comment on doc ticket"
-  echo "  ./bootstrap.sh <app> dev                    — create dev ticket"
-  echo "  ./bootstrap.sh <app> dev <comment-id>       — post comment on dev ticket"
+  echo "  ./bootstrap.sh prepare <app> <model>             — update config.yml + create PR"
+  echo "  ./bootstrap.sh <app> doc                         — create doc ticket"
+  echo "  ./bootstrap.sh <app> doc <comment-id> [--yes]   — post comment on doc ticket"
+  echo "  ./bootstrap.sh <app> dev                         — create dev ticket"
+  echo "  ./bootstrap.sh <app> dev <comment-id> [--yes]   — post comment on dev ticket"
   exit 1
 }
 
@@ -311,6 +313,8 @@ else
     cmd_create_ticket "${app}" "${ticket}"
   elif [[ $# -eq 3 ]]; then
     cmd_post_comment "${app}" "${ticket}" "$3"
+  elif [[ $# -eq 4 ]]; then
+    cmd_post_comment "${app}" "${ticket}" "$3" "$4"
   else
     usage
   fi
