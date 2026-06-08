@@ -11,7 +11,7 @@
       "body_file": "data/spaceinvaders-doc-body.md",
       "comments": {
         "init-doc": "@po init-doc",
-        "po-request": "@po please complete the documentation in `apps/spaceinvaders/docs/` — in particular `architecture.md`, the C4 model and the slices. Then initialize the app skeleton using the AppShell template so that OneTicket can scaffold SpaceInvaders."
+        "po-request": "@po please complete the documentation in `apps/spaceinvaders/docs/` — the C4 model (`how/c4/`) and the vertical slices (`how/slices/`) are missing.\n\nUse `apps/breakout/app/` as the reference implementation for AppShell integration, canvas layout and responsive pattern.\n\nThen scaffold the app from the AppShell template into `apps/spaceinvaders/app/` — it must be structurally identical to `apps/breakout/app/`."
       }
     },
     "dev": {
