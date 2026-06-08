@@ -12,6 +12,29 @@ Stack: React + Vite + TypeScript + MSW + localStorage + VexFlow (SVG score rende
 |---|---|
 | [ADR-001](adr-001-solfege-computation-timing.md) | Solfège computation timing — progressive background pre-computation |
 
+## ResponseEngine Contract
+
+Themes expose answers through a `ResponseEngine` interface rather than raw `card.back` strings.
+This enables computed answers (SVG, audio, composite) while maintaining backward compatibility.
+
+```typescript
+type AnswerType = 'text' | 'svg' | 'audio' | 'composite';
+
+interface ComputedAnswer {
+  type: AnswerType;
+  value: string | SVGElement | AudioBuffer | Record<string, unknown>;
+  metadata?: Record<string, unknown>;
+}
+
+interface ResponseEngine {
+  computeNextResponse(card: Card, context?: Record<string, unknown>): ComputedAnswer;
+}
+```
+
+- **IdentityEngine** (default): returns `{ type: 'text', value: card.back }` — zero computation
+- **Custom engines** (e.g., `ScoreResponseEngine` for Solfège): compute SVG + audio on demand
+- Engine is resolved per theme at session start — `theme.responseEngine ?? IdentityEngine`
+
 ## AppShell Base
 
 Scaffold from `AppShell` template, adapted for flashcards:
@@ -39,22 +62,28 @@ Scaffold from `AppShell` template, adapted for flashcards:
 | `ScoreButtons` | "I knew it" / "I didn't know" post-flip |
 | `SessionResults` | Displays final score and replay option |
 
-## Modules
-
-| Module | Responsibility |
-|---|---|
-| `renderScore` | Pure function: `{clef, notes} → SVG` injected into DOM target |
-| `playScore` | Pure function: `{clef, notes} → sequential audio` via Tone.js + Web Audio API |
-
 ## Key Types
 
 ```typescript
 type LearningMode = 'flip' | 'spaced-repetition';
 
+type AnswerType = 'text' | 'svg' | 'audio' | 'composite';
+
+interface ComputedAnswer {
+  type: AnswerType;
+  value: string | SVGElement | AudioBuffer | Record<string, unknown>;
+  metadata?: Record<string, unknown>;
+}
+
+interface ResponseEngine {
+  computeNextResponse(card: Card, context?: Record<string, unknown>): ComputedAnswer;
+}
+
 interface Theme {
   id: string;
   name: string;
   cards: Card[];
+  responseEngine?: ResponseEngine;  // Optional — defaults to IdentityEngine
 }
 
 interface Card {
@@ -98,8 +127,8 @@ Removed: Help, Demo
 | Hook | Responsibility |
 |---|---|
 | `useLearningMode` | Isolates algorithm logic (flip timing, spaced-repetition scheduling) |
-| `useTheme` | Provides theme data and selection |
-| `useSession` | Manages session state, results, localStorage persistence |
+| `useTheme` | Provides theme data, selection, and resolved `ResponseEngine` |
+| `useSession` | Manages session state, results, localStorage persistence — resolves answers via engine |
 | `useAudioPlayback` | Manages Tone.js context, play/stop controls |
 | `useScorePreloader` | Pre-computes next card's SVG in background during reading time (see ADR-001) |
 
@@ -107,6 +136,8 @@ Removed: Help, Demo
 
 | Module | Responsibility |
 |---|---|
+| `IdentityEngine` | Default engine — returns `{ type: 'text', value: card.back }` |
+| `ResponseEngine` registry | Resolves `theme.responseEngine ?? IdentityEngine` at session start |
 | `renderScore` | Pure function: `{clef, notes} → SVG` injected into DOM target |
 | `playScore` | Pure function: `{clef, notes} → sequential audio` via Tone.js + Web Audio API |
 | `ScoreCache` | In-memory cache for pre-computed score SVGs (populated by `useScorePreloader`) |

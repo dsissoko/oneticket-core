@@ -39,3 +39,9 @@ Transform passive score reading into an active learning experience. Animated hig
 <!-- @architect fills this section after producing slices — write filename only, no relative path, no ../
      The build script resolves the correct path automatically.
      Example: [Slice 1 — Skeleton Foundation](slice-1-skeleton-foundation/slice.md) -->
+
+## Related Epics
+
+- [Epic 0 — MVP Flashcard App](epic-0-mvp/epic.md)
+- [Epic 1 — Solfège Bilingual Score Cards](epic-1-solfege/epic.md)
+- [Epic 3 — Theme ResponseEngine Framework](epic-3-theme-response-engine/epic.md)
