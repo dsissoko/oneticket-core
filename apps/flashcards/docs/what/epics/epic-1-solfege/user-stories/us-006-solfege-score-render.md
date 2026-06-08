@@ -27,3 +27,6 @@ Card front renders a VexFlow SVG showing a single note on a treble clef staff. T
 <!-- @architect fills this section after producing slices — write filename only, no relative path, no ../
      The build script resolves the correct path automatically.
      Example: [Slice 1 — Skeleton Foundation](slice-1-skeleton-foundation/slice.md) -->
+
+- [Slice 4 — VexFlow Score Rendering](slice-4-vexflow-render/slice.md)
+- [Slice 7 — ScoreCard UI Integration](slice-7-scorecard-ui/slice.md)
