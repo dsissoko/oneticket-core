@@ -28,3 +28,4 @@ As a player, I want to see a formation of aliens that moves across the screen, s
 
 ## Related Slices
 
+- [Slice 3 — Alien Formation](../../../how/slices/slice-3-alien-formation/slice.md)

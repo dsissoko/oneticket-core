@@ -35,3 +35,8 @@ Alien positions array, alive/dead status per alien, movement direction flag.
 ## Observability Impact
 
 None.
+
+## Related Architecture
+
+- [Architecture](../../architecture.md)
+- [Containers](../../c4/containers.md)

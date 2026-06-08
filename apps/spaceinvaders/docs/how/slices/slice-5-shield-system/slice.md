@@ -36,6 +36,11 @@ Shield health counters, visual state per shield.
 
 None.
 
+## Related Architecture
+
+- [Architecture](../../architecture.md)
+- [Containers](../../c4/containers.md)
+
 ## Tasks
 
 - T5.1: Define shield data structure (position, health 0-10, visual state)

@@ -22,3 +22,7 @@ C4Context
 
 ## Description
 The Space Invaders game is a single-page application served via GitHub Pages and executed in the user's web browser. The player interacts through keyboard (desktop) or touch gestures (mobile). All game rendering uses the Canvas API. Best score is persisted in browser localStorage.
+
+## Related Architecture
+
+- [Architecture](../architecture.md)

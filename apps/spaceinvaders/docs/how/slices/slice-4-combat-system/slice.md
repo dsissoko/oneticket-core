@@ -36,6 +36,11 @@ Projectile arrays (position + velocity), score counter, alien alive status.
 
 None.
 
+## Related Architecture
+
+- [Architecture](../../architecture.md)
+- [Containers](../../c4/containers.md)
+
 ## Tasks
 
 - T4.1: Create ProjectileRenderer for missiles (upward and downward)

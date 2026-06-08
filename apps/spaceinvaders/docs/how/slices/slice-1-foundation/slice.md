@@ -35,3 +35,9 @@ None — infrastructure only.
 ## Observability Impact
 
 Console log for game loop start/stop.
+
+## Related Architecture
+
+- [Architecture](../../architecture.md)
+- [System Context](../../c4/system-context.md)
+- [Containers](../../c4/containers.md)

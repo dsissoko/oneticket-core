@@ -35,3 +35,8 @@ Cannon position (x coordinate), fire state (cooldown timer).
 ## Observability Impact
 
 None.
+
+## Related Architecture
+
+- [Architecture](../../architecture.md)
+- [Containers](../../c4/containers.md)

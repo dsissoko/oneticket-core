@@ -36,6 +36,11 @@ Game state enum, current score, best score (localStorage).
 
 None.
 
+## Related Architecture
+
+- [Architecture](../../architecture.md)
+- [Containers](../../c4/containers.md)
+
 ## Tasks
 
 - T6.1: Implement GameState state machine (menu/playing/gameover/victory)

@@ -25,3 +25,7 @@ C4Container
 
 ## Description
 The application runs as a single container (SPA) within the browser. It uses the browser's native Canvas API for all rendering and localStorage for persisting the best score across sessions. No server-side components or external services are required.
+
+## Related Architecture
+
+- [Architecture](../architecture.md)

@@ -29,6 +29,4 @@ As a player, I want to fire missiles at aliens and see them fire back, so that t
 
 ## Related Slices
 
-<!-- @architect fills this section after producing slices — write filename only, no relative path, no ../
-     The build script resolves the correct path automatically.
-     Example: [Slice 1 — Skeleton Foundation](slice-1-skeleton-foundation/slice.md) -->
+- [Slice 4 — Combat System](../../../how/slices/slice-4-combat-system/slice.md)

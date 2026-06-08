@@ -33,6 +33,4 @@ As a player, I want clear game states with score tracking and persistent best sc
 
 ## Related Slices
 
-<!-- @architect fills this section after producing slices — write filename only, no relative path, no ../
-     The build script resolves the correct path automatically.
-     Example: [Slice 1 — Skeleton Foundation](slice-1-skeleton-foundation/slice.md) -->
+- [Slice 6 — Game Flow](../../../how/slices/slice-6-game-flow/slice.md)

@@ -27,3 +27,4 @@ As a player, I want the game to display a responsive canvas that fills the conte
 
 ## Related Slices
 
+- [Slice 1 — Foundation](../../../how/slices/slice-1-foundation/slice.md)

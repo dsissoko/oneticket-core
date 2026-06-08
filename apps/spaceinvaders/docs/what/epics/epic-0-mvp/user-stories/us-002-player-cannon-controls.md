@@ -30,3 +30,4 @@ As a player, I want to move my cannon and fire missiles using keyboard or touch 
 
 ## Related Slices
 
+- [Slice 2 — Player Cannon](../../../how/slices/slice-2-player-cannon/slice.md)
