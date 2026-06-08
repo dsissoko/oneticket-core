@@ -11,7 +11,7 @@
       "body_file": "data/spaceinvaders-doc-body.md",
       "comments": {
         "init-doc": "@po init-doc",
-        "po-request": "@po please complete the documentation in `apps/spaceinvaders/docs/` — the C4 model (`how/c4/`) and the vertical slices (`how/slices/`) are missing.\n\nUse `apps/breakout/app/` as the reference implementation for AppShell integration, canvas layout and responsive pattern.\n\nThen scaffold the app from the AppShell template into `apps/spaceinvaders/app/` — it must be structurally identical to `apps/breakout/app/`."
+        "po-request": "@po init the knowledge base of spaceinvaders based on the issue body content. All mandatory docs must be filled: product-spec, epics, user stories, architecture, C4 models, slices. You can mobilize all team members needed."
       }
     },
     "dev": {
