@@ -1,15 +1,22 @@
 #!/usr/bin/env python3
-import re
+import re, json, os
 from datetime import datetime
 from collections import defaultdict
 
+# Répertoire du script — tous les fichiers sont relatifs à ce répertoire
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+HISTO_FILE = os.path.join(SCRIPT_DIR, "histo-opencode.txt")
+PRS_FILE   = os.path.join(SCRIPT_DIR, "prs-not-merged.json")
+REPO       = "dsissoko/oneticket-core"
+
 APPS = {
-    "oneticket-core": [("2026-05-27 09:50", "2026-06-05 17:34")],
-    "appshell":       [("2026-05-29 08:12", "2026-05-29 20:28")],
-    "breakout":       [("2026-05-31 01:02", "2026-06-03 09:39")],
-    "monjournal":     [("2026-05-28 11:49", "2026-06-05 16:16")],
-    "flashcards":     [("2026-06-07 06:23", "2026-06-07 14:50")],
-    "spaceinvaders":  [("2026-05-31 18:17", "2026-06-08 11:52")],
+    # Plages en heure locale Paris (UTC+2 en juin) — issues GitHub createdAt/closedAt + 2h
+    "oneticket-core": [("2026-05-27 11:50", "2026-06-05 19:34")],
+    "appshell":       [("2026-05-29 10:12", "2026-05-29 22:28")],
+    "breakout":       [("2026-05-31 03:02", "2026-06-03 11:39")],
+    "monjournal":     [("2026-05-28 13:49", "2026-06-05 18:16")],
+    "flashcards":     [("2026-06-07 08:23", "2026-06-07 16:50")],
+    "spaceinvaders":  [("2026-05-31 20:17", "2026-06-08 23:59")],
 }
 
 def parse_app_ranges():
@@ -39,12 +46,45 @@ def parse_cost(s):
     return 0.0
 
 def main():
-    ranges = parse_app_ranges()
-    stats = defaultdict(lambda: defaultdict(lambda: {"ti":0,"to":0,"cost":0.0,"n":0}))
-    unmatched = {"ti":0,"to":0,"cost":0.0,"n":0}
+    # ── Charger les PRs non mergées (cache local ou fetch GitHub) ────────────
+    if os.path.exists(PRS_FILE):
+        with open(PRS_FILE) as f:
+            prs_data = json.load(f)
+    else:
+        import subprocess
+        print(f"Fetching PRs from {REPO}...")
+        result = subprocess.run(
+            ["gh", "pr", "list", "--repo", REPO, "--state", "closed",
+             "--json", "number,mergedAt,createdAt,closedAt", "--limit", "500"],
+            capture_output=True, text=True
+        )
+        prs_data = json.loads(result.stdout)
+        with open(PRS_FILE, "w") as f:
+            json.dump(prs_data, f)
+        print(f"Saved to {PRS_FILE}")
 
-    with open("histo-opencode.txt", encoding="utf-8") as f:
-        lines = f.readlines()
+    exclusions = []
+    for p in prs_data:
+        if not p['mergedAt']:
+            # GitHub dates are UTC, histo dates are local Paris time (UTC+2)
+            # Convert UTC to local by adding 2h
+            from datetime import timedelta
+            s = datetime.strptime(p['createdAt'][:16], "%Y-%m-%dT%H:%M") + timedelta(hours=2)
+            e = datetime.strptime(p['closedAt'][:16], "%Y-%m-%dT%H:%M") + timedelta(hours=2)
+            exclusions.append((s, e))
+
+    def is_excluded(dt):
+        return any(s <= dt <= e for s, e in exclusions)
+
+    ranges = parse_app_ranges()
+    stats = defaultdict(lambda: defaultdict(lambda: {"ti":0.0,"to":0.0,"cost":0.0,"n":0.0}))
+    unmatched = {"ti":0.0,"to":0.0,"cost":0.0,"n":0}
+    excluded_count = 0
+
+    with open(HISTO_FILE, encoding="utf-8") as f:
+        content = f.read()
+    content = content.replace('\r\n', '\n').replace('\r', '\n')
+    lines = [l.strip() for l in content.split('\n')]
 
     # Reconstruire les enregistrements
     date_pat = re.compile(r'^\d+\s+\w+,\s+\d+:\d+\s+(AM|PM)')
@@ -61,13 +101,15 @@ def main():
     print(f"Enregistrements : {len(records)}")
 
     for rec in records:
-        if len(rec) < 4: continue
-        date_str = rec[0]
-        model = rec[1] if len(rec) > 1 else ""
+        if len(rec) < 3: continue
+        # rec[0] = "date\tmodel", rec[1..] = tokens/cost
+        first_parts = rec[0].split('\t')
+        date_str = first_parts[0].strip()
+        model = first_parts[1].strip() if len(first_parts) > 1 else ""
         nums, cost = [], 0.0
-        for p in rec[2:]:
+        for p in rec[1:]:
             p = p.strip()
-            if re.match(r'^\$[0-9.]+$', p) or re.match(r'^BYOK', p):
+            if re.match(r'^\$[0-9.]+', p) or re.match(r'^BYOK', p):
                 cost = parse_cost(p)
             elif re.match(r'^\d+$', p):
                 nums.append(int(p))
@@ -75,6 +117,9 @@ def main():
         ti, to = nums[0], nums[1]
         dt = parse_date(date_str)
         if not dt: continue
+        if is_excluded(dt):
+            excluded_count += 1
+            continue
         apps = find_apps(dt, ranges)
         if not apps:
             unmatched["ti"] += ti; unmatched["to"] += to; unmatched["cost"] += cost; unmatched["n"] += 1
@@ -84,8 +129,9 @@ def main():
                 stats[app][model]["ti"] += ti*w; stats[app][model]["to"] += to*w
                 stats[app][model]["cost"] += cost*w; stats[app][model]["n"] += w
 
+    print(f"Exclus (PRs non mergées) : {excluded_count}")
     print("\n" + "="*70)
-    print("SYNTHÈSE PAR APP")
+    print("SYNTHÈSE PAR APP (PRs non mergées exclues)")
     print("="*70)
     total = 0.0
     for app in ["oneticket-core","appshell","breakout","monjournal","flashcards","spaceinvaders"]:
