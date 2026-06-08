@@ -16,3 +16,6 @@ doc-site/src/content/docs-generated/
 
 # APM dependencies
 apm_modules/
+
+# bootstrap script state — local only, never committed
+test/state/
