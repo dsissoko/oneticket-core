@@ -7,7 +7,7 @@
       "file": "apps/spaceinvaders/app/src/types/index.ts",
       "content": "Slice 1 — Foundation: Read apps/spaceinvaders/docs/how/slices/slice-1-foundation/slice.md and apps/spaceinvaders/docs/how/architecture.md. Update apps/spaceinvaders/app/src/types/index.ts with complete SpaceInvaders game state types. Define: GameState interface with phase ('menu'|'playing'|'gameover'|'victory'), score, bestScore, cannon (x, width, height), aliens (array of {x, y, alive}), playerProjectiles and alienProjectiles (arrays of {x, y, vy, direction}), shields (array of {x, y, health, maxHealth}), alienDirection (number), alienSpeed (number), lastFireTime (number), reloadDelay (number). Read apps/spaceinvaders/app/src/components/GameCanvas.tsx — the canvas infrastructure (resize, game loop, event listeners) is already in place from Breakout scaffold. Enhance GameCanvas.tsx to use the new types: initialize a complete GameState with refs, update the render function to clear canvas with dark background (#0a0a0a) and log 'SpaceInvaders game loop started' on mount. The game loop should track deltaTime properly. Keep the existing resize, ResizeObserver, keyboard handlers (keysRef as Set<string>), and touch handler structure intact. Do not modify AppLayout, Header, Footer, ErrorBoundary, HomeScreen, or any non-game files.",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "dev"
     },
     {
