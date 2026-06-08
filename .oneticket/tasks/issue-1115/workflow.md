@@ -4,3 +4,4 @@
 2026-06-08 16:43 | D | apps/flashcards/docs/how/architecture.md
 2026-06-08 16:45 | E | apps/flashcards/docs/how/c4/system-context.md
 2026-06-08 16:45 | G | apps/flashcards/docs/how/slices/slice-4-vexflow-render/slice.md
+2026-06-08 16:45 | H | apps/flashcards/docs/how/slices/slice-5-tonejs-playback/slice.md
