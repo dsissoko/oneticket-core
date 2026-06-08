@@ -32,6 +32,7 @@ export interface GameState {
   phase: GamePhase;
   score: number;
   bestScore: number;
+  lives: number;
   cannon: Cannon;
   aliens: Alien[];
   playerProjectiles: Projectile[];
@@ -41,4 +42,6 @@ export interface GameState {
   alienSpeed: number;
   lastFireTime: number;
   reloadDelay: number;
+  invincible: boolean;
+  invincibleTimer: number;
 }

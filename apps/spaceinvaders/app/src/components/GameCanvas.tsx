@@ -9,7 +9,11 @@ const ALIEN_SIZE = 20; // base pixel size for each alien
 const ALIEN_BASE_SPEED = 30; // px/sec
 const ALIEN_DROP_DISTANCE = 24; // px to drop when hitting edge
 const ALIEN_MARGIN = 10; // px from canvas edge before reversing
-const ALIEN_SPEED_INCREMENT = 2; // px/sec increase per alien killed
+const ALIEN_SPEED_INCREMENT = 0.5; // px/sec increase per alien killed — kept low for playability
+
+// Lives and invincibility
+const INITIAL_LIVES = 3;
+const INVINCIBILITY_DURATION = 2.0; // seconds of invincibility after hit
 
 // Projectile constants
 const PLAYER_PROJECTILE_SPEED = -500; // px/sec (upward)
@@ -67,6 +71,7 @@ function createInitialState(): GameState {
     phase: 'menu' as GamePhase,
     score: 0,
     bestScore: loadBestScore(),
+    lives: INITIAL_LIVES,
     cannon: { x: 400, width: 60, height: 20 },
     aliens,
     playerProjectiles: [],
@@ -76,6 +81,8 @@ function createInitialState(): GameState {
     alienSpeed: ALIEN_BASE_SPEED,
     lastFireTime: 0,
     reloadDelay: RELOAD_DELAY,
+    invincible: false,
+    invincibleTimer: 0,
   };
 }
 
@@ -126,11 +133,14 @@ function resetToMenu(gameState: GameState, canvasWidth: number, _canvasHeight: n
   gameState.phase = 'menu';
   gameState.score = 0;
   gameState.bestScore = loadBestScore();
+  gameState.lives = INITIAL_LIVES;
   gameState.cannon.x = canvasWidth / 2 - gameState.cannon.width / 2;
   gameState.playerProjectiles = [];
   gameState.alienProjectiles = [];
   gameState.alienDirection = 1;
   gameState.alienSpeed = ALIEN_BASE_SPEED;
+  gameState.invincible = false;
+  gameState.invincibleTimer = 0;
   // Reset aliens
   for (let i = 0; i < gameState.aliens.length; i++) {
     gameState.aliens[i] = { x: 0, y: 0, alive: false };
@@ -173,6 +183,12 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
 
     // Clamp cannon position to canvas bounds
     cannon.x = Math.max(0, Math.min(canvas.width - cannonWidth, cannon.x));
+
+    // Flash during invincibility (blink on/off every 0.15s)
+    if (gameState.invincible) {
+      const blinkPhase = Math.floor(Date.now() / 150) % 2;
+      if (blinkPhase === 0) return; // Skip drawing this frame for blinking effect
+    }
 
     ctx.fillStyle = '#22c55e';
 
@@ -312,6 +328,17 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
     }
   }, []);
 
+  const updateInvincibility = useCallback((deltaTime: number, gameState: GameState) => {
+    if (gameState.phase !== 'playing') return;
+    if (gameState.invincible) {
+      gameState.invincibleTimer -= deltaTime;
+      if (gameState.invincibleTimer <= 0) {
+        gameState.invincible = false;
+        gameState.invincibleTimer = 0;
+      }
+    }
+  }, []);
+
   const checkCollisions = useCallback((gameState: GameState, canvas: HTMLCanvasElement) => {
     if (gameState.phase !== 'playing') return;
 
@@ -409,12 +436,22 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
     }
     gameState.alienProjectiles = survivingAlienProjectiles;
 
-    if (cannonHit) {
-      gameState.phase = 'gameover';
-      if (gameState.score > gameState.bestScore) {
-        gameState.bestScore = gameState.score;
+    if (cannonHit && !gameState.invincible) {
+      gameState.lives -= 1;
+      if (gameState.lives <= 0) {
+        // No lives left — game over
+        gameState.phase = 'gameover';
+        if (gameState.score > gameState.bestScore) {
+          gameState.bestScore = gameState.score;
+        }
+        saveBestScore(gameState.bestScore);
+      } else {
+        // Lose a life, enter invincibility
+        gameState.invincible = true;
+        gameState.invincibleTimer = INVINCIBILITY_DURATION;
+        // Clear all alien projectiles to give player a fair chance
+        gameState.alienProjectiles = [];
       }
-      saveBestScore(gameState.bestScore);
     }
   }, []);
 
@@ -506,15 +543,19 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
   }, []);
 
   const renderHUD = useCallback((ctx: CanvasRenderingContext2D, gameState: GameState) => {
-    if (gameState.phase !== 'playing') return;
+    if (gameState.phase !== 'playing' && gameState.phase !== 'menu') return;
 
     ctx.fillStyle = '#ffffff';
     ctx.font = '16px monospace';
     ctx.textBaseline = 'top';
 
-    // Current score top-left
+    // Lives display (left side, before score)
     ctx.textAlign = 'left';
-    ctx.fillText(`Score: ${gameState.score}`, 16, 16);
+    const livesText = '♥'.repeat(gameState.lives) + '♡'.repeat(Math.max(0, INITIAL_LIVES - gameState.lives));
+    ctx.fillText(livesText, 16, 16);
+
+    // Current score (left side, below lives)
+    ctx.fillText(`Score: ${gameState.score}`, 16, 36);
 
     // Best score top-right
     ctx.textAlign = 'right';
@@ -563,16 +604,22 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
     ctx.font = '24px monospace';
     ctx.fillText(`Score: ${gameState.score}`, canvas.width / 2, canvas.height * (isVictory ? 0.45 : 0.38));
 
+    // Lives
+    ctx.font = '18px monospace';
+    ctx.fillStyle = '#ffffff';
+    const livesText = '♥'.repeat(gameState.lives) + '♡'.repeat(Math.max(0, INITIAL_LIVES - gameState.lives));
+    ctx.fillText(`Lives: ${livesText}`, canvas.width / 2, canvas.height * (isVictory ? 0.53 : 0.46));
+
     // Best score
     ctx.font = '16px monospace';
     ctx.fillStyle = '#94a3b8';
-    ctx.fillText(`Best: ${gameState.bestScore}`, canvas.width / 2, canvas.height * (isVictory ? 0.53 : 0.46));
+    ctx.fillText(`Best: ${gameState.bestScore}`, canvas.width / 2, canvas.height * (isVictory ? 0.61 : 0.54));
 
     // Restart button
     const buttonWidth = 160;
     const buttonHeight = 44;
     const buttonX = canvas.width / 2 - buttonWidth / 2;
-    const buttonY = canvas.height * (isVictory ? 0.63 : 0.56);
+    const buttonY = canvas.height * (isVictory ? 0.71 : 0.64);
 
     ctx.fillStyle = '#2563eb';
     ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
@@ -587,7 +634,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
     const buttonHeight = 44;
     const isVictory = phase === 'victory';
     const buttonX = canvas.width / 2 - buttonWidth / 2;
-    const buttonY = canvas.height * (isVictory ? 0.63 : 0.56);
+    const buttonY = canvas.height * (isVictory ? 0.71 : 0.64);
     return { x: buttonX, y: buttonY, width: buttonWidth, height: buttonHeight };
   }, []);
 
@@ -715,12 +762,28 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
           }
           saveBestScore(gameState.bestScore);
         }
+
+        // Game over if any alien reaches close to the bottom (near cannon zone)
+        const cannonZoneY = canvas.height * 0.85; // 85% of canvas height
+        for (const alien of aliveAliens) {
+          if (alien.y + ALIEN_SIZE / 2 >= cannonZoneY) {
+            gameState.phase = 'gameover';
+            if (gameState.score > gameState.bestScore) {
+              gameState.bestScore = gameState.score;
+            }
+            saveBestScore(gameState.bestScore);
+            break;
+          }
+        }
       }
+
+      // Update invincibility timer
+      updateInvincibility(deltaTime, gameState);
     }
 
     render();
     animFrameRef.current = requestAnimationFrame(gameLoop);
-  }, [render, updateCannon, updateAliens, updateProjectiles, alienFire, checkCollisions]);
+  }, [render, updateCannon, updateAliens, updateProjectiles, alienFire, checkCollisions, updateInvincibility]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
