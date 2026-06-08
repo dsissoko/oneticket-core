@@ -1,15 +1,21 @@
 import React, { useRef, useEffect, useCallback } from 'react';
-import { GameState, GamePhase } from '../types';
+import { GameState, GamePhase, Alien } from '../types';
 
 interface GameCanvasProps {}
 
+const ALIEN_ROWS = 5;
+const ALIEN_COLS = 11;
+const ALIEN_SIZE = 20; // base pixel size for each alien
+const ALIEN_BASE_SPEED = 30; // px/sec
+const ALIEN_DROP_DISTANCE = 24; // px to drop when hitting edge
+const ALIEN_MARGIN = 10; // px from canvas edge before reversing
+const ALIEN_SPEED_INCREMENT = 2; // px/sec increase per alien killed
+
 function createInitialState(): GameState {
-  const alienRows = 5;
-  const alienCols = 11;
   const aliens: GameState['aliens'] = [];
-  for (let row = 0; row < alienRows; row++) {
-    for (let col = 0; col < alienCols; col++) {
-      aliens.push({ x: col * 40, y: row * 30, alive: true });
+  for (let row = 0; row < ALIEN_ROWS; row++) {
+    for (let col = 0; col < ALIEN_COLS; col++) {
+      aliens.push({ x: 0, y: 0, alive: false });
     }
   }
 
@@ -28,10 +34,31 @@ function createInitialState(): GameState {
     alienProjectiles: [],
     shields,
     alienDirection: 1,
-    alienSpeed: 1,
+    alienSpeed: ALIEN_BASE_SPEED,
     lastFireTime: 0,
     reloadDelay: 0,
   };
+}
+
+function initAlienFormation(aliens: Alien[], canvasWidth: number, canvasHeight: number) {
+  const waveWidth = canvasWidth * 0.7;
+  const waveHeight = canvasHeight * 0.4;
+  const spacingX = waveWidth / ALIEN_COLS;
+  const spacingY = waveHeight / ALIEN_ROWS;
+  const offsetX = (canvasWidth - waveWidth) / 2;
+  const offsetY = canvasHeight * 0.05; // small top margin
+
+  let index = 0;
+  for (let row = 0; row < ALIEN_ROWS; row++) {
+    for (let col = 0; col < ALIEN_COLS; col++) {
+      aliens[index] = {
+        x: offsetX + col * spacingX + spacingX / 2,
+        y: offsetY + row * spacingY + spacingY / 2,
+        alive: true,
+      };
+      index++;
+    }
+  }
 }
 
 export const GameCanvas: React.FC<GameCanvasProps> = () => {
@@ -40,6 +67,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
   const keysRef = useRef<Set<string>>(new Set());
   const _gameStateRef = useRef<GameState>(createInitialState());
   const lastTimeRef = useRef<number>(0);
+  const prevPhaseRef = useRef<GamePhase>('menu');
 
   // Cannon input tracking refs
   const touchStartXRef = useRef<number | null>(null);
@@ -89,6 +117,69 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
     ctx.fill();
   }, []);
 
+  const updateAliens = useCallback((deltaTime: number, canvas: HTMLCanvasElement, gameState: GameState) => {
+    if (gameState.phase !== 'playing') return;
+
+    const { aliens } = gameState;
+    const aliveAliens = aliens.filter(a => a.alive);
+    if (aliveAliens.length === 0) return;
+
+    // Calculate speed based on remaining aliens (faster as fewer remain)
+    const totalAliens = ALIEN_ROWS * ALIEN_COLS;
+    const killed = totalAliens - aliveAliens.length;
+    const currentSpeed = gameState.alienSpeed + killed * ALIEN_SPEED_INCREMENT;
+
+    // Update all alien x positions
+    let hitEdge = false;
+    for (const alien of aliens) {
+      if (!alien.alive) continue;
+      alien.x += gameState.alienDirection * currentSpeed * deltaTime;
+
+      // Check edge collision
+      if (alien.x - ALIEN_SIZE / 2 < ALIEN_MARGIN || alien.x + ALIEN_SIZE / 2 > canvas.width - ALIEN_MARGIN) {
+        hitEdge = true;
+      }
+    }
+
+    // If any alien hit the edge, reverse direction and drop all down
+    if (hitEdge) {
+      gameState.alienDirection *= -1;
+      for (const alien of aliens) {
+        if (alien.alive) {
+          alien.y += ALIEN_DROP_DISTANCE;
+        }
+      }
+    }
+  }, []);
+
+  const renderAliens = useCallback((ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, gameState: GameState) => {
+    if (gameState.phase !== 'playing') return;
+
+    const { aliens } = gameState;
+    ctx.fillStyle = '#4ade80';
+
+    for (const alien of aliens) {
+      if (!alien.alive) continue;
+
+      const x = alien.x - ALIEN_SIZE / 2;
+      const y = alien.y - ALIEN_SIZE / 2;
+
+      // Main body - pixel-art style square
+      ctx.fillRect(x, y, ALIEN_SIZE, ALIEN_SIZE);
+
+      // Small details - "eyes" (darker pixels)
+      ctx.fillStyle = '#0a0a0a';
+      const eyeSize = 3;
+      const eyeOffsetY = 4;
+      const eyeSpacing = 6;
+      ctx.fillRect(alien.x - eyeSpacing - eyeSize / 2, y + eyeOffsetY, eyeSize, eyeSize);
+      ctx.fillRect(alien.x + eyeSpacing - eyeSize / 2, y + eyeOffsetY, eyeSize, eyeSize);
+
+      // Restore alien color for next iteration
+      ctx.fillStyle = '#4ade80';
+    }
+  }, []);
+
   const render = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -103,7 +194,12 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
     if (gameState.phase === 'playing' || gameState.phase === 'menu') {
       renderCannon(ctx, canvas, gameState);
     }
-  }, [renderCannon]);
+
+    // Render aliens during 'playing' phase
+    if (gameState.phase === 'playing') {
+      renderAliens(ctx, canvas, gameState);
+    }
+  }, [renderCannon, renderAliens]);
 
   const updateCannon = useCallback((deltaTime: number, canvas: HTMLCanvasElement, gameState: GameState) => {
     const keys = keysRef.current;
@@ -138,12 +234,22 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
 
     if (canvas) {
       const gameState = _gameStateRef.current;
+
+      // Detect menu → playing transition to initialize alien formation
+      if (gameState.phase === 'playing' && prevPhaseRef.current === 'menu') {
+        initAlienFormation(gameState.aliens, canvas.width, canvas.height);
+        gameState.alienDirection = 1;
+        gameState.alienSpeed = ALIEN_BASE_SPEED;
+      }
+      prevPhaseRef.current = gameState.phase;
+
       updateCannon(deltaTime, canvas, gameState);
+      updateAliens(deltaTime, canvas, gameState);
     }
 
     render();
     animFrameRef.current = requestAnimationFrame(gameLoop);
-  }, [render, updateCannon]);
+  }, [render, updateCannon, updateAliens]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
