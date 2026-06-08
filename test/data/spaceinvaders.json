@@ -1,0 +1,26 @@
+{
+  "app": "spaceinvaders",
+  "repo": "dsissoko/oneticket-core",
+  "config": {
+    "current_project": "spaceinvaders",
+    "model": "opencode/gpt-5.3-codex"
+  },
+  "tickets": {
+    "doc": {
+      "title": "feat: scaffold spaceinvaders app from AppShell template",
+      "body_file": "data/spaceinvaders-doc-body.md",
+      "comments": {
+        "init-doc": "@po init-doc",
+        "po-request": "@po please complete the documentation in `apps/spaceinvaders/docs/` — in particular `architecture.md`, the C4 model and the slices. Then initialize the app skeleton using the AppShell template so that OneTicket can scaffold SpaceInvaders."
+      }
+    },
+    "dev": {
+      "title": "feat: spaceinvaders — responsive canvas, game loop, controls, HUD, shields, score",
+      "body_file": "data/spaceinvaders-dev-body.md",
+      "comments": {
+        "init-appshell": "@po init-appshell",
+        "leaddev-request": "@leaddev implement the app following the slices in `apps/spaceinvaders/docs/how/slices/`.\n\nPay special attention to the Home page integration with AppShell:\n- The Home page must use the AppShell layout (header, footer, flex-grow content area)\n- A single \"Start Game\" button centered in the content area navigates to `/game`\n- The Game page canvas must fill the AppShell content area exactly as Breakout does (`flex-grow flex flex-col overflow-hidden`)\n- `GameCanvas` must return `<canvas>` as the root element (no wrapper div) — CSS `style={{ display: 'block', width: '100%', height: '100%', touchAction: 'none' }}`\n- Dimensions read from `canvas.parentElement.clientWidth/Height`\n- `engine.resize()` called **before** `engine.start()` in a single `useEffect`\n- Do not bypass or replace the AppShell layout — the game lives inside it\n- Reference: `apps/breakout/app/src/components/GameCanvas.tsx`"
+      }
+    }
+  }
+}
