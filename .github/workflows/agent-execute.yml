@@ -84,9 +84,14 @@ jobs:
       - name: Install dependencies
         run: npm ci --silent
 
-      # [DETERMINISTIC] Install APM CLI
+      # [DETERMINISTIC] Install APM CLI — retry up to 3 times on transient network errors
       - name: Install APM
-        run: curl -sSL https://aka.ms/apm-unix | sh
+        run: |
+          for i in 1 2 3; do
+            curl -sSL https://aka.ms/apm-unix | sh && break
+            echo "[apm-install] attempt $i failed, retrying in 5s..."
+            sleep 5
+          done
 
       # [DETERMINISTIC] Copy .oneticket/apm.yml → apm.yml (repo root, read by apm install)
       # and .oneticket/.apm/ → .apm/ (instructions compiled by apm compile)
