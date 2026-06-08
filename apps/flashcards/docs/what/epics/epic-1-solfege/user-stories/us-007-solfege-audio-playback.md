@@ -27,3 +27,6 @@ On card flip, `playScore({clef, notes})` plays the note sequentially using Tone.
 <!-- @architect fills this section after producing slices — write filename only, no relative path, no ../
      The build script resolves the correct path automatically.
      Example: [Slice 1 — Skeleton Foundation](slice-1-skeleton-foundation/slice.md) -->
+
+- [Slice 5 — Tone.js Audio Playback](slice-5-tonejs-playback/slice.md)
+- [Slice 7 — ScoreCard UI Integration](slice-7-scorecard-ui/slice.md)

@@ -27,3 +27,6 @@ Home screen theme picker includes 'Solfège' option alongside 'World Capitals'. 
 <!-- @architect fills this section after producing slices — write filename only, no relative path, no ../
      The build script resolves the correct path automatically.
      Example: [Slice 1 — Skeleton Foundation](slice-1-skeleton-foundation/slice.md) -->
+
+- [Slice 6 — Solfège Card Data](slice-6-solfege-data/slice.md)
+- [Slice 7 — ScoreCard UI Integration](slice-7-scorecard-ui/slice.md)
