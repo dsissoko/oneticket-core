@@ -6,6 +6,12 @@ title: Architecture
 
 Stack: React + Vite + TypeScript + MSW + localStorage + VexFlow (SVG score rendering) + Tone.js (audio playback)
 
+## Architecture Decisions
+
+| ADR | Topic |
+|---|---|
+| [ADR-001](adr-001-solfege-computation-timing.md) | Solfège computation timing — progressive background pre-computation |
+
 ## AppShell Base
 
 Scaffold from `AppShell` template, adapted for flashcards:
@@ -95,6 +101,15 @@ Removed: Help, Demo
 | `useTheme` | Provides theme data and selection |
 | `useSession` | Manages session state, results, localStorage persistence |
 | `useAudioPlayback` | Manages Tone.js context, play/stop controls |
+| `useScorePreloader` | Pre-computes next card's SVG in background during reading time (see ADR-001) |
+
+## Modules
+
+| Module | Responsibility |
+|---|---|
+| `renderScore` | Pure function: `{clef, notes} → SVG` injected into DOM target |
+| `playScore` | Pure function: `{clef, notes} → sequential audio` via Tone.js + Web Audio API |
+| `ScoreCache` | In-memory cache for pre-computed score SVGs (populated by `useScorePreloader`) |
 
 ## Constraints
 
