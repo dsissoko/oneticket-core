@@ -7,7 +7,7 @@
   },
   "tickets": {
     "doc": {
-      "title": "feat: scaffold spaceinvaders app from AppShell template",
+      "title": "feat: scaffold spaceinvaders app from Breakout template",
       "body_file": "data/spaceinvaders-doc-body.md",
       "comments": {
         "init-doc": "@po init-doc",
