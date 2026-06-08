@@ -1,3 +1,7 @@
+---
+title: Product Specification — Flashcards
+---
+
 # Product Specification
 
 <!-- SITE_DESCRIPTION: Flashcard app for learning world capitals with flip mode and local progress tracking. -->
@@ -8,7 +12,7 @@ Learn world capitals efficiently via spaced-repetition-ready flashcard system.
 
 ## 2. Users and Actors
 
-Learners studying geography.
+Learners studying geography and music learners practicing solfège.
 
 ## 3. Problems to Solve
 
@@ -20,6 +24,7 @@ Learners studying geography.
 - Display cards from built-in theme
 - Track session progress
 - Extensible theme/mode architecture
+- Solfège
 
 ## 5. Out of Scope
 
@@ -33,6 +38,8 @@ Learners studying geography.
 - Card
 - LearningMode
 - SessionResult
+- VexFlow
+- Tone.js
 
 ## 7. Product Capabilities
 
@@ -40,6 +47,8 @@ Learners studying geography.
 - Flip interaction
 - Session scoring
 - Results summary
+- Score rendering
+- Audio playback
 
 ## 8. High-Level Workflows
 
