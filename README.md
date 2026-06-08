@@ -56,15 +56,19 @@ The pipeline posts two live URLs directly in the PR comment:
 
 ### Token & cost details
 
+> PRs closed without merge excluded. Overlapping sessions split 50/50 between apps.
+
 | App | Model | Tokens in | Tokens out | Cost |
 |---|---|---|---|---|
-| SpaceInvaders | `qwen3.6-plus` | ~2.5M | ~19K | $1.41 |
-| SpaceInvaders | `gpt-5.3-codex` BYOK | ~1.1M | ~15K | $1.28 |
-| MonJournal | — | — | — | pending |
-| Breakout | — | — | — | pending |
+| SpaceInvaders | `claude-haiku-4-5` | ~39.8M | ~287K | $6.87 |
+| SpaceInvaders | `qwen3.6-plus` | ~6.4M | ~70K | $0.80 |
+| SpaceInvaders | `gpt-5-nano` | ~52K | ~1K | $0.00 |
+| **SpaceInvaders TOTAL** | | **~46.3M** | **~359K** | **$7.68** |
+| MonJournal | `claude-haiku-4-5` | ~9.2M | ~76K | $1.68 |
+| OneTicket | `claude-haiku-4-5` | ~10.9M | ~89K | $1.99 |
 | AppShell | — | — | — | pending |
+| Breakout | — | — | — | pending |
 | Flashcards | — | — | — | pending |
-| OneTicket | — | — | — | pending |
 
 > Costs are [Zen](https://opencode.ai/docs/zen) pay-as-you-go. BYOK sessions billed directly by provider.
 
