@@ -1,6 +1,10 @@
+---
+title: Architecture
+---
+
 # Architecture
 
-Stack: React + Vite + TypeScript + MSW + localStorage
+Stack: React + Vite + TypeScript + MSW + localStorage + VexFlow (SVG score rendering) + Tone.js (audio playback)
 
 ## AppShell Base
 
@@ -22,11 +26,19 @@ Scaffold from `AppShell` template, adapted for flashcards:
 | Component | Responsibility |
 |---|---|
 | `FlashcardDisplay` | Renders card front/back with flip animation |
+| `ScoreCard` | Renders VexFlow SVG on card front, plays Tone.js audio on flip |
 | `ThemePicker` | Selects from available themes |
 | `ModeSelector` | Chooses learning mode (flip, spaced-repetition) |
 | `ProgressBar` | Shows session advancement (X/Y) |
 | `ScoreButtons` | "I knew it" / "I didn't know" post-flip |
 | `SessionResults` | Displays final score and replay option |
+
+## Modules
+
+| Module | Responsibility |
+|---|---|
+| `renderScore` | Pure function: `{clef, notes} → SVG` injected into DOM target |
+| `playScore` | Pure function: `{clef, notes} → sequential audio` via Tone.js + Web Audio API |
 
 ## Key Types
 
@@ -50,6 +62,16 @@ interface SessionResult {
   known: boolean;
   timestamp: number;
 }
+
+interface ScoreNote {
+  note: string;       // e.g. 'C4'
+  duration: string;   // 'w' | 'h' | 'q'
+}
+
+interface ScoreData {
+  clef: string;       // 'treble' | 'bass'
+  notes: ScoreNote[];
+}
 ```
 
 ## Routes
@@ -72,6 +94,7 @@ Removed: Help, Demo
 | `useLearningMode` | Isolates algorithm logic (flip timing, spaced-repetition scheduling) |
 | `useTheme` | Provides theme data and selection |
 | `useSession` | Manages session state, results, localStorage persistence |
+| `useAudioPlayback` | Manages Tone.js context, play/stop controls |
 
 ## Constraints
 
@@ -79,3 +102,4 @@ Removed: Help, Demo
 - localStorage only — persistence across sessions
 - Algorithm logic in hook — separation of concerns
 - GitHub Pages deployment — SPA routing with hash fallback
+- Existing flashcard themes and tests must remain unaffected by VexFlow/Tone.js integration
