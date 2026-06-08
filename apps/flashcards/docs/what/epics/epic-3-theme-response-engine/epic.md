@@ -18,6 +18,9 @@ The `ResponseEngine` framework unlocks computed themes while preserving backward
 
 - Define the `ResponseEngine` interface: `computeNextResponse(card, context) → computedAnswer`
 - Introduce a default `IdentityEngine` that returns `card.back` as-is (backward-compatible)
+- Define the rendering contract: `renderQuestion(card)` and `renderAnswer(answer)` with type-based dispatch
+- Implement text renderer for existing themes (handles single-line and multi-line content)
+- Create SVG and audio renderer stubs — placeholders ready for VexFlow and Tone.js integration
 - Migrate existing themes (World Capitals, Multiplication Tables, Conjugaisons FR) to use `IdentityEngine`
 - Wire the `ResponseEngine` into the session flow so that card answers are resolved through the engine
 - Ensure existing tests pass without modification
@@ -40,6 +43,7 @@ The `ResponseEngine` framework unlocks computed themes while preserving backward
 - [US-016 — Migrate Existing Themes to ResponseEngine Contract](us-016-migrate-existing-themes.md)
 - [US-017 — Wire ResponseEngine into Session Flow](us-017-wire-response-engine-session.md)
 - [US-018 — Validate Existing Tests Pass Unchanged](us-018-validate-existing-tests.md)
+- [US-019 — Define and Implement Rendering Contract for Questions and Answers](us-019-rendering-contract.md)
 
 ## Related Slices
 
