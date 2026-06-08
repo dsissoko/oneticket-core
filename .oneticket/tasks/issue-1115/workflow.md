@@ -7,3 +7,4 @@
 2026-06-08 16:45 | H | apps/flashcards/docs/how/slices/slice-5-tonejs-playback/slice.md
 2026-06-08 16:45 | F | apps/flashcards/docs/how/c4/containers.md
 2026-06-08 16:46 | I | apps/flashcards/docs/how/slices/slice-6-solfege-data/slice.md
+2026-06-08 16:46 | J | apps/flashcards/docs/how/slices/slice-7-scorecard-ui/slice.md
