@@ -25,7 +25,7 @@ Learners studying geography and music learners practicing solfège.
 - Track session progress
 - Extensible theme/mode architecture
 - Solfège
-- Computed answers via ResponseEngine framework
+- Computed answers via RenderEngine framework
 
 ## 5. Out of Scope
 
@@ -41,7 +41,7 @@ Learners studying geography and music learners practicing solfège.
 - SessionResult
 - VexFlow
 - Tone.js
-- ResponseEngine
+- RenderEngine
 - ComputedAnswer
 
 ## 7. Product Capabilities
@@ -52,7 +52,7 @@ Learners studying geography and music learners practicing solfège.
 - Results summary
 - Score rendering
 - Audio playback
-- Computed answer resolution (ResponseEngine)
+- Computed answer resolution (RenderEngine)
 
 ## 8. High-Level Workflows
 

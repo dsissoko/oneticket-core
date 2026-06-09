@@ -10,7 +10,7 @@ Implement the `RenderingEngine` layer: `TextRenderingEngine` (default), renderer
 
 ## Related Epics
 
-[Epic 3 — Theme ResponseEngine Framework](epic-3-theme-response-engine/epic.md)
+[Epic 3 — Theme RenderEngine Framework](epic-3-theme-render-engine/epic.md)
 
 ## Related User Stories
 
@@ -27,7 +27,7 @@ Implement the `RenderingEngine` layer: `TextRenderingEngine` (default), renderer
 | `src/engine/renderers/audio-renderer.ts` | New file — stub for `type: 'audio'` (play button placeholder, ready for Tone.js) |
 | `src/engine/renderers/composite-renderer.ts` | New file — stub for `type: 'composite'` (renders child renderers in sequence) |
 | `src/engine/index.ts` | Extend — add `RenderingEngine` registry, resolve `theme.renderingEngine ?? TextRenderingEngine` |
-| `src/hooks/useTheme.ts` | Extend — expose resolved `RenderingEngine` alongside `ResponseEngine` |
+| `src/hooks/useTheme.ts` | Extend — expose resolved `RenderingEngine` alongside `RenderEngine` |
 | `src/components/FlashcardDisplay.tsx` | Modify — use `renderQuestion` for front, `renderAnswer` for back via engine |
 | `src/components/ScoreCard.tsx` | Modify — accept `RenderingEngine` prop for solfège card rendering |
 | `src/components/SessionScreen.tsx` | Modify — pass resolved engine to `FlashcardDisplay` / `ScoreCard` |
