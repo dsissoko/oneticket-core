@@ -93,6 +93,13 @@ export function buildPrompt({ role, request, branch, issueNumber, repo, docsPath
   lines.push(`FIRST ACTION - no exception: run bash command: git checkout ${branch}.`);
   lines.push('');
 
+  // Critical pipeline rules — explicit guard against rogue branch/PR creation
+  lines.push(`CRITICAL RULES — no exception:`);
+  lines.push(`- NEVER call \`gh pr create\` — PR creation is handled by the pipeline after your run.`);
+  lines.push(`- NEVER create a new git branch — work exclusively on the branch already checked out (${branch}).`);
+  lines.push(`- NEVER call \`git push\` — the pipeline handles all pushes after your run.`);
+  lines.push('');
+
   // Project context — injected deterministically
   lines.push(`## Project context`);
   lines.push(`issue_number: ${issueNumber}`);
