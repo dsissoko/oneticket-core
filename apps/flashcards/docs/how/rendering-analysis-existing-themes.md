@@ -65,7 +65,7 @@ Each theme's cards are rendered through **two functions**:
 ### Phase 2: Solfège (Epic 1)
 1. Replace SVG stub with VexFlow `renderScore()` implementation
 2. Replace audio stub with Tone.js `playScore()` implementation
-3. Implement `ScoreResponseEngine` for computed answers
+3. Implement `ScoreRenderEngine` for computed answers
 4. Bilingual FR/EN note name support
 
 ---
@@ -87,16 +87,16 @@ Each theme's cards are rendered through **two functions**:
 1. **Multi-line support is mandatory** — Conjugaisons FR uses `\n` for line breaks; the text renderer must split and render each line separately
 2. **Renderer stubs are required** — SVG and audio stubs must exist (even as placeholders) so the type dispatch is complete and type-safe
 3. **No visual regression** — All 3 existing themes must look identical before and after the rendering layer is introduced
-4. **Rendering is separate from ResponseEngine** — `ResponseEngine` computes the answer; rendering layer displays it. These are two distinct concerns.
+4. **Rendering is separate from RenderEngine** — `RenderEngine` computes the answer; rendering layer displays it. These are two distinct concerns.
 
 ---
 
 ## Related Artifacts
 
 - **US-019**: Define and Implement Rendering Contract for Questions and Answers
-- **US-016**: Migrate Existing Themes to ResponseEngine Contract
-- **Epic 3**: Theme ResponseEngine Framework
-- **Architecture.md**: ResponseEngine Contract section
+- **US-016**: Migrate Existing Themes to RenderEngine Contract
+- **Epic 3**: Theme RenderEngine Framework
+- **Architecture.md**: RenderEngine Contract section
 
 ---
 

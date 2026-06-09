@@ -50,4 +50,4 @@ Transform passive score reading into an active learning experience. Animated hig
 
 - [Epic 0 — MVP Flashcard App](epic-0-mvp/epic.md)
 - [Epic 1 — Solfège Bilingual Score Cards](epic-1-solfege/epic.md)
-- [Epic 3 — Theme ResponseEngine Framework](epic-3-theme-response-engine/epic.md)
+- [Epic 3 — Theme RenderEngine Framework](epic-3-theme-render-engine/epic.md)

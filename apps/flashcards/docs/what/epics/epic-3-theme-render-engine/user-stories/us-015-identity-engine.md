@@ -10,11 +10,11 @@ As a system, I want a default `IdentityEngine` that returns `card.back` unchange
 
 ## Expected Behavior
 
-The `IdentityEngine` implements the `ResponseEngine` interface. Its `computeNextResponse()` method simply returns the card's `back` field as a string answer. This is the default engine applied to all themes that do not specify a custom engine.
+The `IdentityEngine` implements the `RenderEngine` interface. Its `computeNextResponse()` method simply returns the card's `back` field as a string answer. This is the default engine applied to all themes that do not specify a custom engine.
 
 ## Acceptance Criteria
 
-- [ ] `IdentityEngine` class or function implements `ResponseEngine`
+- [ ] `IdentityEngine` class or function implements `RenderEngine`
 - [ ] `computeNextResponse(card)` returns `{ type: 'text', value: card.back }`
 - [ ] Engine is exported from a dedicated module `src/engine/identity-engine.ts`
 - [ ] Unit tests verify identity behavior for all existing card formats
@@ -22,7 +22,7 @@ The `IdentityEngine` implements the `ResponseEngine` interface. Its `computeNext
 
 ## Related Epic
 
-[Epic 3 — Theme ResponseEngine Framework](epic-3-theme-response-engine/epic.md)
+[Epic 3 — Theme RenderEngine Framework](epic-3-theme-render-engine/epic.md)
 
 ## Related Slices
 

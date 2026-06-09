@@ -15,7 +15,7 @@ This document answers: **What should the next sprint cover?** Based on architect
 | Epic | Status | Slices | User Stories |
 |---|---|---|---|
 | **Epic 0 — MVP** | Defined | Slice 1–3 | US-001 to US-004 |
-| **Epic 3 — ResponseEngine Framework** | Defined | Slice 8 | US-014 to US-019 |
+| **Epic 3 — RenderEngine Framework** | Defined | Slice 8 | US-014 to US-019 |
 | **Epic 1 — Solfège Bilingual Score Cards** | Defined | Slice 4–7 | US-005 to US-008 |
 | **Epic 2 — Animated Score Learning** | **No slices** | — | US-009 to US-013 |
 
@@ -23,16 +23,16 @@ This document answers: **What should the next sprint cover?** Based on architect
 
 ## Recommended Sprint Sequence
 
-### Sprint 1 — ResponseEngine Framework (Epic 3)
+### Sprint 1 — RenderEngine Framework (Epic 3)
 
 **Why first:** Validates the rendering architecture with simple text rendering before adding VexFlow/Tone.js complexity. Proves the contract works with real data.
 
 | Slice | Coverage |
 |---|---|
-| **Slice 8** — ResponseEngine Framework | US-014 to US-019 |
+| **Slice 8** — RenderEngine Framework | US-014 to US-019 |
 
 **Deliverables:**
-- `ResponseEngine` interface + `IdentityEngine` default
+- `RenderEngine` interface + `IdentityEngine` default
 - `renderQuestion(card)` and `renderAnswer(answer)` with type-based dispatch
 - Text renderer (single-line + multi-line with `\n`)
 - SVG and audio renderer stubs (placeholders)
@@ -149,7 +149,7 @@ You asked: *"I'm not confident about the mechanism to use for rendering the next
 
 | Concern | Where It Lives | Why |
 |---|---|---|
-| "What to render" | `ResponseEngine` | Computes the answer (text, SVG, audio) |
+| "What to render" | `RenderEngine` | Computes the answer (text, SVG, audio) |
 | "How to render" | `RenderingEngine` | Displays the answer (text renderer, SVG renderer, etc.) |
 | "When to preload" | `CardPreloader` (app) | Knows session flow, current index, next card |
 | "When to display" | `SessionScreen` | Orchestrates the flip animation and content swap |
@@ -158,7 +158,7 @@ You asked: *"I'm not confident about the mechanism to use for rendering the next
 
 ## What to Validate Visually
 
-### After Sprint 1 (ResponseEngine):
+### After Sprint 1 (RenderEngine):
 - [ ] World Capitals: country → capital displays correctly (single line)
 - [ ] Multiplication Tables: question → answer displays correctly (single line)
 - [ ] Conjugaisons FR: verb tense → full conjugation displays with proper line breaks

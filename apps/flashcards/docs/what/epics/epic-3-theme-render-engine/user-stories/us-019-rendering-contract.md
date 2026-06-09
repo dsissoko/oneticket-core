@@ -26,11 +26,11 @@ For existing themes (World Capitals, Multiplication Tables, Conjugaisons FR), bo
 - [ ] Audio renderer stub (`type: 'audio'`) exists and renders a play button placeholder — ready for Tone.js integration
 - [ ] `FlashcardDisplay` component uses `renderQuestion` for front and `renderAnswer` for back
 - [ ] All 3 existing themes display identically to before (no visual regression)
-- [ ] Rendering contract documented in `architecture.md` with clear separation from `ResponseEngine`
+- [ ] Rendering contract documented in `architecture.md` with clear separation from `RenderEngine`
 
 ## Related Epic
 
-[Epic 3 — Theme ResponseEngine Framework](epic-3-theme-response-engine/epic.md)
+[Epic 3 — Theme RenderEngine Framework](epic-3-theme-render-engine/epic.md)
 
 ## Related Slices
 
@@ -38,5 +38,5 @@ For existing themes (World Capitals, Multiplication Tables, Conjugaisons FR), bo
      The build script resolves the correct path automatically.
      Example: [Slice 1 — Skeleton Foundation](slice-1-skeleton-foundation/slice.md) -->
 
-[Slice 8 — ResponseEngine Framework](../../how/slices/slice-8-response-engine-framework/slice.md)
+[Slice 8 — RenderEngine Framework](../../how/slices/slice-8-render-engine-framework/slice.md)
 [Slice 14 — Rendering Engine Implementation](../../how/slices/slice-14-rendering-engine/slice.md)

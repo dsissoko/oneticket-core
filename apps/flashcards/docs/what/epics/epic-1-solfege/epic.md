@@ -46,4 +46,4 @@ Enable music students to learn note recognition visually and auditorily with bil
 
 - [Epic 0 — MVP Flashcard App](epic-0-mvp/epic.md)
 - [Epic 2 — Animated Score Learning](epic-2-animated-score/epic.md)
-- [Epic 3 — Theme ResponseEngine Framework](epic-3-theme-response-engine/epic.md)
+- [Epic 3 — Theme RenderEngine Framework](epic-3-theme-render-engine/epic.md)

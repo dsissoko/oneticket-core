@@ -69,8 +69,8 @@ C4Container
 
 | Engine | Responsibility |
 |---|---|
-| `ResponseEngine` | Computes answer data (`computeNextResponse()`) |
-| `IdentityEngine` | Default ResponseEngine — returns `card.back` as text |
+| `RenderEngine` | Computes answer data (`computeNextResponse()`) |
+| `IdentityEngine` | Default RenderEngine — returns `card.back` as text |
 | `RenderingEngine` | Renders answer as ReactNode (`renderQuestion()`, `renderAnswer()`) |
 | `TextRenderingEngine` | Default RenderingEngine — text with `\n` support |
 | `ScoreRenderingEngine` | Solfège RenderingEngine — VexFlow SVG + Tone.js audio |

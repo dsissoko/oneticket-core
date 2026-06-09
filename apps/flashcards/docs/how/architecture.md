@@ -51,9 +51,9 @@ function useCardPreloader(cards: Card[], currentIndex: number, engine: Rendering
 }
 ```
 
-## ResponseEngine Contract
+## RenderEngine Contract
 
-Themes expose answers through a `ResponseEngine` interface rather than raw `card.back` strings.
+Themes expose answers through a `RenderEngine` interface rather than raw `card.back` strings.
 This enables computed answers (SVG, audio, composite) while maintaining backward compatibility.
 
 ```typescript
@@ -65,20 +65,20 @@ interface ComputedAnswer {
   metadata?: Record<string, unknown>;
 }
 
-interface ResponseEngine {
+interface RenderEngine {
   computeNextResponse(card: Card, context?: Record<string, unknown>): ComputedAnswer;
 }
 ```
 
 - **IdentityEngine** (default): returns `{ type: 'text', value: card.back }` — zero computation
-- **Custom engines** (e.g., `ScoreResponseEngine` for Solfège): compute SVG + audio on demand
-- Engine is resolved per theme at session start — `theme.responseEngine ?? IdentityEngine`
+- **Custom engines** (e.g., `ScoreRenderEngine` for Solfège): compute SVG + audio on demand
+- Engine is resolved per theme at session start — `theme.renderEngine ?? IdentityEngine`
 
-### Relationship: ResponseEngine vs RenderingEngine
+### Relationship: RenderEngine vs RenderingEngine
 
 | Concern | Interface | Responsibility |
 |---|---|---|
-| "What is the answer?" | `ResponseEngine.computeNextResponse()` | Computes the answer data |
+| "What is the answer?" | `RenderEngine.computeNextResponse()` | Computes the answer data |
 | "How to display it?" | `RenderingEngine.renderAnswer()` | Renders the answer as ReactNode |
 | "When to preload?" | `CardPreloader` (app layer) | Pre-renders next card in background |
 
@@ -126,7 +126,7 @@ interface ComputedAnswer {
   metadata?: Record<string, unknown>;
 }
 
-interface ResponseEngine {
+interface RenderEngine {
   computeNextResponse(card: Card, context?: Record<string, unknown>): ComputedAnswer;
 }
 
@@ -139,7 +139,7 @@ interface Theme {
   id: string;
   name: string;
   cards: Card[];
-  responseEngine?: ResponseEngine;   // Optional — defaults to IdentityEngine
+  renderEngine?: RenderEngine;   // Optional — defaults to IdentityEngine
   renderingEngine?: RenderingEngine; // Optional — defaults to TextRenderingEngine
 }
 
@@ -194,7 +194,7 @@ Removed: Help, Demo
 | Hook | Responsibility |
 |---|---|
 | `useLearningMode` | Isolates algorithm logic (flip timing, spaced-repetition scheduling) |
-| `useTheme` | Provides theme data, selection, and resolved `ResponseEngine` + `RenderingEngine` |
+| `useTheme` | Provides theme data, selection, and resolved `RenderEngine` + `RenderingEngine` |
 | `useSession` | Manages session state, results, localStorage persistence — resolves answers via engine |
 | `useAudioPlayback` | Manages Tone.js context, play/stop controls (non-animated mode) |
 | `useAnimatedPlayback` | Manages Tone.js context + note highlight sync, pause/resume/skip/jump (animated mode) |
@@ -205,10 +205,10 @@ Removed: Help, Demo
 
 | Module | Responsibility |
 |---|---|
-| `IdentityEngine` | Default ResponseEngine — returns `{ type: 'text', value: card.back }` |
+| `IdentityEngine` | Default RenderEngine — returns `{ type: 'text', value: card.back }` |
 | `TextRenderingEngine` | Default RenderingEngine — renders text (single-line + multi-line with `\n`) |
 | `ScoreRenderingEngine` | Solfège RenderingEngine — renders VexFlow SVG + Tone.js audio |
-| `ResponseEngine` registry | Resolves `theme.responseEngine ?? IdentityEngine` at session start |
+| `RenderEngine` registry | Resolves `theme.renderEngine ?? IdentityEngine` at session start |
 | `RenderingEngine` registry | Resolves `theme.renderingEngine ?? TextRenderingEngine` at session start |
 | `renderScore` | Pure function: `{clef, notes} → SVG` injected into DOM target |
 | `playScore` | Pure function: `{clef, notes} → sequential audio` via Tone.js + Web Audio API |

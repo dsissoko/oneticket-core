@@ -1,20 +1,20 @@
 ---
-title: US-014 — Define ResponseEngine Interface
+title: US-014 — Define RenderEngine Interface
 ---
 
-# US-014 — Define ResponseEngine Interface
+# US-014 — Define RenderEngine Interface
 
 ## Story
 
-As a theme developer, I want a well-defined `ResponseEngine` interface so that I can implement custom answer computation logic for my theme without modifying the core session flow.
+As a theme developer, I want a well-defined `RenderEngine` interface so that I can implement custom answer computation logic for my theme without modifying the core session flow.
 
 ## Expected Behavior
 
-The `ResponseEngine` interface exposes a single method `computeNextResponse(card, context)` that returns the computed answer for a given card. The interface is typed and documented so that any theme author can implement it.
+The `RenderEngine` interface exposes a single method `computeNextResponse(card, context)` that returns the computed answer for a given card. The interface is typed and documented so that any theme author can implement it.
 
 ## Acceptance Criteria
 
-- [ ] `ResponseEngine` interface defined in `src/types/index.ts`
+- [ ] `RenderEngine` interface defined in `src/types/index.ts`
 - [ ] Interface includes `computeNextResponse(card: Card, context?: Record<string, unknown>): ComputedAnswer`
 - [ ] `ComputedAnswer` type supports string, SVG, audio, and composite responses
 - [ ] Interface is documented with JSDoc explaining the contract
@@ -22,7 +22,7 @@ The `ResponseEngine` interface exposes a single method `computeNextResponse(card
 
 ## Related Epic
 
-[Epic 3 — Theme ResponseEngine Framework](epic-3-theme-response-engine/epic.md)
+[Epic 3 — Theme RenderEngine Framework](epic-3-theme-render-engine/epic.md)
 
 ## Related Slices
 

@@ -6,11 +6,11 @@ title: US-018 — Validate Existing Tests Pass Unchanged
 
 ## Story
 
-As a developer, I want all existing tests to pass without modification after the ResponseEngine migration so that backward compatibility is guaranteed and no regressions are introduced.
+As a developer, I want all existing tests to pass without modification after the RenderEngine migration so that backward compatibility is guaranteed and no regressions are introduced.
 
 ## Expected Behavior
 
-The full test suite (unit tests, hook tests, component tests) runs green after the ResponseEngine integration. No test file requires changes — the `IdentityEngine` ensures static themes behave identically.
+The full test suite (unit tests, hook tests, component tests) runs green after the RenderEngine integration. No test file requires changes — the `IdentityEngine` ensures static themes behave identically.
 
 ## Acceptance Criteria
 
@@ -24,7 +24,7 @@ The full test suite (unit tests, hook tests, component tests) runs green after t
 
 ## Related Epic
 
-[Epic 3 — Theme ResponseEngine Framework](epic-3-theme-response-engine/epic.md)
+[Epic 3 — Theme RenderEngine Framework](epic-3-theme-render-engine/epic.md)
 
 ## Related Slices
 
