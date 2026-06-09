@@ -27,9 +27,9 @@
 - [Components](../c4/components.md)
 - [Deployment](../c4/deployment.md)
 
-## 12. Related Implementation Slices
+## 12. Related Sprints
 
-See [how/slices/](../slices/) for all implementation slices derived from this architecture.
+See [how/sprints/](../sprints/) for all implementation sprints derived from this architecture.
 
 ## 13. Technical Constraints
 

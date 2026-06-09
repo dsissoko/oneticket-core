@@ -1,3 +1,5 @@
+<!-- ⚠️ Legacy — slices are replaced by sprints from this point forward. This document is preserved for historical reference. New epics use `docs/how/sprints/` instead. -->
+
 # Slice 5 — Help Screen
 
 ## Overview

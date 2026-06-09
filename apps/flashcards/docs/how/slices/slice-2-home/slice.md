@@ -1,3 +1,5 @@
+<!-- ⚠️ Legacy — slices are replaced by sprints from this point forward. This document is preserved for historical reference. New epics use `docs/how/sprints/` instead. -->
+
 # Slice 2 — Home Screen
 
 Home screen implementation: theme picker, mode selector, Start button, and AppShell nav adaptation.
