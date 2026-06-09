@@ -17,7 +17,7 @@ This document answers: **What should the next sprint cover?** Based on architect
 | **Epic 0 — MVP** | Defined | Slice 1–3 | US-001 to US-004 |
 | **Epic 3 — RenderEngine Framework** | Defined | Slice 8, 14 | US-014 to US-019 |
 | **Epic 1 — Solfège Bilingual Score Cards** | Defined | Slice 4–7 | US-005 to US-008 |
-| **Epic 2 — Animated Score Learning** | **No slices** | — | US-009 to US-013 |
+| **Epic 2 — Animated Score Learning** | Defined | Slice 9–13 | US-009 to US-013 |
 
 ---
 
