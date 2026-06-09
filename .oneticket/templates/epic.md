@@ -13,8 +13,8 @@
      The build script resolves the correct path automatically.
      Example: [US-001 — Skeleton Setup](us-001-skeleton-setup.md) -->
 
-## Related Slices
+## Related Sprints
 
-<!-- @architect fills this section after producing slices — write filename only, no relative path, no ../
+<!-- @po fills this section after producing sprints — write filename only, no relative path, no ../
      The build script resolves the correct path automatically.
-     Example: [Slice 1 — Skeleton Foundation](slice-1-skeleton-foundation/slice.md) -->
+     Example: [Sprint 1 — Skeleton Foundation](sprint-1/sprint.md) -->
