@@ -28,7 +28,7 @@ Every PR contains two artifacts, both instantly accessible via a live preview:
 
 **Structured documentation** — four sections, generated and kept in sync with the code:
 - `what/` — product vision, epics, user stories
-- `how/` — architecture, C4 diagrams, implementation slices
+- `how/` — architecture, C4 diagrams, implementation sprints, ADRs
 - `ship/` — CI/CD, deployment
 - `run/` — operational runbooks
 
@@ -139,7 +139,9 @@ The framework handles the rest.
 |---|---|
 | `@po init-doc` | Initializes the documentation structure (`what/`, `how/`, `ship/`, `run/`) |
 | `@po <describe your product>` | Generates product-spec, epics, user stories |
-| `@architect create` | Generates architecture.md, C4 diagrams, implementation slices |
+| `@po plan-sprint` | Plans a sprint — selects US from backlog, creates sprint.md + GitHub Milestone |
+| `@po close-sprint` | Closes a sprint — velocity summary, closes GitHub Milestone |
+| `@architect create` | Generates architecture.md, C4 diagrams — also completes Technical Notes in sprints and authors ADRs |
 | `@leaddev init-<template>` | Bootstraps the app from a template (e.g. `@leaddev init-appshell`) |
 | `@leaddev <implement request>` | Decomposes into tasks, triggers FAN-OUT, delivers a PR |
 | `@dev <request>` | Implements directly on the feature branch (no decomposition) |
@@ -154,27 +156,32 @@ If it answers a question → it posts a comment and stops.
 
 ## Happy Path
 
-### From scratch — 4 tickets
+### From scratch
 
-#### Ticket 1 — Initialize documentation
-Comment: `@po init-doc`
-→ PR opened with the documentation structure.
-Iterate with `@po update` comments if needed. Merge when ready.
+#### Issue 1 — Full documentation *(one-shot)*
+Comment: `@po init-doc` then `@po <vision>`
+→ FAN-OUT manifest: product-spec, epics, US, architecture, C4 — delivered in one pass.
+Iterate with `@po update` / `@architect update` / `@analyst update` as needed. Merge when ready.
 
-#### Ticket 2 — Generate product knowledge and architecture
-Comment: `@po <describe your product, its users, and main features>`
-→ PR opened with product-spec, epics, user stories, architecture, C4 diagrams, slices.
-Iterate with `@po update` comments on the ticket or PR. Merge when ready.
+#### Issue 2 — Sprint Planning *(each sprint)*
+Comment: `@po plan-sprint`
+→ sprint.md created with selected US + cross-references + GitHub Milestone.
+Comment: `@architect` (on same issue)
+→ `## Technical Notes` completed in sprint.md.
+Merge when ready.
 
-#### Ticket 3 — Bootstrap the app scaffold (optional)
-Comment: `@leaddev init-<template>`
-→ PR opened with the app scaffold.
-Merge before proceeding — Ticket 4 builds on this.
-
-#### Ticket 4 — Implement the app
-Comment: `@leaddev implement the app following the slices in docs/how/slices/`
-→ PR opened when all tasks complete (FAN-OUT/GATHER).
+#### Issue 3 — Sprint Execution *(each sprint)*
+Comment: `@leaddev init-<template>` (optional — first Sprint Execution only)
+→ PR opened with app scaffold. Merge before proceeding.
+Comment: `@leaddev implement`
+→ Reads `docs/how/sprints/sprint-N/sprint.md` — FAN-OUT/GATHER — PR opened when all tasks complete.
 Iterate with `@dev fix` or `@qa validate` comments on the PR. Merge → app in production.
+
+#### Issue 4 — Sprint Review *(each sprint)*
+Comment: `@po close-sprint`
+→ Velocity summary posted, GitHub Milestone closed.
+
+> Issues 2→3→4 repeat each sprint.
 
 ---
 
@@ -182,7 +189,7 @@ Iterate with `@dev fix` or `@qa validate` comments on the PR. Merge → app in p
 
 #### Ticket 1 — Initialize and generate documentation from code
 Comment: `@po reverse-doc <describe what to document>`
-→ PR opened with inferred product-spec, epics, user stories, architecture, C4 diagrams, slices.
+→ PR opened with inferred product-spec, epics, user stories, architecture, C4 diagrams, sprints.
 
 #### Ticket 2 — Refine documentation
 Comment: `@po update <what to refine>`
