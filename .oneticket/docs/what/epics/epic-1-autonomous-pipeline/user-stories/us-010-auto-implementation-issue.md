@@ -24,20 +24,20 @@ After auto-merge of the doc PR:
      docs_path: apps/<project>/docs
      app_path: apps/<project>/app
 
-     ## Implementation slices
-     <list of slices from docs_path/how/slices/>
+     ## Sprint content
+     <active sprint from docs_path/how/sprints/>
 
      @leaddev please decompose and implement.
      ```
 2. The issue creation triggers `agent-dispatch.mjs` via `on-issue-comment.yml`
 3. `@leaddev` is dispatched with its full profile and the issue context
-4. `@leaddev` reads `docs_path/how/slices/` and produces an implementation manifest
+4. `@leaddev` reads `docs_path/how/sprints/` and produces an implementation manifest
 
 ### Issue body generation
 
 The body is built deterministically by `orchestrate.mjs`:
 - `current_project` and `docs_path` from `config.yml`
-- Slice list from `docs_path/how/slices/` — directory listing, not LLM-generated
+- Sprint content from `docs_path/how/sprints/` — directory listing, not LLM-generated
 - The `@leaddev` invocation at the end triggers the dispatch
 
 ## Acceptance Criteria
@@ -54,12 +54,12 @@ The body is built deterministically by `orchestrate.mjs`:
 **When** doc PR is created,
 **Then** no implementation issue is auto-created — `@user` decides.
 
-**Given** `docs_path/how/slices/` is empty at merge time,
+**Given** `docs_path/how/sprints/` is empty at merge time,
 **When** the implementation issue is created,
-**Then** the body notes that slices are missing and `@leaddev` should generate them first.
+**Then** the body notes that the sprint is missing and `@leaddev` should ask `@po` to create it first.
 
 ## Key Files
 
 - `src/orchestrate.mjs` — auto-merge + issue creation after all tasks done
 - `.oneticket/config.yml` — `autonomous_mode`, `current_project`
-- `.oneticket/agents/leaddev.agent.md` (new — see US-009)
+- `.oneticket/agents/leaddev.agent.md` (see US-009)

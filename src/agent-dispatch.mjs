@@ -167,7 +167,7 @@ export function buildPrompt({ role, request, branch, issueNumber, repo, docsPath
     lines.push(`Load and apply the following skills to execute the reverse documentation workflow:`);
     lines.push('');
     lines.push(`1. Load skill \`oneticket-reverse-doc\` — this is your primary orchestration guide for reverse documentation, code discovery, and ordered generation.`);
-    lines.push(`   It will instruct you to also load: \`oneticket-doc-structure\`, \`oneticket-user-story\`, \`oneticket-epic-breakdown\`, \`oneticket-c4\`, \`oneticket-vertical-slice\` as needed.`);
+     lines.push(`   It will instruct you to also load: \`oneticket-doc-structure\`, \`oneticket-user-story\`, \`oneticket-epic-breakdown\`, \`oneticket-c4\`, \`oneticket-create-sprint\`, \`oneticket-complete-sprint-technical\` as needed.`);
     lines.push('');
     lines.push(`Key constraints:`);
     lines.push(`- docs_path: \`${docsPath}\``);
@@ -176,7 +176,7 @@ export function buildPrompt({ role, request, branch, issueNumber, repo, docsPath
     lines.push(`- product-spec.md : if it exists but is outdated vs the current code → UPDATE it to reflect the current implementation`);
     lines.push(`- architecture.md : if it exists but is outdated vs the current code → UPDATE it to reflect the current implementation`);
     lines.push(`- C4 diagrams (how/c4/) : if they exist but are outdated vs the current stack or components → UPDATE them`);
-    lines.push(`- slices : if existing slices do not match the current src/ structure → UPDATE them`);
+     lines.push(`- sprints : if existing sprints do not match the current src/ structure → UPDATE them`);
     lines.push(`- user stories : if new observable features exist in the code with no corresponding US → CREATE the missing US`);
     lines.push(`- All other files (epic.md) : update only if explicitly requested or clearly outdated`);
     lines.push(`- Every generated artifact must be traceable to the code in app_path/src/`);
