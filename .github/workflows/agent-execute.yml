@@ -205,6 +205,33 @@ jobs:
           IS_FANOUT_TASK: ${{ inputs.is_fanout_task }}
         run: node src/notify-agent-failure.mjs
 
+      # [GUARD] Close rogue PRs and delete rogue branches created by the agent
+      # Protects against opencode/dispatch-* branches created when switched=true is not honored
+      - name: Cleanup rogue branches
+        if: steps.run-agent.outcome == 'success'
+        env:
+          GITHUB_TOKEN: ${{ secrets.ONETICKET_GH_PAT }}
+          REPO:         ${{ github.repository }}
+        run: |
+          # Find and close any open PR on opencode/dispatch-* branches
+          ROGUE_PRS=$(gh pr list --repo "$REPO" --state open --json number,headRefName \
+            --jq '.[] | select(.headRefName | startswith("opencode/dispatch-")) | .number')
+          if [ -n "$ROGUE_PRS" ]; then
+            for PR_NUM in $ROGUE_PRS; do
+              echo "[cleanup] Closing rogue PR #$PR_NUM"
+              gh pr close "$PR_NUM" --repo "$REPO" \
+                --comment "Closed automatically — rogue branch created by agent instead of committing to \`${{ inputs.branch }}\`. See fix/issue-1123."
+            done
+          fi
+          # Delete rogue remote branches
+          ROGUE_BRANCHES=$(git ls-remote --heads origin 'refs/heads/opencode/dispatch-*' | awk '{print $2}' | sed 's|refs/heads/||')
+          if [ -n "$ROGUE_BRANCHES" ]; then
+            for B in $ROGUE_BRANCHES; do
+              echo "[cleanup] Deleting rogue branch $B"
+              git push origin --delete "$B" || true
+            done
+          fi
+
       # [DETERMINISTIC] Push branch on success
       - name: Push branch
         if: steps.run-agent.outcome == 'success'
