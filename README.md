@@ -158,26 +158,26 @@ If it answers a question → it posts a comment and stops.
 
 ### From scratch — 4 tickets
 
-#### Issue 1 — Full documentation *(one-shot)*
+#### Ticket 1 — Full documentation *(one-shot)*
 Comment: `@po init-doc` then `@po <vision>`
 → FAN-OUT manifest: product-spec, epics, US, architecture, C4 — delivered in one pass.
 Iterate with `@po update` / `@architect update` / `@analyst update` as needed. Merge when ready.
 
-#### Issue 2 — Sprint Planning *(each sprint)*
+#### Ticket 2 — Sprint Planning *(each sprint)*
 Comment: `@po plan-sprint`
 → sprint.md created with selected US + cross-references + GitHub Milestone.
 Comment: `@architect` (on same issue)
 → `## Technical Notes` completed in sprint.md.
 Merge when ready.
 
-#### Issue 3 — Sprint Execution *(each sprint)*
+#### Ticket 3 — Sprint Execution *(each sprint)*
 Comment: `@leaddev init-<template>` (optional — first Sprint Execution only)
 → PR opened with app scaffold. Merge before proceeding.
 Comment: `@leaddev implement`
 → Reads `docs/how/sprints/sprint-N/sprint.md` — FAN-OUT/GATHER — PR opened when all tasks complete.
 Iterate with `@dev fix` or `@qa validate` comments on the PR. Merge → app in production.
 
-#### Issue 4 — Sprint Review *(each sprint)*
+#### Ticket 4 — Sprint Review *(each sprint)*
 Comment: `@po close-sprint`
 → Velocity summary posted, GitHub Milestone closed.
 
