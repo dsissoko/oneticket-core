@@ -196,7 +196,7 @@ Comment: `@po update <what to refine>`
 → PR opened with targeted updates.
 Iterate until documentation reflects the codebase accurately. Merge when ready.
 
-> Once your documentation reflects the codebase accurately, you are set to go to **Issue 2 — Sprint Planning**.
+> Once your documentation reflects the codebase accurately, you are set to go to **Ticket 2 — Sprint Planning**.
 
 ---
 
