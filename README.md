@@ -156,7 +156,7 @@ If it answers a question → it posts a comment and stops.
 
 ## Happy Path
 
-### From scratch
+### From scratch — 4 issues
 
 #### Issue 1 — Full documentation *(one-shot)*
 Comment: `@po init-doc` then `@po <vision>`
@@ -195,6 +195,8 @@ Comment: `@po reverse-doc <describe what to document>`
 Comment: `@po update <what to refine>`
 → PR opened with targeted updates.
 Iterate until documentation reflects the codebase accurately. Merge when ready.
+
+> Once your documentation reflects the codebase accurately, you are set to go to **Issue 2 — Sprint Planning**.
 
 ---
 
