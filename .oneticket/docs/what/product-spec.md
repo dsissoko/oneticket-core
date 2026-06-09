@@ -24,7 +24,7 @@ Five macro-capabilities define the product:
 
 **3. Autonomous mode** — Agents operate within a declared workflow: each role knows where to route a request and what to hand off. Routing and handoff rules make agent-to-agent chaining explicit and controllable, in both interactive and autonomous modes.
 
-**4. Documentation generation** — OneTicket covers the full software product lifecycle through structured documentation: product specification, architecture, epics, user stories, implementation slices, C4 diagrams, CI/CD, and operations. Documentation is the source of truth that agents read before acting.
+**4. Documentation generation** — OneTicket covers the full software product lifecycle through structured documentation: product specification, architecture, epics, user stories, implementation sprints, ADRs, C4 diagrams, CI/CD, and operations. Documentation is the source of truth that agents read before acting.
 
 **5. Skill and agent management** — Agent profiles and skills are the distributable unit of the product. Integration with APM (Microsoft Agent Package Manager) is planned to enable versioned skill distribution and agent identity management.
 
@@ -115,7 +115,7 @@ The `@qa`, `@analyst`, and `@help` roles belong to the V1 trajectory.
 | **FAN-OUT execution** | Ready tasks dispatched in parallel to worker agents | ✅ v0.1.0 |
 | **GATHER and merge** | Completed task branches merged sequentially, dependencies resolved | ✅ v0.1.0 |
 | **Multi-trigger support** | Issue comments, PR comments, inline review comments | ✅ v0.1.0 |
-| **Documentation generation** | Structured docs covering product, architecture, epics, US, slices, C4, ship | ✅ v0.1.0 |
+| **Documentation generation** | Structured docs covering product, architecture, epics, US, sprints, ADRs, C4, ship | ✅ v0.1.0 |
 | **Skill loading** | Agent profiles load domain-specific skills at runtime | ✅ v0.1.0 |
 | **Routing and handoff** | Declared rules for agent-to-agent communication | 🔲 V1 |
 | **Autonomous mode** | Agent-to-agent chaining without human intervention | 🔲 V1 |
@@ -194,9 +194,10 @@ apps/<project>/docs/
     architecture.md
     c4/
       system-context.md
-    slices/
-      slice-N-<name>/
-        slice.md
+    sprints/
+      sprint-N-<name>/
+        sprint.md
+    adr-NNN-<name>.md
   ship/                         ← delivery
   run/                          ← operations
 ```
@@ -1205,6 +1206,12 @@ A single task asked to produce all implementation slices for a project generated
 
 **Documentation — fine tasks, integration success:**
 When the manifest explicitly named each slice as a separate task, each agent produced a coherent slice file. No duplicates. Cross-references were handled by a dedicated final task. The documentation was complete and navigable on the first pass.
+
+**Sprint planning — @po overloaded:**
+A sprint created in a single `@po` task that included goal, US selection, cross-references, AND Technical Notes produced an inconsistent document — the Technical Notes mixed business requirements with technical decisions, and cross-references were incomplete. Mitigation: split into two sequential tasks — `@po` creates the sprint shell and cross-references, `@architect` completes Technical Notes in a second task that depends on the first.
+
+**Sprint planning — two-phase ownership, clean result:**
+When `@po` created the sprint shell (goal + US selection + cross-references) and `@architect` completed `## Technical Notes` in a dependent task, the sprint document was coherent and actionable. `@leaddev` could read the sprint and produce a valid manifest without ambiguity. Cross-references were complete and bidirectional across epics, US, and sprint.
 
 **Implementation — fine tasks, integration failure:**
 A game implementation decomposed into one task per JS module produced individually correct files. At runtime, the ball had a radius of zero (not initialized by the module that owned the ball), physics ran during the menu phase (no shared phase guard), and the first game frame computed a large delta time after the menu delay — causing the ball to teleport outside the canvas. Five debug iterations were required to identify and fix the integration boundaries. The agents had no shared contract on initial state, lifecycle phases, or timing assumptions. Mitigation: skeleton-first task establishes the shared contract before any parallel implementation begins.
