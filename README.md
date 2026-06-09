@@ -296,8 +296,8 @@ Full list: `https://opencode.ai/zen/v1/models`
 |---|---|
 | **v0.1.0** — released | GitHub-native pipeline fully operational end-to-end |
 | **v0.5.0** — released | AppShell + Breakout delivered, product-spec stable, pipeline doc aligned |
-| **v0.6.0** — current | reverse-doc, label flow, 50 skills catalog, MonJournal app delivered |
-| **V1** — planned | Routing & handoff matrix, autonomous mode, full-stack skills, APM integration |
+| **v0.6.0** — current | reverse-doc, label flow, 50 skills catalog, MonJournal app delivered, APM integration live |
+| **V1** — planned | Routing & handoff matrix, autonomous mode, full-stack skills, sprint planning (`@po plan-sprint`) |
 | **V2** — planned | Cloud runtime, persistent sandboxes, multi-sandbox fan-out, observability |
 
 > V1 and V2 are planning labels, not SemVer versions. Official releases follow semantic versioning carried by git tags.
