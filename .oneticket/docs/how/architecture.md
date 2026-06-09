@@ -1,5 +1,15 @@
 # Architecture
 
+| Field     | Value |
+|-----------|-------|
+| Version   | 1.0.0 |
+| Status    | ☑ draft  ☐ review  ☐ stable |
+| Author    | @dsissoko |
+| Date      | 2026-06-09 |
+| Changelog | 1.0.0 — initial architecture — deterministic pipeline, FAN-OUT/GATHER, skill-based agents, sprint replaces slice as implementation planning unit |
+
+---
+
 ## 1. Architecture Principles
 
 - **Deterministic orchestration** — all pipeline control flow lives in code; LLMs only generate content, never make routing or sequencing decisions
