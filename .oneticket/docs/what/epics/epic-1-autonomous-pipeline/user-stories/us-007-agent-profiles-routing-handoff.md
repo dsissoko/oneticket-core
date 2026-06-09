@@ -18,7 +18,7 @@ As a team using OneTicket, I want each agent profile to correctly implement the 
 - In `autonomous_mode: false`:
   - `@po` — after manifest execution, proposes handoff to `analyst` or `architect` with backticks
   - `@analyst` — after producing doc files, proposes handoff to `po` for summary
-  - `@architect` — after producing architecture/C4/slices, proposes handoff to `po`
+   - `@architect` — after producing architecture/C4, proposes handoff to `po` for sprint Technical Notes
   - `@qa` — after reviewing a PR, proposes handoff to `user` with findings
   - `@dev` — after completing implementation, proposes handoff to `qa`
 
