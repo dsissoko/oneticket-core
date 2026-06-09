@@ -12,75 +12,84 @@ Stack: React + Vite + TypeScript + MSW + localStorage + VexFlow (SVG score rende
 |---|---|
 | [ADR-001](adr-001-solfege-computation-timing.md) | Solfège computation timing — progressive background pre-computation |
 
-## RenderingEngine Contract
-
-Themes render content through a `RenderingEngine` interface that separates **what to display** from **how to display it**. The engine is stateless — it receives data and returns a `ReactNode`. Preloading of next card content belongs in the app layer (`CardPreloader`), not in the engine.
-
-```typescript
-interface RenderingEngine {
-  /** Render the question (card front) */
-  renderQuestion(card: Card): ReactNode;
-  /** Render the answer (computed response) */
-  renderAnswer(answer: ComputedAnswer): ReactNode;
-}
-```
-
-- **TextRenderingEngine** (default for existing themes): renders `card.front` and `answer.value` as styled text, handles single-line and multi-line content (`\n` breaks)
-- **ScoreRenderingEngine** (for Solfège): renders VexFlow SVG on question, triggers Tone.js audio + highlight on answer
-- Engine is resolved per theme at session start — `theme.renderingEngine ?? TextRenderingEngine`
-
-### Renderer Dispatch (inside RenderingEngine)
-
-```typescript
-// renderAnswer dispatches by ComputedAnswer.type
-switch (answer.type) {
-  case 'text':      return TextRenderer.render(answer.value);
-  case 'svg':       return SvgRenderer.render(answer.value);
-  case 'audio':     return AudioRenderer.render(answer.value);
-  case 'composite': return CompositeRenderer.render(answer.value);
-}
-```
-
-### Preloading (App Layer, NOT in RenderingEngine)
-
-```typescript
-// CardPreloader — app-level, knows session flow
-function useCardPreloader(cards: Card[], currentIndex: number, engine: RenderingEngine) {
-  // Pre-renders next card's question + answer in background
-  // Stores in cache for instant display on navigation
-}
-```
-
 ## RenderEngine Contract
 
-Themes expose answers through a `RenderEngine` interface rather than raw `card.back` strings.
-This enables computed answers (SVG, audio, composite) while maintaining backward compatibility.
+Themes render card sides through a single `RenderEngine` interface that unifies **what to render** and **how to render it**. Each card side (question or answer) references a `renderEngineId` string that selects the engine implementation.
 
 ```typescript
-type AnswerType = 'text' | 'svg' | 'audio' | 'composite';
-
-interface ComputedAnswer {
-  type: AnswerType;
-  value: string | SVGElement | AudioBuffer | Record<string, unknown>;
-  metadata?: Record<string, unknown>;
-}
-
 interface RenderEngine {
-  computeNextResponse(card: Card, context?: Record<string, unknown>): ComputedAnswer;
+  /** Render the card side (question or answer) into a DOM target */
+  render(data: unknown, target: HTMLElement): void;
+  /** Optional async pre-computation — used by ScoreAudioEngine only */
+  precompute?(data: unknown): Promise<void>;
 }
 ```
 
-- **IdentityEngine** (default): returns `{ type: 'text', value: card.back }` — zero computation
-- **Custom engines** (e.g., `ScoreRenderEngine` for Solfège): compute SVG + audio on demand
-- Engine is resolved per theme at session start — `theme.renderEngine ?? IdentityEngine`
+### Built-in Engine Implementations
 
-### Relationship: RenderEngine vs RenderingEngine
-
-| Concern | Interface | Responsibility |
+| Engine | `renderEngineId` | Responsibility |
 |---|---|---|
-| "What is the answer?" | `RenderEngine.computeNextResponse()` | Computes the answer data |
-| "How to display it?" | `RenderingEngine.renderAnswer()` | Renders the answer as ReactNode |
-| "When to preload?" | `CardPreloader` (app layer) | Pre-renders next card in background |
+| `TextEngine` | `"text"` | Plain text rendering |
+| `MarkdownEngine` | `"markdown"` | Markdown to HTML rendering |
+| `ScoreEngine` | `"score"` | VexFlow SVG score rendering (solfège questions) |
+| `ScoreAudioEngine` | `"score-audio"` | VexFlow SVG + Tone.js audio (solfège answers) |
+
+### Card Side Contract
+
+Each card side references a `renderEngineId` that selects the engine:
+
+```typescript
+interface CardSide {
+  renderEngineId: string;   // "text" | "markdown" | "score" | "score-audio"
+  data: unknown;            // Engine-specific data payload
+}
+
+interface Card {
+  id: string;
+  front: CardSide;
+  back: CardSide;
+}
+```
+
+### Preloading Strategy
+
+`precompute()` is triggered immediately after the question is displayed. On card tap:
+- If precompute is done → instant flip
+- If still running → wait for completion then flip
+
+```typescript
+// Preloading flow
+async function onQuestionDisplayed(card: Card) {
+  const engine = resolveEngine(card.back.renderEngineId);
+  if (engine.precompute) {
+    await engine.precompute(card.back.data);  // runs in background
+  }
+}
+
+// On card flip
+async function onCardFlip(card: Card, target: HTMLElement) {
+  const engine = resolveEngine(card.back.renderEngineId);
+  if (engine.precompute && !isPrecomputed(card)) {
+    await engine.precompute(card.back.data);  // wait if not done
+  }
+  engine.render(card.back.data, target);
+}
+```
+
+### Engine Resolution
+
+```typescript
+const engineRegistry: Record<string, RenderEngine> = {
+  "text": new TextEngine(),
+  "markdown": new MarkdownEngine(),
+  "score": new ScoreEngine(),
+  "score-audio": new ScoreAudioEngine(),
+};
+
+function resolveEngine(renderEngineId: string): RenderEngine {
+  return engineRegistry[renderEngineId] ?? engineRegistry["text"];
+}
+```
 
 ## AppShell Base
 
@@ -101,8 +110,8 @@ Scaffold from `AppShell` template, adapted for flashcards:
 
 | Component | Responsibility |
 |---|---|
-| `FlashcardDisplay` | Renders card front/back with flip animation (text-based themes) |
-| `ScoreCard` | Renders VexFlow SVG on card front, plays Tone.js audio on flip (solfège themes) |
+| `FlashcardDisplay` | Renders card front/back with flip animation using `RenderEngine.render(data, target)` |
+| `ScoreCard` | Renders VexFlow SVG on card front via ScoreEngine, plays Tone.js audio on flip via ScoreAudioEngine |
 | `PlaybackControls` | Toolbar with pause, replay, skip, progress indicator (animated solfège mode) |
 | `TempoSelector` | UI for selecting tempo (directive dropdown + optional BPM input) |
 | `ThemePicker` | Selects from available themes |
@@ -116,38 +125,32 @@ Scaffold from `AppShell` template, adapted for flashcards:
 ```typescript
 type LearningMode = 'flip' | 'spaced-repetition' | 'animated';
 
-type AnswerType = 'text' | 'svg' | 'audio' | 'composite';
-
 type TempoDirective = 'largo' | 'adagio' | 'andante' | 'moderato' | 'allegro' | 'presto';
 
-interface ComputedAnswer {
-  type: AnswerType;
-  value: string | SVGElement | AudioBuffer | Record<string, unknown>;
-  metadata?: Record<string, unknown>;
-}
+type RenderEngineId = 'text' | 'markdown' | 'score' | 'score-audio';
 
 interface RenderEngine {
-  computeNextResponse(card: Card, context?: Record<string, unknown>): ComputedAnswer;
+  /** Render the card side (question or answer) into a DOM target */
+  render(data: unknown, target: HTMLElement): void;
+  /** Optional async pre-computation — used by ScoreAudioEngine only */
+  precompute?(data: unknown): Promise<void>;
 }
 
-interface RenderingEngine {
-  renderQuestion(card: Card): ReactNode;
-  renderAnswer(answer: ComputedAnswer): ReactNode;
+interface CardSide {
+  renderEngineId: RenderEngineId;
+  data: unknown;
+}
+
+interface Card {
+  id: string;
+  front: CardSide;
+  back: CardSide;
 }
 
 interface Theme {
   id: string;
   name: string;
   cards: Card[];
-  renderEngine?: RenderEngine;   // Optional — defaults to IdentityEngine
-  renderingEngine?: RenderingEngine; // Optional — defaults to TextRenderingEngine
-}
-
-interface Card {
-  id: string;
-  front: string;
-  back: string;
-  score?: ScoreData;  // Present for solfège cards
 }
 
 interface SessionResult {
@@ -194,28 +197,26 @@ Removed: Help, Demo
 | Hook | Responsibility |
 |---|---|
 | `useLearningMode` | Isolates algorithm logic (flip timing, spaced-repetition scheduling) |
-| `useTheme` | Provides theme data, selection, and resolved `RenderEngine` + `RenderingEngine` |
-| `useSession` | Manages session state, results, localStorage persistence — resolves answers via engine |
+| `useTheme` | Provides theme data, selection |
+| `useSession` | Manages session state, results, localStorage persistence — resolves answers via RenderEngine |
 | `useAudioPlayback` | Manages Tone.js context, play/stop controls (non-animated mode) |
 | `useAnimatedPlayback` | Manages Tone.js context + note highlight sync, pause/resume/skip/jump (animated mode) |
-| `useScorePreloader` | Pre-computes next card's SVG in background during reading time (see ADR-001) |
-| `useCardPreloader` | Pre-renders next card's question + answer via RenderingEngine in background |
+| `useScorePreloader` | Triggers `precompute()` on next card's back side after question is displayed (see ADR-001) |
 
 ## Modules
 
 | Module | Responsibility |
 |---|---|
-| `IdentityEngine` | Default RenderEngine — returns `{ type: 'text', value: card.back }` |
-| `TextRenderingEngine` | Default RenderingEngine — renders text (single-line + multi-line with `\n`) |
-| `ScoreRenderingEngine` | Solfège RenderingEngine — renders VexFlow SVG + Tone.js audio |
-| `RenderEngine` registry | Resolves `theme.renderEngine ?? IdentityEngine` at session start |
-| `RenderingEngine` registry | Resolves `theme.renderingEngine ?? TextRenderingEngine` at session start |
-| `renderScore` | Pure function: `{clef, notes} → SVG` injected into DOM target |
-| `playScore` | Pure function: `{clef, notes} → sequential audio` via Tone.js + Web Audio API |
+| `TextEngine` | Default RenderEngine — renders plain text into DOM target |
+| `MarkdownEngine` | RenderEngine — renders markdown as HTML into DOM target |
+| `ScoreEngine` | RenderEngine — renders VexFlow SVG score into DOM target (solfège questions) |
+| `ScoreAudioEngine` | RenderEngine — renders VexFlow SVG + Tone.js audio into DOM target (solfège answers); implements `precompute()` |
+| `RenderEngine` registry | Resolves engine by `renderEngineId` — defaults to `TextEngine` |
+| `renderScore` | Pure function: `{clef, notes} → SVG` injected into DOM target (used by ScoreEngine) |
+| `playScore` | Pure function: `{clef, notes} → sequential audio` via Tone.js + Web Audio API (used by ScoreAudioEngine) |
 | `highlightNote` | Pure function: applies/removes CSS highlight on SVG note elements |
 | `tempo` | Tempo calculation utilities (BPM ↔ duration, directive ↔ BPM) |
 | `ScoreCache` | In-memory cache for pre-computed score SVGs (populated by `useScorePreloader`) |
-| `CardPreloader` | App-level preloader — pre-renders next card via RenderingEngine |
 
 ## Constraints
 

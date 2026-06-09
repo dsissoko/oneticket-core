@@ -10,14 +10,14 @@ As a system maintainer, I want all existing themes (World Capitals, Multiplicati
 
 ## Expected Behavior
 
-Each existing theme JSON file is updated to include an optional `renderEngine` field (or the engine is resolved by default). The cards render and flip exactly as before — no visible change to the user.
+Each existing theme's card sides are updated to use the `CardSide` contract with `renderEngineId: "text"` and the text data in the `data` field. The cards render and flip exactly as before — no visible change to the user.
 
 ## Acceptance Criteria
 
-- [ ] World Capitals theme uses `IdentityEngine` (explicit or default)
-- [ ] Multiplication Tables theme uses `IdentityEngine` (explicit or default)
-- [ ] Conjugaisons FR theme uses `IdentityEngine` (explicit or default)
-- [ ] Theme JSON schema updated to support optional `renderEngine` field
+- [ ] World Capitals theme cards use `renderEngineId: "text"` on front and back
+- [ ] Multiplication Tables theme cards use `renderEngineId: "text"` on front and back
+- [ ] Conjugaisons FR theme cards use `renderEngineId: "text"` on front and back
+- [ ] Theme JSON schema updated to support `CardSide` contract (`renderEngineId` + `data`)
 - [ ] Visual behavior unchanged: card front/back display identically to before
 - [ ] No breaking changes to theme data format — existing JSON files remain valid
 

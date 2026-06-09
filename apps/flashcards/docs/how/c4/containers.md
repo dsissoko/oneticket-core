@@ -69,23 +69,22 @@ C4Container
 
 | Engine | Responsibility |
 |---|---|
-| `RenderEngine` | Computes answer data (`computeNextResponse()`) |
-| `IdentityEngine` | Default RenderEngine — returns `card.back` as text |
-| `RenderingEngine` | Renders answer as ReactNode (`renderQuestion()`, `renderAnswer()`) |
-| `TextRenderingEngine` | Default RenderingEngine — text with `\n` support |
-| `ScoreRenderingEngine` | Solfège RenderingEngine — VexFlow SVG + Tone.js audio |
+| `TextEngine` | Default RenderEngine — renders plain text into DOM target |
+| `MarkdownEngine` | RenderEngine — renders markdown as HTML into DOM target |
+| `ScoreEngine` | RenderEngine — renders VexFlow SVG score (solfège questions) |
+| `ScoreAudioEngine` | RenderEngine — renders VexFlow SVG + Tone.js audio (solfège answers); implements `precompute()` |
+| `RenderEngine` registry | Resolves engine by `renderEngineId` — defaults to `TextEngine` |
 
 ### Hooks
 
 | Hook | Responsibility |
 |---|---|
 | `useSession` | Session state, results, localStorage persistence |
-| `useTheme` | Theme data, engine resolution |
+| `useTheme` | Theme data, card loading |
 | `useLearningMode` | Flip timing, spaced-repetition scheduling |
 | `useAudioPlayback` | Tone.js context, play/stop (non-animated) |
 | `useAnimatedPlayback` | Audio + highlight sync, pause/resume/skip/jump |
-| `useScorePreloader` | Pre-computes next card SVG in background |
-| `useCardPreloader` | Pre-renders next card via RenderingEngine |
+| `useScorePreloader` | Triggers `precompute()` on next card's back side after question displayed |
 
 ### External Integrations
 

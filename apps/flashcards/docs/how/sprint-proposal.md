@@ -6,7 +6,7 @@ title: Sprint Proposal — Next Steps for Flashcards
 
 ## Context
 
-This document answers: **What should the next sprint cover?** Based on architecture review, epic dependencies, and the RenderingEngine pattern discussed in comments.
+This document answers: **What should the next sprint cover?** Based on architecture review, epic dependencies, and the RenderEngine pattern discussed in comments.
 
 ---
 
@@ -15,7 +15,7 @@ This document answers: **What should the next sprint cover?** Based on architect
 | Epic | Status | Slices | User Stories |
 |---|---|---|---|
 | **Epic 0 — MVP** | Defined | Slice 1–3 | US-001 to US-004 |
-| **Epic 3 — RenderEngine Framework** | Defined | Slice 8 | US-014 to US-019 |
+| **Epic 3 — RenderEngine Framework** | Defined | Slice 8, 14 | US-014 to US-019 |
 | **Epic 1 — Solfège Bilingual Score Cards** | Defined | Slice 4–7 | US-005 to US-008 |
 | **Epic 2 — Animated Score Learning** | **No slices** | — | US-009 to US-013 |
 
@@ -29,14 +29,17 @@ This document answers: **What should the next sprint cover?** Based on architect
 
 | Slice | Coverage |
 |---|---|
-| **Slice 8** — RenderEngine Framework | US-014 to US-019 |
+| **Slice 8** — RenderEngine Framework | US-014 to US-018 |
+| **Slice 14** — Rendering Engine Implementation | US-019 |
 
 **Deliverables:**
-- `RenderEngine` interface + `IdentityEngine` default
-- `renderQuestion(card)` and `renderAnswer(answer)` with type-based dispatch
-- Text renderer (single-line + multi-line with `\n`)
-- SVG and audio renderer stubs (placeholders)
-- Migration of existing themes to `IdentityEngine`
+- `RenderEngine` interface: `render(data, target)` + optional `precompute?(data)`
+- `CardSide` contract: `{ renderEngineId, data }`
+- `TextEngine` default implementation (single-line + multi-line with `\n`)
+- `MarkdownEngine`, `ScoreEngine`, `ScoreAudioEngine` stubs (placeholders)
+- Engine registry: resolves by `renderEngineId` — defaults to `TextEngine`
+- Migration of existing themes to `CardSide` contract with `renderEngineId: "text"`
+- Preloading strategy: `precompute()` triggered after question display
 - Zero visual regression — all 3 themes display identically
 
 **Risk:** Low — no new dependencies, pure refactoring.
@@ -45,7 +48,7 @@ This document answers: **What should the next sprint cover?** Based on architect
 
 ### Sprint 2 — Solfège Bilingual Score Cards (Epic 1)
 
-**Why second:** The RenderingEngine contract is proven. Now add VexFlow + Tone.js complexity on top of a validated foundation.
+**Why second:** The RenderEngine contract is proven. Now add VexFlow + Tone.js complexity on top of a validated foundation.
 
 | Slice | Coverage | Dependencies |
 |---|---|---|
@@ -55,8 +58,9 @@ This document answers: **What should the next sprint cover?** Based on architect
 | **Slice 7** — ScoreCard UI Integration | US-005, US-006, US-007, US-008 | Slice 4, 5, 6 |
 
 **Deliverables:**
-- `renderScore()` — VexFlow SVG rendering
-- `playScore()` — Tone.js audio playback
+- `ScoreEngine.render()` — VexFlow SVG rendering (solfège questions)
+- `ScoreAudioEngine.render()` — VexFlow SVG + Tone.js audio (solfège answers)
+- `ScoreAudioEngine.precompute()` — async pre-computation for instant flip
 - Bilingual FR/EN note name support
 - `ScoreCard` component integrated into `SessionScreen`
 - "Solfège" theme selectable from home screen
@@ -88,11 +92,11 @@ This document answers: **What should the next sprint cover?** Based on architect
 
 ---
 
-## RenderingEngine Architecture — Answering Your Question
+## RenderEngine Architecture — Answering Your Question
 
 You asked: *"I'm not confident about the mechanism to use for rendering the next question and answer while the user is playing."*
 
-### Clean Separation
+### Unified RenderEngine Contract
 
 ```
 ┌─────────────────────────────────────────────────┐
@@ -101,58 +105,54 @@ You asked: *"I'm not confident about the mechanism to use for rendering the next
 │  ┌───────────────────────────────────────────┐  │
 │  │           SessionController                │  │
 │  │  - Manages current card index              │  │
-│  │  - Triggers preloading of next card        │  │
+│  │  - Triggers precompute() on next card      │  │
 │  │  - Handles flip/next/back navigation       │  │
 │  └───────────────────┬───────────────────────┘  │
 │                      │                          │
 │                      ▼                          │
 │  ┌───────────────────────────────────────────┐  │
-│  │            CardPreloader                   │  │
-│  │  - Pre-renders next card's question        │  │
-│  │  - Pre-computes next card's answer         │  │
-│  │  - Lives in app, NOT in RenderingEngine    │  │
-│  └───────────────────┬───────────────────────┘  │
-│                      │                          │
-└──────────────────────┼──────────────────────────┘
-                       │
-                       ▼
+│  │         RenderEngine Registry              │  │
+│  │  resolveEngine(renderEngineId)             │  │
+│  │  - "text"         → TextEngine            │  │
+│  │  - "markdown"     → MarkdownEngine        │  │
+│  │  - "score"        → ScoreEngine           │  │
+│  │  - "score-audio"  → ScoreAudioEngine      │  │
+│  └───────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────┘
+
 ┌──────────────────────────────────────────────────┐
-│              RENDERING ENGINE LAYER               │
+│              CARD SIDE CONTRACT                   │
 │                                                   │
-│  ┌─────────────────────────────────────────────┐ │
-│  │         RenderingEngine (per-theme)          │ │
-│  │                                              │ │
-│  │  renderQuestion(card) → ReactNode            │ │
-│  │  renderAnswer(answer) → ReactNode            │ │
-│  │                                              │ │
-│  │  ┌─────────────────────────────────────────┐│ │
-│  │  │ TextRenderer     (type: 'text')         ││ │
-│  │  │ SvgRenderer      (type: 'svg')          ││ │
-│  │  │ AudioRenderer    (type: 'audio')        ││ │
-│  │  │ CompositeRenderer(type: 'composite')    ││ │
-│  │  └─────────────────────────────────────────┘│ │
-│  └─────────────────────────────────────────────┘ │
+│  interface CardSide {                             │
+│    renderEngineId: string;  // selects engine     │
+│    data: unknown;           // engine payload     │
+│  }                                                │
+│                                                   │
+│  interface RenderEngine {                         │
+│    render(data, target): void;                    │
+│    precompute?(data): Promise<void>;              │
+│  }                                                │
 └──────────────────────────────────────────────────┘
 ```
 
 ### Key Principles
 
-1. **RenderingEngine is stateless** — it receives data, returns ReactNode. No knowledge of "next card" or session flow.
+1. **RenderEngine is unified** — single interface for both rendering and optional pre-computation. No separate "compute" vs "render" layers.
 
-2. **Preloading belongs in the APP** — `CardPreloader` (app-level) calls `renderingEngine.renderQuestion(nextCard)` and `renderingEngine.renderAnswer(nextAnswer)` in background, stores results in a cache.
+2. **Each card side declares its engine** — `renderEngineId` string selects the implementation. Front and back can use different engines.
 
-3. **SessionScreen reads from cache** — when user navigates to next card, the rendered content is already available. Falls back to synchronous rendering if cache miss.
+3. **Preloading is engine-driven** — `precompute()` is triggered after the question is displayed. On card flip: if done → instant, if running → wait.
 
-4. **Each theme gets its own RenderingEngine** — `TextRenderingEngine` for existing themes, `ScoreRenderingEngine` for Solfège. Both implement the same interface.
+4. **Engine registry is extensible** — new engines added by registering under a new `renderEngineId`.
 
 ### Why This Works
 
 | Concern | Where It Lives | Why |
 |---|---|---|
-| "What to render" | `RenderEngine` | Computes the answer (text, SVG, audio) |
-| "How to render" | `RenderingEngine` | Displays the answer (text renderer, SVG renderer, etc.) |
-| "When to preload" | `CardPreloader` (app) | Knows session flow, current index, next card |
-| "When to display" | `SessionScreen` | Orchestrates the flip animation and content swap |
+| "What to render" | `CardSide.data` | Engine-specific data payload |
+| "How to render" | `RenderEngine.render(data, target)` | Renders into DOM target |
+| "When to precompute" | `RenderEngine.precompute?(data)` | Optional async pre-computation |
+| "Which engine" | `CardSide.renderEngineId` | String selects engine from registry |
 
 ---
 

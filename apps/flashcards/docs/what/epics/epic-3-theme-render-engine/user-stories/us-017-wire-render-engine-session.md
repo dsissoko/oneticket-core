@@ -6,19 +6,20 @@ title: US-017 — Wire RenderEngine into Session Flow
 
 ## Story
 
-As a user playing a flashcard session, I want the answer to be resolved through the theme's `RenderEngine` so that computed answers (like music scores) work seamlessly alongside static answers.
+As a user playing a flashcard session, I want each card side to be rendered through the `RenderEngine` selected by its `renderEngineId` so that computed answers (like music scores) work seamlessly alongside static answers.
 
 ## Expected Behavior
 
-When a card is flipped during a session, the `SessionScreen` calls the theme's `RenderEngine.computeNextResponse()` to obtain the answer. For static themes, this returns the same `card.back` as before. For computed themes (future), this returns the dynamically generated answer.
+When a card is displayed during a session, the `SessionScreen` resolves the `RenderEngine` for the card's front side via `renderEngineId` and calls `render(data, target)`. On card flip, the back side's engine is used the same way. For static themes (`renderEngineId: "text"`), this renders plain text as before. For computed themes (future), the engine may use `precompute()` for async preparation.
 
 ## Acceptance Criteria
 
-- [ ] `SessionScreen` resolves answer via `RenderEngine` instead of reading `card.back` directly
-- [ ] `FlashcardDisplay` component accepts `ComputedAnswer` type (not just string)
+- [ ] `SessionScreen` renders card sides via `RenderEngine.render(data, target)` instead of reading raw strings
+- [ ] `FlashcardDisplay` component accepts `CardSide` contract (`renderEngineId` + `data`)
 - [ ] Flip animation timing unchanged for static themes
 - [ ] No regression in session scoring or progress tracking
-- [ ] Hook `useSession` updated to use engine-resolved answers
+- [ ] Hook `useSession` updated to use engine-resolved rendering
+- [ ] Preloading strategy: `precompute()` triggered after question display, instant flip if done, wait if still running
 
 ## Related Epic
 

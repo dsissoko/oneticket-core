@@ -6,27 +6,26 @@ title: US-019 — Define and Implement Rendering Contract for Questions and Answ
 
 ## Story
 
-As a user playing a flashcard session, I want questions and answers to be rendered consistently through a dedicated rendering layer so that the display adapts to the answer type (text, SVG, audio, composite) without the session logic knowing about rendering details.
+As a user playing a flashcard session, I want questions and answers to be rendered consistently through the `RenderEngine` so that the display adapts to the card side's `renderEngineId` (text, markdown, score, score-audio) without the session logic knowing about rendering details.
 
 ## Expected Behavior
 
-A rendering contract separates **what to display** from **how to display it**. Each theme's cards are rendered through two functions:
+The unified `RenderEngine` contract handles both rendering and optional pre-computation. Each card side (`front` and `back`) declares a `renderEngineId` that selects the engine. The engine's `render(data, target)` method renders the content into the DOM target. For engines with `precompute()`, pre-computation is triggered after the question is displayed, enabling instant flip when ready.
 
-- **`renderQuestion(card)`** — renders the card front (question) into the DOM
-- **`renderAnswer(answer: ComputedAnswer)`** — renders the computed answer into the DOM based on its `AnswerType`
-
-For existing themes (World Capitals, Multiplication Tables, Conjugaisons FR), both functions handle `type: 'text'` only. The rendering layer validates that the architecture correctly dispatches to the right renderer based on answer type — preparing the ground for Solfège's `svg` and `audio` types.
+For existing themes (World Capitals, Multiplication Tables, Conjugaisons FR), both card sides use `renderEngineId: "text"`. The rendering layer validates that the architecture correctly dispatches to the right engine based on `renderEngineId` — preparing the ground for Solfège's `score` and `score-audio` engines.
 
 ## Acceptance Criteria
 
-- [ ] `renderQuestion(card: Card) → ReactNode` renders `card.front` as styled text
-- [ ] `renderAnswer(answer: ComputedAnswer) → ReactNode` dispatches based on `answer.type`
-- [ ] Text renderer (`type: 'text'`) handles single-line and multi-line content (Conjugaisons FR has `\n` line breaks)
-- [ ] SVG renderer stub (`type: 'svg'`) exists and renders a placeholder — ready for VexFlow integration
-- [ ] Audio renderer stub (`type: 'audio'`) exists and renders a play button placeholder — ready for Tone.js integration
-- [ ] `FlashcardDisplay` component uses `renderQuestion` for front and `renderAnswer` for back
+- [ ] `RenderEngine.render(data, target)` renders card side content into the DOM target
+- [ ] Engine dispatch based on `renderEngineId`: `"text"` → TextEngine, `"markdown"` → MarkdownEngine, `"score"` → ScoreEngine, `"score-audio"` → ScoreAudioEngine
+- [ ] TextEngine (`"text"`) handles single-line and multi-line content (Conjugaisons FR has `\n` line breaks)
+- [ ] MarkdownEngine stub (`"markdown"`) exists — ready for markdown-to-HTML integration
+- [ ] ScoreEngine stub (`"score"`) exists — ready for VexFlow integration
+- [ ] ScoreAudioEngine stub (`"score-audio"`) exists — ready for VexFlow + Tone.js integration
+- [ ] `FlashcardDisplay` component uses `RenderEngine.render(data, target)` for front and back
 - [ ] All 3 existing themes display identically to before (no visual regression)
-- [ ] Rendering contract documented in `architecture.md` with clear separation from `RenderEngine`
+- [ ] Preloading strategy: `precompute()` triggered after question display, instant flip if done, wait if still running
+- [ ] Rendering contract documented in `architecture.md`
 
 ## Related Epic
 

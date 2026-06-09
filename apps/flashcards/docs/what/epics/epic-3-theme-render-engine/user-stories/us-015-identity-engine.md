@@ -1,24 +1,25 @@
 ---
-title: US-015 — Implement IdentityEngine for Static Themes
+title: US-015 — Implement TextEngine for Static Themes
 ---
 
-# US-015 — Implement IdentityEngine for Static Themes
+# US-015 — Implement TextEngine for Static Themes
 
 ## Story
 
-As a system, I want a default `IdentityEngine` that returns `card.back` unchanged so that existing themes with static answers continue to work without any code changes.
+As a system, I want a default `TextEngine` that renders `card.front` and `card.back` data as plain text so that existing themes with static answers continue to work without any code changes.
 
 ## Expected Behavior
 
-The `IdentityEngine` implements the `RenderEngine` interface. Its `computeNextResponse()` method simply returns the card's `back` field as a string answer. This is the default engine applied to all themes that do not specify a custom engine.
+The `TextEngine` implements the `RenderEngine` interface. Its `render(data, target)` method renders the text data into the target DOM element, handling single-line and multi-line content (`\n` breaks). This is the default engine applied to all card sides that use `renderEngineId: "text"`.
 
 ## Acceptance Criteria
 
-- [ ] `IdentityEngine` class or function implements `RenderEngine`
-- [ ] `computeNextResponse(card)` returns `{ type: 'text', value: card.back }`
-- [ ] Engine is exported from a dedicated module `src/engine/identity-engine.ts`
-- [ ] Unit tests verify identity behavior for all existing card formats
-- [ ] Engine is registered as the default in the theme resolution logic
+- [ ] `TextEngine` class implements `RenderEngine`
+- [ ] `render(data, target)` renders text content into the target DOM element
+- [ ] Handles multi-line text with `\n` line breaks (Conjugaisons FR)
+- [ ] Engine is exported from a dedicated module `src/engine/text-engine.ts`
+- [ ] Unit tests verify text rendering behavior for all existing card formats
+- [ ] Engine is registered as default in the engine registry for `renderEngineId: "text"`
 
 ## Related Epic
 

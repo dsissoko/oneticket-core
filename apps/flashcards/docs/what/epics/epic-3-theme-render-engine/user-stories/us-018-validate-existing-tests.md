@@ -10,13 +10,13 @@ As a developer, I want all existing tests to pass without modification after the
 
 ## Expected Behavior
 
-The full test suite (unit tests, hook tests, component tests) runs green after the RenderEngine integration. No test file requires changes — the `IdentityEngine` ensures static themes behave identically.
+The full test suite (unit tests, hook tests, component tests) runs green after the RenderEngine integration. No test file requires changes — the `TextEngine` ensures static themes behave identically.
 
 ## Acceptance Criteria
 
 - [ ] All existing unit tests pass without modification
-- [ ] `useTheme.test.ts` passes with `IdentityEngine` integration
-- [ ] `useSession.test.ts` passes with engine-resolved answers
+- [ ] `useTheme.test.ts` passes with `TextEngine` integration
+- [ ] `useSession.test.ts` passes with engine-resolved rendering
 - [ ] `useLearningMode.test.ts` passes unchanged
 - [ ] Component tests for `FlashcardDisplay` pass unchanged
 - [ ] Build passes with zero TypeScript errors
