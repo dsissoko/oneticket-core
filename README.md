@@ -156,7 +156,7 @@ If it answers a question → it posts a comment and stops.
 
 ## Happy Path
 
-### From scratch — 4 issues
+### From scratch — 4 tickets
 
 #### Issue 1 — Full documentation *(one-shot)*
 Comment: `@po init-doc` then `@po <vision>`
