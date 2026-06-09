@@ -6,13 +6,11 @@ title: Epic 3 — Theme ResponseEngine Framework
 
 ## Goal
 
-Introduce a generic `ResponseEngine` contract that allows themes to compute answers dynamically rather than relying solely on static `{ front, back }` card data. Migrate all existing themes to this framework, validating that the new mechanism is transparent for themes that require no computation, while enabling computed responses for themes like Solfège.
+Introduce a generic `ResponseEngine` contract and migrate all existing themes to this framework, ensuring full backward compatibility. The `IdentityEngine` returns `card.back` as-is so that existing themes (World Capitals, Multiplication Tables, Conjugaisons FR) continue to work unchanged.
 
 ## Business Value
 
-Currently, flashcard answers are pre-baked as raw strings in JSON files. This works for simple Q&A (capitals, multiplication tables) but blocks any theme where the answer must be **computed** — such as rendering a music score, generating audio, or deriving a response from context.
-
-The `ResponseEngine` framework unlocks computed themes while preserving backward compatibility: existing themes continue to work unchanged, and new themes gain the ability to define `computeNextResponse()` logic.
+Currently, flashcard answers are pre-baked as raw strings in JSON files. This works for simple Q&A but couples the session flow directly to static card data. The `ResponseEngine` framework decouples answer resolution from card storage through a clean interface with a default identity implementation. Existing themes remain fully functional with zero behavioral change, while the architecture is ready for future computed-answer themes.
 
 ## Scope
 
@@ -20,15 +18,13 @@ The `ResponseEngine` framework unlocks computed themes while preserving backward
 - Introduce a default `IdentityEngine` that returns `card.back` as-is (backward-compatible)
 - Define the rendering contract: `renderQuestion(card)` and `renderAnswer(answer)` with type-based dispatch
 - Implement text renderer for existing themes (handles single-line and multi-line content)
-- Create SVG and audio renderer stubs — placeholders ready for VexFlow and Tone.js integration
 - Migrate existing themes (World Capitals, Multiplication Tables, Conjugaisons FR) to use `IdentityEngine`
 - Wire the `ResponseEngine` into the session flow so that card answers are resolved through the engine
 - Ensure existing tests pass without modification
-- Prepare the contract so that Solfège can later implement its own `ScoreResponseEngine`
 
 ## Out of Scope
 
-- Implementing the Solfège `ScoreResponseEngine` — covered by Epic 1 (Solfège Bilingual Score Cards)
+- Computed-answer engines for future themes (e.g. score rendering, audio generation) — covered by their respective epics
 - Animated score rendering — covered by Epic 2 (Animated Score Learning)
 
 ## Related User Stories
