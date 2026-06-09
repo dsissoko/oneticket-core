@@ -39,3 +39,4 @@ For existing themes (World Capitals, Multiplication Tables, Conjugaisons FR), bo
      Example: [Slice 1 — Skeleton Foundation](slice-1-skeleton-foundation/slice.md) -->
 
 [Slice 8 — ResponseEngine Framework](../../how/slices/slice-8-response-engine-framework/slice.md)
+[Slice 14 — Rendering Engine Implementation](../../how/slices/slice-14-rendering-engine/slice.md)

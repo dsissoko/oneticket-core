@@ -52,6 +52,7 @@ The `ResponseEngine` framework unlocks computed themes while preserving backward
      Example: [Slice 1 — Skeleton Foundation](slice-1-skeleton-foundation/slice.md) -->
 
 - [Slice 8 — ResponseEngine Framework](slice-8-response-engine-framework/slice.md)
+- [Slice 14 — Rendering Engine Implementation](slice-14-rendering-engine/slice.md)
 
 ## Related Epics
 
