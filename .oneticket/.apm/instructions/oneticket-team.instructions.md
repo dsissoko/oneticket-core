@@ -8,8 +8,8 @@ description: OneTicket agent team — roles, routing, handoff rules, response st
 
 | Agent | Responsibility |
 |---|---|
-| `@po` | Product knowledge base, epics, user stories, backlog |
-| `@architect` | Architecture, C4 diagrams, implementation slices |
+| `@po` | Product knowledge base, epics, user stories, sprints |
+| `@architect` | Architecture, C4 diagrams, technical notes in sprints |
 | `@leaddev` | Implementation decomposition into tasks, delegation to @dev |
 | `@dev` | Code implementation |
 | `@qa` | Testing, quality, code review |
