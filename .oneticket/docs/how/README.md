@@ -9,7 +9,7 @@ It defines:
 - the components,
 - the interfaces,
 - the integration patterns,
-- the implementation slices.
+- the implementation sprints.
 
 This section describes:
 - how the system is designed,
@@ -22,17 +22,21 @@ Main architectural views are documented using C4-style models:
 - components,
 - deployment views.
 
-Implementation work is progressively refined using vertical slices.
+Implementation work is progressively planned and delivered using sprints.
 
-A slice represents:
-- a small,
-- testable,
-- incremental,
-- end-to-end implementation unit.
+A sprint represents:
+- a time-boxed iteration,
+- a selection of user stories from the backlog,
+- a set of technical notes added by @architect,
+- the unit of delivery tracked via a GitHub Milestone.
+
+Architectural decisions are documented as ADRs (Architecture Decision Records),
+referenced from the sprint they belong to.
 
 The `how/` section remains independent from specific delivery pipelines or runtime operations.
 
 ## Templates
 
 - Architecture: `.oneticket/templates/architecture.md`
-- Slice: `.oneticket/templates/slice.md`
+- Sprint: `.oneticket/templates/sprint.md`
+- ADR: `.oneticket/templates/adr.md`
