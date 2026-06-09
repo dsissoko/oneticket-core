@@ -21,12 +21,12 @@ C4Container
     Person(user, "User", "Learns with flashcard sessions")
 
     Container(spa, "Web Application", "React SPA", "Serves flashcard UI, manages client-side routing")
-    ContainerDb(localStorage, "Local Storage", "Browser localStorage", "Persists session state and results")
+    ContainerDb(localStorage, "Local Storage", "Browser localStorage", "Persists session state, results, and tempo preferences")
 
-    System_Ext(msw, "MSW Handlers", "Mock Service Worker", "Serves theme data (world-capitals.json) and session results")
+    System_Ext(msw, "MSW Handlers", "Mock Service Worker", "Serves theme data and session results")
 
     Rel(user, spa, "Interacts with")
-    Rel(spa, localStorage, "Reads/Writes session data")
+    Rel(spa, localStorage, "Reads/Writes session data and preferences")
     Rel(spa, msw, "Fetches theme data and results")
 ```
 
@@ -34,7 +34,7 @@ C4Container
 
 ### React SPA Container
 
-**Technology:** React + Vite + TypeScript + MSW
+**Technology:** React + Vite + TypeScript + MSW + VexFlow + Tone.js
 
 **Client-side routes:**
 - `/` — HomeScreen (theme picker, mode selector, Start button)
@@ -42,11 +42,11 @@ C4Container
 - `/results` — ResultsScreen (session score, replay, back to home)
 
 **State management:**
-- React Context for session state (current card, progress, score)
+- React Context for session state (current card, progress, score, tempo)
 - localStorage for persistence across sessions
 
 **MSW handlers:**
-- Theme data: `world-capitals.json` (card deck with front/back pairs)
+- Theme data: card decks with front/back pairs + score data for solfège
 - Session results: stores/retrieves per-session outcomes
 
 ### Components
@@ -56,20 +56,43 @@ C4Container
 | `HomeScreen` | Theme picker, mode selector, Start button |
 | `SessionScreen` | Flashcard display, progress bar, score buttons |
 | `ResultsScreen` | Session score display, replay, back to home |
-| `FlashcardDisplay` | Renders card front/back with flip animation |
+| `FlashcardDisplay` | Renders card front/back with flip animation (text themes) |
+| `ScoreCard` | Renders VexFlow SVG on front, triggers Tone.js playback on flip (solfège) |
+| `PlaybackControls` | Pause, replay, skip, progress indicator (animated mode) |
+| `TempoSelector` | Tempo selection (directive + BPM) |
 | `ThemePicker` | Selects from available themes |
-| `ModeSelector` | Chooses learning mode (flip, spaced-repetition) |
+| `ModeSelector` | Chooses learning mode (flip, spaced-repetition, animated) |
 | `ProgressBar` | Shows session advancement (X/Y) |
 | `ScoreButtons` | "I knew it" / "I didn't know" post-flip |
-| `ScoreCard` | Renders VexFlow SVG on front, triggers Tone.js playback on flip |
+
+### Engine Layer
+
+| Engine | Responsibility |
+|---|---|
+| `ResponseEngine` | Computes answer data (`computeNextResponse()`) |
+| `IdentityEngine` | Default ResponseEngine — returns `card.back` as text |
+| `RenderingEngine` | Renders answer as ReactNode (`renderQuestion()`, `renderAnswer()`) |
+| `TextRenderingEngine` | Default RenderingEngine — text with `\n` support |
+| `ScoreRenderingEngine` | Solfège RenderingEngine — VexFlow SVG + Tone.js audio |
+
+### Hooks
+
+| Hook | Responsibility |
+|---|---|
+| `useSession` | Session state, results, localStorage persistence |
+| `useTheme` | Theme data, engine resolution |
+| `useLearningMode` | Flip timing, spaced-repetition scheduling |
+| `useAudioPlayback` | Tone.js context, play/stop (non-animated) |
+| `useAnimatedPlayback` | Audio + highlight sync, pause/resume/skip/jump |
+| `useScorePreloader` | Pre-computes next card SVG in background |
+| `useCardPreloader` | Pre-renders next card via RenderingEngine |
 
 ### External Integrations
 
 | External | Purpose |
 |---|---|
-| Local Storage | Persist session results and user preferences |
-| MSW (world-capitals.json) | Serve flashcard theme data |
-| MSW (session results) | Mock storage for session outcomes |
+| Local Storage | Persist session results, user preferences, tempo settings |
+| MSW | Serve flashcard theme data |
 | VexFlow | Renders musical notation as SVG for score display |
 | Tone.js | Synthesizes audio playback via Web Audio API |
 
@@ -101,3 +124,18 @@ playScore(data) → Tone.js synth → Web Audio API → browser speakers
 ```
 
 This pipeline is triggered on card flip (front → back transition) and can be replayed via a dedicated play button.
+
+## Animated Score Pipeline (planned)
+
+For animated solfège mode (Epic 2), the playback pipeline is extended:
+
+1. **`useAnimatedPlayback`** orchestrates synchronized audio + visual highlight
+2. **`highlightNote()`** applies CSS highlight to SVG element with `data-note-index`
+3. **Tempo control** adjusts note duration: `getDurationMs(noteDuration, bpm)`
+4. **Playback controls** enable pause, resume, skip, replay, click-to-jump
+
+```
+playScore(data) → Tone.js + highlightNote() → CSS transition → browser speakers
+                      ↑
+              tempo (BPM/directive)
+```

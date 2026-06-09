@@ -29,3 +29,5 @@ The animation speed is controlled by a tempo setting, expressed either as BPM (b
 <!-- @architect fills this section after producing slices — write filename only, no relative path, no ../
      The build script resolves the correct path automatically.
      Example: [Slice 1 — Skeleton Foundation](slice-1-skeleton-foundation/slice.md) -->
+
+[Slice 10 — Tempo Control](../../how/slices/slice-10-tempo-control/slice.md)

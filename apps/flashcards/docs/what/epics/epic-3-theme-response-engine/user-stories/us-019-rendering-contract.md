@@ -37,3 +37,5 @@ For existing themes (World Capitals, Multiplication Tables, Conjugaisons FR), bo
 <!-- @architect fills this section after producing slices — write filename only, no relative path, no ../
      The build script resolves the correct path automatically.
      Example: [Slice 1 — Skeleton Foundation](slice-1-skeleton-foundation/slice.md) -->
+
+[Slice 8 — ResponseEngine Framework](../../how/slices/slice-8-response-engine-framework/slice.md)

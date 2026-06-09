@@ -30,3 +30,5 @@ A beginner-themed card deck containing approximately 20 cards. Each card display
 <!-- @architect fills this section after producing slices — write filename only, no relative path, no ../
      The build script resolves the correct path automatically.
      Example: [Slice 1 — Skeleton Foundation](slice-1-skeleton-foundation/slice.md) -->
+
+[Slice 11 — Beginner Dataset](../../how/slices/slice-11-beginner-dataset/slice.md)

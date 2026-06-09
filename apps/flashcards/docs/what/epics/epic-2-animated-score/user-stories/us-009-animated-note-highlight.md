@@ -29,3 +29,5 @@ When `playScore()` is called, each note in the SVG is highlighted sequentially a
 <!-- @architect fills this section after producing slices — write filename only, no relative path, no ../
      The build script resolves the correct path automatically.
      Example: [Slice 1 — Skeleton Foundation](slice-1-skeleton-foundation/slice.md) -->
+
+[Slice 9 — Note Highlight Engine](../../how/slices/slice-9-note-highlight-engine/slice.md)

@@ -40,6 +40,12 @@ Transform passive score reading into an active learning experience. Animated hig
      The build script resolves the correct path automatically.
      Example: [Slice 1 — Skeleton Foundation](slice-1-skeleton-foundation/slice.md) -->
 
+- [Slice 9 — Note Highlight Engine](slice-9-note-highlight-engine/slice.md)
+- [Slice 10 — Tempo Control](slice-10-tempo-control/slice.md)
+- [Slice 11 — Beginner Dataset](slice-11-beginner-dataset/slice.md)
+- [Slice 12 — Progressive Themes](slice-12-progressive-themes/slice.md)
+- [Slice 13 — Playback Controls](slice-13-playback-controls/slice.md)
+
 ## Related Epics
 
 - [Epic 0 — MVP Flashcard App](epic-0-mvp/epic.md)

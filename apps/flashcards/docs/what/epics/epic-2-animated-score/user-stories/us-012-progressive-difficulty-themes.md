@@ -33,3 +33,5 @@ Each theme is selectable from the home screen. Progress tracking shows which the
 <!-- @architect fills this section after producing slices — write filename only, no relative path, no ../
      The build script resolves the correct path automatically.
      Example: [Slice 1 — Skeleton Foundation](slice-1-skeleton-foundation/slice.md) -->
+
+[Slice 12 — Progressive Themes](../../how/slices/slice-12-progressive-themes/slice.md)
