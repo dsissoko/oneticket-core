@@ -6,3 +6,4 @@
 2026-06-10 19:18 | G | apps/flashcards/app/src/engine/ScoreEngine.test.ts
 2026-06-10 19:19 | F | apps/flashcards/app/src/engine/ScoreAudioEngine.ts
 2026-06-10 19:22 | H | apps/flashcards/app/src/engine/ScoreAudioEngine.test.ts
+2026-06-10 19:25 | I | apps/flashcards/app/verify-build.sh
