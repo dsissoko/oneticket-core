@@ -78,10 +78,14 @@ C4Component
     Component(EngineRegistry, "Engine Registry", "TypeScript", "Resolves engines by renderEngineId")
     Component(TextEngine, "TextEngine", "TypeScript", "Plain text rendering")
     Component(MarkdownEngine, "MarkdownEngine", "TypeScript", "Markdown to HTML rendering")
+    Component(ScoreEngine, "ScoreEngine", "TypeScript + VexFlow", "SVG music score rendering — question side")
+    Component(ScoreAudioEngine, "ScoreAudioEngine", "TypeScript + VexFlow + Tone.js", "SVG music score + audio playback — answer side")
     
     Rel(FlashcardDisplay, EngineRegistry, "Resolves engine by ID")
     Rel(EngineRegistry, TextEngine, "Instantiates")
     Rel(EngineRegistry, MarkdownEngine, "Instantiates")
+    Rel(EngineRegistry, ScoreEngine, "Instantiates (id: score)")
+    Rel(EngineRegistry, ScoreAudioEngine, "Instantiates (id: score-audio)")
 ```
 
 ### Engine Resolution Flow
@@ -97,3 +101,10 @@ C4Component
 |---|---|
 | `FlashcardDisplay` | Now delegates rendering to resolved RenderEngine instead of direct text rendering |
 | `SessionScreen` | Implements precompute lifecycle for async engines |
+
+### External Libraries (Solfège Engines)
+
+| Library | Version | Engine | Purpose |
+|---|---|---|---|
+| `vexflow` | `^4.2.2` | ScoreEngine, ScoreAudioEngine | SVG music notation |
+| `tone` | `^15.0.4` | ScoreAudioEngine | Browser audio (Web Audio API) |
