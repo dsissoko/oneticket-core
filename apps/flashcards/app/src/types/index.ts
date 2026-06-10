@@ -10,6 +10,7 @@ interface Theme {
 
 interface Card {
   id: string;
+  label?: string;
   front: CardSide;
   back: CardSide;
 }
