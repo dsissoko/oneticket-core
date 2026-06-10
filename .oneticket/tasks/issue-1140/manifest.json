@@ -17,7 +17,7 @@
       "file": "apps/flashcards/app/src/data/themes/asia.json",
       "content": "Create the file `apps/flashcards/app/src/data/themes/asia.json` with the Asia themed capitals dataset. Format: { \"id\": \"asia\", \"name\": \"Asia\", \"cards\": [...] }. Each card: { \"id\": \"card-N\", \"front\": { \"data\": \"<Country>\", \"renderEngineId\": \"text\" }, \"back\": { \"data\": \"<Capital>\\n\\n![<Country>](https://flagcdn.com/w80/<iso2>.png)\", \"renderEngineId\": \"markdown\" } }. Include all ~48 Asian sovereign countries with their capitals and correct 2-letter ISO codes for flagcdn.com. Use sequential card IDs starting at card-1. No duplicate countries. Accurate country-capital pairs only.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "C",
