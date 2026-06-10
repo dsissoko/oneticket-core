@@ -26,9 +26,10 @@ export function HomeScreen(): React.ReactElement {
   const [highlightedThoughtId, setHighlightedThoughtId] = useState<string | null>(null);
   const highlightedRef = useRef<HTMLDivElement>(null);
 
-  // Apply filters to thoughts
+  // Apply filters to thoughts and sort by most recent first
   const filteredThoughts = useMemo(() => {
-    return applyFilters(thoughts, filters);
+    return applyFilters(thoughts, filters)
+      .sort((a, b) => b.createdAt - a.createdAt);
   }, [thoughts, filters]);
 
   // Handle filter changes from FilterPanel

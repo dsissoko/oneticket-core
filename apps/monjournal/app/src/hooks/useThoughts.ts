@@ -52,26 +52,24 @@ export function useThoughts(): UseThoughtsReturn {
     }
   };
 
-  // Load from localStorage on component mount
+  // Load from localStorage once on mount
   useEffect(() => {
-    if (isInitialized) return;
-
     const loaded = loadThoughtsFromStorage();
     setThoughts(loaded);
     setIsInitialized(true);
-  }, [isInitialized]);
+  }, []);
+
+  // Persist to localStorage whenever thoughts change (after initialization)
+  useEffect(() => {
+    if (!isInitialized) return;
+    setItem(STORAGE_KEY, thoughts);
+  }, [thoughts, isInitialized]);
 
   /**
-   * Adds a new thought and persists to localStorage.
-   * Reloads from localStorage to sync with other instances of the hook.
+   * Adds a new thought — pure state updater, persistence handled by useEffect.
    */
   const addThought = (thought: Thought): void => {
-    setThoughts((prev) => {
-      const updated = [...prev, thought];
-      // Persist to localStorage
-      setItem(STORAGE_KEY, updated);
-      return updated;
-    });
+    setThoughts((prev) => [...prev, thought]);
   };
 
   /**
