@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useSession } from './useSession';
 
-// Mock localStorage
-const localStorageMock = (() => {
+// Mock localStorage using vi.stubGlobal (ESM-safe, configurable)
+const createLocalStorageMock = () => {
   let store: Record<string, string> = {};
   return {
     getItem: vi.fn((key: string) => store[key] ?? null),
@@ -17,18 +17,18 @@ const localStorageMock = (() => {
       store = {};
     }),
   };
-})();
-
-Object.defineProperty(window, 'localStorage', { value: localStorageMock });
+};
 
 describe('useSession', () => {
+  let localStorageMock: ReturnType<typeof createLocalStorageMock>;
+
   beforeEach(() => {
-    localStorageMock.clear();
-    vi.clearAllMocks();
+    localStorageMock = createLocalStorageMock();
+    vi.stubGlobal('localStorage', localStorageMock);
   });
 
   afterEach(() => {
-    localStorageMock.clear();
+    vi.unstubAllGlobals();
   });
 
   describe('initial state', () => {

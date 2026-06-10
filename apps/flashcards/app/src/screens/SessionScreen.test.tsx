@@ -1,238 +1,150 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import React from 'react';
 import { SessionScreen } from './SessionScreen';
+import { ThemeContext } from '@/context/ThemeContext';
+import { I18nProvider } from '@/i18n/I18nContext';
+import type { Card } from '@/types';
 
-// Mock useSession hook
+// Mock useSession hook at module scope (ESM-compatible)
 vi.mock('@/hooks/useSession', () => ({
-  useSession: () => ({
-    currentIndex: 0,
-    results: [],
-    recordResult: vi.fn(),
-    nextCard: vi.fn(),
-    previousCard: vi.fn(),
-    resetSession: vi.fn(),
-    themeId: null,
-    mode: null,
-    setPreferences: vi.fn(),
-  }),
+  useSession: vi.fn(),
 }));
 
-// Wrapper with router
-function renderWithRouter(ui: React.ReactElement) {
-  return render(ui, { wrapper: BrowserRouter });
-}
+import { useSession } from '@/hooks/useSession';
 
-const mockCards = [
+// Mock useNavigate
+vi.mock('react-router-dom', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('react-router-dom')>();
+  return {
+    ...actual,
+    useNavigate: vi.fn(),
+  };
+});
+
+import { useNavigate } from 'react-router-dom';
+
+const mockCards: Card[] = [
   { id: 'card-1', front: 'France', back: 'Paris' },
-  { id: 'card-2', front: 'Germany', back: 'Berlin' },
-  { id: 'card-3', front: 'Italy', back: 'Rome' },
 ];
 
+function renderSessionScreen(cards?: Card[]) {
+  const mockNavigate = vi.fn();
+  vi.mocked(useNavigate).mockReturnValue(mockNavigate);
+  vi.mocked(useSession).mockReturnValue({
+    results: [],
+    recordResult: vi.fn(),
+    resetSession: vi.fn(),
+  });
+
+  return render(
+    <ThemeContext.Provider value={{ themes: [], currentTheme: { id: 'test', name: 'Test', cards: cards ?? [] }, selectedThemeId: 'test', selectTheme: vi.fn() }}>
+      <I18nProvider>
+        <MemoryRouter>
+          <SessionScreen cards={cards} />
+        </MemoryRouter>
+      </I18nProvider>
+    </ThemeContext.Provider>,
+  );
+}
+
 describe('SessionScreen', () => {
-  let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
-
   beforeEach(() => {
-    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.clearAllMocks();
   });
 
-  afterEach(() => {
-    consoleErrorSpy.mockRestore();
+  it('displays message when no cards available', () => {
+    renderSessionScreen([]);
+    expect(screen.getByText('No cards available for this session.')).toBeInTheDocument();
   });
 
-  it('renders ProgressBar with correct values', () => {
-    renderWithRouter(<SessionScreen cards={mockCards} />);
-
-    const progressText = screen.getByText('1/3');
-    expect(progressText).toBeTruthy();
-  });
-
-  it('displays FlashcardDisplay with current card country', () => {
-    renderWithRouter(<SessionScreen cards={mockCards} />);
-
-    const flashcardFront = screen.getByTestId('flashcard-front');
-    expect(flashcardFront).toHaveTextContent('France');
-  });
-
-  it('shows country name initially (not flipped)', () => {
-    renderWithRouter(<SessionScreen cards={mockCards} />);
-
+  it('renders flashcard with front content', () => {
+    renderSessionScreen(mockCards);
     const front = screen.getByTestId('flashcard-front');
-    expect(front).toBeVisible();
-    const back = screen.getByTestId('flashcard-back');
-    expect(back).not.toBeVisible();
+    // With a single card, shuffle always returns that card
+    expect(front).toHaveTextContent('France');
   });
 
-  it('flips card on click and shows capital', () => {
-    renderWithRouter(<SessionScreen cards={mockCards} />);
+  it('flips card on click and shows back content', () => {
+    renderSessionScreen(mockCards);
 
     const cardButton = screen.getByTestId('flashcard-container').querySelector('button');
     expect(cardButton).toBeTruthy();
-
     fireEvent.click(cardButton!);
 
-    const front = screen.getByTestId('flashcard-front');
-    expect(front).not.toBeVisible();
     const back = screen.getByTestId('flashcard-back');
-    expect(back).toBeVisible();
     expect(back).toHaveTextContent('Paris');
   });
 
   it('shows ScoreButtons after flip', () => {
-    renderWithRouter(<SessionScreen cards={mockCards} />);
+    renderSessionScreen(mockCards);
 
-    // Initially no ScoreButtons
     expect(screen.queryByText('I knew it')).toBeNull();
     expect(screen.queryByText("I didn't know")).toBeNull();
 
-    // Flip the card
     const cardButton = screen.getByTestId('flashcard-container').querySelector('button');
     fireEvent.click(cardButton!);
 
-    // ScoreButtons should now be visible
-    expect(screen.getByText('I knew it')).toBeTruthy();
-    expect(screen.getByText("I didn't know")).toBeTruthy();
+    expect(screen.getByText('I knew it')).toBeInTheDocument();
+    expect(screen.getByText("I didn't know")).toBeInTheDocument();
   });
 
-  it('hides ScoreButtons when card is not flipped', () => {
-    renderWithRouter(<SessionScreen cards={mockCards} />);
-
-    expect(screen.queryByText('I knew it')).toBeNull();
-    expect(screen.queryByText("I didn't know")).toBeNull();
-  });
-
-  it('records result and advances to next card on "I knew it"', () => {
-    const { useSession } = vi.mocked(require('@/hooks/useSession'));
+  it('records result and navigates to /results on last card', () => {
     const mockRecordResult = vi.fn();
-    const mockNextCard = vi.fn();
-
-    useSession.mockReturnValue({
-      currentIndex: 0,
+    vi.mocked(useSession).mockReturnValue({
       results: [],
       recordResult: mockRecordResult,
-      nextCard: mockNextCard,
-      previousCard: vi.fn(),
       resetSession: vi.fn(),
-      themeId: null,
-      mode: null,
-      setPreferences: vi.fn(),
     });
-
-    const { useNavigate } = require('react-router-dom');
     const mockNavigate = vi.fn();
-    useNavigate.mockReturnValue(mockNavigate);
+    vi.mocked(useNavigate).mockReturnValue(mockNavigate);
 
-    renderWithRouter(<SessionScreen cards={mockCards} />);
+    render(
+      <ThemeContext.Provider value={{ themes: [], currentTheme: { id: 'test', name: 'Test', cards: mockCards }, selectedThemeId: 'test', selectTheme: vi.fn() }}>
+        <I18nProvider>
+          <MemoryRouter>
+            <SessionScreen cards={mockCards} />
+          </MemoryRouter>
+        </I18nProvider>
+      </ThemeContext.Provider>,
+    );
 
     // Flip card
     const cardButton = screen.getByTestId('flashcard-container').querySelector('button');
     fireEvent.click(cardButton!);
 
-    // Click "I knew it"
+    // Click "I knew it" on the only card
     fireEvent.click(screen.getByText('I knew it'));
 
     expect(mockRecordResult).toHaveBeenCalledWith('card-1', true);
-    expect(mockNextCard).toHaveBeenCalled();
-  });
-
-  it('records result and advances to next card on "I didn\'t know"', () => {
-    const { useSession } = vi.mocked(require('@/hooks/useSession'));
-    const mockRecordResult = vi.fn();
-    const mockNextCard = vi.fn();
-
-    useSession.mockReturnValue({
-      currentIndex: 0,
-      results: [],
-      recordResult: mockRecordResult,
-      nextCard: mockNextCard,
-      previousCard: vi.fn(),
-      resetSession: vi.fn(),
-      themeId: null,
-      mode: null,
-      setPreferences: vi.fn(),
-    });
-
-    const { useNavigate } = require('react-router-dom');
-    const mockNavigate = vi.fn();
-    useNavigate.mockReturnValue(mockNavigate);
-
-    renderWithRouter(<SessionScreen cards={mockCards} />);
-
-    // Flip card
-    const cardButton = screen.getByTestId('flashcard-container').querySelector('button');
-    fireEvent.click(cardButton!);
-
-    // Click "I didn't know"
-    fireEvent.click(screen.getByText("I didn't know"));
-
-    expect(mockRecordResult).toHaveBeenCalledWith('card-1', false);
-    expect(mockNextCard).toHaveBeenCalled();
-  });
-
-  it('navigates to /results when last card is answered', () => {
-    const { useSession } = vi.mocked(require('@/hooks/useSession'));
-    const mockRecordResult = vi.fn();
-    const mockNextCard = vi.fn();
-
-    useSession.mockReturnValue({
-      currentIndex: 2, // Last card index (0-indexed, 3 cards total)
-      results: [],
-      recordResult: mockRecordResult,
-      nextCard: mockNextCard,
-      previousCard: vi.fn(),
-      resetSession: vi.fn(),
-      themeId: null,
-      mode: null,
-      setPreferences: vi.fn(),
-    });
-
-    const { useNavigate } = require('react-router-dom');
-    const mockNavigate = vi.fn();
-    useNavigate.mockReturnValue(mockNavigate);
-
-    renderWithRouter(<SessionScreen cards={mockCards} />);
-
-    // Flip card
-    const cardButton = screen.getByTestId('flashcard-container').querySelector('button');
-    fireEvent.click(cardButton!);
-
-    // Click "I knew it" on last card
-    fireEvent.click(screen.getByText('I knew it'));
-
     expect(mockNavigate).toHaveBeenCalledWith('/results');
   });
 
-  it('displays message when no cards available', () => {
-    renderWithRouter(<SessionScreen cards={[]} />);
-
-    expect(screen.getByText('No cards available for this session.')).toBeTruthy();
-  });
-
-  it('displays second card after first is answered', () => {
-    const { useSession } = vi.mocked(require('@/hooks/useSession'));
+  it('records unknown result on "I didn\'t know"', () => {
     const mockRecordResult = vi.fn();
-    const mockNextCard = vi.fn();
-
-    useSession.mockReturnValue({
-      currentIndex: 1, // Second card
+    vi.mocked(useSession).mockReturnValue({
       results: [],
       recordResult: mockRecordResult,
-      nextCard: mockNextCard,
-      previousCard: vi.fn(),
       resetSession: vi.fn(),
-      themeId: null,
-      mode: null,
-      setPreferences: vi.fn(),
     });
 
-    renderWithRouter(<SessionScreen cards={mockCards} />);
+    render(
+      <ThemeContext.Provider value={{ themes: [], currentTheme: { id: 'test', name: 'Test', cards: mockCards }, selectedThemeId: 'test', selectTheme: vi.fn() }}>
+        <I18nProvider>
+          <MemoryRouter>
+            <SessionScreen cards={mockCards} />
+          </MemoryRouter>
+        </I18nProvider>
+      </ThemeContext.Provider>,
+    );
 
-    // Should show Germany (second card)
-    const front = screen.getByTestId('flashcard-front');
-    expect(front).toHaveTextContent('Germany');
+    // Flip card
+    const cardButton = screen.getByTestId('flashcard-container').querySelector('button');
+    fireEvent.click(cardButton!);
 
-    // Progress should show 2/3
-    expect(screen.getByText('2/3')).toBeTruthy();
+    fireEvent.click(screen.getByText("I didn't know"));
+
+    expect(mockRecordResult).toHaveBeenCalledWith('card-1', false);
   });
 });

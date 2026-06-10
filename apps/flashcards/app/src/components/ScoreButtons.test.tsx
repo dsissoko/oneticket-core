@@ -8,7 +8,7 @@ describe('ScoreButtons', () => {
   it('renders both score buttons', () => {
     renderWithProviders(<ScoreButtons onScore={vi.fn()} />);
     expect(screen.getByText('I knew it')).toBeInTheDocument();
-    expect(screen.getByText('I didn't know')).toBeInTheDocument();
+    expect(screen.getByText("I didn't know")).toBeInTheDocument();
   });
 
   it('calls onScore(true) when "I knew it" is clicked', async () => {
@@ -19,11 +19,11 @@ describe('ScoreButtons', () => {
     expect(onScore).toHaveBeenCalledWith(true);
   });
 
-  it('calls onScore(false) when "I didn't know" is clicked', async () => {
+  it("calls onScore(false) when \"I didn't know\" is clicked", async () => {
     const user = userEvent.setup();
     const onScore = vi.fn();
     renderWithProviders(<ScoreButtons onScore={onScore} />);
-    await user.click(screen.getByText('I didn't know'));
+    await user.click(screen.getByText("I didn't know"));
     expect(onScore).toHaveBeenCalledWith(false);
   });
 
