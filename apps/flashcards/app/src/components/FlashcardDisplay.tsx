@@ -70,7 +70,7 @@ export function FlashcardDisplay({
         >
         {/* Front face — rendered via engine */}
         <div
-          className="absolute inset-0 flex items-center justify-center rounded-xl border-2 border-border bg-card text-card-foreground text-center text-2xl font-semibold shadow-md backface-hidden"
+          className="absolute inset-0 flex flex-col items-center justify-center rounded-xl border-2 border-border bg-card text-card-foreground text-center text-2xl font-semibold shadow-md backface-hidden"
           style={{ backfaceVisibility: 'hidden' }}
           data-testid="flashcard-front"
           ref={frontRef}
@@ -78,7 +78,7 @@ export function FlashcardDisplay({
 
         {/* Back face — rendered via engine */}
         <div
-          className="absolute inset-0 flex items-center justify-center rounded-xl border-2 border-border bg-card text-card-foreground text-center text-2xl font-semibold shadow-md"
+          className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-border bg-card text-card-foreground text-center text-2xl font-semibold shadow-md"
           style={{
             backfaceVisibility: 'hidden',
             transform: 'rotateY(180deg)',
