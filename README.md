@@ -280,6 +280,16 @@ Any model available on [opencode.ai/zen](https://opencode.ai/zen) works out of t
 
 Full list: `https://opencode.ai/zen/v1/models`
 
+### Tested models
+
+| Model | Manifest generation | Notes |
+|---|---|---|
+| `opencode/claude-sonnet-4-6` | ✅ | Current — recommended |
+| `opencode/claude-haiku-4-5` | ✅ | Validated in prod, lighter |
+| `opencode/qwen3.6-plus` | ✅ | Validated in prod |
+| `opencode/minimax-m2.5` | ✅ | Validated in prod |
+| `opencode/deepseek-v4-pro` | ❌ | Loops indefinitely on manifest generation, never writes the file |
+
 ---
 
 ## Roadmap
