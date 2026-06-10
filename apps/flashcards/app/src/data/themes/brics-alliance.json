@@ -1,0 +1,116 @@
+{
+  "id": "brics-alliance",
+  "name": "BRICS Alliance",
+  "cards": [
+    {
+      "id": "card-1",
+      "front": {
+        "data": "Brazil",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Brasília\n\n![Brazil](https://flagcdn.com/w80/br.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-2",
+      "front": {
+        "data": "Russia",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Moscow\n\n![Russia](https://flagcdn.com/w80/ru.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-3",
+      "front": {
+        "data": "India",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "New Delhi\n\n![India](https://flagcdn.com/w80/in.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-4",
+      "front": {
+        "data": "China",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Beijing\n\n![China](https://flagcdn.com/w80/cn.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-5",
+      "front": {
+        "data": "South Africa",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Pretoria\n\n![South Africa](https://flagcdn.com/w80/za.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-6",
+      "front": {
+        "data": "Egypt",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Cairo\n\n![Egypt](https://flagcdn.com/w80/eg.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-7",
+      "front": {
+        "data": "Ethiopia",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Addis Ababa\n\n![Ethiopia](https://flagcdn.com/w80/et.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-8",
+      "front": {
+        "data": "Iran",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Tehran\n\n![Iran](https://flagcdn.com/w80/ir.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-9",
+      "front": {
+        "data": "Saudi Arabia",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Riyadh\n\n![Saudi Arabia](https://flagcdn.com/w80/sa.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-10",
+      "front": {
+        "data": "UAE",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Abu Dhabi\n\n![UAE](https://flagcdn.com/w80/ae.png)",
+        "renderEngineId": "markdown"
+      }
+    }
+  ]
+}
