@@ -90,8 +90,9 @@ agent_config:
     # model: opencode/minimax-m2.7       ← prod (validated v0.1.0)
     # model: opencode/minimax-m2.5       ← minimax 2.5
     # model: opencode/qwen3.6-plus       ← qwen (previous)
+    # model: opencode/claude-haiku-4-5   ← haiku (previous)
     # model: opencode/gpt-5.1-codex      ← deprecated 2026-07-23
-    model: opencode/claude-haiku-4-5
+    model: opencode/deepseek-v4-pro
     permission:
       "*": allow
       task: deny
