@@ -1,0 +1,106 @@
+{
+  "id": "gdp-biggest-20",
+  "name": "20 biggest GDP",
+  "cards": [
+    {
+      "id": "card-1",
+      "front": { "data": "United States", "renderEngineId": "text" },
+      "back": { "data": "Washington D.C.\n\n![United States](https://flagcdn.com/w80/us.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-2",
+      "front": { "data": "China", "renderEngineId": "text" },
+      "back": { "data": "Beijing\n\n![China](https://flagcdn.com/w80/cn.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-3",
+      "front": { "data": "Germany", "renderEngineId": "text" },
+      "back": { "data": "Berlin\n\n![Germany](https://flagcdn.com/w80/de.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-4",
+      "front": { "data": "Japan", "renderEngineId": "text" },
+      "back": { "data": "Tokyo\n\n![Japan](https://flagcdn.com/w80/jp.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-5",
+      "front": { "data": "India", "renderEngineId": "text" },
+      "back": { "data": "New Delhi\n\n![India](https://flagcdn.com/w80/in.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-6",
+      "front": { "data": "United Kingdom", "renderEngineId": "text" },
+      "back": { "data": "London\n\n![United Kingdom](https://flagcdn.com/w80/gb.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-7",
+      "front": { "data": "France", "renderEngineId": "text" },
+      "back": { "data": "Paris\n\n![France](https://flagcdn.com/w80/fr.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-8",
+      "front": { "data": "Italy", "renderEngineId": "text" },
+      "back": { "data": "Rome\n\n![Italy](https://flagcdn.com/w80/it.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-9",
+      "front": { "data": "Brazil", "renderEngineId": "text" },
+      "back": { "data": "Brasília\n\n![Brazil](https://flagcdn.com/w80/br.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-10",
+      "front": { "data": "Canada", "renderEngineId": "text" },
+      "back": { "data": "Ottawa\n\n![Canada](https://flagcdn.com/w80/ca.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-11",
+      "front": { "data": "Russia", "renderEngineId": "text" },
+      "back": { "data": "Moscow\n\n![Russia](https://flagcdn.com/w80/ru.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-12",
+      "front": { "data": "South Korea", "renderEngineId": "text" },
+      "back": { "data": "Seoul\n\n![South Korea](https://flagcdn.com/w80/kr.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-13",
+      "front": { "data": "Australia", "renderEngineId": "text" },
+      "back": { "data": "Canberra\n\n![Australia](https://flagcdn.com/w80/au.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-14",
+      "front": { "data": "Mexico", "renderEngineId": "text" },
+      "back": { "data": "Mexico City\n\n![Mexico](https://flagcdn.com/w80/mx.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-15",
+      "front": { "data": "Spain", "renderEngineId": "text" },
+      "back": { "data": "Madrid\n\n![Spain](https://flagcdn.com/w80/es.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-16",
+      "front": { "data": "Indonesia", "renderEngineId": "text" },
+      "back": { "data": "Jakarta\n\n![Indonesia](https://flagcdn.com/w80/id.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-17",
+      "front": { "data": "Netherlands", "renderEngineId": "text" },
+      "back": { "data": "Amsterdam\n\n![Netherlands](https://flagcdn.com/w80/nl.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-18",
+      "front": { "data": "Saudi Arabia", "renderEngineId": "text" },
+      "back": { "data": "Riyadh\n\n![Saudi Arabia](https://flagcdn.com/w80/sa.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-19",
+      "front": { "data": "Türkiye", "renderEngineId": "text" },
+      "back": { "data": "Ankara\n\n![Türkiye](https://flagcdn.com/w80/tr.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-20",
+      "front": { "data": "Switzerland", "renderEngineId": "text" },
+      "back": { "data": "Bern\n\n![Switzerland](https://flagcdn.com/w80/ch.png)", "renderEngineId": "markdown" }
+    }
+  ]
+}
