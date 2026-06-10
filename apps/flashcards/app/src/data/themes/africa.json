@@ -1,0 +1,600 @@
+{
+  "id": "africa",
+  "name": "Africa",
+  "cards": [
+    {
+      "id": "card-1",
+      "front": {
+        "data": "Algeria",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Algiers\n\n![Algeria](https://flagcdn.com/w80/dz.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-2",
+      "front": {
+        "data": "Angola",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Luanda\n\n![Angola](https://flagcdn.com/w80/ao.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-3",
+      "front": {
+        "data": "Benin",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Porto-Novo\n\n![Benin](https://flagcdn.com/w80/bj.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-4",
+      "front": {
+        "data": "Botswana",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Gaborone\n\n![Botswana](https://flagcdn.com/w80/bw.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-5",
+      "front": {
+        "data": "Burkina Faso",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Ouagadougou\n\n![Burkina Faso](https://flagcdn.com/w80/bf.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-6",
+      "front": {
+        "data": "Burundi",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Gitega\n\n![Burundi](https://flagcdn.com/w80/bi.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-7",
+      "front": {
+        "data": "Cabo Verde",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Praia\n\n![Cabo Verde](https://flagcdn.com/w80/cv.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-8",
+      "front": {
+        "data": "Cameroon",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Yaoundé\n\n![Cameroon](https://flagcdn.com/w80/cm.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-9",
+      "front": {
+        "data": "Central African Republic",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Bangui\n\n![Central African Republic](https://flagcdn.com/w80/cf.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-10",
+      "front": {
+        "data": "Chad",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "N'Djamena\n\n![Chad](https://flagcdn.com/w80/td.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-11",
+      "front": {
+        "data": "Comoros",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Moroni\n\n![Comoros](https://flagcdn.com/w80/km.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-12",
+      "front": {
+        "data": "Democratic Republic of the Congo",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Kinshasa\n\n![Democratic Republic of the Congo](https://flagcdn.com/w80/cd.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-13",
+      "front": {
+        "data": "Republic of the Congo",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Brazzaville\n\n![Republic of the Congo](https://flagcdn.com/w80/cg.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-14",
+      "front": {
+        "data": "Djibouti",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Djibouti\n\n![Djibouti](https://flagcdn.com/w80/dj.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-15",
+      "front": {
+        "data": "Egypt",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Cairo\n\n![Egypt](https://flagcdn.com/w80/eg.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-16",
+      "front": {
+        "data": "Equatorial Guinea",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Malabo\n\n![Equatorial Guinea](https://flagcdn.com/w80/gq.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-17",
+      "front": {
+        "data": "Eritrea",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Asmara\n\n![Eritrea](https://flagcdn.com/w80/er.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-18",
+      "front": {
+        "data": "Eswatini",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Mbabane\n\n![Eswatini](https://flagcdn.com/w80/sz.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-19",
+      "front": {
+        "data": "Ethiopia",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Addis Ababa\n\n![Ethiopia](https://flagcdn.com/w80/et.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-20",
+      "front": {
+        "data": "Gabon",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Libreville\n\n![Gabon](https://flagcdn.com/w80/ga.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-21",
+      "front": {
+        "data": "Gambia",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Banjul\n\n![Gambia](https://flagcdn.com/w80/gm.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-22",
+      "front": {
+        "data": "Ghana",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Accra\n\n![Ghana](https://flagcdn.com/w80/gh.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-23",
+      "front": {
+        "data": "Guinea",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Conakry\n\n![Guinea](https://flagcdn.com/w80/gn.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-24",
+      "front": {
+        "data": "Guinea-Bissau",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Bissau\n\n![Guinea-Bissau](https://flagcdn.com/w80/gw.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-25",
+      "front": {
+        "data": "Ivory Coast",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Yamoussoukro\n\n![Ivory Coast](https://flagcdn.com/w80/ci.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-26",
+      "front": {
+        "data": "Kenya",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Nairobi\n\n![Kenya](https://flagcdn.com/w80/ke.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-27",
+      "front": {
+        "data": "Lesotho",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Maseru\n\n![Lesotho](https://flagcdn.com/w80/ls.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-28",
+      "front": {
+        "data": "Liberia",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Monrovia\n\n![Liberia](https://flagcdn.com/w80/lr.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-29",
+      "front": {
+        "data": "Libya",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Tripoli\n\n![Libya](https://flagcdn.com/w80/ly.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-30",
+      "front": {
+        "data": "Madagascar",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Antananarivo\n\n![Madagascar](https://flagcdn.com/w80/mg.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-31",
+      "front": {
+        "data": "Malawi",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Lilongwe\n\n![Malawi](https://flagcdn.com/w80/mw.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-32",
+      "front": {
+        "data": "Mali",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Bamako\n\n![Mali](https://flagcdn.com/w80/ml.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-33",
+      "front": {
+        "data": "Mauritania",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Nouakchott\n\n![Mauritania](https://flagcdn.com/w80/mr.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-34",
+      "front": {
+        "data": "Mauritius",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Port Louis\n\n![Mauritius](https://flagcdn.com/w80/mu.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-35",
+      "front": {
+        "data": "Morocco",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Rabat\n\n![Morocco](https://flagcdn.com/w80/ma.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-36",
+      "front": {
+        "data": "Mozambique",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Maputo\n\n![Mozambique](https://flagcdn.com/w80/mz.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-37",
+      "front": {
+        "data": "Namibia",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Windhoek\n\n![Namibia](https://flagcdn.com/w80/na.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-38",
+      "front": {
+        "data": "Niger",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Niamey\n\n![Niger](https://flagcdn.com/w80/ne.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-39",
+      "front": {
+        "data": "Nigeria",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Abuja\n\n![Nigeria](https://flagcdn.com/w80/ng.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-40",
+      "front": {
+        "data": "Rwanda",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Kigali\n\n![Rwanda](https://flagcdn.com/w80/rw.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-41",
+      "front": {
+        "data": "São Tomé and Príncipe",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "São Tomé\n\n![São Tomé and Príncipe](https://flagcdn.com/w80/st.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-42",
+      "front": {
+        "data": "Senegal",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Dakar\n\n![Senegal](https://flagcdn.com/w80/sn.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-43",
+      "front": {
+        "data": "Seychelles",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Victoria\n\n![Seychelles](https://flagcdn.com/w80/sc.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-44",
+      "front": {
+        "data": "Sierra Leone",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Freetown\n\n![Sierra Leone](https://flagcdn.com/w80/sl.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-45",
+      "front": {
+        "data": "Somalia",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Mogadishu\n\n![Somalia](https://flagcdn.com/w80/so.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-46",
+      "front": {
+        "data": "South Africa",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Pretoria\n\n![South Africa](https://flagcdn.com/w80/za.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-47",
+      "front": {
+        "data": "South Sudan",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Juba\n\n![South Sudan](https://flagcdn.com/w80/ss.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-48",
+      "front": {
+        "data": "Sudan",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Khartoum\n\n![Sudan](https://flagcdn.com/w80/sd.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-49",
+      "front": {
+        "data": "Tanzania",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Dodoma\n\n![Tanzania](https://flagcdn.com/w80/tz.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-50",
+      "front": {
+        "data": "Togo",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Lomé\n\n![Togo](https://flagcdn.com/w80/tg.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-51",
+      "front": {
+        "data": "Tunisia",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Tunis\n\n![Tunisia](https://flagcdn.com/w80/tn.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-52",
+      "front": {
+        "data": "Uganda",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Kampala\n\n![Uganda](https://flagcdn.com/w80/ug.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-53",
+      "front": {
+        "data": "Zambia",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Lusaka\n\n![Zambia](https://flagcdn.com/w80/zm.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-54",
+      "front": {
+        "data": "Zimbabwe",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Harare\n\n![Zimbabwe](https://flagcdn.com/w80/zw.png)",
+        "renderEngineId": "markdown"
+      }
+    }
+  ]
+}
