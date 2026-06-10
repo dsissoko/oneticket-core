@@ -26,7 +26,7 @@
       "file": "apps/flashcards/app/src/data/themes/europe-west.json",
       "content": "Create the file `apps/flashcards/app/src/data/themes/europe-west.json` with the Western Europe themed capitals dataset. Format: { \"id\": \"europe-west\", \"name\": \"Europe West\", \"cards\": [...] }. Each card: { \"id\": \"card-N\", \"front\": { \"data\": \"<Country>\", \"renderEngineId\": \"text\" }, \"back\": { \"data\": \"<Capital>\\n\\n![<Country>](https://flagcdn.com/w80/<iso2>.png)\", \"renderEngineId\": \"markdown\" } }. Include Western European countries (approximately: Andorra, Austria, Belgium, Cyprus, Denmark, Finland, France, Germany, Greece, Iceland, Ireland, Italy, Liechtenstein, Luxembourg, Malta, Monaco, Netherlands, Norway, Portugal, San Marino, Spain, Sweden, Switzerland, United Kingdom, Vatican City) with capitals and correct 2-letter ISO codes for flagcdn.com. Use sequential card IDs starting at card-1. No duplicate countries.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "D",
