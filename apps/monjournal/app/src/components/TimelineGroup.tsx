@@ -6,7 +6,6 @@ import { ThoughtCard } from './ThoughtCard';
 interface TimelineGroupProps {
   date: number;
   thoughts: Thought[];
-  onSurpriseClick?: (thought: Thought) => void;
   highlightedThoughtId?: string | null;
   highlightedRef?: React.RefObject<HTMLDivElement>;
 }
@@ -17,7 +16,6 @@ interface TimelineGroupProps {
 export function TimelineGroup({
   date,
   thoughts,
-  onSurpriseClick,
   highlightedThoughtId,
   highlightedRef,
 }: TimelineGroupProps): React.ReactElement {
@@ -37,12 +35,7 @@ export function TimelineGroup({
             ref={thought.id === highlightedThoughtId ? highlightedRef : undefined}
             className={thought.id === highlightedThoughtId ? 'highlighted' : ''}
           >
-            <ThoughtCard
-              thought={thought}
-              onHighlight={
-                onSurpriseClick ? () => onSurpriseClick(thought) : undefined
-              }
-            />
+            <ThoughtCard thought={thought} />
           </div>
         ))}
       </div>

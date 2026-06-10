@@ -103,14 +103,12 @@ export function HomeScreen(): React.ReactElement {
           {viewMode === 'list' ? (
             <ThoughtList
               thoughts={filteredThoughts}
-              onSurpriseClick={handleSurpriseClick}
               highlightedThoughtId={highlightedThoughtId}
               highlightedRef={highlightedRef}
             />
           ) : (
             <TimelineView
               thoughts={filteredThoughts}
-              onSurpriseClick={handleSurpriseClick}
               highlightedThoughtId={highlightedThoughtId}
               highlightedRef={highlightedRef}
             />

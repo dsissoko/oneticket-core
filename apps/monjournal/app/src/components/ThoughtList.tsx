@@ -4,7 +4,6 @@ import { ThoughtCard } from './ThoughtCard';
 
 interface ThoughtListProps {
   thoughts: Thought[];
-  onSurpriseClick?: (thought: Thought) => void;
   highlightedThoughtId?: string | null;
   highlightedRef?: React.RefObject<HTMLDivElement>;
 }
@@ -14,7 +13,6 @@ interface ThoughtListProps {
  */
 export function ThoughtList({
   thoughts,
-  onSurpriseClick,
   highlightedThoughtId,
   highlightedRef,
 }: ThoughtListProps): React.ReactElement {
@@ -39,12 +37,7 @@ export function ThoughtList({
           ref={thought.id === highlightedThoughtId ? highlightedRef : undefined}
           className={thought.id === highlightedThoughtId ? 'highlighted' : ''}
         >
-          <ThoughtCard
-            thought={thought}
-            onHighlight={
-              onSurpriseClick ? () => onSurpriseClick(thought) : undefined
-            }
-          />
+          <ThoughtCard thought={thought} />
         </div>
       ))}
     </div>

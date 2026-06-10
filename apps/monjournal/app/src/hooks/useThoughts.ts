@@ -20,7 +20,6 @@ export interface UseThoughtsReturn {
  */
 export function useThoughts(): UseThoughtsReturn {
   const [thoughts, setThoughts] = useState<Thought[]>([]);
-  const [isInitialized, setIsInitialized] = useState(false);
 
   // Function to load thoughts from localStorage
   const loadThoughtsFromStorage = (): Thought[] => {
@@ -56,20 +55,17 @@ export function useThoughts(): UseThoughtsReturn {
   useEffect(() => {
     const loaded = loadThoughtsFromStorage();
     setThoughts(loaded);
-    setIsInitialized(true);
   }, []);
 
-  // Persist to localStorage whenever thoughts change (after initialization)
-  useEffect(() => {
-    if (!isInitialized) return;
-    setItem(STORAGE_KEY, thoughts);
-  }, [thoughts, isInitialized]);
-
   /**
-   * Adds a new thought — pure state updater, persistence handled by useEffect.
+   * Adds a new thought and persists synchronously to localStorage.
    */
   const addThought = (thought: Thought): void => {
-    setThoughts((prev) => [...prev, thought]);
+    setThoughts((prev) => {
+      const next = [...prev, thought];
+      setItem(STORAGE_KEY, next);
+      return next;
+    });
   };
 
   /**

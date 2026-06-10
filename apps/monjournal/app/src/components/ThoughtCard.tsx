@@ -5,21 +5,20 @@ import { TagDisplay } from './TagDisplay';
 
 interface ThoughtCardProps {
   thought: Thought;
-  onHighlight?: () => void;
 }
 
 /**
  * Individual thought display card showing title, truncated content, date, and tags.
+ * Pure display component — no click behavior.
  */
 export function ThoughtCard({
   thought,
-  onHighlight,
 }: ThoughtCardProps): React.ReactElement {
   const truncatedContent = truncateText(thought.content, 100);
   const formattedDate = formatDate(thought.createdAt, 'relative');
 
   return (
-    <div className="thought-card" onClick={onHighlight}>
+    <div className="thought-card">
       <div className="thought-card-header">
         <h3 className="thought-title">{thought.title}</h3>
       </div>
