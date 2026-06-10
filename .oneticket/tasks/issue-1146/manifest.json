@@ -8,7 +8,7 @@
       "file": "apps/flashcards/app/src/data/themes/solfege.json",
       "content": "Create the file `apps/flashcards/app/src/data/themes/solfege.json` with exactly 21 flashcards covering 7 notes × 3 durations.\n\nTop-level structure:\n```json\n{\n  \"id\": \"solfege\",\n  \"name\": \"Solfège\",\n  \"cards\": [ ... ]\n}\n```\n\nCard structure for each of the 21 cards:\n```json\n{\n  \"id\": \"<note-fr>-<duration-en>\",\n  \"label\": \"<fr> / <EN>\",\n  \"front\": {\n    \"renderEngineId\": \"score\",\n    \"data\": { \"clef\": \"treble\", \"notes\": [{ \"note\": \"<VexKey>\", \"duration\": \"<dur>\" }] }\n  },\n  \"back\": {\n    \"renderEngineId\": \"score-audio\",\n    \"data\": { \"clef\": \"treble\", \"notes\": [{ \"note\": \"<VexKey>\", \"duration\": \"<dur>\" }] }\n  }\n}\n```\n\nNote FR → VexFlow mapping: do→C4, ré→D4, mi→E4, fa→F4, sol→G4, la→A4, si→B4\nDuration EN → VexFlow: whole→\"w\", half→\"h\", quarter→\"q\"\nCard ID pattern: `<note-fr>-<duration-en>` — ré is encoded as `re` in IDs (no accent)\nLabel format: `do / C`, `ré / D`, `mi / E`, `fa / F`, `sol / G`, `la / A`, `si / B`\n\nCard ordering: iterate notes in order [do, ré, mi, fa, sol, la, si], then durations in order [whole, half, quarter] for each note. So 21 cards total: do-whole, do-half, do-quarter, re-whole, re-half, re-quarter, mi-whole, ..., si-quarter.\n\nBoth front and back `data` objects are identical (same clef, same notes) — only `renderEngineId` differs: `score` for front, `score-audio` for back.\n\nValidate: the resulting JSON must be valid, contain exactly 21 cards, and all cards must have the `label` field.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
