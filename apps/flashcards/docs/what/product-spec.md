@@ -1,6 +1,6 @@
 # Product Specification
 
-<!-- SITE_DESCRIPTION: Flashcard app for learning world capitals with flip mode and local progress tracking. -->
+<!-- SITE_DESCRIPTION: Flashcard app for learning world capitals with 12 themed datasets, flip mode, and local progress tracking. -->
 
 ## 1. Vision
 
@@ -17,7 +17,7 @@ Learners studying geography.
 
 ## 4. Product Goals
 
-- Display cards from built-in theme
+- Display cards from 12 themed datasets (continents, alliances, GDP rankings)
 - Track session progress
 - Extensible theme/mode architecture
 - Extensible card rendering (text, markdown, future SVG/audio)
@@ -38,7 +38,7 @@ Learners studying geography.
 
 ## 7. Product Capabilities
 
-- Theme selection
+- Theme selection (12 themed datasets: continents, alliances, GDP rankings)
 - Flip interaction
 - Session scoring
 - Results summary
