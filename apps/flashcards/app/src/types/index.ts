@@ -10,9 +10,16 @@ interface Theme {
 
 interface Card {
   id: string;
-  front: string;
-  back: string;
+  front: CardSide;
+  back: CardSide;
 }
+
+interface RenderEngine {
+  render(data: any, target: HTMLElement): void;
+  precompute?(data: any): Promise<void>;
+}
+
+type CardSide = string | { data: any; renderEngineId: string };
 
 interface SessionResult {
   cardId: string;
@@ -20,4 +27,4 @@ interface SessionResult {
   timestamp: number;
 }
 
-export type { LearningMode, Theme, Card, SessionResult };
+export type { LearningMode, Theme, Card, SessionResult, RenderEngine, CardSide };

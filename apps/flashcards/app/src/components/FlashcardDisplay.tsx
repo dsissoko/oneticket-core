@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 import type { Card } from '@/types';
+import { engineRegistry, normalizeCardSide } from '@/engine/EngineRegistry';
 
 interface FlashcardDisplayProps {
   card: Card;
@@ -10,7 +11,7 @@ interface FlashcardDisplayProps {
 }
 
 /**
- * FlashcardDisplay renders a card with front (country) and back (capital).
+ * FlashcardDisplay renders a card with front and back via resolved render engines.
  * Tap/click triggers a 3D flip animation revealing the answer.
  */
 export function FlashcardDisplay({
@@ -19,6 +20,29 @@ export function FlashcardDisplay({
   onFlip,
   className,
 }: FlashcardDisplayProps) {
+  const frontRef = React.useRef<HTMLDivElement>(null);
+  const backRef = React.useRef<HTMLDivElement>(null);
+
+  const frontSide = normalizeCardSide(card.front);
+  const backSide = normalizeCardSide(card.back);
+
+  const frontEngine = engineRegistry.resolve(frontSide.renderEngineId);
+  const backEngine = engineRegistry.resolve(backSide.renderEngineId);
+
+  // Render front face via engine
+  React.useEffect(() => {
+    if (frontRef.current) {
+      frontEngine.render(frontSide.data, frontRef.current);
+    }
+  }, [card.id, isFlipped, frontEngine, frontSide.data]);
+
+  // Render back face via engine
+  React.useEffect(() => {
+    if (backRef.current) {
+      backEngine.render(backSide.data, backRef.current);
+    }
+  }, [card.id, isFlipped, backEngine, backSide.data]);
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
@@ -44,16 +68,15 @@ export function FlashcardDisplay({
             transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
         >
-        {/* Front face — country name */}
+        {/* Front face — rendered via engine */}
         <div
           className="absolute inset-0 flex items-center justify-center rounded-xl border-2 border-border bg-card text-card-foreground text-center text-2xl font-semibold shadow-md backface-hidden"
           style={{ backfaceVisibility: 'hidden' }}
           data-testid="flashcard-front"
-        >
-          <span className="text-card-foreground">{card.front}</span>
-        </div>
+          ref={frontRef}
+        />
 
-        {/* Back face — capital */}
+        {/* Back face — rendered via engine */}
         <div
           className="absolute inset-0 flex items-center justify-center rounded-xl border-2 border-border bg-card text-card-foreground text-center shadow-md"
           style={{
@@ -61,14 +84,8 @@ export function FlashcardDisplay({
             transform: 'rotateY(180deg)',
           }}
           data-testid="flashcard-back"
-        >
-          <span className={cn(
-            'text-card-foreground whitespace-pre-line leading-relaxed',
-            card.back.includes('\n') ? 'text-sm' : 'text-2xl font-semibold'
-          )}>
-            {card.back}
-          </span>
-        </div>
+          ref={backRef}
+        />
       </button>
       </div>
     </div>

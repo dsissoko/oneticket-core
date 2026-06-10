@@ -1,9 +1,15 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useEffect, useRef, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FlashcardDisplay } from '@/components/FlashcardDisplay';
 import { ScoreButtons } from '@/components/ScoreButtons';
 import { useSession } from '@/hooks/useSession';
-import { useThemeContext } from '@/context/ThemeContext';
+import { ThemeContext } from '@/context/ThemeContext';
+import { engineRegistry, normalizeCardSide } from '@/engine/EngineRegistry';
+import type { Card } from '@/types';
+
+interface SessionScreenProps {
+  cards?: Card[];
+}
 
 /** Fisher-Yates shuffle — returns a new shuffled array of IDs */
 function shuffleIds(cards: { id: string }[]): string[] {
@@ -21,15 +27,18 @@ function shuffleIds(cards: { id: string }[]): string[] {
  * Displays a flashcard session with progress tracking and scoring.
  * Cards are drawn randomly from remaining (unplayed) cards only.
  */
-export function SessionScreen(): React.ReactElement {
+export function SessionScreen({ cards: propCards }: SessionScreenProps = {}): React.ReactElement {
   const navigate = useNavigate();
-  const { currentTheme } = useThemeContext();
+  const themeCtx = useContext(ThemeContext);
+  const currentTheme = themeCtx?.currentTheme;
   const { results, recordResult, resetSession } = useSession();
   const [isFlipped, setIsFlipped] = useState(false);
   const [remainingIds, setRemainingIds] = useState<string[]>([]);
+  const [precomputePromise, setPrecomputePromise] = useState<Promise<void> | null>(null);
   const prevThemeId = useRef<string | undefined>(undefined);
 
-  const allCards = currentTheme?.cards ?? [];
+  // Support optional cards prop for testing, fallback to theme cards
+  const allCards = propCards ?? currentTheme?.cards ?? [];
   const totalCards = allCards.length;
 
   // Reset on mount — fresh start every time the user navigates to /session
@@ -54,9 +63,24 @@ export function SessionScreen(): React.ReactElement {
   const currentCard = allCards.find(c => c.id === remainingIds[0]);
   const isSessionComplete = remainingIds.length === 0 && totalCards > 0;
 
-  const handleFlip = useCallback(() => {
+  // Precompute back side when a new card is displayed (not flipped yet)
+  useEffect(() => {
+    if (!currentCard || isFlipped) return;
+    const backEngine = engineRegistry.resolve(normalizeCardSide(currentCard.back).renderEngineId);
+    const promise = backEngine.precompute?.(normalizeCardSide(currentCard.back).data);
+    setPrecomputePromise(promise ?? null);
+  }, [currentCard, isFlipped, currentCard?.back]);
+
+  const handleFlip = useCallback(async () => {
+    if (precomputePromise) {
+      try {
+        await precomputePromise;
+      } catch {
+        // Fallback: proceed with flip even if precompute failed
+      }
+    }
     setIsFlipped((prev) => !prev);
-  }, []);
+  }, [precomputePromise]);
 
   const handleScore = useCallback(
     (known: boolean) => {

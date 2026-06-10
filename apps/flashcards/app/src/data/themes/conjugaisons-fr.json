@@ -4,303 +4,303 @@
   "cards": [
     {
       "id": "aimer-present",
-      "front": "Aimer — présent",
-      "back": "j'aime\ntu aimes\nil/elle aime\nnous aimons\nvous aimez\nils/elles aiment"
+      "front": { "data": "Aimer — présent", "renderEngineId": "text" },
+      "back": { "data": "j'aime\ntu aimes\nil/elle aime\nnous aimons\nvous aimez\nils/elles aiment", "renderEngineId": "markdown" }
     },
     {
       "id": "aimer-imparfait",
-      "front": "Aimer — imparfait",
-      "back": "j'aimais\ntu aimais\nil/elle aimait\nnous aimions\nvous aimiez\nils/elles aimaient"
+      "front": { "data": "Aimer — imparfait", "renderEngineId": "text" },
+      "back": { "data": "j'aimais\ntu aimais\nil/elle aimait\nnous aimions\nvous aimiez\nils/elles aimaient", "renderEngineId": "markdown" }
     },
     {
       "id": "aimer-futur",
-      "front": "Aimer — futur",
-      "back": "j'aimerai\ntu aimeras\nil/elle aimera\nnous aimerons\nvous aimerez\nils/elles aimeront"
+      "front": { "data": "Aimer — futur", "renderEngineId": "text" },
+      "back": { "data": "j'aimerai\ntu aimeras\nil/elle aimera\nnous aimerons\nvous aimerez\nils/elles aimeront", "renderEngineId": "markdown" }
     },
     {
       "id": "finir-present",
-      "front": "Finir — présent",
-      "back": "je finis\ntu finis\nil/elle finit\nnous finissons\nvous finissez\nils/elles finissent"
+      "front": { "data": "Finir — présent", "renderEngineId": "text" },
+      "back": { "data": "je finis\ntu finis\nil/elle finit\nnous finissons\nvous finissez\nils/elles finissent", "renderEngineId": "markdown" }
     },
     {
       "id": "finir-imparfait",
-      "front": "Finir — imparfait",
-      "back": "je finissais\ntu finissais\nil/elle finissait\nnous finissions\nvous finissiez\nils/elles finissaient"
+      "front": { "data": "Finir — imparfait", "renderEngineId": "text" },
+      "back": { "data": "je finissais\ntu finissais\nil/elle finissait\nnous finissions\nvous finissiez\nils/elles finissaient", "renderEngineId": "markdown" }
     },
     {
       "id": "finir-futur-ils",
-      "front": "Finir — futur — ils",
-      "back": "ils finiront"
+      "front": { "data": "Finir — futur — ils", "renderEngineId": "text" },
+      "back": { "data": "ils finiront", "renderEngineId": "markdown" }
     },
     {
       "id": "aller-present-tu",
-      "front": "Aller — présent — tu",
-      "back": "tu vas"
+      "front": { "data": "Aller — présent — tu", "renderEngineId": "text" },
+      "back": { "data": "tu vas", "renderEngineId": "markdown" }
     },
     {
       "id": "aller-imparfait",
-      "front": "Aller — imparfait",
-      "back": "j'allais\ntu allais\nil/elle allait\nnous allions\nvous alliez\nils/elles allaient"
+      "front": { "data": "Aller — imparfait", "renderEngineId": "text" },
+      "back": { "data": "j'allais\ntu allais\nil/elle allait\nnous allions\nvous alliez\nils/elles allaient", "renderEngineId": "markdown" }
     },
     {
       "id": "aller-futur-nous",
-      "front": "Aller — futur — nous",
-      "back": "nous irons"
+      "front": { "data": "Aller — futur — nous", "renderEngineId": "text" },
+      "back": { "data": "nous irons", "renderEngineId": "markdown" }
     },
     {
       "id": "avoir-present-il",
-      "front": "Avoir — présent — il",
-      "back": "il a"
+      "front": { "data": "Avoir — présent — il", "renderEngineId": "text" },
+      "back": { "data": "il a", "renderEngineId": "markdown" }
     },
     {
       "id": "avoir-imparfait-nous",
-      "front": "Avoir — imparfait — nous",
-      "back": "nous avions"
+      "front": { "data": "Avoir — imparfait — nous", "renderEngineId": "text" },
+      "back": { "data": "nous avions", "renderEngineId": "markdown" }
     },
     {
       "id": "avoir-futur-il",
-      "front": "Avoir — futur — il",
-      "back": "il aura"
+      "front": { "data": "Avoir — futur — il", "renderEngineId": "text" },
+      "back": { "data": "il aura", "renderEngineId": "markdown" }
     },
     {
       "id": "etre-present",
-      "front": "Être — présent",
-      "back": "je suis\ntu es\nil/elle est\nnous sommes\nvous êtes\nils/elles sont"
+      "front": { "data": "Être — présent", "renderEngineId": "text" },
+      "back": { "data": "je suis\ntu es\nil/elle est\nnous sommes\nvous êtes\nils/elles sont", "renderEngineId": "markdown" }
     },
     {
       "id": "etre-imparfait-il",
-      "front": "Être — imparfait — il",
-      "back": "il était"
+      "front": { "data": "Être — imparfait — il", "renderEngineId": "text" },
+      "back": { "data": "il était", "renderEngineId": "markdown" }
     },
     {
       "id": "etre-futur-je",
-      "front": "Être — futur — je",
-      "back": "je serai"
+      "front": { "data": "Être — futur — je", "renderEngineId": "text" },
+      "back": { "data": "je serai", "renderEngineId": "markdown" }
     },
     {
       "id": "faire-present",
-      "front": "Faire — présent",
-      "back": "je fais\ntu fais\nil/elle fait\nnous faisons\nvous faites\nils/elles font"
+      "front": { "data": "Faire — présent", "renderEngineId": "text" },
+      "back": { "data": "je fais\ntu fais\nil/elle fait\nnous faisons\nvous faites\nils/elles font", "renderEngineId": "markdown" }
     },
     {
       "id": "faire-imparfait-vous",
-      "front": "Faire — imparfait — vous",
-      "back": "vous faisiez"
+      "front": { "data": "Faire — imparfait — vous", "renderEngineId": "text" },
+      "back": { "data": "vous faisiez", "renderEngineId": "markdown" }
     },
     {
       "id": "faire-futur-tu",
-      "front": "Faire — futur — tu",
-      "back": "tu feras"
+      "front": { "data": "Faire — futur — tu", "renderEngineId": "text" },
+      "back": { "data": "tu feras", "renderEngineId": "markdown" }
     },
     {
       "id": "dire-present-nous",
-      "front": "Dire — présent — nous",
-      "back": "nous disons"
+      "front": { "data": "Dire — présent — nous", "renderEngineId": "text" },
+      "back": { "data": "nous disons", "renderEngineId": "markdown" }
     },
     {
       "id": "dire-imparfait-il",
-      "front": "Dire — imparfait — il",
-      "back": "il disait"
+      "front": { "data": "Dire — imparfait — il", "renderEngineId": "text" },
+      "back": { "data": "il disait", "renderEngineId": "markdown" }
     },
     {
       "id": "dire-futur-ils",
-      "front": "Dire — futur — ils",
-      "back": "ils diront"
+      "front": { "data": "Dire — futur — ils", "renderEngineId": "text" },
+      "back": { "data": "ils diront", "renderEngineId": "markdown" }
     },
     {
       "id": "venir-present",
-      "front": "Venir — présent",
-      "back": "je viens\ntu viens\nil/elle vient\nnous venons\nvous venez\nils/elles viennent"
+      "front": { "data": "Venir — présent", "renderEngineId": "text" },
+      "back": { "data": "je viens\ntu viens\nil/elle vient\nnous venons\nvous venez\nils/elles viennent", "renderEngineId": "markdown" }
     },
     {
       "id": "venir-imparfait",
-      "front": "Venir — imparfait",
-      "back": "je venais\ntu venais\nil/elle venait\nnous venions\nvous veniez\nils/elles venaient"
+      "front": { "data": "Venir — imparfait", "renderEngineId": "text" },
+      "back": { "data": "je venais\ntu venais\nil/elle venait\nnous venions\nvous veniez\nils/elles venaient", "renderEngineId": "markdown" }
     },
     {
       "id": "venir-futur-il",
-      "front": "Venir — futur — il",
-      "back": "il viendra"
+      "front": { "data": "Venir — futur — il", "renderEngineId": "text" },
+      "back": { "data": "il viendra", "renderEngineId": "markdown" }
     },
     {
       "id": "voir-present-vous",
-      "front": "Voir — présent — vous",
-      "back": "vous voyez"
+      "front": { "data": "Voir — présent — vous", "renderEngineId": "text" },
+      "back": { "data": "vous voyez", "renderEngineId": "markdown" }
     },
     {
       "id": "voir-imparfait-il",
-      "front": "Voir — imparfait — il",
-      "back": "il voyait"
+      "front": { "data": "Voir — imparfait — il", "renderEngineId": "text" },
+      "back": { "data": "il voyait", "renderEngineId": "markdown" }
     },
     {
       "id": "voir-futur-il",
-      "front": "Voir — futur — il",
-      "back": "il verra"
+      "front": { "data": "Voir — futur — il", "renderEngineId": "text" },
+      "back": { "data": "il verra", "renderEngineId": "markdown" }
     },
     {
       "id": "pouvoir-present",
-      "front": "Pouvoir — présent",
-      "back": "je peux\ntu peux\nil/elle peut\nnous pouvons\nvous pouvez\nils/elles peuvent"
+      "front": { "data": "Pouvoir — présent", "renderEngineId": "text" },
+      "back": { "data": "je peux\ntu peux\nil/elle peut\nnous pouvons\nvous pouvez\nils/elles peuvent", "renderEngineId": "markdown" }
     },
     {
       "id": "pouvoir-imparfait",
-      "front": "Pouvoir — imparfait",
-      "back": "je pouvais\ntu pouvais\nil/elle pouvait\nnous pouvions\nvous pouviez\nils/elles pouvaient"
+      "front": { "data": "Pouvoir — imparfait", "renderEngineId": "text" },
+      "back": { "data": "je pouvais\ntu pouvais\nil/elle pouvait\nnous pouvions\nvous pouviez\nils/elles pouvaient", "renderEngineId": "markdown" }
     },
     {
       "id": "pouvoir-futur",
-      "front": "Pouvoir — futur",
-      "back": "je pourrai\ntu pourras\nil/elle pourra\nnous pourrons\nvous pourrez\nils/elles pourront"
+      "front": { "data": "Pouvoir — futur", "renderEngineId": "text" },
+      "back": { "data": "je pourrai\ntu pourras\nil/elle pourra\nnous pourrons\nvous pourrez\nils/elles pourront", "renderEngineId": "markdown" }
     },
     {
       "id": "vouloir-present-tu",
-      "front": "Vouloir — présent — tu",
-      "back": "tu veux"
+      "front": { "data": "Vouloir — présent — tu", "renderEngineId": "text" },
+      "back": { "data": "tu veux", "renderEngineId": "markdown" }
     },
     {
       "id": "vouloir-imparfait",
-      "front": "Vouloir — imparfait",
-      "back": "je voulais\ntu voulais\nil/elle voulait\nnous voulions\nvous vouliez\nils/elles voulaient"
+      "front": { "data": "Vouloir — imparfait", "renderEngineId": "text" },
+      "back": { "data": "je voulais\ntu voulais\nil/elle voulait\nnous voulions\nvous vouliez\nils/elles voulaient", "renderEngineId": "markdown" }
     },
     {
       "id": "vouloir-futur-nous",
-      "front": "Vouloir — futur — nous",
-      "back": "nous voudrons"
+      "front": { "data": "Vouloir — futur — nous", "renderEngineId": "text" },
+      "back": { "data": "nous voudrons", "renderEngineId": "markdown" }
     },
     {
       "id": "savoir-present",
-      "front": "Savoir — présent",
-      "back": "je sais\ntu sais\nil/elle sait\nnous savons\nvous savez\nils/elles savent"
+      "front": { "data": "Savoir — présent", "renderEngineId": "text" },
+      "back": { "data": "je sais\ntu sais\nil/elle sait\nnous savons\nvous savez\nils/elles savent", "renderEngineId": "markdown" }
     },
     {
       "id": "savoir-imparfait-vous",
-      "front": "Savoir — imparfait — vous",
-      "back": "vous saviez"
+      "front": { "data": "Savoir — imparfait — vous", "renderEngineId": "text" },
+      "back": { "data": "vous saviez", "renderEngineId": "markdown" }
     },
     {
       "id": "savoir-futur",
-      "front": "Savoir — futur",
-      "back": "je saurai\ntu sauras\nil/elle saura\nnous saurons\nvous saurez\nils/elles sauront"
+      "front": { "data": "Savoir — futur", "renderEngineId": "text" },
+      "back": { "data": "je saurai\ntu sauras\nil/elle saura\nnous saurons\nvous saurez\nils/elles sauront", "renderEngineId": "markdown" }
     },
     {
       "id": "partir-present-ils",
-      "front": "Partir — présent — ils",
-      "back": "ils partent"
+      "front": { "data": "Partir — présent — ils", "renderEngineId": "text" },
+      "back": { "data": "ils partent", "renderEngineId": "markdown" }
     },
     {
       "id": "partir-imparfait-il",
-      "front": "Partir — imparfait — il",
-      "back": "il partait"
+      "front": { "data": "Partir — imparfait — il", "renderEngineId": "text" },
+      "back": { "data": "il partait", "renderEngineId": "markdown" }
     },
     {
       "id": "partir-futur",
-      "front": "Partir — futur",
-      "back": "je partirai\ntu partiras\nil/elle partira\nnous partirons\nvous partirez\nils/elles partiront"
+      "front": { "data": "Partir — futur", "renderEngineId": "text" },
+      "back": { "data": "je partirai\ntu partiras\nil/elle partira\nnous partirons\nvous partirez\nils/elles partiront", "renderEngineId": "markdown" }
     },
     {
       "id": "prendre-present-je",
-      "front": "Prendre — présent — je",
-      "back": "je prends"
+      "front": { "data": "Prendre — présent — je", "renderEngineId": "text" },
+      "back": { "data": "je prends", "renderEngineId": "markdown" }
     },
     {
       "id": "prendre-imparfait",
-      "front": "Prendre — imparfait",
-      "back": "je prenais\ntu prenais\nil/elle prenait\nnous prenions\nvous preniez\nils/elles prenaient"
+      "front": { "data": "Prendre — imparfait", "renderEngineId": "text" },
+      "back": { "data": "je prenais\ntu prenais\nil/elle prenait\nnous prenions\nvous preniez\nils/elles prenaient", "renderEngineId": "markdown" }
     },
     {
       "id": "prendre-futur-vous",
-      "front": "Prendre — futur — vous",
-      "back": "vous prendrez"
+      "front": { "data": "Prendre — futur — vous", "renderEngineId": "text" },
+      "back": { "data": "vous prendrez", "renderEngineId": "markdown" }
     },
     {
       "id": "manger-present-nous",
-      "front": "Manger — présent — nous",
-      "back": "nous mangeons"
+      "front": { "data": "Manger — présent — nous", "renderEngineId": "text" },
+      "back": { "data": "nous mangeons", "renderEngineId": "markdown" }
     },
     {
       "id": "manger-imparfait-tu",
-      "front": "Manger — imparfait — tu",
-      "back": "tu mangeais"
+      "front": { "data": "Manger — imparfait — tu", "renderEngineId": "text" },
+      "back": { "data": "tu mangeais", "renderEngineId": "markdown" }
     },
     {
       "id": "manger-futur-nous",
-      "front": "Manger — futur — nous",
-      "back": "nous mangerons"
+      "front": { "data": "Manger — futur — nous", "renderEngineId": "text" },
+      "back": { "data": "nous mangerons", "renderEngineId": "markdown" }
     },
     {
       "id": "jouer-present",
-      "front": "Jouer — présent",
-      "back": "je joue\ntu joues\nil/elle joue\nnous jouons\nvous jouez\nils/elles jouent"
+      "front": { "data": "Jouer — présent", "renderEngineId": "text" },
+      "back": { "data": "je joue\ntu joues\nil/elle joue\nnous jouons\nvous jouez\nils/elles jouent", "renderEngineId": "markdown" }
     },
     {
       "id": "jouer-imparfait-ils",
-      "front": "Jouer — imparfait — ils",
-      "back": "ils jouaient"
+      "front": { "data": "Jouer — imparfait — ils", "renderEngineId": "text" },
+      "back": { "data": "ils jouaient", "renderEngineId": "markdown" }
     },
     {
       "id": "jouer-futur-tu",
-      "front": "Jouer — futur — tu",
-      "back": "tu joueras"
+      "front": { "data": "Jouer — futur — tu", "renderEngineId": "text" },
+      "back": { "data": "tu joueras", "renderEngineId": "markdown" }
     },
     {
       "id": "chanter-present-ils",
-      "front": "Chanter — présent — ils",
-      "back": "ils chantent"
+      "front": { "data": "Chanter — présent — ils", "renderEngineId": "text" },
+      "back": { "data": "ils chantent", "renderEngineId": "markdown" }
     },
     {
       "id": "chanter-imparfait-ils",
-      "front": "Chanter — imparfait — ils",
-      "back": "ils chantaient"
+      "front": { "data": "Chanter — imparfait — ils", "renderEngineId": "text" },
+      "back": { "data": "ils chantaient", "renderEngineId": "markdown" }
     },
     {
       "id": "chanter-futur-il",
-      "front": "Chanter — futur — il",
-      "back": "il chantera"
+      "front": { "data": "Chanter — futur — il", "renderEngineId": "text" },
+      "back": { "data": "il chantera", "renderEngineId": "markdown" }
     },
     {
       "id": "danser-present-je",
-      "front": "Danser — présent — je",
-      "back": "je danse"
+      "front": { "data": "Danser — présent — je", "renderEngineId": "text" },
+      "back": { "data": "je danse", "renderEngineId": "markdown" }
     },
     {
       "id": "danser-imparfait-je",
-      "front": "Danser — imparfait — je",
-      "back": "je dansais"
+      "front": { "data": "Danser — imparfait — je", "renderEngineId": "text" },
+      "back": { "data": "je dansais", "renderEngineId": "markdown" }
     },
     {
       "id": "danser-futur-je",
-      "front": "Danser — futur — je",
-      "back": "je danserai"
+      "front": { "data": "Danser — futur — je", "renderEngineId": "text" },
+      "back": { "data": "je danserai", "renderEngineId": "markdown" }
     },
     {
       "id": "lire-present-je",
-      "front": "Lire — présent — je",
-      "back": "je lis"
+      "front": { "data": "Lire — présent — je", "renderEngineId": "text" },
+      "back": { "data": "je lis", "renderEngineId": "markdown" }
     },
     {
       "id": "lire-imparfait-vous",
-      "front": "Lire — imparfait — vous",
-      "back": "vous lisiez"
+      "front": { "data": "Lire — imparfait — vous", "renderEngineId": "text" },
+      "back": { "data": "vous lisiez", "renderEngineId": "markdown" }
     },
     {
       "id": "lire-futur-je",
-      "front": "Lire — futur — je",
-      "back": "je lirai"
+      "front": { "data": "Lire — futur — je", "renderEngineId": "text" },
+      "back": { "data": "je lirai", "renderEngineId": "markdown" }
     },
     {
       "id": "ecrire-present",
-      "front": "Écrire — présent",
-      "back": "j'écris\ntu écris\nil/elle écrit\nnous écrivons\nvous écrivez\nils/elles écrivent"
+      "front": { "data": "Écrire — présent", "renderEngineId": "text" },
+      "back": { "data": "j'écris\ntu écris\nil/elle écrit\nnous écrivons\nvous écrivez\nils/elles écrivent", "renderEngineId": "markdown" }
     },
     {
       "id": "ecrire-imparfait-il",
-      "front": "Écrire — imparfait — il",
-      "back": "il écrivait"
+      "front": { "data": "Écrire — imparfait — il", "renderEngineId": "text" },
+      "back": { "data": "il écrivait", "renderEngineId": "markdown" }
     },
     {
       "id": "ecrire-futur-il",
-      "front": "Écrire — futur — il",
-      "back": "il écrira"
+      "front": { "data": "Écrire — futur — il", "renderEngineId": "text" },
+      "back": { "data": "il écrira", "renderEngineId": "markdown" }
     }
   ]
 }
