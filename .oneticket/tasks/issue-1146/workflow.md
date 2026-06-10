@@ -4,3 +4,4 @@
 2026-06-10 19:17 | D | apps/flashcards/app/src/components/FlashcardDisplay.tsx
 2026-06-10 19:17 | B | apps/flashcards/app/src/hooks/useTheme.ts
 2026-06-10 19:18 | G | apps/flashcards/app/src/engine/ScoreEngine.test.ts
+2026-06-10 19:19 | F | apps/flashcards/app/src/engine/ScoreAudioEngine.ts
