@@ -65,3 +65,35 @@ C4Container
 | Local Storage | Persist session results and user preferences |
 | MSW (world-capitals.json) | Serve flashcard theme data |
 | MSW (session results) | Mock storage for session outcomes |
+
+## RenderEngine Layer
+
+### Rendering Architecture
+
+```mermaid
+C4Component
+    Container(spa, "Web Application", "React SPA", "Flashcard app with RenderEngine")
+    
+    Component(FlashcardDisplay, "FlashcardDisplay", "React Component", "Delegates rendering to resolved engine")
+    Component(EngineRegistry, "Engine Registry", "TypeScript", "Resolves engines by renderEngineId")
+    Component(TextEngine, "TextEngine", "TypeScript", "Plain text rendering")
+    Component(MarkdownEngine, "MarkdownEngine", "TypeScript", "Markdown to HTML rendering")
+    
+    Rel(FlashcardDisplay, EngineRegistry, "Resolves engine by ID")
+    Rel(EngineRegistry, TextEngine, "Instantiates")
+    Rel(EngineRegistry, MarkdownEngine, "Instantiates")
+```
+
+### Engine Resolution Flow
+
+1. CardSide is normalized: plain string → `{ data, renderEngineId: 'text' }`
+2. EngineRegistry resolves the engine by `renderEngineId`
+3. FlashcardDisplay calls `engine.render(data, targetElement)`
+4. If engine supports `precompute`, SessionScreen calls it during question display
+
+### Components Updated
+
+| Component | Change |
+|---|---|
+| `FlashcardDisplay` | Now delegates rendering to resolved RenderEngine instead of direct text rendering |
+| `SessionScreen` | Implements precompute lifecycle for async engines |
