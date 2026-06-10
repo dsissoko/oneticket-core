@@ -96,7 +96,7 @@
       "file": "apps/flashcards/app/src/data/themes/world-capitals.json",
       "content": "Migrate apps/flashcards/app/src/data/themes/world-capitals.json to the extended CardSide format.\n\nConvert every card from:\n```json\n{ \"id\": \"card-1\", \"front\": \"France\", \"back\": \"Paris\" }\n```\nTo:\n```json\n{ \"id\": \"card-1\", \"front\": { \"data\": \"France\", \"renderEngineId\": \"text\" }, \"back\": { \"data\": \"Paris\", \"renderEngineId\": \"text\" } }\n```\n\nAll 12 cards must be migrated. Both front and back use renderEngineId: 'text'.\n\nKeep the theme id, name, and card ids unchanged.\n\nReference: apps/flashcards/docs/how/sprints/sprint-1-render-engine/sprint.md — section 6",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "dev"
     },
     {
