@@ -9,6 +9,9 @@ import { queryClient } from './lib/query-client';
 import { logger } from './lib/logger';
 import { I18nProvider } from './i18n/I18nContext';
 import { ThemeDataProvider } from './context/ThemeContext';
+import { engineRegistry } from '@/engine/EngineRegistry';
+import { TextEngine } from '@/engine/TextEngine';
+import { MarkdownEngine } from '@/engine/MarkdownEngine';
 
 // __ENABLE_MSW__ is defined at build time in vite.config.ts → define block.
 // true  = MSW active (demo, preview, GitHub Pages — no backend needed)
@@ -92,6 +95,9 @@ async function main(): Promise<void> {
   try {
     await startMockServiceWorker();
     logger.info('[app] Starting');
+
+    engineRegistry.register('text', TextEngine);
+    engineRegistry.register('markdown', MarkdownEngine);
 
     const root = document.getElementById('root');
     if (!root) throw new Error('Root element not found');
