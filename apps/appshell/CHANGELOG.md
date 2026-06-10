@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.1](https://github.com/dsissoko/oneticket-core/compare/appshell-v0.4.0...appshell-v0.4.1) (2026-06-10)
+
+
+### Bug Fixes
+
+* **appshell:** Logger tab — build-time log level label avec explication ([0f3d2bc](https://github.com/dsissoko/oneticket-core/commit/0f3d2bcf254f47525aafa0f08144b55649123a65))
+* **appshell:** Realtime tab — speed options en multiplicateurs 0.5× → 10× ([836d464](https://github.com/dsissoko/oneticket-core/commit/836d4641f6c7544829076003ba1b2bb859867b18))
+
 ## [0.4.0](https://github.com/dsissoko/oneticket-core/compare/appshell-v0.3.0...appshell-v0.4.0) (2026-06-03)
 
 

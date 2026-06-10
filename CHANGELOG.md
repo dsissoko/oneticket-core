@@ -1,5 +1,46 @@
 # Changelog
 
+## [0.7.0](https://github.com/dsissoko/oneticket-core/compare/OneTicket-v0.6.0...OneTicket-v0.7.0) (2026-06-10)
+
+
+### Features
+
+* [@po](https://github.com/po) response for issue [#1058](https://github.com/dsissoko/oneticket-core/issues/1058) ([4153cfa](https://github.com/dsissoko/oneticket-core/commit/4153cfa3a52477d26bd9ba5daed3b6b03ebf1b91))
+* **agent-dispatch:** flag --safe — force décomposition manifest strictement séquentielle ([466bc00](https://github.com/dsissoko/oneticket-core/commit/466bc00df4b1ac19ce3ba5de022a5ece14c498d3))
+* issue [#1058](https://github.com/dsissoko/oneticket-core/issues/1058) — oneticket readme file ([4ef8a34](https://github.com/dsissoko/oneticket-core/commit/4ef8a34faf372d5f987b786b614a495002bb5fc1))
+* issue [#1068](https://github.com/dsissoko/oneticket-core/issues/1068) — Flashcard App — world capitals, flip mode, theme-ready architecture ([b3a06e2](https://github.com/dsissoko/oneticket-core/commit/b3a06e2b51a87be015589d41f47ea9cd527a120b))
+* **oneticket:** replace slices with sprints — US-1 template restructuring ([7591c88](https://github.com/dsissoko/oneticket-core/commit/7591c88bc1192463ce60b9a63817b558659b8faa))
+* **oneticket:** replace slices with sprints — US-1 template restructuring ([96b33f3](https://github.com/dsissoko/oneticket-core/commit/96b33f37720656520c96b9be8175ee88e3ac610b))
+* **oneticket:** US-3 global coherence — slices → sprints in dispatch and US docs ([7b3b0ab](https://github.com/dsissoko/oneticket-core/commit/7b3b0abd9f32d0f7097d102e09de62e90ac599f1))
+* **oneticket:** US-3 global coherence — slices → sprints in dispatch, US-007/009/010 ([25bfc92](https://github.com/dsissoko/oneticket-core/commit/25bfc92e5ff658132e89e7a5b908385c394f97ae))
+* **test:** add --yes flag to skip interactive confirmation ([773b1c2](https://github.com/dsissoko/oneticket-core/commit/773b1c2b0d6cc817754321c46ac1af61b64a24d1))
+* **test:** add --yes flag to skip interactive confirmation in bootstrap.sh ([c62b9d5](https://github.com/dsissoko/oneticket-core/commit/c62b9d5f45a3c6e469884696c05061725a81a75c))
+
+
+### Bug Fixes
+
+* **ci:** deploy workflow — URLs GitHub Pages dynamiques via GITHUB_REPOSITORY (portable pour les forks) ([9b3bb74](https://github.com/dsissoko/oneticket-core/commit/9b3bb74b44483fd6020dc32b87b1aa925ccea976))
+* **ci:** local skills override APM — oneticket-install split in --apm-only / --skills-only, skills-only runs after apm install ([f4ead16](https://github.com/dsissoko/oneticket-core/commit/f4ead16921f3a44041fef74d947f25f51dba44a0))
+* **ci:** retry APM install up to 3 times on transient network errors ([c8d58aa](https://github.com/dsissoko/oneticket-core/commit/c8d58aa1dc5832809c032a57468415fc0a3c58b0))
+* **ci:** retry APM install up to 3 times on transient network errors ([43e7945](https://github.com/dsissoko/oneticket-core/commit/43e7945a67014bc6a478e33e0bcdcbbbc13ad642))
+* **config:** deny task permission — prevent opencode from spawning subagents ([72b3356](https://github.com/dsissoko/oneticket-core/commit/72b3356e352acf2a5095562c903aef36fc1b2b4b))
+* **config:** increase chunkTimeout 30s → 60s ([662e054](https://github.com/dsissoko/oneticket-core/commit/662e054fc6fcfb236ec724a45727e0d7837fbf2d))
+* **config:** increase chunkTimeout 30s → 60s — prevent write tool interruption on large manifests ([8d454fd](https://github.com/dsissoko/oneticket-core/commit/8d454fd27b4d22abe4bab345d8c40e7190a8ed78))
+* **context:** réduire COMMENT_HISTORY_MAX 10→5 et COMMENT_BODY_MAX_CHARS 500→300 ([930bb1c](https://github.com/dsissoko/oneticket-core/commit/930bb1cb0915f17187b69fbf0e19893f0cb50077))
+* **context:** réduire COMMENT_HISTORY_MAX 10→5 et COMMENT_BODY_MAX_CHARS 500→300 ([707a226](https://github.com/dsissoko/oneticket-core/commit/707a226c0420aaef2ac80fc33244c446199c6241))
+* **context:** réduire taille historique commentaires — 5 commentaires, 300 chars max ([0ba9c6a](https://github.com/dsissoko/oneticket-core/commit/0ba9c6aa803096eb41772b4632fee0f700a32441))
+* **oneticket:** remove remaining slice references in epic, us, architecture templates ([8c2713b](https://github.com/dsissoko/oneticket-core/commit/8c2713b7c8102e5a713b3d1245f5551d6b95aa6b))
+* **oneticket:** update README.md slice → sprint references, remove issue-766 legacy tasks ([f605773](https://github.com/dsissoko/oneticket-core/commit/f605773104eb13a915780ce17e31de26e5a4b365))
+* **orchestrate:** git merge --abort avant commit sur merge-failed — label merge error désormais toujours posé ([ed7b640](https://github.com/dsissoko/oneticket-core/commit/ed7b64055b9b8395c3f573f688b837a788c3ba0a))
+* **pipeline:** prevent rogue opencode/dispatch-* branch and PR creation ([bd295c2](https://github.com/dsissoko/oneticket-core/commit/bd295c20bfdef297020bdc57f1ba5b5795ddfc80))
+* **pipeline:** prevent rogue opencode/dispatch-* branch and PR creation ([39d895a](https://github.com/dsissoko/oneticket-core/commit/39d895acd2d49c0a1775e1277cd7d4967f31198c)), closes [#1123](https://github.com/dsissoko/oneticket-core/issues/1123)
+* **pipeline:** sanitize manifest.json — strip invalid control chars from LLM output ([dd29570](https://github.com/dsissoko/oneticket-core/commit/dd29570ba54c60a599739eb91951753b5a88e5a3))
+* **pipeline:** sanitize manifest.json before JSON.parse — strip invalid control chars from LLM output ([3c1c636](https://github.com/dsissoko/oneticket-core/commit/3c1c6362f668ea83f81fc73f23553f3560f8356b))
+* **pipeline:** sanitize manifest.json before JSON.parse — strip invalid control chars from LLM output ([7a4c400](https://github.com/dsissoko/oneticket-core/commit/7a4c4008e0c0a624a86b7404e6555d1fd9e14024))
+* **release-please:** suppression package apps/appshell obsolète, manifest aligné sur v0.6.0 ([225b5aa](https://github.com/dsissoko/oneticket-core/commit/225b5aada7cfa63d6f88438f603a2a7412daed2c))
+* **test:** init-breakout uses [@leaddev](https://github.com/leaddev) not [@po](https://github.com/po) ([63d057c](https://github.com/dsissoko/oneticket-core/commit/63d057cf2640dbcf77a103be7c84c2708354b7ab))
+* **test:** init-breakout uses [@leaddev](https://github.com/leaddev) not [@po](https://github.com/po) ([a5febf3](https://github.com/dsissoko/oneticket-core/commit/a5febf3e64c308f6e3c1cc20b5fe513b521fc883))
+
 ## [0.6.0](https://github.com/dsissoko/oneticket-core/compare/OneTicket-v0.5.0...OneTicket-v0.6.0) (2026-06-05)
 
 
