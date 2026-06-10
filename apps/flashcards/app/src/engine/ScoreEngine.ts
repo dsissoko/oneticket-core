@@ -34,7 +34,8 @@ export class ScoreEngine implements RenderEngine {
         })
     );
 
-    const voice = new Voice({ num_beats: staveNotes.length, beat_value: 4 });
+    const voice = new Voice({ num_beats: 4, beat_value: 4 });
+    voice.setStrict(false);
     voice.addTickables(staveNotes);
 
     new Formatter().joinVoices([voice]).format([voice], 260);
