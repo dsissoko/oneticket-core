@@ -41,9 +41,68 @@ Each theme contains an appropriate number of cards (not limited to 12 — use al
 - **When** reviewed for completeness
 - **Then** each theme contains relevant, accurate country-capital pairs with no duplicates within a theme
 
+## Technical Notes
+
+### Hook Refactoring: useTheme.ts
+
+The `useTheme.ts` hook currently imports themes via hardcoded static imports (3 imports). With 12 new themed datasets, you have two options:
+
+1. **Static imports** (simple, explicit): Add all 12 JSON imports to `useTheme.ts`
+   ```typescript
+   import africaTheme from '../data/themes/africa.json';
+   import asiaTheme from '../data/themes/asia.json';
+   // ... 10 more imports
+   ```
+
+2. **Dynamic imports** (more scalable): Refactor the hook to use dynamic `import()` and scan the themes directory
+   ```typescript
+   const loadTheme = async (themeId: string) => import(`../data/themes/${themeId}.json`);
+   ```
+
+### Data File Cleanup
+
+- **Delete** `world-capitals.json` (being replaced by the 12 themed files)
+- Create 12 new JSON files in `apps/flashcards/app/src/data/themes/`:
+  - `africa.json`
+  - `antarctica.json`
+  - `asia.json`
+  - `europe-east.json`
+  - `europe-west.json`
+  - `north-america.json`
+  - `south-america.json`
+  - `australia.json`
+  - `brics-alliance.json`
+  - `nato-alliance.json`
+  - `gdp-biggest-20.json`
+  - `gdp-lowest-20.json`
+
+### Format Specification
+
+Each JSON file follows the existing format:
+```json
+{
+  "id": "africa",
+  "name": "Africa",
+  "renderEngineId": "markdown",
+  "cards": [
+    { "q": "Egypt", "a": "Cairo", "flag": "eg" },
+    { "q": "Nigeria", "a": "Abuja", "flag": "ng" }
+  ]
+}
+```
+
+Flag codes map to [flagcdn.com](https://flagcdn.com/) — use the 2-letter ISO country code as the flag identifier.
+
+### localStorage Migration
+
+The app may persist the selected theme id in localStorage. If the stored id (e.g., `"world-capitals"`) is no longer available:
+- Check if the theme exists in `useTheme().themes`
+- If not found, fall back to the first available theme (e.g., Africa)
+- This ensures users with old localStorage entries transition smoothly
+
 ## Related Epic
 
-[Epic 2 — Theme Reorganization: World Capitals into 12 Themes](epic-2-theme-reorganization/epic.md)
+[Epic 2 — Theme Reorganization: World Capitals into 12 Themes](../epic.md)
 
 ## Related Sprints
 

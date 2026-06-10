@@ -26,6 +26,10 @@ The home screen theme picker displays all 12 themes with clear, readable labels.
 - **When** the home screen loads
 - **Then** a default theme is pre-selected (e.g., Africa or first in list)
 
+## Technical Notes
+
+**ThemeToggle Automatic Adaptation**: The `ThemeToggle` component already renders themes dynamically from `useTheme().themes`. Once the 12 new imports are added to `useTheme.ts`, the theme picker will display them automatically — no major UI refactoring is required. The component will adapt seamlessly to the expanded theme list.
+
 ## Related Epic
 
 [Epic 2 — Theme Reorganization: World Capitals into 12 Themes](epic-2-theme-reorganization/epic.md)

@@ -22,11 +22,9 @@ Learners can now study capitals by continent, alliance, or economic ranking — 
 
 ## Related User Stories
 
-[US-009 — Define 12 Themed Capital Datasets](us-009-themed-datasets.md)
+[US-009 — Define 12 Themed Capital Datasets](user-stories/us-009-themed-datasets.md) (must be completed before US-010)
 
-[US-010 — Update Theme Picker with 12 Themes](us-010-theme-picker-update.md)
-
-[US-011 — Session Flow with Selected Theme](us-011-session-theme-flow.md)
+[US-010 — Update Theme Picker with 12 Themes](user-stories/us-010-theme-picker-update.md) (depends on US-009)
 
 ## Related Sprints
 
