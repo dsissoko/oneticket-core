@@ -1,0 +1,104 @@
+{
+  "issue": 1125,
+  "tasks": [
+    {
+      "id": "A",
+      "branch": "task/issue-1125-A",
+      "file": "apps/flashcards/docs/what/product-spec.md",
+      "content": "Update product-spec.md for the flashcards app. Add 'RenderEngine' to Business Concepts (section 6). Add 'Extensible card rendering (text, markdown, future SVG/audio)' to Product Goals (section 4). Add 'Rich rendering support via pluggable RenderEngine' to Product Capabilities (section 7). Keep all existing content intact. Ensure SITE_DESCRIPTION comment remains accurate. File must start with '# Product Specification' H1.",
+      "depends_on": [],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "B",
+      "branch": "task/issue-1125-B",
+      "file": "apps/flashcards/docs/what/epics/epic-1-render-engine/epic.md",
+      "content": "Create a new epic at apps/flashcards/docs/what/epics/epic-1-render-engine/epic.md using the epic template. Title: '# Epic 1 — RenderEngine Refactoring'. Goal: Refactor the Flashcards app to introduce a generic RenderEngine mechanism so each card side references a renderEngineId selecting the rendering implementation. Business Value: Enables rich rendering (SVG scores, audio, markdown) via clean extension point without breaking existing themes. Scope: Define RenderEngine interface, implement TextEngine and MarkdownEngine, create engine registry, migrate all 3 existing themes to extended CardSide format, implement precompute lifecycle in SessionScreen. Include Related User Stories section (leave placeholder comment per template). Include Related Sprints section (leave placeholder comment per template). Add frontmatter: ---\ntitle: 'Epic 1 — RenderEngine Refactoring'\n---",
+      "depends_on": [],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "C",
+      "branch": "task/issue-1125-C",
+      "file": "apps/flashcards/docs/what/epics/epic-1-render-engine/user-stories/us-005-render-engine-interface.md",
+      "content": "Create user story US-005 at apps/flashcards/docs/what/epics/epic-1-render-engine/user-stories/us-005-render-engine-interface.md using the us template. Title: '# US-005 — RenderEngine Interface and Registry'. Story: As a developer, I want a generic RenderEngine interface and engine registry so that card sides can be rendered by different implementations selected by ID. Expected Behavior: RenderEngine interface with render(data, target) and optional precompute(data) methods. Engine registry resolves by renderEngineId, defaults to TextEngine. Normalization helper converts plain string to { data, renderEngineId: 'text' }. Acceptance Criteria: RenderEngine interface defined and documented, Engine registry resolves by renderEngineId with TextEngine default, Normalization helper handles plain string → object format, Unit tests for registry and normalization. Related Epic: [Epic 1 — RenderEngine Refactoring](epic-1-render-engine/epic.md). Related Sprints: leave placeholder. Add frontmatter: ---\ntitle: 'US-005 — RenderEngine Interface and Registry'\n---",
+      "depends_on": [],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "D",
+      "branch": "task/issue-1125-D",
+      "file": "apps/flashcards/docs/what/epics/epic-1-render-engine/user-stories/us-006-text-markdown-engines.md",
+      "content": "Create user story US-006 at apps/flashcards/docs/what/epics/epic-1-render-engine/user-stories/us-006-text-markdown-engines.md using the us template. Title: '# US-006 — TextEngine and MarkdownEngine Implementations'. Story: As a learner, I want flashcard content to render correctly whether it is plain text or markdown so that I can study different types of content. Expected Behavior: TextEngine renders plain text into the target HTMLElement. MarkdownEngine converts markdown to HTML and renders into the target. Both implement the RenderEngine interface. Neither implements precompute — flip is always instant. Acceptance Criteria: TextEngine implemented and handles plain text, MarkdownEngine implemented and handles markdown-to-HTML, Both wired to engine registry ('text' and 'markdown' IDs), All existing tests pass without modification. Related Epic: [Epic 1 — RenderEngine Refactoring](epic-1-render-engine/epic.md). Related Sprints: leave placeholder. Add frontmatter: ---\ntitle: 'US-006 — TextEngine and MarkdownEngine Implementations'\n---",
+      "depends_on": [],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "E",
+      "branch": "task/issue-1125-E",
+      "file": "apps/flashcards/docs/what/epics/epic-1-render-engine/user-stories/us-007-session-preload.md",
+      "content": "Create user story US-007 at apps/flashcards/docs/what/epics/epic-1-render-engine/user-stories/us-007-session-preload.md using the us template. Title: '# US-007 — SessionScreen Precompute Lifecycle'. Story: As a learner, I want the back side of a card to be precomputed while I read the question so that the flip is instant when I tap. Expected Behavior: SessionScreen calls engine.precompute?.(back.data) immediately after question display. If precompute is still running when user taps to flip, SessionScreen waits for completion before flipping. TextEngine and MarkdownEngine do NOT implement precompute — flip is always instant. The mechanism must benefit future engines automatically. Acceptance Criteria: SessionScreen calls precompute immediately after question display, SessionScreen waits for precompute completion before flipping if still running, Precompute strategy is universal — applies to all engines, Existing tests pass without modification. Related Epic: [Epic 1 — RenderEngine Refactoring](epic-1-render-engine/epic.md). Related Sprints: leave placeholder. Add frontmatter: ---\ntitle: 'US-007 — SessionScreen Precompute Lifecycle'\n---",
+      "depends_on": [],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "F",
+      "branch": "task/issue-1125-F",
+      "file": "apps/flashcards/docs/what/epics/epic-1-render-engine/user-stories/us-008-dataset-migration.md",
+      "content": "Create user story US-008 at apps/flashcards/docs/what/epics/epic-1-render-engine/user-stories/us-008-dataset-migration.md using the us template. Title: '# US-008 — Dataset Migration to Extended CardSide Format'. Story: As a developer, I want all existing themes to adopt explicit renderEngineId per side so that the new rendering architecture works with zero visual regression. Expected Behavior: All 3 existing themes migrate to extended CardSide format: { front: { data: '...', renderEngineId: 'text' }, back: { data: '...', renderEngineId: 'text' } }. Conjugaisons back side uses 'markdown' engine for multiline content. Plain string format remains supported (backward compatible). SessionScreen and FlashcardDisplay wired to use resolved engine. Acceptance Criteria: All 3 existing themes migrated to extended CardSide format, Conjugaisons back side uses markdown engine, Plain string format remains backward compatible, All existing tests pass without modification, Build passes. Related Epic: [Epic 1 — RenderEngine Refactoring](epic-1-render-engine/epic.md). Related Sprints: leave placeholder. Add frontmatter: ---\ntitle: 'US-008 — Dataset Migration to Extended CardSide Format'\n---",
+      "depends_on": [],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "G",
+      "branch": "task/issue-1125-G",
+      "file": "apps/flashcards/docs/how/architecture.md",
+      "content": "Update architecture.md to document the RenderEngine refactoring. Add a new section '## RenderEngine Architecture' after the existing Hooks section. Include: the RenderEngine interface (render(data, target) and optional precompute(data)), CardSide type definition (string | { data: any; renderEngineId: string }), list of built-in engines (TextEngine, MarkdownEngine), engine registry pattern, normalization helper (plain string → { data, renderEngineId: 'text' }), precompute lifecycle in SessionScreen. Update the Key Types section to include the new RenderEngine interface and CardSide type alongside existing types. Update the Components table to note that FlashcardDisplay now uses resolved engine for rendering. Keep all existing content intact. File must start with '# Architecture' H1.",
+      "depends_on": [],
+      "status": "pending",
+      "role": "architect"
+    },
+    {
+      "id": "H",
+      "branch": "task/issue-1125-H",
+      "file": "apps/flashcards/docs/how/c4/containers.md",
+      "content": "Update containers.md to reflect the RenderEngine architecture. Add a new subsection after 'Component Details' titled '## RenderEngine Layer'. Document: TextEngine and MarkdownEngine as rendering implementations, Engine Registry as the resolution layer, how FlashcardDisplay delegates to the resolved engine. Update the Components table to note FlashcardDisplay now uses engine resolution. Keep all existing content and diagrams intact. File must start with '# Container C4 Diagram — Flashcards App' H1.",
+      "depends_on": [],
+      "status": "pending",
+      "role": "architect"
+    },
+    {
+      "id": "I",
+      "branch": "task/issue-1125-I",
+      "file": "apps/flashcards/docs/how/sprints/sprint-1-render-engine/sprint.md",
+      "content": "Create sprint document at apps/flashcards/docs/how/sprints/sprint-1-render-engine/sprint.md using the sprint template. Title: '# Sprint 1 — RenderEngine Foundation'. Description: This sprint introduces the generic RenderEngine mechanism to the flashcards app. It defines the RenderEngine interface, implements TextEngine and MarkdownEngine, creates the engine registry with normalization, implements the precompute lifecycle in SessionScreen, and migrates all 3 existing themes to the extended CardSide format with zero visual regression. Cross-references section with links to: Epic: [Epic 1 — RenderEngine Refactoring](../../what/epics/epic-1-render-engine/epic.md), US-005: [US-005 — RenderEngine Interface and Registry](us-005-render-engine-interface.md), US-006: [US-006 — TextEngine and MarkdownEngine Implementations](us-006-text-markdown-engines.md), US-007: [US-007 — SessionScreen Precompute Lifecycle](us-007-session-preload.md), US-008: [US-008 — Dataset Migration to Extended CardSide Format](us-008-dataset-migration.md). Include Technical Notes section with placeholder: '> Section owned by @architect. To be completed after @po creates this sprint.' Add frontmatter: ---\ntitle: 'Sprint 1 — RenderEngine Foundation'\n---",
+      "depends_on": [],
+      "status": "pending",
+      "role": "analyst"
+    },
+    {
+      "id": "J",
+      "branch": "task/issue-1125-J",
+      "file": "apps/flashcards/docs/how/sprints/sprint-1-render-engine/sprint.md",
+      "content": "Complete the ## Technical Notes section in apps/flashcards/docs/how/sprints/sprint-1-render-engine/sprint.md (produced by task I). Add architecture decisions, ADR references, and implementation guidance for: RenderEngine interface design (strategy pattern), engine registry implementation (Map-based lookup with fallback), normalization helper (type guard for CardSide), precompute lifecycle in SessionScreen (async state management with cancellation safety), backward compatibility strategy (plain string → TextEngine default), theme data migration approach (JSON transformation with validation). Reference architecture.md for the RenderEngine section. Do NOT modify any other part of the file. Keep the frontmatter and cross-references intact.",
+      "depends_on": ["I"],
+      "status": "pending",
+      "role": "architect"
+    },
+    {
+      "id": "K",
+      "branch": "task/issue-1125-K",
+      "file": "apps/flashcards/docs/what/epics/epic-1-render-engine/epic.md",
+      "content": "Update cross-references in ALL documentation files produced by this manifest. This is the LAST task — depends on ALL file-producing tasks. 1) In epic-1-render-engine/epic.md: fill '## Related User Stories' with links to us-005-render-engine-interface.md, us-006-text-markdown-engines.md, us-007-session-preload.md, us-008-dataset-migration.md (filename only, no ../). Fill '## Related Sprints' with link to sprint-1-render-engine/sprint.md (filename only). 2) In each US-005 through US-008: fill '## Related Sprints' with link to sprint-1-render-engine/sprint.md (filename only). 3) In sprint-1-render-engine/sprint.md: update cross-references to use filename-only links (no ../, no relative paths). 4) In epic-0-mvp/epic.md: fill '## Related User Stories' with links to us-001-home-screen.md, us-002-session-flip.md, us-003-results-screen.md, us-004-complete-flow.md (filename only). Use filename-only convention for ALL links — no relative paths, no ../. The build script resolves paths automatically.",
+      "depends_on": ["B", "C", "D", "E", "F", "I"],
+      "status": "pending",
+      "role": "analyst"
+    }
+  ]
+}
