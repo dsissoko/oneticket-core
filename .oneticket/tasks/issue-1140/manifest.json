@@ -89,7 +89,7 @@
       "file": "apps/flashcards/app/src/data/themes/nato-alliance.json",
       "content": "Create the file `apps/flashcards/app/src/data/themes/nato-alliance.json` with the NATO Alliance capitals dataset. Format: { \"id\": \"nato-alliance\", \"name\": \"NATO Alliance\", \"cards\": [...] }. Each card: { \"id\": \"card-N\", \"front\": { \"data\": \"<Country>\", \"renderEngineId\": \"text\" }, \"back\": { \"data\": \"<Capital>\\n\\n![<Country>](https://flagcdn.com/w80/<iso2>.png)\", \"renderEngineId\": \"markdown\" } }. Include all current NATO member countries (~32 as of 2024 including Sweden): Albania (Tirana, al), Belgium (Brussels, be), Bulgaria (Sofia, bg), Canada (Ottawa, ca), Croatia (Zagreb, hr), Czech Republic (Prague, cz), Denmark (Copenhagen, dk), Estonia (Tallinn, ee), Finland (Helsinki, fi), France (Paris, fr), Germany (Berlin, de), Greece (Athens, gr), Hungary (Budapest, hu), Iceland (Reykjavik, is), Italy (Rome, it), Latvia (Riga, lv), Lithuania (Vilnius, lt), Luxembourg (Luxembourg, lu), Montenegro (Podgorica, me), Netherlands (Amsterdam, nl), North Macedonia (Skopje, mk), Norway (Oslo, no), Poland (Warsaw, pl), Portugal (Lisbon, pt), Romania (Bucharest, ro), Slovakia (Bratislava, sk), Slovenia (Ljubljana, si), Spain (Madrid, es), Sweden (Stockholm, se), Türkiye (Ankara, tr), United Kingdom (London, gb), United States (Washington D.C., us). Use sequential card IDs starting at card-1. No duplicate countries.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "K",
