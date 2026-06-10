@@ -10,6 +10,11 @@ import { mockUsers as initialUsers } from './data/users';
 // In-memory store — resets on page reload (MSW runs in the browser)
 let users: User[] = [...initialUsers];
 
+/** Reset the in-memory users array to initial state — call in test beforeEach */
+export function resetMockUsers() {
+  users = [...initialUsers];
+}
+
 export const handlers = [
   // GET /api/users
   http.get('/api/users', () => {

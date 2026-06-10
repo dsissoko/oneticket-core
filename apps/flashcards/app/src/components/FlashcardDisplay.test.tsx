@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { screen, waitFor } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { renderWithProviders } from '../test/utils';
 import { FlashcardDisplay } from './FlashcardDisplay';
@@ -71,20 +71,23 @@ describe('FlashcardDisplay', () => {
     expect(back).toHaveTextContent('Paris');
   });
 
-  it('passes aria-label reflecting flipped state', () => {
+  it('shows aria-label for unflipped state', () => {
     const onFlip = vi.fn();
-    const { rerender } = renderWithProviders(
+    renderWithProviders(
       <FlashcardDisplay card={mockCard} isFlipped={false} onFlip={onFlip} />
     );
 
-    const buttonUnflipped = screen.getByRole('button');
-    expect(buttonUnflipped).toHaveAttribute('aria-label', 'Show capital');
+    const button = screen.getByRole('button');
+    expect(button).toHaveAttribute('aria-label', 'Show capital');
+  });
 
-    rerender(
+  it('shows aria-label for flipped state', () => {
+    const onFlip = vi.fn();
+    renderWithProviders(
       <FlashcardDisplay card={mockCard} isFlipped={true} onFlip={onFlip} />
     );
 
-    const buttonFlipped = screen.getByRole('button');
-    expect(buttonFlipped).toHaveAttribute('aria-label', 'Show country name');
+    const button = screen.getByRole('button');
+    expect(button).toHaveAttribute('aria-label', 'Show country name');
   });
 });

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useTheme } from './useTheme';
 
@@ -16,7 +16,7 @@ describe('useTheme', () => {
 
   it('loads world-capitals theme', () => {
     const { result } = renderHook(() => useTheme());
-    expect(result.current.themes).toHaveLength(2);
+    expect(result.current.themes).toHaveLength(3);
     expect(result.current.themes[0].id).toBe('world-capitals');
     expect(result.current.themes[0].name).toBe('World Capitals');
   });

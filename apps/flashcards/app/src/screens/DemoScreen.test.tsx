@@ -7,11 +7,12 @@ import { renderWithProviders } from '../test/utils';
 import { DemoScreen } from './DemoScreen';
 
 describe('DemoScreen', () => {
-  it('renders 4 tabs', () => {
+  it('renders 5 tabs', () => {
     renderWithProviders(<DemoScreen />);
     expect(screen.getByRole('tab', { name: 'Users' })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: 'Logger' })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: 'Theme' })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: 'Realtime' })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: 'Auth' })).toBeInTheDocument();
   });
 

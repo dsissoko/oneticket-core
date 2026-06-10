@@ -1,10 +1,11 @@
 import React from 'react';
 
 import { screen, fireEvent, waitFor } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { renderWithProviders } from '../test/utils';
 import { useUsers } from './useUsers';
 import { useCreateUser } from './useCreateUser';
+import { resetMockUsers } from '@/mocks/handlers';
 
 function CreateUserTest() {
   const { data: users } = useUsers();
@@ -21,6 +22,10 @@ function CreateUserTest() {
 }
 
 describe('useCreateUser', () => {
+  beforeEach(() => {
+    resetMockUsers();
+  });
+
   it('creates a user and invalidates users cache', async () => {
     renderWithProviders(<CreateUserTest />);
 

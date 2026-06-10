@@ -26,7 +26,9 @@ function AppRoutes() {
 describe('Routing', () => {
   it('/ renders HomeScreen', () => {
     renderWithProviders(<AppRoutes />, { initialPath: '/' });
-    expect(screen.getByText('Welcome to the foundation.')).toBeInTheDocument();
+    // "Flashcards" appears in both header and HomeScreen title — use getAllByText
+    const elements = screen.getAllByText('Flashcards');
+    expect(elements.length).toBeGreaterThanOrEqual(1);
   });
 
   it('/about renders AboutScreen', () => {

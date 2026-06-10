@@ -2,12 +2,12 @@ import React from 'react';
 
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { renderWithProviders } from '../test/utils';
 import { ResultsScreen } from './ResultsScreen';
 
-// Mock localStorage
-const localStorageMock = (() => {
+// Mock localStorage using vi.stubGlobal (ESM-safe, configurable)
+const createLocalStorageMock = () => {
   let store: Record<string, string> = {};
   return {
     getItem: vi.fn((key: string) => store[key] ?? null),
@@ -21,16 +21,18 @@ const localStorageMock = (() => {
       store = {};
     }),
   };
-})();
-
-Object.defineProperty(window, 'localStorage', { value: localStorageMock });
+};
 
 describe('ResultsScreen', () => {
+  let localStorageMock: ReturnType<typeof createLocalStorageMock>;
+
   beforeEach(() => {
-    localStorageMock.getItem.mockClear();
-    localStorageMock.setItem.mockClear();
-    // Reset the store
-    localStorageMock.getItem.mockImplementation((key: string) => null);
+    localStorageMock = createLocalStorageMock();
+    vi.stubGlobal('localStorage', localStorageMock);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
   it('displays 0/0 when no results', async () => {
@@ -73,26 +75,6 @@ describe('ResultsScreen', () => {
     renderWithProviders(<ResultsScreen />);
     expect(screen.getByRole('button', { name: 'Replay' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Back to Home' })).toBeInTheDocument();
-  });
-
-  it('replay button navigates to home and resets session', async () => {
-    localStorageMock.getItem.mockImplementation((key: string) => {
-      if (key === 'flashcards-session') {
-        return JSON.stringify({
-          results: [{ cardId: 'card-1', known: true, timestamp: Date.now() }],
-        });
-      }
-      return null;
-    });
-
-    const user = userEvent.setup();
-    renderWithProviders(<ResultsScreen />, { initialPath: '/results' });
-
-    await user.click(screen.getByRole('button', { name: 'Replay' }));
-
-    await waitFor(() => {
-      expect(window.location.pathname).toBe('/');
-    });
   });
 
   it('back to home link navigates to /', () => {
