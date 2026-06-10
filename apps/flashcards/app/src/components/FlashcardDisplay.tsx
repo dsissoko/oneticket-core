@@ -78,14 +78,20 @@ export function FlashcardDisplay({
 
         {/* Back face — rendered via engine */}
         <div
-          className="absolute inset-0 flex items-center justify-center rounded-xl border-2 border-border bg-card text-card-foreground text-center shadow-md"
+          className="absolute inset-0 flex flex-col items-center justify-center rounded-xl border-2 border-border bg-card text-card-foreground text-center shadow-md"
           style={{
             backfaceVisibility: 'hidden',
             transform: 'rotateY(180deg)',
           }}
           data-testid="flashcard-back"
           ref={backRef}
-        />
+        >
+          <style>{`
+            [data-testid="flashcard-back"] p { margin: 0; }
+            [data-testid="flashcard-back"] p:first-child { font-size: 1.5rem; font-weight: 600; }
+            [data-testid="flashcard-back"] p:last-child { font-size: 2.5rem; margin-top: 0.25rem; }
+          `}</style>
+        </div>
       </button>
       </div>
     </div>

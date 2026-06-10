@@ -2,17 +2,17 @@
   "id": "world-capitals",
   "name": "World Capitals",
   "cards": [
-    { "id": "card-1", "front": { "data": "France", "renderEngineId": "text" }, "back": { "data": "Paris", "renderEngineId": "text" } },
-    { "id": "card-2", "front": { "data": "Japan", "renderEngineId": "text" }, "back": { "data": "Tokyo", "renderEngineId": "text" } },
-    { "id": "card-3", "front": { "data": "Australia", "renderEngineId": "text" }, "back": { "data": "Canberra", "renderEngineId": "text" } },
-    { "id": "card-4", "front": { "data": "Brazil", "renderEngineId": "text" }, "back": { "data": "Brasília", "renderEngineId": "text" } },
-    { "id": "card-5", "front": { "data": "Canada", "renderEngineId": "text" }, "back": { "data": "Ottawa", "renderEngineId": "text" } },
-    { "id": "card-6", "front": { "data": "Germany", "renderEngineId": "text" }, "back": { "data": "Berlin", "renderEngineId": "text" } },
-    { "id": "card-7", "front": { "data": "Egypt", "renderEngineId": "text" }, "back": { "data": "Cairo", "renderEngineId": "text" } },
-    { "id": "card-8", "front": { "data": "India", "renderEngineId": "text" }, "back": { "data": "New Delhi", "renderEngineId": "text" } },
-    { "id": "card-9", "front": { "data": "China", "renderEngineId": "text" }, "back": { "data": "Beijing", "renderEngineId": "text" } },
-    { "id": "card-10", "front": { "data": "Argentina", "renderEngineId": "text" }, "back": { "data": "Buenos Aires", "renderEngineId": "text" } },
-    { "id": "card-11", "front": { "data": "Italy", "renderEngineId": "text" }, "back": { "data": "Rome", "renderEngineId": "text" } },
-    { "id": "card-12", "front": { "data": "South Korea", "renderEngineId": "text" }, "back": { "data": "Seoul", "renderEngineId": "text" } }
+    { "id": "card-1", "front": { "data": "France", "renderEngineId": "text" }, "back": { "data": "Paris  \n🇫🇷", "renderEngineId": "markdown" } },
+    { "id": "card-2", "front": { "data": "Japan", "renderEngineId": "text" }, "back": { "data": "Tokyo  \n🇯🇵", "renderEngineId": "markdown" } },
+    { "id": "card-3", "front": { "data": "Australia", "renderEngineId": "text" }, "back": { "data": "Canberra  \n🇦🇺", "renderEngineId": "markdown" } },
+    { "id": "card-4", "front": { "data": "Brazil", "renderEngineId": "text" }, "back": { "data": "Brasília  \n🇧🇷", "renderEngineId": "markdown" } },
+    { "id": "card-5", "front": { "data": "Canada", "renderEngineId": "text" }, "back": { "data": "Ottawa  \n🇨🇦", "renderEngineId": "markdown" } },
+    { "id": "card-6", "front": { "data": "Germany", "renderEngineId": "text" }, "back": { "data": "Berlin  \n🇩🇪", "renderEngineId": "markdown" } },
+    { "id": "card-7", "front": { "data": "Egypt", "renderEngineId": "text" }, "back": { "data": "Cairo  \n🇪🇬", "renderEngineId": "markdown" } },
+    { "id": "card-8", "front": { "data": "India", "renderEngineId": "text" }, "back": { "data": "New Delhi  \n🇮🇳", "renderEngineId": "markdown" } },
+    { "id": "card-9", "front": { "data": "China", "renderEngineId": "text" }, "back": { "data": "Beijing  \n🇨🇳", "renderEngineId": "markdown" } },
+    { "id": "card-10", "front": { "data": "Argentina", "renderEngineId": "text" }, "back": { "data": "Buenos Aires  \n🇦🇷", "renderEngineId": "markdown" } },
+    { "id": "card-11", "front": { "data": "Italy", "renderEngineId": "text" }, "back": { "data": "Rome  \n🇮🇹", "renderEngineId": "markdown" } },
+    { "id": "card-12", "front": { "data": "South Korea", "renderEngineId": "text" }, "back": { "data": "Seoul  \n🇰🇷", "renderEngineId": "markdown" } }
   ]
 }
