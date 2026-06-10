@@ -48,7 +48,7 @@
       "file": "apps/flashcards/app/src/engine/ScoreEngine.ts",
       "content": "Read `apps/flashcards/app/src/engine/ScoreEngine.ts` and verify it correctly implements the VexFlow 4.x rendering contract as specified in sprint.md.\n\nRequired implementation (from `apps/flashcards/docs/how/sprints/sprint-3-solege-theme/sprint.md` — section 'ScoreEngine — Implementation Guidance'):\n- Accepts `ScoreData` with `clef` and `notes` array\n- Clears `target.innerHTML` before rendering\n- Uses `Renderer`, `Stave`, `Voice`, `Formatter`, `StaveNote` from `vexflow`\n- Renderer size: 300×150, SVG backend\n- Stave at (10, 20) width 280, adds clef\n- Converts note names like `C4` → VexFlow key `c/4` via `noteToVexKey()`\n- Duration values: `\"w\"`, `\"h\"`, `\"q\"`\n- Voice beats = number of notes, beat_value = 4\n- Format voice to 260px width\n\nIf the file already contains a correct implementation matching these specs, make no changes. If any part is missing or wrong, fix it to match the spec exactly.\n\nThe `ScoreData` interface must be exported from this file:\n```typescript\nexport interface ScoreData {\n  clef: 'treble' | 'bass';\n  notes: Array<{ note: string; duration: string }>;\n}\n```\n\nAlso verify the class is exported: `export class ScoreEngine implements RenderEngine { ... }`",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "F",
