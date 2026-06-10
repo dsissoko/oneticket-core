@@ -288,8 +288,8 @@ Full list: `https://opencode.ai/zen/v1/models`
 |---|---|
 | **v0.1.0** — released | GitHub-native pipeline fully operational end-to-end |
 | **v0.5.0** — released | AppShell + Breakout delivered, product-spec stable, pipeline doc aligned |
-| **v0.6.0** — current | reverse-doc, label flow, 50 skills catalog, MonJournal app delivered, APM integration live |
-| **v0.7.0** — planned | Sprints replace slices as implementation planning unit, reinforced deterministic workflow (rogue branch prevention) |
+| **v0.6.0** — released | reverse-doc, label flow, 50 skills catalog, MonJournal app delivered, APM integration live |
+| **v0.7.0** — current | Sprints replace slices as implementation planning unit, reinforced deterministic workflow (rogue branch prevention) |
 | **V1** — planned | Routing & handoff matrix, autonomous mode, full-stack skills, sprint planning (`@po plan-sprint`) |
 | **V2** — planned | Cloud runtime, persistent sandboxes, multi-sandbox fan-out, observability |
 
