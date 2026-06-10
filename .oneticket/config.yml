@@ -92,7 +92,9 @@ agent_config:
     # model: opencode/claude-haiku-4-5   ← haiku test (validated commit 9011332)
     # model: opencode/gpt-5.1-codex      ← deprecated 2026-07-23
     model: opencode/qwen3.6-plus
-    permission: allow
+    permission:
+      "*": allow
+      task: deny
     share: "disabled"
     autoupdate: false
     disabled_providers:
