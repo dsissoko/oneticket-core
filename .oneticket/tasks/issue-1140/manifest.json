@@ -8,7 +8,7 @@
       "file": "apps/flashcards/app/src/data/themes/africa.json",
       "content": "Create the file `apps/flashcards/app/src/data/themes/africa.json` with the Africa themed capitals dataset. Format: { \"id\": \"africa\", \"name\": \"Africa\", \"cards\": [...] }. Each card: { \"id\": \"card-N\", \"front\": { \"data\": \"<Country>\", \"renderEngineId\": \"text\" }, \"back\": { \"data\": \"<Capital>\\n\\n![<Country>](https://flagcdn.com/w80/<iso2>.png)\", \"renderEngineId\": \"markdown\" } }. Include all 54 African sovereign countries with their capitals and correct 2-letter ISO codes for flagcdn.com. Use sequential card IDs starting at card-1. No duplicate countries. Accurate country-capital pairs only.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "B",
@@ -17,7 +17,7 @@
       "file": "apps/flashcards/app/src/data/themes/asia.json",
       "content": "Create the file `apps/flashcards/app/src/data/themes/asia.json` with the Asia themed capitals dataset. Format: { \"id\": \"asia\", \"name\": \"Asia\", \"cards\": [...] }. Each card: { \"id\": \"card-N\", \"front\": { \"data\": \"<Country>\", \"renderEngineId\": \"text\" }, \"back\": { \"data\": \"<Capital>\\n\\n![<Country>](https://flagcdn.com/w80/<iso2>.png)\", \"renderEngineId\": \"markdown\" } }. Include all ~48 Asian sovereign countries with their capitals and correct 2-letter ISO codes for flagcdn.com. Use sequential card IDs starting at card-1. No duplicate countries. Accurate country-capital pairs only.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "C",
@@ -26,7 +26,7 @@
       "file": "apps/flashcards/app/src/data/themes/europe-west.json",
       "content": "Create the file `apps/flashcards/app/src/data/themes/europe-west.json` with the Western Europe themed capitals dataset. Format: { \"id\": \"europe-west\", \"name\": \"Europe West\", \"cards\": [...] }. Each card: { \"id\": \"card-N\", \"front\": { \"data\": \"<Country>\", \"renderEngineId\": \"text\" }, \"back\": { \"data\": \"<Capital>\\n\\n![<Country>](https://flagcdn.com/w80/<iso2>.png)\", \"renderEngineId\": \"markdown\" } }. Include Western European countries (approximately: Andorra, Austria, Belgium, Cyprus, Denmark, Finland, France, Germany, Greece, Iceland, Ireland, Italy, Liechtenstein, Luxembourg, Malta, Monaco, Netherlands, Norway, Portugal, San Marino, Spain, Sweden, Switzerland, United Kingdom, Vatican City) with capitals and correct 2-letter ISO codes for flagcdn.com. Use sequential card IDs starting at card-1. No duplicate countries.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "D",
@@ -35,7 +35,7 @@
       "file": "apps/flashcards/app/src/data/themes/europe-east.json",
       "content": "Create the file `apps/flashcards/app/src/data/themes/europe-east.json` with the Eastern Europe themed capitals dataset. Format: { \"id\": \"europe-east\", \"name\": \"Europe East\", \"cards\": [...] }. Each card: { \"id\": \"card-N\", \"front\": { \"data\": \"<Country>\", \"renderEngineId\": \"text\" }, \"back\": { \"data\": \"<Capital>\\n\\n![<Country>](https://flagcdn.com/w80/<iso2>.png)\", \"renderEngineId\": \"markdown\" } }. Include Eastern European countries (approximately: Albania, Belarus, Bosnia and Herzegovina, Bulgaria, Croatia, Czech Republic, Estonia, Hungary, Kosovo, Latvia, Lithuania, Moldova, Montenegro, North Macedonia, Poland, Romania, Russia, Serbia, Slovakia, Slovenia, Ukraine) with capitals and correct 2-letter ISO codes for flagcdn.com. Use sequential card IDs starting at card-1. No duplicate countries.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "E",
@@ -44,7 +44,7 @@
       "file": "apps/flashcards/app/src/data/themes/north-america.json",
       "content": "Create the file `apps/flashcards/app/src/data/themes/north-america.json` with the North America themed capitals dataset. Format: { \"id\": \"north-america\", \"name\": \"North America\", \"cards\": [...] }. Each card: { \"id\": \"card-N\", \"front\": { \"data\": \"<Country>\", \"renderEngineId\": \"text\" }, \"back\": { \"data\": \"<Capital>\\n\\n![<Country>](https://flagcdn.com/w80/<iso2>.png)\", \"renderEngineId\": \"markdown\" } }. Include all North American sovereign countries (~23 including Caribbean nations: Antigua and Barbuda, Bahamas, Barbados, Belize, Canada, Costa Rica, Cuba, Dominica, Dominican Republic, El Salvador, Grenada, Guatemala, Haiti, Honduras, Jamaica, Mexico, Nicaragua, Panama, Saint Kitts and Nevis, Saint Lucia, Saint Vincent and the Grenadines, Trinidad and Tobago, United States) with capitals and correct 2-letter ISO codes for flagcdn.com. Use sequential card IDs starting at card-1. No duplicate countries.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "F",
@@ -53,7 +53,7 @@
       "file": "apps/flashcards/app/src/data/themes/south-america.json",
       "content": "Create the file `apps/flashcards/app/src/data/themes/south-america.json` with the South America themed capitals dataset. Format: { \"id\": \"south-america\", \"name\": \"South America\", \"cards\": [...] }. Each card: { \"id\": \"card-N\", \"front\": { \"data\": \"<Country>\", \"renderEngineId\": \"text\" }, \"back\": { \"data\": \"<Capital>\\n\\n![<Country>](https://flagcdn.com/w80/<iso2>.png)\", \"renderEngineId\": \"markdown\" } }. Include all 12 South American sovereign countries: Argentina (Buenos Aires, ar), Bolivia (Sucre, bo), Brazil (Brasília, br), Chile (Santiago, cl), Colombia (Bogotá, co), Ecuador (Quito, ec), Guyana (Georgetown, gy), Paraguay (Asunción, py), Peru (Lima, pe), Suriname (Paramaribo, sr), Uruguay (Montevideo, uy), Venezuela (Caracas, ve). Use sequential card IDs starting at card-1.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "G",
@@ -62,7 +62,7 @@
       "file": "apps/flashcards/app/src/data/themes/australia.json",
       "content": "Create the file `apps/flashcards/app/src/data/themes/australia.json` with the Australia/Oceania themed capitals dataset. Format: { \"id\": \"australia\", \"name\": \"Australia\", \"cards\": [...] }. Each card: { \"id\": \"card-N\", \"front\": { \"data\": \"<Country>\", \"renderEngineId\": \"text\" }, \"back\": { \"data\": \"<Capital>\\n\\n![<Country>](https://flagcdn.com/w80/<iso2>.png)\", \"renderEngineId\": \"markdown\" } }. Include Oceania/Pacific sovereign countries (~14): Australia (Canberra, au), Fiji (Suva, fj), Kiribati (South Tarawa, ki), Marshall Islands (Majuro, mh), Micronesia (Palikir, fm), Nauru (Yaren, nr), New Zealand (Wellington, nz), Palau (Ngerulmud, pw), Papua New Guinea (Port Moresby, pg), Samoa (Apia, ws), Solomon Islands (Honiara, sb), Tonga (Nukualofa, to), Tuvalu (Funafuti, tv), Vanuatu (Port Vila, vu). Use sequential card IDs starting at card-1. No duplicate countries.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "H",
@@ -71,7 +71,7 @@
       "file": "apps/flashcards/app/src/data/themes/antarctica.json",
       "content": "Create the file `apps/flashcards/app/src/data/themes/antarctica.json` with the Antarctica themed educational dataset. Format: { \"id\": \"antarctica\", \"name\": \"Antarctica\", \"cards\": [...] }. Each card: { \"id\": \"card-N\", \"front\": { \"data\": \"<Territory/Station>\", \"renderEngineId\": \"text\" }, \"back\": { \"data\": \"<Administrative center/main station>\\n\\n![<Country>](https://flagcdn.com/w80/<iso2>.png)\", \"renderEngineId\": \"markdown\" } }. Include educational entries for Antarctica: British Antarctic Territory (Stanley/Rothera, gb), Australian Antarctic Territory (Kingston, au), French Southern and Antarctic Lands (Saint-Pierre, fr), Norwegian Antarctic Territory (Oslo/Troll, no). Since Antarctica has no sovereign states, use territorial claims and their administrative centers or main research stations. Use sequential card IDs starting at card-1.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "I",
@@ -80,7 +80,7 @@
       "file": "apps/flashcards/app/src/data/themes/brics-alliance.json",
       "content": "Create the file `apps/flashcards/app/src/data/themes/brics-alliance.json` with the BRICS Alliance capitals dataset. Format: { \"id\": \"brics-alliance\", \"name\": \"BRICS Alliance\", \"cards\": [...] }. Each card: { \"id\": \"card-N\", \"front\": { \"data\": \"<Country>\", \"renderEngineId\": \"text\" }, \"back\": { \"data\": \"<Capital>\\n\\n![<Country>](https://flagcdn.com/w80/<iso2>.png)\", \"renderEngineId\": \"markdown\" } }. Include all current BRICS member countries (as of 2024 expansion): Brazil (Brasília, br), Russia (Moscow, ru), India (New Delhi, in), China (Beijing, cn), South Africa (Pretoria, za), Egypt (Cairo, eg), Ethiopia (Addis Ababa, et), Iran (Tehran, ir), Saudi Arabia (Riyadh, sa), UAE (Abu Dhabi, ae). Use sequential card IDs starting at card-1. No duplicate countries.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "J",
@@ -89,7 +89,7 @@
       "file": "apps/flashcards/app/src/data/themes/nato-alliance.json",
       "content": "Create the file `apps/flashcards/app/src/data/themes/nato-alliance.json` with the NATO Alliance capitals dataset. Format: { \"id\": \"nato-alliance\", \"name\": \"NATO Alliance\", \"cards\": [...] }. Each card: { \"id\": \"card-N\", \"front\": { \"data\": \"<Country>\", \"renderEngineId\": \"text\" }, \"back\": { \"data\": \"<Capital>\\n\\n![<Country>](https://flagcdn.com/w80/<iso2>.png)\", \"renderEngineId\": \"markdown\" } }. Include all current NATO member countries (~32 as of 2024 including Sweden): Albania (Tirana, al), Belgium (Brussels, be), Bulgaria (Sofia, bg), Canada (Ottawa, ca), Croatia (Zagreb, hr), Czech Republic (Prague, cz), Denmark (Copenhagen, dk), Estonia (Tallinn, ee), Finland (Helsinki, fi), France (Paris, fr), Germany (Berlin, de), Greece (Athens, gr), Hungary (Budapest, hu), Iceland (Reykjavik, is), Italy (Rome, it), Latvia (Riga, lv), Lithuania (Vilnius, lt), Luxembourg (Luxembourg, lu), Montenegro (Podgorica, me), Netherlands (Amsterdam, nl), North Macedonia (Skopje, mk), Norway (Oslo, no), Poland (Warsaw, pl), Portugal (Lisbon, pt), Romania (Bucharest, ro), Slovakia (Bratislava, sk), Slovenia (Ljubljana, si), Spain (Madrid, es), Sweden (Stockholm, se), Türkiye (Ankara, tr), United Kingdom (London, gb), United States (Washington D.C., us). Use sequential card IDs starting at card-1. No duplicate countries.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "K",
@@ -98,7 +98,7 @@
       "file": "apps/flashcards/app/src/data/themes/gdp-biggest-20.json",
       "content": "Create the file `apps/flashcards/app/src/data/themes/gdp-biggest-20.json` with exactly 20 cards for the top 20 GDP countries dataset. Format: { \"id\": \"gdp-biggest-20\", \"name\": \"20 biggest GDP\", \"cards\": [...] }. Each card: { \"id\": \"card-N\", \"front\": { \"data\": \"<Country>\", \"renderEngineId\": \"text\" }, \"back\": { \"data\": \"<Capital>\\n\\n![<Country>](https://flagcdn.com/w80/<iso2>.png)\", \"renderEngineId\": \"markdown\" } }. Include the 20 countries with the largest nominal GDP (approximate 2023-2024 ranking): 1. United States (Washington D.C., us), 2. China (Beijing, cn), 3. Germany (Berlin, de), 4. Japan (Tokyo, jp), 5. India (New Delhi, in), 6. United Kingdom (London, gb), 7. France (Paris, fr), 8. Italy (Rome, it), 9. Brazil (Brasília, br), 10. Canada (Ottawa, ca), 11. Russia (Moscow, ru), 12. South Korea (Seoul, kr), 13. Australia (Canberra, au), 14. Mexico (Mexico City, mx), 15. Spain (Madrid, es), 16. Indonesia (Jakarta, id), 17. Netherlands (Amsterdam, nl), 18. Saudi Arabia (Riyadh, sa), 19. Türkiye (Ankara, tr), 20. Switzerland (Bern, ch). Exactly 20 cards, use sequential card IDs starting at card-1.",
       "depends_on": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "L",
@@ -106,7 +106,19 @@
       "branch": "task/issue-1140-L",
       "file": "apps/flashcards/app/src/data/themes/gdp-lowest-20.json",
       "content": "Create the file `apps/flashcards/app/src/data/themes/gdp-lowest-20.json` with exactly 20 cards for the 20 lowest GDP countries dataset. Then update `apps/flashcards/app/src/hooks/useTheme.ts` to import all 12 new theme JSON files and replace the worldCapitalsTheme import. Then update `apps/flashcards/app/src/hooks/useTheme.test.ts` to match 14 themes and verify Africa is themes[0]. Then update `apps/flashcards/app/src/screens/HomeScreen.test.tsx` to expect 'Africa' instead of 'World Capitals'. Finally, delete `apps/flashcards/app/src/data/themes/world-capitals.json`.\n\nStep 1 — Create `apps/flashcards/app/src/data/themes/gdp-lowest-20.json`:\nFormat: { \"id\": \"gdp-lowest-20\", \"name\": \"20 lowest GDP\", \"cards\": [...] }. Each card: { \"id\": \"card-N\", \"front\": { \"data\": \"<Country>\", \"renderEngineId\": \"text\" }, \"back\": { \"data\": \"<Capital>\\n\\n![<Country>](https://flagcdn.com/w80/<iso2>.png)\", \"renderEngineId\": \"markdown\" } }. Use 20 countries with the lowest nominal GDP: Tuvalu (Funafuti, tv), Nauru (Yaren, nr), Palau (Ngerulmud, pw), Marshall Islands (Majuro, mh), Kiribati (South Tarawa, ki), Micronesia (Palikir, fm), Tonga (Nukualofa, to), Samoa (Apia, ws), Vanuatu (Port Vila, vu), São Tomé and Príncipe (São Tomé, st), Comoros (Moroni, km), Solomon Islands (Honiara, sb), Guinea-Bissau (Bissau, gw), Gambia (Banjul, gm), Sierra Leone (Freetown, sl), Eritrea (Asmara, er), Burundi (Gitega, bi), Central African Republic (Bangui, cf), Niger (Niamey, ne), Liberia (Monrovia, lr). Exactly 20 cards.\n\nStep 2 — Update `apps/flashcards/app/src/hooks/useTheme.ts`: Replace the import of worldCapitalsTheme (line 3) with 12 new imports: africaTheme from '@/data/themes/africa.json', antarcticaTheme from '@/data/themes/antarctica.json', asiaTheme from '@/data/themes/asia.json', europeEastTheme from '@/data/themes/europe-east.json', europeWestTheme from '@/data/themes/europe-west.json', northAmericaTheme from '@/data/themes/north-america.json', southAmericaTheme from '@/data/themes/south-america.json', australiaTheme from '@/data/themes/australia.json', bricsAllianceTheme from '@/data/themes/brics-alliance.json', natoAllianceTheme from '@/data/themes/nato-alliance.json', gdpBiggest20Theme from '@/data/themes/gdp-biggest-20.json', gdpLowest20Theme from '@/data/themes/gdp-lowest-20.json'. Keep multiplicationTablesTheme and conjugaisonsFrTheme imports. Update the themes array to list all 14: 12 capital themes first (africa, antarctica, asia, europeEast, europeWest, northAmerica, southAmerica, australia, bricsAlliance, natoAlliance, gdpBiggest20, gdpLowest20), then multiplicationTables, then conjugaisonsFr. Update JSDoc comment (remove world-capitals reference, use africa). The localStorage fallback `themes.find((t) => t.id === selectedThemeId) ?? null` already handles unknown ids correctly — no code logic change needed.\n\nStep 3 — Update `apps/flashcards/app/src/hooks/useTheme.test.ts`: Replace the test 'loads world-capitals theme' with 'loads 14 themes including africa': expect(result.current.themes).toHaveLength(14) and expect(result.current.themes[0].id).toBe('africa'). Update 'returns first theme as current theme when none selected': expect(result.current.currentTheme?.id).toBe('africa'). Update 'selects theme by id': use selectTheme('africa') instead of 'world-capitals'. Update 'persists selected theme to localStorage': use 'africa' key. Update 'restores selected theme from localStorage on init': use 'africa'. Add a new test 'falls back to africa when world-capitals stored in localStorage': stub localStorage.getItem to return 'world-capitals', expect currentTheme?.id to be null (themes.find returns undefined, ?? null applies). Keep 'returns null currentTheme when invalid theme id stored' test as is.\n\nStep 4 — Update `apps/flashcards/app/src/screens/HomeScreen.test.tsx`: In test 'renders theme picker showing World Capitals', change test name to 'renders theme picker showing Africa' and update assertion from toContain('World Capitals') to toContain('Africa').\n\nStep 5 — Delete `apps/flashcards/app/src/data/themes/world-capitals.json` using `git rm apps/flashcards/app/src/data/themes/world-capitals.json` command.",
-      "depends_on": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"],
+      "depends_on": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K"
+      ],
       "status": "pending"
     }
   ]
