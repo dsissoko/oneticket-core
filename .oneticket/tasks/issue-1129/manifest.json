@@ -16,7 +16,7 @@
       "file": "apps/flashcards/app/package.json",
       "content": "Install the 'marked' library (markdown-to-HTML converter) as a dependency.\n\nRun: npm install marked --prefix apps/flashcards/app\n\nAlso install types: npm install @types/marked --save-dev --prefix apps/flashcards/app\n\nVerify package.json is updated with marked in dependencies.\n\nThis is needed for the MarkdownEngine implementation.",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "dev"
     },
     {
