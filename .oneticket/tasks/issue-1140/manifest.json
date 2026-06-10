@@ -53,7 +53,7 @@
       "file": "apps/flashcards/app/src/data/themes/south-america.json",
       "content": "Create the file `apps/flashcards/app/src/data/themes/south-america.json` with the South America themed capitals dataset. Format: { \"id\": \"south-america\", \"name\": \"South America\", \"cards\": [...] }. Each card: { \"id\": \"card-N\", \"front\": { \"data\": \"<Country>\", \"renderEngineId\": \"text\" }, \"back\": { \"data\": \"<Capital>\\n\\n![<Country>](https://flagcdn.com/w80/<iso2>.png)\", \"renderEngineId\": \"markdown\" } }. Include all 12 South American sovereign countries: Argentina (Buenos Aires, ar), Bolivia (Sucre, bo), Brazil (Brasília, br), Chile (Santiago, cl), Colombia (Bogotá, co), Ecuador (Quito, ec), Guyana (Georgetown, gy), Paraguay (Asunción, py), Peru (Lima, pe), Suriname (Paramaribo, sr), Uruguay (Montevideo, uy), Venezuela (Caracas, ve). Use sequential card IDs starting at card-1.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "G",
