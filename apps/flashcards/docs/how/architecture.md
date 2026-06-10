@@ -84,6 +84,39 @@ type CardSide = string | { data: any; renderEngineId: string }
 |---|---|---|---|
 | TextEngine | `text` | Plain text rendering | No |
 | MarkdownEngine | `markdown` | Markdown to HTML conversion | No |
+| ScoreEngine | `score` | VexFlow SVG music score — question side | No |
+| ScoreAudioEngine | `score-audio` | VexFlow SVG + Tone.js audio playback — answer side | Yes |
+
+### ScoreData Interface
+
+```typescript
+interface ScoreData {
+  clef: 'treble' | 'bass'
+  notes: Array<{ note: string; duration: string }>
+}
+```
+
+Used by both `ScoreEngine` and `ScoreAudioEngine`. Note names follow VexFlow format (e.g. `C4`, `D4`). Duration values: `"w"` (whole), `"h"` (half), `"q"` (quarter).
+
+### ScoreAudioEngine — Audio Lifecycle
+
+`precompute(data)` pre-schedules the Tone.js note sequence in the background while the learner reads the question. Audio playback starts inside `render()` — which is triggered by the flip gesture (constituting the required Web Audio API user gesture).
+
+```
+Question displayed
+    └─► engine.precompute(back.data)   ← pre-schedules Tone.js sequence
+              │
+              └─► runs in background
+[User taps to flip]
+    └─► engine.render(back.data, target)  ← injects SVG + triggers audio play
+```
+
+### External Dependencies (Solfège)
+
+| Library | Version | Purpose |
+|---|---|---|
+| `vexflow` | `^4.2.2` | SVG music notation rendering |
+| `tone` | `^15.0.4` | Web Audio API — browser note playback |
 
 ### Engine Registry
 

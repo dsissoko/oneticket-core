@@ -40,3 +40,5 @@ graph LR
 |---|---|
 | `localStorage` | Persists theme selection, session results, and progress across visits |
 | `MSW` | Intercepts and mocks API calls for consistent offline/demo behavior |
+| `VexFlow (bundled)` | SVG music notation rendering — used by ScoreEngine and ScoreAudioEngine |
+| `Tone.js (bundled)` | Web Audio API abstraction — used by ScoreAudioEngine for note playback |
