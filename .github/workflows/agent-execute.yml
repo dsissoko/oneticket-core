@@ -205,8 +205,14 @@ jobs:
           IS_FANOUT_TASK: ${{ inputs.is_fanout_task }}
         run: node src/notify-agent-failure.mjs
 
+      # [DETERMINISTIC] Push branch on success
+      - name: Push branch
+        if: steps.run-agent.outcome == 'success'
+        run: git push origin ${{ inputs.branch }}
+
       # [GUARD] Close rogue PRs and delete rogue branches created by the agent
       # Protects against opencode/dispatch-* branches created when switched=true is not honored
+      # Runs AFTER push — a cleanup failure must never block the code push
       - name: Cleanup rogue branches
         if: steps.run-agent.outcome == 'success'
         env:
@@ -215,12 +221,12 @@ jobs:
         run: |
           # Find and close any open PR on opencode/dispatch-* branches
           ROGUE_PRS=$(gh pr list --repo "$REPO" --state open --json number,headRefName \
-            --jq '.[] | select(.headRefName | startswith("opencode/dispatch-")) | .number')
+            --jq '.[] | select(.headRefName | startswith("opencode/dispatch-")) | .number' 2>/dev/null || echo "")
           if [ -n "$ROGUE_PRS" ]; then
             for PR_NUM in $ROGUE_PRS; do
               echo "[cleanup] Closing rogue PR #$PR_NUM"
               gh pr close "$PR_NUM" --repo "$REPO" \
-                --comment "Closed automatically — rogue branch created by agent instead of committing to \`${{ inputs.branch }}\`. See fix/issue-1123."
+                --comment "Closed automatically — rogue branch created by agent instead of committing to \`${{ inputs.branch }}\`. See fix/issue-1123." || true
             done
           fi
           # Delete rogue remote branches
@@ -231,11 +237,6 @@ jobs:
               git push origin --delete "$B" || true
             done
           fi
-
-      # [DETERMINISTIC] Push branch on success
-      - name: Push branch
-        if: steps.run-agent.outcome == 'success'
-        run: git push origin ${{ inputs.branch }}
 
       # [DETERMINISTIC] Create PR feature/issue-N → main if files were pushed
       # Idempotent — skips if PR exists, skips if no commits ahead, skips for task/* branches
