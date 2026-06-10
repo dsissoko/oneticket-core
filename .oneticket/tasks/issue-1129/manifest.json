@@ -7,7 +7,7 @@
       "file": "apps/flashcards/app/src/types/index.ts",
       "content": "Update src/types/index.ts to add the RenderEngine interface and CardSide union type.\n\nAdd these types:\n```typescript\ninterface RenderEngine {\n  render(data: any, target: HTMLElement): void\n  precompute?(data: any): Promise<void>\n}\n\ntype CardSide = string | { data: any; renderEngineId: string }\n```\n\nUpdate the Card interface so front and back use CardSide instead of string:\n```typescript\ninterface Card {\n  id: string;\n  front: CardSide;\n  back: CardSide;\n}\n```\n\nKeep all existing types (LearningMode, Theme, SessionResult) unchanged.\nExport the new types (RenderEngine, CardSide) alongside existing exports.\n\nReference: apps/flashcards/docs/how/architecture.md — Key Types section\nReference: apps/flashcards/docs/how/sprints/sprint-1-render-engine/sprint.md — ADR-003",
       "depends_on": [],
-      "status": "pending",
+      "status": "in_progress",
       "role": "dev"
     },
     {
@@ -16,7 +16,7 @@
       "file": "apps/flashcards/app/package.json",
       "content": "Install the 'marked' library (markdown-to-HTML converter) as a dependency.\n\nRun: npm install marked --prefix apps/flashcards/app\n\nAlso install types: npm install @types/marked --save-dev --prefix apps/flashcards/app\n\nVerify package.json is updated with marked in dependencies.\n\nThis is needed for the MarkdownEngine implementation.",
       "depends_on": [],
-      "status": "pending",
+      "status": "in_progress",
       "role": "dev"
     },
     {
@@ -24,7 +24,9 @@
       "branch": "task/issue-1129-C",
       "file": "apps/flashcards/app/src/engine/EngineRegistry.ts",
       "content": "Create src/engine/EngineRegistry.ts with the EngineRegistry class and normalizeCardSide helper.\n\nImplement:\n```typescript\nimport type { RenderEngine, CardSide } from '@/types';\n\nclass EngineRegistry {\n  private engines = new Map<string, RenderEngine>()\n\n  register(id: string, engine: RenderEngine): void {\n    this.engines.set(id, engine)\n  }\n\n  resolve(id?: string): RenderEngine {\n    if (!id || !this.engines.has(id)) {\n      // Fallback: return TextEngine if registered, or a minimal text renderer\n      const fallback = this.engines.get('text')\n      if (fallback) return fallback\n      // Minimal fallback if text engine not yet registered\n      return {\n        render(data: any, target: HTMLElement) {\n          target.textContent = String(data ?? '')\n        }\n      }\n    }\n    return this.engines.get(id)!\n  }\n}\n\nfunction normalizeCardSide(side: CardSide): { data: any; renderEngineId: string } {\n  if (typeof side === 'string') return { data: side, renderEngineId: 'text' }\n  return side\n}\n\n// Singleton instance\nconst engineRegistry = new EngineRegistry()\n\nexport { EngineRegistry, normalizeCardSide, engineRegistry }\nexport type { RenderEngine }\n```\n\nRules:\n- resolve() never throws — always returns a valid engine\n- Falls back to TextEngine (id='text') for unknown or missing IDs\n- normalizeCardSide converts plain string → { data, renderEngineId: 'text' }\n- Export a singleton instance `engineRegistry` for use across the app\n\nReference: apps/flashcards/docs/how/sprints/sprint-1-render-engine/sprint.md — sections 2 and 3",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -33,7 +35,9 @@
       "branch": "task/issue-1129-D",
       "file": "apps/flashcards/app/src/engine/TextEngine.ts",
       "content": "Create src/engine/TextEngine.ts implementing the RenderEngine interface for plain text rendering.\n\nImplement:\n```typescript\nimport type { RenderEngine } from '@/types';\n\nconst TextEngine: RenderEngine = {\n  render(data: any, target: HTMLElement): void {\n    target.textContent = String(data ?? '')\n  }\n}\n\nexport { TextEngine }\n```\n\nRules:\n- render() is synchronous — sets target.textContent directly\n- No precompute implementation — flip is always instant\n- Engine must be pure — no side effects beyond target DOM\n- Handle null/undefined data gracefully (render as empty string)\n\nReference: apps/flashcards/docs/how/architecture.md — Built-in Engines table\nReference: apps/flashcards/docs/how/sprints/sprint-1-render-engine/sprint.md — section 1",
-      "depends_on": ["A"],
+      "depends_on": [
+        "A"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -42,7 +46,10 @@
       "branch": "task/issue-1129-E",
       "file": "apps/flashcards/app/src/engine/MarkdownEngine.ts",
       "content": "Create src/engine/MarkdownEngine.ts implementing the RenderEngine interface for markdown-to-HTML rendering.\n\nFirst, ensure 'marked' library is installed:\nnpm install marked --prefix apps/flashcards/app\n\nImplement:\n```typescript\nimport { marked } from 'marked';\nimport type { RenderEngine } from '@/types';\n\nconst MarkdownEngine: RenderEngine = {\n  render(data: any, target: HTMLElement): void {\n    const markdown = String(data ?? '')\n    target.innerHTML = marked.parse(markdown, { async: false }) as string\n  }\n}\n\nexport { MarkdownEngine }\n```\n\nRules:\n- render() is synchronous — uses marked.parse with async: false\n- No precompute implementation — flip is always instant\n- Engine must be pure — no side effects beyond target DOM\n- Handle null/undefined data gracefully (render as empty string)\n\nReference: apps/flashcards/docs/how/architecture.md — Built-in Engines table\nReference: apps/flashcards/docs/how/sprints/sprint-1-render-engine/sprint.md — section 1",
-      "depends_on": ["A", "B"],
+      "depends_on": [
+        "A",
+        "B"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -51,7 +58,10 @@
       "branch": "task/issue-1129-F",
       "file": "apps/flashcards/app/src/components/FlashcardDisplay.tsx",
       "content": "Update src/components/FlashcardDisplay.tsx to accept CardSide type and render via resolved engine.\n\nCurrent component renders card.front and card.back as plain strings. Update it to:\n\n1. Import engineRegistry and normalizeCardSide from '@/engine/EngineRegistry'\n2. Change the component to accept card with CardSide front/back (already defined in types)\n3. Use a ref for the front and back face divs to render via engine\n4. Call engine.render() via useEffect when the card or flip state changes\n\nKey implementation:\n- Create refs: frontRef and backRef for the target divs\n- Resolve engines: const frontEngine = engineRegistry.resolve(normalizeCardSide(card.front).renderEngineId)\n- Render front: useEffect that calls frontEngine.render(normalizeCardSide(card.front).data, frontRef.current!)\n- Render back: useEffect that calls backEngine.render(normalizeCardSide(card.back).data, backRef.current!)\n- The effects should run when card.id or isFlipped changes\n\nKeep the existing flip animation, styling, and keyboard handling intact.\nKeep the existing data-testid attributes (flashcard-container, flashcard-front, flashcard-back).\n\nCRITICAL: All existing tests in FlashcardDisplay.test.tsx must pass without modification. The tests pass Card objects with plain string front/back — the normalization helper handles this automatically.\n\nReference: apps/flashcards/docs/how/sprints/sprint-1-render-engine/sprint.md — sections 3 and 5",
-      "depends_on": ["A", "C"],
+      "depends_on": [
+        "A",
+        "C"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -60,7 +70,10 @@
       "branch": "task/issue-1129-G",
       "file": "apps/flashcards/app/src/screens/SessionScreen.tsx",
       "content": "Update src/screens/SessionScreen.tsx to implement the precompute lifecycle.\n\nAdd precompute support:\n1. Import engineRegistry and normalizeCardSide from '@/engine/EngineRegistry'\n2. Add state: const [precomputePromise, setPrecomputePromise] = useState<Promise<void> | null>(null)\n3. After the question (front side) is displayed, start precompute for the back side:\n   - Add a useEffect that triggers when currentCard changes and isFlipped is false\n   - Resolve the back engine: const backEngine = engineRegistry.resolve(normalizeCardSide(currentCard.back).renderEngineId)\n   - Call precompute if available: const promise = backEngine.precompute?.(normalizeCardSide(currentCard.back).data)\n   - Store promise: setPrecomputePromise(promise ?? null)\n4. Modify handleFlip to wait for precompute before flipping:\n   ```typescript\n   const handleFlip = useCallback(async () => {\n     if (precomputePromise) {\n       try {\n         await precomputePromise\n       } catch {\n         // Fallback: proceed with flip even if precompute failed\n       }\n     }\n     setIsFlipped((prev) => !prev)\n   }, [precomputePromise])\n   ```\n5. Cancel/reset precompute when card changes (the useEffect on currentCard handles this)\n\nKeep all existing functionality: shuffle, scoring, navigation, progress display.\n\nCRITICAL: All existing tests in SessionScreen.test.tsx must pass without modification. TextEngine and MarkdownEngine do NOT implement precompute, so flip remains instant for current themes.\n\nReference: apps/flashcards/docs/how/sprints/sprint-1-render-engine/sprint.md — section 4 (Precompute Lifecycle)\nReference: apps/flashcards/docs/how/architecture.md — Precompute Lifecycle in SessionScreen",
-      "depends_on": ["A", "C"],
+      "depends_on": [
+        "A",
+        "C"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -69,7 +82,11 @@
       "branch": "task/issue-1129-H",
       "file": "apps/flashcards/app/src/main.tsx",
       "content": "Update src/main.tsx to register TextEngine and MarkdownEngine in the engine registry at app startup.\n\nAdd these imports:\n```typescript\nimport { engineRegistry } from '@/engine/EngineRegistry'\nimport { TextEngine } from '@/engine/TextEngine'\nimport { MarkdownEngine } from '@/engine/MarkdownEngine'\n```\n\nBefore ReactDOM.createRoot().render(), register the engines:\n```typescript\nengineRegistry.register('text', TextEngine)\nengineRegistry.register('markdown', MarkdownEngine)\n```\n\nKeep all existing imports, app setup, and rendering logic intact.\n\nReference: apps/flashcards/docs/how/sprints/sprint-1-render-engine/sprint.md — section 2 (Engine Registry)",
-      "depends_on": ["C", "D", "E"],
+      "depends_on": [
+        "C",
+        "D",
+        "E"
+      ],
       "status": "pending",
       "role": "dev"
     },
@@ -79,7 +96,7 @@
       "file": "apps/flashcards/app/src/data/themes/world-capitals.json",
       "content": "Migrate apps/flashcards/app/src/data/themes/world-capitals.json to the extended CardSide format.\n\nConvert every card from:\n```json\n{ \"id\": \"card-1\", \"front\": \"France\", \"back\": \"Paris\" }\n```\nTo:\n```json\n{ \"id\": \"card-1\", \"front\": { \"data\": \"France\", \"renderEngineId\": \"text\" }, \"back\": { \"data\": \"Paris\", \"renderEngineId\": \"text\" } }\n```\n\nAll 12 cards must be migrated. Both front and back use renderEngineId: 'text'.\n\nKeep the theme id, name, and card ids unchanged.\n\nReference: apps/flashcards/docs/how/sprints/sprint-1-render-engine/sprint.md — section 6",
       "depends_on": [],
-      "status": "pending",
+      "status": "in_progress",
       "role": "dev"
     },
     {
@@ -88,7 +105,7 @@
       "file": "apps/flashcards/app/src/data/themes/multiplication-tables.json",
       "content": "Migrate apps/flashcards/app/src/data/themes/multiplication-tables.json to the extended CardSide format.\n\nConvert every card from:\n```json\n{ \"id\": \"mult-1-1\", \"front\": \"1 × 1\", \"back\": \"1\" }\n```\nTo:\n```json\n{ \"id\": \"mult-1-1\", \"front\": { \"data\": \"1 × 1\", \"renderEngineId\": \"text\" }, \"back\": { \"data\": \"1\", \"renderEngineId\": \"text\" } }\n```\n\nAll 100 cards must be migrated. Both front and back use renderEngineId: 'text'.\n\nKeep the theme id, name, and card ids unchanged.\n\nReference: apps/flashcards/docs/how/sprints/sprint-1-render-engine/sprint.md — section 6",
       "depends_on": [],
-      "status": "pending",
+      "status": "in_progress",
       "role": "dev"
     },
     {
@@ -97,7 +114,7 @@
       "file": "apps/flashcards/app/src/data/themes/conjugaisons-fr.json",
       "content": "Migrate apps/flashcards/app/src/data/themes/conjugaisons-fr.json to the extended CardSide format.\n\nConvert every card:\n- front side: use renderEngineId: 'text'\n- back side: use renderEngineId: 'markdown' (conjugaison back sides contain multiline content that benefits from markdown rendering)\n\nFrom:\n```json\n{ \"id\": \"aimer-present\", \"front\": \"Aimer — présent\", \"back\": \"j'aime\\ntu aimes\\n...\" }\n```\nTo:\n```json\n{ \"id\": \"aimer-present\", \"front\": { \"data\": \"Aimer — présent\", \"renderEngineId\": \"text\" }, \"back\": { \"data\": \"j'aime\\ntu aimes\\nil/elle aime\\nnous aimons\\nvous aimez\\nils/elles aiment\", \"renderEngineId\": \"markdown\" } }\n```\n\nAll 60 cards must be migrated. Front = 'text', back = 'markdown'.\n\nKeep the theme id, name, and card ids unchanged.\n\nReference: apps/flashcards/docs/how/sprints/sprint-1-render-engine/sprint.md — section 6",
       "depends_on": [],
-      "status": "pending",
+      "status": "in_progress",
       "role": "dev"
     }
   ]
