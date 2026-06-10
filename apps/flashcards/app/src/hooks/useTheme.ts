@@ -15,6 +15,8 @@ import gdpLowest20Theme from '@/data/themes/gdp-lowest-20.json';
 import multiplicationTablesTheme from '@/data/themes/multiplication-tables.json';
 import conjugaisonsFrTheme from '@/data/themes/conjugaisons-fr.json';
 import solfegeTheme from '@/data/themes/solfege.json';
+import solfegeTetracordesTheme from '@/data/themes/solfege-tetracordes.json';
+import solfegeMelodiesTheme from '@/data/themes/solfege-melodies.json';
 
 const STORAGE_KEY = 'flashcards-selected-theme';
 
@@ -34,6 +36,8 @@ const themes: Theme[] = [
   multiplicationTablesTheme as Theme,
   conjugaisonsFrTheme as Theme,
   solfegeTheme as Theme,
+  solfegeTetracordesTheme as Theme,
+  solfegeMelodiesTheme as Theme,
 ];
 
 interface UseThemeReturn {
