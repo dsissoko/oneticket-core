@@ -2,3 +2,4 @@
 2026-06-10 19:14 | A | apps/flashcards/app/src/data/themes/solfege.json
 2026-06-10 19:16 | E | apps/flashcards/app/src/engine/ScoreEngine.ts
 2026-06-10 19:17 | D | apps/flashcards/app/src/components/FlashcardDisplay.tsx
+2026-06-10 19:19 | F | apps/flashcards/app/src/engine/ScoreAudioEngine.ts
