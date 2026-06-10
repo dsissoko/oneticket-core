@@ -1,0 +1,111 @@
+{
+  "id": "europe-east",
+  "name": "Europe East",
+  "cards": [
+    {
+      "id": "card-1",
+      "front": { "data": "Albania", "renderEngineId": "text" },
+      "back": { "data": "Tirana\n\n![Albania](https://flagcdn.com/w80/al.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-2",
+      "front": { "data": "Belarus", "renderEngineId": "text" },
+      "back": { "data": "Minsk\n\n![Belarus](https://flagcdn.com/w80/by.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-3",
+      "front": { "data": "Bosnia and Herzegovina", "renderEngineId": "text" },
+      "back": { "data": "Sarajevo\n\n![Bosnia and Herzegovina](https://flagcdn.com/w80/ba.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-4",
+      "front": { "data": "Bulgaria", "renderEngineId": "text" },
+      "back": { "data": "Sofia\n\n![Bulgaria](https://flagcdn.com/w80/bg.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-5",
+      "front": { "data": "Croatia", "renderEngineId": "text" },
+      "back": { "data": "Zagreb\n\n![Croatia](https://flagcdn.com/w80/hr.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-6",
+      "front": { "data": "Czech Republic", "renderEngineId": "text" },
+      "back": { "data": "Prague\n\n![Czech Republic](https://flagcdn.com/w80/cz.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-7",
+      "front": { "data": "Estonia", "renderEngineId": "text" },
+      "back": { "data": "Tallinn\n\n![Estonia](https://flagcdn.com/w80/ee.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-8",
+      "front": { "data": "Hungary", "renderEngineId": "text" },
+      "back": { "data": "Budapest\n\n![Hungary](https://flagcdn.com/w80/hu.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-9",
+      "front": { "data": "Kosovo", "renderEngineId": "text" },
+      "back": { "data": "Pristina\n\n![Kosovo](https://flagcdn.com/w80/xk.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-10",
+      "front": { "data": "Latvia", "renderEngineId": "text" },
+      "back": { "data": "Riga\n\n![Latvia](https://flagcdn.com/w80/lv.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-11",
+      "front": { "data": "Lithuania", "renderEngineId": "text" },
+      "back": { "data": "Vilnius\n\n![Lithuania](https://flagcdn.com/w80/lt.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-12",
+      "front": { "data": "Moldova", "renderEngineId": "text" },
+      "back": { "data": "Chișinău\n\n![Moldova](https://flagcdn.com/w80/md.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-13",
+      "front": { "data": "Montenegro", "renderEngineId": "text" },
+      "back": { "data": "Podgorica\n\n![Montenegro](https://flagcdn.com/w80/me.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-14",
+      "front": { "data": "North Macedonia", "renderEngineId": "text" },
+      "back": { "data": "Skopje\n\n![North Macedonia](https://flagcdn.com/w80/mk.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-15",
+      "front": { "data": "Poland", "renderEngineId": "text" },
+      "back": { "data": "Warsaw\n\n![Poland](https://flagcdn.com/w80/pl.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-16",
+      "front": { "data": "Romania", "renderEngineId": "text" },
+      "back": { "data": "Bucharest\n\n![Romania](https://flagcdn.com/w80/ro.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-17",
+      "front": { "data": "Russia", "renderEngineId": "text" },
+      "back": { "data": "Moscow\n\n![Russia](https://flagcdn.com/w80/ru.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-18",
+      "front": { "data": "Serbia", "renderEngineId": "text" },
+      "back": { "data": "Belgrade\n\n![Serbia](https://flagcdn.com/w80/rs.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-19",
+      "front": { "data": "Slovakia", "renderEngineId": "text" },
+      "back": { "data": "Bratislava\n\n![Slovakia](https://flagcdn.com/w80/sk.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-20",
+      "front": { "data": "Slovenia", "renderEngineId": "text" },
+      "back": { "data": "Ljubljana\n\n![Slovenia](https://flagcdn.com/w80/si.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-21",
+      "front": { "data": "Ukraine", "renderEngineId": "text" },
+      "back": { "data": "Kyiv\n\n![Ukraine](https://flagcdn.com/w80/ua.png)", "renderEngineId": "markdown" }
+    }
+  ]
+}
