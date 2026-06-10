@@ -16,10 +16,13 @@ Enable structured memorization with immediate feedback — learners can practice
 
 ## Related User Stories
 
-<!-- @analyst fills this section — write filename only, no relative path, no ../
-     US files are always in user-stories/ subfolder — never flat in the epic directory
-     The build script resolves the correct path automatically.
-     Example: [US-001 — Skeleton Setup](us-001-skeleton-setup.md) -->
+[US-001 — Home Screen Theme and Mode Selection](us-001-home-screen.md)
+
+[US-002 — Session Card Flip Interaction](us-002-session-flip.md)
+
+[US-003 — Results Screen Session Score](us-003-results-screen.md)
+
+[US-004 — Complete Study Flow](us-004-complete-flow.md)
 
 ## Related Slices
 

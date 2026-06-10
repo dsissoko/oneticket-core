@@ -21,7 +21,7 @@ Scaffold from `AppShell` template, adapted for flashcards:
 
 | Component | Responsibility |
 |---|---|
-| `FlashcardDisplay` | Renders card front/back with flip animation |
+| `FlashcardDisplay` | Renders card front/back using resolved RenderEngine with flip animation |
 | `ThemePicker` | Selects from available themes |
 | `ModeSelector` | Chooses learning mode (flip, spaced-repetition) |
 | `ProgressBar` | Shows session advancement (X/Y) |
@@ -41,8 +41,8 @@ interface Theme {
 
 interface Card {
   id: string;
-  front: string;
-  back: string;
+  front: CardSide;
+  back: CardSide;
 }
 
 interface SessionResult {
@@ -50,7 +50,65 @@ interface SessionResult {
   known: boolean;
   timestamp: number;
 }
+
+interface RenderEngine {
+  render(data: any, target: HTMLElement): void
+  precompute?(data: any): Promise<void>  // optional — async engines only
+}
+
+type CardSide = string | { data: any; renderEngineId: string }
+// plain string defaults to TextEngine (backward compatible)
 ```
+
+## RenderEngine Architecture
+
+### Interface
+
+```typescript
+interface RenderEngine {
+  render(data: any, target: HTMLElement): void
+  precompute?(data: any): Promise<void>  // optional — async engines only
+}
+```
+
+### CardSide Type
+
+```typescript
+type CardSide = string | { data: any; renderEngineId: string }
+// plain string defaults to TextEngine (backward compatible)
+```
+
+### Built-in Engines
+
+| Engine | ID | Purpose | precompute |
+|---|---|---|---|
+| TextEngine | `text` | Plain text rendering | No |
+| MarkdownEngine | `markdown` | Markdown to HTML conversion | No |
+
+### Engine Registry
+
+Map-based lookup that resolves implementations by `renderEngineId`. Falls back to `TextEngine` for unknown or missing IDs.
+
+### Normalization Helper
+
+Converts legacy plain string card sides to extended format:
+`"France"` → `{ data: "France", renderEngineId: "text" }`
+
+### Precompute Lifecycle in SessionScreen
+
+```
+Question displayed
+    └─► engine.precompute?.(back.data)   ← called immediately if engine supports it
+              │
+              └─► runs in background while user reads the question
+                        │
+[User taps to flip]     │
+    ├─ precompute done  ─┤─► instant flip ✅
+    └─ still running   ──┘─► wait for completion → then flip ⏳
+```
+
+TextEngine and MarkdownEngine do NOT implement precompute — flip is always instant.
+The mechanism is universal so future engines (e.g. ScoreAudioEngine) benefit automatically.
 
 ## Routes
 

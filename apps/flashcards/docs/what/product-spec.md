@@ -20,6 +20,7 @@ Learners studying geography.
 - Display cards from built-in theme
 - Track session progress
 - Extensible theme/mode architecture
+- Extensible card rendering (text, markdown, future SVG/audio)
 
 ## 5. Out of Scope
 
@@ -33,6 +34,7 @@ Learners studying geography.
 - Card
 - LearningMode
 - SessionResult
+- RenderEngine
 
 ## 7. Product Capabilities
 
@@ -40,6 +42,7 @@ Learners studying geography.
 - Flip interaction
 - Session scoring
 - Results summary
+- Rich rendering support via pluggable RenderEngine
 
 ## 8. High-Level Workflows
 
