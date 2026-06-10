@@ -73,8 +73,23 @@ export function FlashcardDisplay({
           className="absolute inset-0 flex flex-col items-center justify-center rounded-xl border-2 border-border bg-card text-card-foreground text-center text-2xl font-semibold shadow-md backface-hidden"
           style={{ backfaceVisibility: 'hidden' }}
           data-testid="flashcard-front"
-          ref={frontRef}
-        />
+        >
+          <div ref={frontRef} />
+          {card.label && (
+            <p
+              data-testid="flashcard-label"
+              style={{
+                fontSize: '0.85rem',
+                color: 'inherit',
+                opacity: 0.75,
+                textAlign: 'center',
+                marginTop: '0.5rem',
+              }}
+            >
+              {card.label}
+            </p>
+          )}
+        </div>
 
         {/* Back face — rendered via engine */}
         <div
