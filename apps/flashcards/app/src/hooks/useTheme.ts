@@ -17,6 +17,8 @@ import conjugaisonsFrTheme from '@/data/themes/conjugaisons-fr.json';
 import solfegeTheme from '@/data/themes/solfege.json';
 import solfegeTetracordesTheme from '@/data/themes/solfege-tetracordes.json';
 import solfegeMelodiesTheme from '@/data/themes/solfege-melodies.json';
+import solfegeFrTheme from '@/data/themes/solfege-fr.json';
+import solfegeEnTheme from '@/data/themes/solfege-en.json';
 
 const STORAGE_KEY = 'flashcards-selected-theme';
 
@@ -38,6 +40,8 @@ const themes: Theme[] = [
   solfegeTheme as Theme,
   solfegeTetracordesTheme as Theme,
   solfegeMelodiesTheme as Theme,
+  solfegeFrTheme as Theme,
+  solfegeEnTheme as Theme,
 ];
 
 interface UseThemeReturn {
