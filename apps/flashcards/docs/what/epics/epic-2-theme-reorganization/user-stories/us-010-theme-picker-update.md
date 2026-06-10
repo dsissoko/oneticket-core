@@ -32,7 +32,7 @@ The home screen theme picker displays all 12 themes with clear, readable labels.
 
 ## Related Epic
 
-[Epic 2 — Theme Reorganization: World Capitals into 12 Themes](epic-2-theme-reorganization/epic.md)
+[Epic 2 — Theme Reorganization: World Capitals into 12 Themes](../epic.md)
 
 ## Related Sprints
 

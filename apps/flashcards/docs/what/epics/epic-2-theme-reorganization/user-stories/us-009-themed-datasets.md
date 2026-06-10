@@ -83,13 +83,17 @@ Each JSON file follows the existing format:
 {
   "id": "africa",
   "name": "Africa",
-  "renderEngineId": "markdown",
   "cards": [
-    { "q": "Egypt", "a": "Cairo", "flag": "eg" },
-    { "q": "Nigeria", "a": "Abuja", "flag": "ng" }
+    {
+      "id": "card-1",
+      "front": { "data": "Egypt", "renderEngineId": "text" },
+      "back": { "data": "Cairo\n\n![Egypt](https://flagcdn.com/w80/eg.png)", "renderEngineId": "markdown" }
+    }
   ]
 }
 ```
+
+Each card has a unique `id`, a `front` object with the question and its rendering engine, and a `back` object with the answer (optionally including embedded markdown such as a flag image) and its rendering engine.
 
 Flag codes map to [flagcdn.com](https://flagcdn.com/) — use the 2-letter ISO country code as the flag identifier.
 
