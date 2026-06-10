@@ -7,7 +7,7 @@
       "file": "apps/flashcards/app/src/types/index.ts",
       "content": "Update src/types/index.ts to add the RenderEngine interface and CardSide union type.\n\nAdd these types:\n```typescript\ninterface RenderEngine {\n  render(data: any, target: HTMLElement): void\n  precompute?(data: any): Promise<void>\n}\n\ntype CardSide = string | { data: any; renderEngineId: string }\n```\n\nUpdate the Card interface so front and back use CardSide instead of string:\n```typescript\ninterface Card {\n  id: string;\n  front: CardSide;\n  back: CardSide;\n}\n```\n\nKeep all existing types (LearningMode, Theme, SessionResult) unchanged.\nExport the new types (RenderEngine, CardSide) alongside existing exports.\n\nReference: apps/flashcards/docs/how/architecture.md — Key Types section\nReference: apps/flashcards/docs/how/sprints/sprint-1-render-engine/sprint.md — ADR-003",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "dev"
     },
     {
