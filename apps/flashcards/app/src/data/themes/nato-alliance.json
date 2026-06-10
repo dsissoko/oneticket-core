@@ -1,0 +1,166 @@
+{
+  "id": "nato-alliance",
+  "name": "NATO Alliance",
+  "cards": [
+    {
+      "id": "card-1",
+      "front": { "data": "Albania", "renderEngineId": "text" },
+      "back": { "data": "Tirana\n\n![Albania](https://flagcdn.com/w80/al.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-2",
+      "front": { "data": "Belgium", "renderEngineId": "text" },
+      "back": { "data": "Brussels\n\n![Belgium](https://flagcdn.com/w80/be.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-3",
+      "front": { "data": "Bulgaria", "renderEngineId": "text" },
+      "back": { "data": "Sofia\n\n![Bulgaria](https://flagcdn.com/w80/bg.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-4",
+      "front": { "data": "Canada", "renderEngineId": "text" },
+      "back": { "data": "Ottawa\n\n![Canada](https://flagcdn.com/w80/ca.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-5",
+      "front": { "data": "Croatia", "renderEngineId": "text" },
+      "back": { "data": "Zagreb\n\n![Croatia](https://flagcdn.com/w80/hr.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-6",
+      "front": { "data": "Czech Republic", "renderEngineId": "text" },
+      "back": { "data": "Prague\n\n![Czech Republic](https://flagcdn.com/w80/cz.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-7",
+      "front": { "data": "Denmark", "renderEngineId": "text" },
+      "back": { "data": "Copenhagen\n\n![Denmark](https://flagcdn.com/w80/dk.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-8",
+      "front": { "data": "Estonia", "renderEngineId": "text" },
+      "back": { "data": "Tallinn\n\n![Estonia](https://flagcdn.com/w80/ee.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-9",
+      "front": { "data": "Finland", "renderEngineId": "text" },
+      "back": { "data": "Helsinki\n\n![Finland](https://flagcdn.com/w80/fi.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-10",
+      "front": { "data": "France", "renderEngineId": "text" },
+      "back": { "data": "Paris\n\n![France](https://flagcdn.com/w80/fr.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-11",
+      "front": { "data": "Germany", "renderEngineId": "text" },
+      "back": { "data": "Berlin\n\n![Germany](https://flagcdn.com/w80/de.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-12",
+      "front": { "data": "Greece", "renderEngineId": "text" },
+      "back": { "data": "Athens\n\n![Greece](https://flagcdn.com/w80/gr.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-13",
+      "front": { "data": "Hungary", "renderEngineId": "text" },
+      "back": { "data": "Budapest\n\n![Hungary](https://flagcdn.com/w80/hu.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-14",
+      "front": { "data": "Iceland", "renderEngineId": "text" },
+      "back": { "data": "Reykjavik\n\n![Iceland](https://flagcdn.com/w80/is.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-15",
+      "front": { "data": "Italy", "renderEngineId": "text" },
+      "back": { "data": "Rome\n\n![Italy](https://flagcdn.com/w80/it.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-16",
+      "front": { "data": "Latvia", "renderEngineId": "text" },
+      "back": { "data": "Riga\n\n![Latvia](https://flagcdn.com/w80/lv.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-17",
+      "front": { "data": "Lithuania", "renderEngineId": "text" },
+      "back": { "data": "Vilnius\n\n![Lithuania](https://flagcdn.com/w80/lt.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-18",
+      "front": { "data": "Luxembourg", "renderEngineId": "text" },
+      "back": { "data": "Luxembourg\n\n![Luxembourg](https://flagcdn.com/w80/lu.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-19",
+      "front": { "data": "Montenegro", "renderEngineId": "text" },
+      "back": { "data": "Podgorica\n\n![Montenegro](https://flagcdn.com/w80/me.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-20",
+      "front": { "data": "Netherlands", "renderEngineId": "text" },
+      "back": { "data": "Amsterdam\n\n![Netherlands](https://flagcdn.com/w80/nl.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-21",
+      "front": { "data": "North Macedonia", "renderEngineId": "text" },
+      "back": { "data": "Skopje\n\n![North Macedonia](https://flagcdn.com/w80/mk.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-22",
+      "front": { "data": "Norway", "renderEngineId": "text" },
+      "back": { "data": "Oslo\n\n![Norway](https://flagcdn.com/w80/no.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-23",
+      "front": { "data": "Poland", "renderEngineId": "text" },
+      "back": { "data": "Warsaw\n\n![Poland](https://flagcdn.com/w80/pl.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-24",
+      "front": { "data": "Portugal", "renderEngineId": "text" },
+      "back": { "data": "Lisbon\n\n![Portugal](https://flagcdn.com/w80/pt.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-25",
+      "front": { "data": "Romania", "renderEngineId": "text" },
+      "back": { "data": "Bucharest\n\n![Romania](https://flagcdn.com/w80/ro.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-26",
+      "front": { "data": "Slovakia", "renderEngineId": "text" },
+      "back": { "data": "Bratislava\n\n![Slovakia](https://flagcdn.com/w80/sk.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-27",
+      "front": { "data": "Slovenia", "renderEngineId": "text" },
+      "back": { "data": "Ljubljana\n\n![Slovenia](https://flagcdn.com/w80/si.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-28",
+      "front": { "data": "Spain", "renderEngineId": "text" },
+      "back": { "data": "Madrid\n\n![Spain](https://flagcdn.com/w80/es.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-29",
+      "front": { "data": "Sweden", "renderEngineId": "text" },
+      "back": { "data": "Stockholm\n\n![Sweden](https://flagcdn.com/w80/se.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-30",
+      "front": { "data": "Türkiye", "renderEngineId": "text" },
+      "back": { "data": "Ankara\n\n![Türkiye](https://flagcdn.com/w80/tr.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-31",
+      "front": { "data": "United Kingdom", "renderEngineId": "text" },
+      "back": { "data": "London\n\n![United Kingdom](https://flagcdn.com/w80/gb.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-32",
+      "front": { "data": "United States", "renderEngineId": "text" },
+      "back": { "data": "Washington D.C.\n\n![United States](https://flagcdn.com/w80/us.png)", "renderEngineId": "markdown" }
+    }
+  ]
+}
