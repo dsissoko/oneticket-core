@@ -105,7 +105,7 @@
       "file": "apps/flashcards/app/src/data/themes/multiplication-tables.json",
       "content": "Migrate apps/flashcards/app/src/data/themes/multiplication-tables.json to the extended CardSide format.\n\nConvert every card from:\n```json\n{ \"id\": \"mult-1-1\", \"front\": \"1 × 1\", \"back\": \"1\" }\n```\nTo:\n```json\n{ \"id\": \"mult-1-1\", \"front\": { \"data\": \"1 × 1\", \"renderEngineId\": \"text\" }, \"back\": { \"data\": \"1\", \"renderEngineId\": \"text\" } }\n```\n\nAll 100 cards must be migrated. Both front and back use renderEngineId: 'text'.\n\nKeep the theme id, name, and card ids unchanged.\n\nReference: apps/flashcards/docs/how/sprints/sprint-1-render-engine/sprint.md — section 6",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "dev"
     },
     {
