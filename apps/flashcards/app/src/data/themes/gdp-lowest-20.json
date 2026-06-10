@@ -1,0 +1,106 @@
+{
+  "id": "gdp-lowest-20",
+  "name": "20 lowest GDP",
+  "cards": [
+    {
+      "id": "card-1",
+      "front": { "data": "Tuvalu", "renderEngineId": "text" },
+      "back": { "data": "Funafuti\n\n![Tuvalu](https://flagcdn.com/w80/tv.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-2",
+      "front": { "data": "Nauru", "renderEngineId": "text" },
+      "back": { "data": "Yaren\n\n![Nauru](https://flagcdn.com/w80/nr.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-3",
+      "front": { "data": "Palau", "renderEngineId": "text" },
+      "back": { "data": "Ngerulmud\n\n![Palau](https://flagcdn.com/w80/pw.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-4",
+      "front": { "data": "Marshall Islands", "renderEngineId": "text" },
+      "back": { "data": "Majuro\n\n![Marshall Islands](https://flagcdn.com/w80/mh.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-5",
+      "front": { "data": "Kiribati", "renderEngineId": "text" },
+      "back": { "data": "South Tarawa\n\n![Kiribati](https://flagcdn.com/w80/ki.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-6",
+      "front": { "data": "Micronesia", "renderEngineId": "text" },
+      "back": { "data": "Palikir\n\n![Micronesia](https://flagcdn.com/w80/fm.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-7",
+      "front": { "data": "Tonga", "renderEngineId": "text" },
+      "back": { "data": "Nukualofa\n\n![Tonga](https://flagcdn.com/w80/to.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-8",
+      "front": { "data": "Samoa", "renderEngineId": "text" },
+      "back": { "data": "Apia\n\n![Samoa](https://flagcdn.com/w80/ws.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-9",
+      "front": { "data": "Vanuatu", "renderEngineId": "text" },
+      "back": { "data": "Port Vila\n\n![Vanuatu](https://flagcdn.com/w80/vu.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-10",
+      "front": { "data": "São Tomé and Príncipe", "renderEngineId": "text" },
+      "back": { "data": "São Tomé\n\n![São Tomé and Príncipe](https://flagcdn.com/w80/st.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-11",
+      "front": { "data": "Comoros", "renderEngineId": "text" },
+      "back": { "data": "Moroni\n\n![Comoros](https://flagcdn.com/w80/km.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-12",
+      "front": { "data": "Solomon Islands", "renderEngineId": "text" },
+      "back": { "data": "Honiara\n\n![Solomon Islands](https://flagcdn.com/w80/sb.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-13",
+      "front": { "data": "Guinea-Bissau", "renderEngineId": "text" },
+      "back": { "data": "Bissau\n\n![Guinea-Bissau](https://flagcdn.com/w80/gw.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-14",
+      "front": { "data": "Gambia", "renderEngineId": "text" },
+      "back": { "data": "Banjul\n\n![Gambia](https://flagcdn.com/w80/gm.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-15",
+      "front": { "data": "Sierra Leone", "renderEngineId": "text" },
+      "back": { "data": "Freetown\n\n![Sierra Leone](https://flagcdn.com/w80/sl.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-16",
+      "front": { "data": "Eritrea", "renderEngineId": "text" },
+      "back": { "data": "Asmara\n\n![Eritrea](https://flagcdn.com/w80/er.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-17",
+      "front": { "data": "Burundi", "renderEngineId": "text" },
+      "back": { "data": "Gitega\n\n![Burundi](https://flagcdn.com/w80/bi.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-18",
+      "front": { "data": "Central African Republic", "renderEngineId": "text" },
+      "back": { "data": "Bangui\n\n![Central African Republic](https://flagcdn.com/w80/cf.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-19",
+      "front": { "data": "Niger", "renderEngineId": "text" },
+      "back": { "data": "Niamey\n\n![Niger](https://flagcdn.com/w80/ne.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-20",
+      "front": { "data": "Liberia", "renderEngineId": "text" },
+      "back": { "data": "Monrovia\n\n![Liberia](https://flagcdn.com/w80/lr.png)", "renderEngineId": "markdown" }
+    }
+  ]
+}
