@@ -3,3 +3,4 @@
 2026-06-10 08:16 | I | apps/flashcards/app/src/data/themes/world-capitals.json
 2026-06-10 08:18 | K | apps/flashcards/app/src/data/themes/conjugaisons-fr.json
 2026-06-10 08:18 | C | apps/flashcards/app/src/engine/EngineRegistry.ts
+2026-06-10 08:22 | F | apps/flashcards/app/src/components/FlashcardDisplay.tsx
