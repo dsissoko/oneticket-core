@@ -71,7 +71,7 @@
       "file": "apps/flashcards/app/src/data/themes/antarctica.json",
       "content": "Create the file `apps/flashcards/app/src/data/themes/antarctica.json` with the Antarctica themed educational dataset. Format: { \"id\": \"antarctica\", \"name\": \"Antarctica\", \"cards\": [...] }. Each card: { \"id\": \"card-N\", \"front\": { \"data\": \"<Territory/Station>\", \"renderEngineId\": \"text\" }, \"back\": { \"data\": \"<Administrative center/main station>\\n\\n![<Country>](https://flagcdn.com/w80/<iso2>.png)\", \"renderEngineId\": \"markdown\" } }. Include educational entries for Antarctica: British Antarctic Territory (Stanley/Rothera, gb), Australian Antarctic Territory (Kingston, au), French Southern and Antarctic Lands (Saint-Pierre, fr), Norwegian Antarctic Territory (Oslo/Troll, no). Since Antarctica has no sovereign states, use territorial claims and their administrative centers or main research stations. Use sequential card IDs starting at card-1.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "I",
