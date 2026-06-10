@@ -9,7 +9,7 @@ interface ThemeContextValue {
   selectTheme: (themeId: string) => void;
 }
 
-const ThemeContext = createContext<ThemeContextValue | null>(null);
+export const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeDataProvider({ children }: { children: React.ReactNode }): React.ReactElement {
   const theme = useTheme();

@@ -8,3 +8,4 @@
 2026-06-10 08:18 | E | apps/flashcards/app/src/engine/MarkdownEngine.ts
 2026-06-10 08:20 | H | apps/flashcards/app/src/main.tsx
 2026-06-10 08:22 | F | apps/flashcards/app/src/components/FlashcardDisplay.tsx
+2026-06-10 08:43 | G | apps/flashcards/app/src/screens/SessionScreen.tsx
