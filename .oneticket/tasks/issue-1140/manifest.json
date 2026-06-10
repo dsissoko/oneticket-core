@@ -98,7 +98,7 @@
       "file": "apps/flashcards/app/src/data/themes/gdp-biggest-20.json",
       "content": "Create the file `apps/flashcards/app/src/data/themes/gdp-biggest-20.json` with exactly 20 cards for the top 20 GDP countries dataset. Format: { \"id\": \"gdp-biggest-20\", \"name\": \"20 biggest GDP\", \"cards\": [...] }. Each card: { \"id\": \"card-N\", \"front\": { \"data\": \"<Country>\", \"renderEngineId\": \"text\" }, \"back\": { \"data\": \"<Capital>\\n\\n![<Country>](https://flagcdn.com/w80/<iso2>.png)\", \"renderEngineId\": \"markdown\" } }. Include the 20 countries with the largest nominal GDP (approximate 2023-2024 ranking): 1. United States (Washington D.C., us), 2. China (Beijing, cn), 3. Germany (Berlin, de), 4. Japan (Tokyo, jp), 5. India (New Delhi, in), 6. United Kingdom (London, gb), 7. France (Paris, fr), 8. Italy (Rome, it), 9. Brazil (Brasília, br), 10. Canada (Ottawa, ca), 11. Russia (Moscow, ru), 12. South Korea (Seoul, kr), 13. Australia (Canberra, au), 14. Mexico (Mexico City, mx), 15. Spain (Madrid, es), 16. Indonesia (Jakarta, id), 17. Netherlands (Amsterdam, nl), 18. Saudi Arabia (Riyadh, sa), 19. Türkiye (Ankara, tr), 20. Switzerland (Bern, ch). Exactly 20 cards, use sequential card IDs starting at card-1.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "L",
