@@ -8,7 +8,7 @@
       "file": "apps/flashcards/app/package.json",
       "content": "Add `vexflow` as a production dependency to `apps/flashcards/app/package.json`. The required version is `^4.2.2`. Read the current `apps/flashcards/app/package.json` first, then add `\"vexflow\": \"^4.2.2\"` to the `dependencies` object (in alphabetical order, after `tw-animate-css`). Do NOT modify any other field. After editing, run `npm install` in `apps/flashcards/app/` to update `package-lock.json`.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "B",
