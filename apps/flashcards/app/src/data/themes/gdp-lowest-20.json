@@ -1,106 +1,106 @@
 {
   "id": "gdp-lowest-20",
-  "name": "20 lowest GDP",
+  "name": "20 Lowest GDP (2024)",
   "cards": [
     {
       "id": "card-1",
       "front": { "data": "Tuvalu", "renderEngineId": "text" },
-      "back": { "data": "Funafuti\n\n![Tuvalu](https://flagcdn.com/w80/tv.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Funafuti\n\n![Tuvalu](https://flagcdn.com/w80/tv.png)\n\n#195 — GDP mondial (2024)\nGDP: $0.06B/y | GDP/capita: $6,345/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-2",
       "front": { "data": "Nauru", "renderEngineId": "text" },
-      "back": { "data": "Yaren\n\n![Nauru](https://flagcdn.com/w80/nr.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Yaren\n\n![Nauru](https://flagcdn.com/w80/nr.png)\n\n#194 — GDP mondial (2024)\nGDP: $0.15B/y | GDP/capita: $13,422/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-3",
       "front": { "data": "Palau", "renderEngineId": "text" },
-      "back": { "data": "Ngerulmud\n\n![Palau](https://flagcdn.com/w80/pw.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Ngerulmud\n\n![Palau](https://flagcdn.com/w80/pw.png)\n\n#193 — GDP mondial (2024)\nGDP: $0.26B/y | GDP/capita: $15,899/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-4",
       "front": { "data": "Marshall Islands", "renderEngineId": "text" },
-      "back": { "data": "Majuro\n\n![Marshall Islands](https://flagcdn.com/w80/mh.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Majuro\n\n![Marshall Islands](https://flagcdn.com/w80/mh.png)\n\n#192 — GDP mondial (2024)\nGDP: $0.28B/y | GDP/capita: $7,467/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-5",
       "front": { "data": "Kiribati", "renderEngineId": "text" },
-      "back": { "data": "South Tarawa\n\n![Kiribati](https://flagcdn.com/w80/ki.png)", "renderEngineId": "markdown" }
+      "back": { "data": "South Tarawa\n\n![Kiribati](https://flagcdn.com/w80/ki.png)\n\n#191 — GDP mondial (2024)\nGDP: $0.25B/y | GDP/capita: $2,288/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-6",
       "front": { "data": "Micronesia", "renderEngineId": "text" },
-      "back": { "data": "Palikir\n\n![Micronesia](https://flagcdn.com/w80/fm.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Palikir\n\n![Micronesia](https://flagcdn.com/w80/fm.png)\n\n#190 — GDP mondial (2024)\nGDP: $0.44B/y | GDP/capita: $4,166/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-7",
       "front": { "data": "Tonga", "renderEngineId": "text" },
-      "back": { "data": "Nukualofa\n\n![Tonga](https://flagcdn.com/w80/to.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Nukualofa\n\n![Tonga](https://flagcdn.com/w80/to.png)\n\n#189 — GDP mondial (2024)\nGDP: $0.52B/y | GDP/capita: $4,864/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-8",
       "front": { "data": "Samoa", "renderEngineId": "text" },
-      "back": { "data": "Apia\n\n![Samoa](https://flagcdn.com/w80/ws.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Apia\n\n![Samoa](https://flagcdn.com/w80/ws.png)\n\n#188 — GDP mondial (2024)\nGDP: $0.83B/y | GDP/capita: $4,899/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-9",
       "front": { "data": "Vanuatu", "renderEngineId": "text" },
-      "back": { "data": "Port Vila\n\n![Vanuatu](https://flagcdn.com/w80/vu.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Port Vila\n\n![Vanuatu](https://flagcdn.com/w80/vu.png)\n\n#187 — GDP mondial (2024)\nGDP: $1.07B/y | GDP/capita: $3,543/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-10",
       "front": { "data": "São Tomé and Príncipe", "renderEngineId": "text" },
-      "back": { "data": "São Tomé\n\n![São Tomé and Príncipe](https://flagcdn.com/w80/st.png)", "renderEngineId": "markdown" }
+      "back": { "data": "São Tomé\n\n![São Tomé and Príncipe](https://flagcdn.com/w80/st.png)\n\n#186 — GDP mondial (2024)\nGDP: $0.65B/y | GDP/capita: $3,245/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-11",
       "front": { "data": "Comoros", "renderEngineId": "text" },
-      "back": { "data": "Moroni\n\n![Comoros](https://flagcdn.com/w80/km.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Moroni\n\n![Comoros](https://flagcdn.com/w80/km.png)\n\n#185 — GDP mondial (2024)\nGDP: $1.35B/y | GDP/capita: $1,784/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-12",
       "front": { "data": "Solomon Islands", "renderEngineId": "text" },
-      "back": { "data": "Honiara\n\n![Solomon Islands](https://flagcdn.com/w80/sb.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Honiara\n\n![Solomon Islands](https://flagcdn.com/w80/sb.png)\n\n#184 — GDP mondial (2024)\nGDP: $1.56B/y | GDP/capita: $2,149/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-13",
       "front": { "data": "Guinea-Bissau", "renderEngineId": "text" },
-      "back": { "data": "Bissau\n\n![Guinea-Bissau](https://flagcdn.com/w80/gw.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Bissau\n\n![Guinea-Bissau](https://flagcdn.com/w80/gw.png)\n\n#183 — GDP mondial (2024)\nGDP: $1.96B/y | GDP/capita: $963/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-14",
       "front": { "data": "Gambia", "renderEngineId": "text" },
-      "back": { "data": "Banjul\n\n![Gambia](https://flagcdn.com/w80/gm.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Banjul\n\n![Gambia](https://flagcdn.com/w80/gm.png)\n\n#182 — GDP mondial (2024)\nGDP: $2.53B/y | GDP/capita: $909/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-15",
       "front": { "data": "Sierra Leone", "renderEngineId": "text" },
-      "back": { "data": "Freetown\n\n![Sierra Leone](https://flagcdn.com/w80/sl.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Freetown\n\n![Sierra Leone](https://flagcdn.com/w80/sl.png)\n\n#181 — GDP mondial (2024)\nGDP: $4.19B/y | GDP/capita: $873/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-16",
       "front": { "data": "Eritrea", "renderEngineId": "text" },
-      "back": { "data": "Asmara\n\n![Eritrea](https://flagcdn.com/w80/er.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Asmara\n\n![Eritrea](https://flagcdn.com/w80/er.png)\n\n#180 — GDP mondial (2024)\nGDP: $2.16B/y | GDP/capita: —\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-17",
       "front": { "data": "Burundi", "renderEngineId": "text" },
-      "back": { "data": "Gitega\n\n![Burundi](https://flagcdn.com/w80/bi.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Gitega\n\n![Burundi](https://flagcdn.com/w80/bi.png)\n\n#179 — GDP mondial (2024)\nGDP: $3.04B/y | GDP/capita: $154/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-18",
       "front": { "data": "Central African Republic", "renderEngineId": "text" },
-      "back": { "data": "Bangui\n\n![Central African Republic](https://flagcdn.com/w80/cf.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Bangui\n\n![Central African Republic](https://flagcdn.com/w80/cf.png)\n\n#178 — GDP mondial (2024)\nGDP: $2.49B/y | GDP/capita: $516/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-19",
       "front": { "data": "Niger", "renderEngineId": "text" },
-      "back": { "data": "Niamey\n\n![Niger](https://flagcdn.com/w80/ne.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Niamey\n\n![Niger](https://flagcdn.com/w80/ne.png)\n\n#177 — GDP mondial (2024)\nGDP: $16.82B/y | GDP/capita: $723/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-20",
       "front": { "data": "Liberia", "renderEngineId": "text" },
-      "back": { "data": "Monrovia\n\n![Liberia](https://flagcdn.com/w80/lr.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Monrovia\n\n![Liberia](https://flagcdn.com/w80/lr.png)\n\n#176 — GDP mondial (2024)\nGDP: $4.37B/y | GDP/capita: $846/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     }
   ]
 }

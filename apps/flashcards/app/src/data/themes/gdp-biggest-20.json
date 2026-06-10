@@ -1,106 +1,106 @@
 {
   "id": "gdp-biggest-20",
-  "name": "20 biggest GDP",
+  "name": "20 Biggest GDP (2024)",
   "cards": [
     {
       "id": "card-1",
       "front": { "data": "United States", "renderEngineId": "text" },
-      "back": { "data": "Washington D.C.\n\n![United States](https://flagcdn.com/w80/us.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Washington D.C.\n\n![United States](https://flagcdn.com/w80/us.png)\n\n#1 — GDP mondial (2024)\nGDP: $28,751B/y | GDP/capita: $85,810/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-2",
       "front": { "data": "China", "renderEngineId": "text" },
-      "back": { "data": "Beijing\n\n![China](https://flagcdn.com/w80/cn.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Beijing\n\n![China](https://flagcdn.com/w80/cn.png)\n\n#2 — GDP mondial (2024)\nGDP: $18,744B/y | GDP/capita: $13,303/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-3",
       "front": { "data": "Germany", "renderEngineId": "text" },
-      "back": { "data": "Berlin\n\n![Germany](https://flagcdn.com/w80/de.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Berlin\n\n![Germany](https://flagcdn.com/w80/de.png)\n\n#3 — GDP mondial (2024)\nGDP: $4,686B/y | GDP/capita: $55,800/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-4",
       "front": { "data": "Japan", "renderEngineId": "text" },
-      "back": { "data": "Tokyo\n\n![Japan](https://flagcdn.com/w80/jp.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Tokyo\n\n![Japan](https://flagcdn.com/w80/jp.png)\n\n#4 — GDP mondial (2024)\nGDP: $4,028B/y | GDP/capita: $32,476/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-5",
       "front": { "data": "India", "renderEngineId": "text" },
-      "back": { "data": "New Delhi\n\n![India](https://flagcdn.com/w80/in.png)", "renderEngineId": "markdown" }
+      "back": { "data": "New Delhi\n\n![India](https://flagcdn.com/w80/in.png)\n\n#6 — GDP mondial (2024)\nGDP: $3,910B/y | GDP/capita: $2,697/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-6",
       "front": { "data": "United Kingdom", "renderEngineId": "text" },
-      "back": { "data": "London\n\n![United Kingdom](https://flagcdn.com/w80/gb.png)", "renderEngineId": "markdown" }
+      "back": { "data": "London\n\n![United Kingdom](https://flagcdn.com/w80/gb.png)\n\n#5 — GDP mondial (2024)\nGDP: $3,686B/y | GDP/capita: $52,637/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-7",
       "front": { "data": "France", "renderEngineId": "text" },
-      "back": { "data": "Paris\n\n![France](https://flagcdn.com/w80/fr.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Paris\n\n![France](https://flagcdn.com/w80/fr.png)\n\n#7 — GDP mondial (2024)\nGDP: $3,160B/y | GDP/capita: $46,150/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-8",
       "front": { "data": "Italy", "renderEngineId": "text" },
-      "back": { "data": "Rome\n\n![Italy](https://flagcdn.com/w80/it.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Rome\n\n![Italy](https://flagcdn.com/w80/it.png)\n\n#8 — GDP mondial (2024)\nGDP: $2,381B/y | GDP/capita: $40,226/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-9",
       "front": { "data": "Brazil", "renderEngineId": "text" },
-      "back": { "data": "Brasília\n\n![Brazil](https://flagcdn.com/w80/br.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Brasília\n\n![Brazil](https://flagcdn.com/w80/br.png)\n\n#9 — GDP mondial (2024)\nGDP: $2,186B/y | GDP/capita: $10,280/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-10",
       "front": { "data": "Canada", "renderEngineId": "text" },
-      "back": { "data": "Ottawa\n\n![Canada](https://flagcdn.com/w80/ca.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Ottawa\n\n![Canada](https://flagcdn.com/w80/ca.png)\n\n#10 — GDP mondial (2024)\nGDP: $2,244B/y | GDP/capita: $54,283/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-11",
       "front": { "data": "Russia", "renderEngineId": "text" },
-      "back": { "data": "Moscow\n\n![Russia](https://flagcdn.com/w80/ru.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Moscow\n\n![Russia](https://flagcdn.com/w80/ru.png)\n\n#11 — GDP mondial (2024)\nGDP: $2,174B/y | GDP/capita: $14,889/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-12",
       "front": { "data": "South Korea", "renderEngineId": "text" },
-      "back": { "data": "Seoul\n\n![South Korea](https://flagcdn.com/w80/kr.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Seoul\n\n![South Korea](https://flagcdn.com/w80/kr.png)\n\n#12 — GDP mondial (2024)\nGDP: $1,875B/y | GDP/capita: $33,121/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-13",
       "front": { "data": "Australia", "renderEngineId": "text" },
-      "back": { "data": "Canberra\n\n![Australia](https://flagcdn.com/w80/au.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Canberra\n\n![Australia](https://flagcdn.com/w80/au.png)\n\n#13 — GDP mondial (2024)\nGDP: $1,757B/y | GDP/capita: $64,408/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-14",
       "front": { "data": "Mexico", "renderEngineId": "text" },
-      "back": { "data": "Mexico City\n\n![Mexico](https://flagcdn.com/w80/mx.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Mexico City\n\n![Mexico](https://flagcdn.com/w80/mx.png)\n\n#14 — GDP mondial (2024)\nGDP: $1,856B/y | GDP/capita: $14,157/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-15",
       "front": { "data": "Spain", "renderEngineId": "text" },
-      "back": { "data": "Madrid\n\n![Spain](https://flagcdn.com/w80/es.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Madrid\n\n![Spain](https://flagcdn.com/w80/es.png)\n\n#15 — GDP mondial (2024)\nGDP: $1,726B/y | GDP/capita: $35,298/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-16",
       "front": { "data": "Indonesia", "renderEngineId": "text" },
-      "back": { "data": "Jakarta\n\n![Indonesia](https://flagcdn.com/w80/id.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Jakarta\n\n![Indonesia](https://flagcdn.com/w80/id.png)\n\n#16 — GDP mondial (2024)\nGDP: $1,396B/y | GDP/capita: $4,925/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-17",
       "front": { "data": "Netherlands", "renderEngineId": "text" },
-      "back": { "data": "Amsterdam\n\n![Netherlands](https://flagcdn.com/w80/nl.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Amsterdam\n\n![Netherlands](https://flagcdn.com/w80/nl.png)\n\n#17 — GDP mondial (2024)\nGDP: $1,215B/y | GDP/capita: $68,219/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-18",
       "front": { "data": "Saudi Arabia", "renderEngineId": "text" },
-      "back": { "data": "Riyadh\n\n![Saudi Arabia](https://flagcdn.com/w80/sa.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Riyadh\n\n![Saudi Arabia](https://flagcdn.com/w80/sa.png)\n\n#18 — GDP mondial (2024)\nGDP: $1,240B/y | GDP/capita: $32,094/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-19",
       "front": { "data": "Türkiye", "renderEngineId": "text" },
-      "back": { "data": "Ankara\n\n![Türkiye](https://flagcdn.com/w80/tr.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Ankara\n\n![Türkiye](https://flagcdn.com/w80/tr.png)\n\n#19 — GDP mondial (2024)\nGDP: $1,359B/y | GDP/capita: $15,473/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     },
     {
       "id": "card-20",
       "front": { "data": "Switzerland", "renderEngineId": "text" },
-      "back": { "data": "Bern\n\n![Switzerland](https://flagcdn.com/w80/ch.png)", "renderEngineId": "markdown" }
+      "back": { "data": "Bern\n\n![Switzerland](https://flagcdn.com/w80/ch.png)\n\n#20 — GDP mondial (2024)\nGDP: $937B/y | GDP/capita: $103,670/y\nSource: World Bank 2024", "renderEngineId": "markdown" }
     }
   ]
 }
