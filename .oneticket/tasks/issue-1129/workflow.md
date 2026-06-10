@@ -6,3 +6,4 @@
 2026-06-10 08:18 | J | apps/flashcards/app/src/data/themes/multiplication-tables.json
 2026-06-10 08:18 | D | apps/flashcards/app/src/engine/TextEngine.ts
 2026-06-10 08:18 | E | apps/flashcards/app/src/engine/MarkdownEngine.ts
+2026-06-10 08:20 | H | apps/flashcards/app/src/main.tsx
