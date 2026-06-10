@@ -278,14 +278,6 @@ src/
 
 Any model available on [opencode.ai/zen](https://opencode.ai/zen) works out of the box.
 
-| Model | ID |
-|---|---|
-| MiniMax M2.5 | `opencode/minimax-m2.5` |
-| Claude Haiku 4.5 | `opencode/claude-haiku-4-5` |
-| Claude Sonnet 4.5 | `opencode/claude-sonnet-4-5` |
-| Kimi K2.5 | `opencode/kimi-k2.5` |
-| GPT 5.4 Mini | `opencode/gpt-5.4-mini` |
-
 Full list: `https://opencode.ai/zen/v1/models`
 
 ---
