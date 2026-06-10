@@ -12,6 +12,7 @@ import { ThemeDataProvider } from './context/ThemeContext';
 import { engineRegistry } from '@/engine/EngineRegistry';
 import { TextEngine } from '@/engine/TextEngine';
 import { MarkdownEngine } from '@/engine/MarkdownEngine';
+import { ScoreEngine } from '@/engine/ScoreEngine';
 
 // __ENABLE_MSW__ is defined at build time in vite.config.ts → define block.
 // true  = MSW active (demo, preview, GitHub Pages — no backend needed)
@@ -98,6 +99,7 @@ async function main(): Promise<void> {
 
     engineRegistry.register('text', TextEngine);
     engineRegistry.register('markdown', MarkdownEngine);
+    engineRegistry.register('score', new ScoreEngine());
 
     const root = document.getElementById('root');
     if (!root) throw new Error('Root element not found');
