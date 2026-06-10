@@ -28,4 +28,4 @@ Learners can now study capitals by continent, alliance, or economic ranking — 
 
 ## Related Sprints
 
-<!-- @po fills this section after producing sprints — write filename only, no relative path, no ../ -->
+[Sprint 2 — Theme Reorganization](sprint-2-theme-reorganization/sprint.md)

@@ -110,4 +110,4 @@ The app may persist the selected theme id in localStorage. If the stored id (e.g
 
 ## Related Sprints
 
-<!-- @po fills this section after producing sprints -->
+[Sprint 2 — Theme Reorganization](sprint-2-theme-reorganization/sprint.md)

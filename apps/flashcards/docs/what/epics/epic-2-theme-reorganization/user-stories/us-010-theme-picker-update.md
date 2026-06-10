@@ -36,4 +36,4 @@ The home screen theme picker displays all 12 themes with clear, readable labels.
 
 ## Related Sprints
 
-<!-- @po fills this section after producing sprints -->
+[Sprint 2 — Theme Reorganization](sprint-2-theme-reorganization/sprint.md)
