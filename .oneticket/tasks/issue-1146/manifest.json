@@ -28,7 +28,7 @@
       "file": "apps/flashcards/app/src/types/index.ts",
       "content": "Update `apps/flashcards/app/src/types/index.ts` to add an optional `label` field to the `Card` interface.\n\nCurrent `Card` interface:\n```typescript\ninterface Card {\n  id: string;\n  front: CardSide;\n  back: CardSide;\n}\n```\n\nUpdate to:\n```typescript\ninterface Card {\n  id: string;\n  label?: string;\n  front: CardSide;\n  back: CardSide;\n}\n```\n\nThis allows solfege.json cards to carry a top-level `label` field (e.g. `\"do / C\"`) while keeping all existing themes working without changes (the field is optional).\n\nNo other changes to this file. Do not change any exports.",
       "depends_on": [],
-      "status": "in_progress"
+      "status": "done"
     },
     {
       "id": "D",
