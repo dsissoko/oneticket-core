@@ -114,7 +114,7 @@
       "file": "apps/flashcards/app/src/data/themes/conjugaisons-fr.json",
       "content": "Migrate apps/flashcards/app/src/data/themes/conjugaisons-fr.json to the extended CardSide format.\n\nConvert every card:\n- front side: use renderEngineId: 'text'\n- back side: use renderEngineId: 'markdown' (conjugaison back sides contain multiline content that benefits from markdown rendering)\n\nFrom:\n```json\n{ \"id\": \"aimer-present\", \"front\": \"Aimer — présent\", \"back\": \"j'aime\\ntu aimes\\n...\" }\n```\nTo:\n```json\n{ \"id\": \"aimer-present\", \"front\": { \"data\": \"Aimer — présent\", \"renderEngineId\": \"text\" }, \"back\": { \"data\": \"j'aime\\ntu aimes\\nil/elle aime\\nnous aimons\\nvous aimez\\nils/elles aiment\", \"renderEngineId\": \"markdown\" } }\n```\n\nAll 60 cards must be migrated. Front = 'text', back = 'markdown'.\n\nKeep the theme id, name, and card ids unchanged.\n\nReference: apps/flashcards/docs/how/sprints/sprint-1-render-engine/sprint.md — section 6",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "dev"
     }
   ]
