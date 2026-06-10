@@ -1,13 +1,35 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { Theme } from '@/types';
-import worldCapitalsTheme from '@/data/themes/world-capitals.json';
+import africaTheme from '@/data/themes/africa.json';
+import antarcticaTheme from '@/data/themes/antarctica.json';
+import asiaTheme from '@/data/themes/asia.json';
+import europeEastTheme from '@/data/themes/europe-east.json';
+import europeWestTheme from '@/data/themes/europe-west.json';
+import northAmericaTheme from '@/data/themes/north-america.json';
+import southAmericaTheme from '@/data/themes/south-america.json';
+import australiaTheme from '@/data/themes/australia.json';
+import bricsAllianceTheme from '@/data/themes/brics-alliance.json';
+import natoAllianceTheme from '@/data/themes/nato-alliance.json';
+import gdpBiggest20Theme from '@/data/themes/gdp-biggest-20.json';
+import gdpLowest20Theme from '@/data/themes/gdp-lowest-20.json';
 import multiplicationTablesTheme from '@/data/themes/multiplication-tables.json';
 import conjugaisonsFrTheme from '@/data/themes/conjugaisons-fr.json';
 
 const STORAGE_KEY = 'flashcards-selected-theme';
 
 const themes: Theme[] = [
-  worldCapitalsTheme as Theme,
+  africaTheme as Theme,
+  antarcticaTheme as Theme,
+  asiaTheme as Theme,
+  europeEastTheme as Theme,
+  europeWestTheme as Theme,
+  northAmericaTheme as Theme,
+  southAmericaTheme as Theme,
+  australiaTheme as Theme,
+  bricsAllianceTheme as Theme,
+  natoAllianceTheme as Theme,
+  gdpBiggest20Theme as Theme,
+  gdpLowest20Theme as Theme,
   multiplicationTablesTheme as Theme,
   conjugaisonsFrTheme as Theme,
 ];
@@ -34,7 +56,7 @@ interface UseThemeReturn {
  * @example
  * const { themes, currentTheme, selectTheme } = useTheme();
  * // Select a different theme
- * selectTheme('world-capitals');
+ * selectTheme('africa');
  */
 export function useTheme(): UseThemeReturn {
   const [selectedThemeId, setSelectedThemeId] = useState<string | null>(() => {

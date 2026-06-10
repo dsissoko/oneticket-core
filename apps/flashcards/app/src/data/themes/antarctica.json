@@ -1,0 +1,50 @@
+{
+  "id": "antarctica",
+  "name": "Antarctica",
+  "cards": [
+    {
+      "id": "card-1",
+      "front": {
+        "data": "British Antarctic Territory",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Stanley / Rothera Research Station\n\n![United Kingdom](https://flagcdn.com/w80/gb.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-2",
+      "front": {
+        "data": "Australian Antarctic Territory",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Kingston\n\n![Australia](https://flagcdn.com/w80/au.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-3",
+      "front": {
+        "data": "French Southern and Antarctic Lands",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Saint-Pierre\n\n![France](https://flagcdn.com/w80/fr.png)",
+        "renderEngineId": "markdown"
+      }
+    },
+    {
+      "id": "card-4",
+      "front": {
+        "data": "Norwegian Antarctic Territory",
+        "renderEngineId": "text"
+      },
+      "back": {
+        "data": "Oslo / Troll Research Station\n\n![Norway](https://flagcdn.com/w80/no.png)",
+        "renderEngineId": "markdown"
+      }
+    }
+  ]
+}

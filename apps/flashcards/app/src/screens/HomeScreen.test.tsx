@@ -7,11 +7,11 @@ import { renderWithProviders } from '../test/utils';
 import { HomeScreen } from './HomeScreen';
 
 describe('HomeScreen', () => {
-  it('renders theme picker showing World Capitals', () => {
+  it('renders theme picker showing Africa', () => {
     renderWithProviders(<HomeScreen />);
-    // Check the Theme label is present and the value shows World Capitals
+    // Check the Theme label is present and the value shows Africa
     const themeSection = screen.getByText('Theme').parentElement;
-    expect(themeSection?.textContent).toContain('World Capitals');
+    expect(themeSection?.textContent).toContain('Africa');
   });
 
   it('renders mode selector showing flip', () => {

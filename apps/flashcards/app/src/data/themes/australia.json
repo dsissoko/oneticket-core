@@ -1,0 +1,76 @@
+{
+  "id": "australia",
+  "name": "Australia",
+  "cards": [
+    {
+      "id": "card-1",
+      "front": { "data": "Australia", "renderEngineId": "text" },
+      "back": { "data": "Canberra\n\n![Australia](https://flagcdn.com/w80/au.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-2",
+      "front": { "data": "Fiji", "renderEngineId": "text" },
+      "back": { "data": "Suva\n\n![Fiji](https://flagcdn.com/w80/fj.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-3",
+      "front": { "data": "Kiribati", "renderEngineId": "text" },
+      "back": { "data": "South Tarawa\n\n![Kiribati](https://flagcdn.com/w80/ki.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-4",
+      "front": { "data": "Marshall Islands", "renderEngineId": "text" },
+      "back": { "data": "Majuro\n\n![Marshall Islands](https://flagcdn.com/w80/mh.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-5",
+      "front": { "data": "Micronesia", "renderEngineId": "text" },
+      "back": { "data": "Palikir\n\n![Micronesia](https://flagcdn.com/w80/fm.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-6",
+      "front": { "data": "Nauru", "renderEngineId": "text" },
+      "back": { "data": "Yaren\n\n![Nauru](https://flagcdn.com/w80/nr.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-7",
+      "front": { "data": "New Zealand", "renderEngineId": "text" },
+      "back": { "data": "Wellington\n\n![New Zealand](https://flagcdn.com/w80/nz.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-8",
+      "front": { "data": "Palau", "renderEngineId": "text" },
+      "back": { "data": "Ngerulmud\n\n![Palau](https://flagcdn.com/w80/pw.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-9",
+      "front": { "data": "Papua New Guinea", "renderEngineId": "text" },
+      "back": { "data": "Port Moresby\n\n![Papua New Guinea](https://flagcdn.com/w80/pg.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-10",
+      "front": { "data": "Samoa", "renderEngineId": "text" },
+      "back": { "data": "Apia\n\n![Samoa](https://flagcdn.com/w80/ws.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-11",
+      "front": { "data": "Solomon Islands", "renderEngineId": "text" },
+      "back": { "data": "Honiara\n\n![Solomon Islands](https://flagcdn.com/w80/sb.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-12",
+      "front": { "data": "Tonga", "renderEngineId": "text" },
+      "back": { "data": "Nukualofa\n\n![Tonga](https://flagcdn.com/w80/to.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-13",
+      "front": { "data": "Tuvalu", "renderEngineId": "text" },
+      "back": { "data": "Funafuti\n\n![Tuvalu](https://flagcdn.com/w80/tv.png)", "renderEngineId": "markdown" }
+    },
+    {
+      "id": "card-14",
+      "front": { "data": "Vanuatu", "renderEngineId": "text" },
+      "back": { "data": "Port Vila\n\n![Vanuatu](https://flagcdn.com/w80/vu.png)", "renderEngineId": "markdown" }
+    }
+  ]
+}

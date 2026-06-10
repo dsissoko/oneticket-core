@@ -14,17 +14,16 @@ describe('useTheme', () => {
     vi.unstubAllGlobals();
   });
 
-  it('loads world-capitals theme', () => {
+  it('loads 14 themes including africa', () => {
     const { result } = renderHook(() => useTheme());
-    expect(result.current.themes).toHaveLength(3);
-    expect(result.current.themes[0].id).toBe('world-capitals');
-    expect(result.current.themes[0].name).toBe('World Capitals');
+    expect(result.current.themes).toHaveLength(14);
+    expect(result.current.themes[0].id).toBe('africa');
   });
 
   it('returns first theme as current theme when none selected', () => {
     const { result } = renderHook(() => useTheme());
     expect(result.current.currentTheme).not.toBeNull();
-    expect(result.current.currentTheme?.id).toBe('world-capitals');
+    expect(result.current.currentTheme?.id).toBe('africa');
   });
 
   it('provides theme selection method', () => {
@@ -35,23 +34,29 @@ describe('useTheme', () => {
   it('selects theme by id', () => {
     const { result } = renderHook(() => useTheme());
     act(() => {
-      result.current.selectTheme('world-capitals');
+      result.current.selectTheme('africa');
     });
-    expect(result.current.selectedThemeId).toBe('world-capitals');
+    expect(result.current.selectedThemeId).toBe('africa');
   });
 
   it('persists selected theme to localStorage', () => {
     const { result } = renderHook(() => useTheme());
     act(() => {
-      result.current.selectTheme('world-capitals');
+      result.current.selectTheme('africa');
     });
-    expect(window.localStorage.setItem).toHaveBeenCalledWith('flashcards-selected-theme', 'world-capitals');
+    expect(window.localStorage.setItem).toHaveBeenCalledWith('flashcards-selected-theme', 'africa');
   });
 
   it('restores selected theme from localStorage on init', () => {
+    window.localStorage.getItem = vi.fn(() => 'africa');
+    const { result } = renderHook(() => useTheme());
+    expect(result.current.selectedThemeId).toBe('africa');
+  });
+
+  it('falls back to africa when world-capitals stored in localStorage', () => {
     window.localStorage.getItem = vi.fn(() => 'world-capitals');
     const { result } = renderHook(() => useTheme());
-    expect(result.current.selectedThemeId).toBe('world-capitals');
+    expect(result.current.currentTheme).toBeNull();
   });
 
   it('returns null currentTheme when invalid theme id stored', () => {
