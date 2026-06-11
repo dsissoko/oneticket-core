@@ -13,7 +13,7 @@ GitHub-native autonomous multi-agent framework. Invoke agents by commenting `@ro
       ↓
   @po decomposes into tasks → manifest
       ↓
-  FAN-OUT: workers execute tasks in parallel
+  FAN-OUT: tasks execute sequentially by default (add --parallel for FAN-OUT)
       ↓
   GATHER: results merge, dependencies resolved
       ↓
@@ -146,7 +146,7 @@ The framework handles the rest.
 | `@po reverse-doc <scope>` | Synchronizes documentation with existing code |
 
 Any `@role` comment on a GitHub issue or PR triggers the pipeline.
-If the agent produces a manifest → FAN-OUT/GATHER starts automatically.
+If the agent produces a manifest → tasks execute and a PR is delivered automatically.
 If it answers a question → it posts a comment and stops.
 
 ---
@@ -218,11 +218,11 @@ OneTicket is designed to be fully customizable. Here are the main axes:
 
 ## Merge conflicts
 
-Merge conflicts can occur when using `--parallel` mode. When two tasks modify the same file simultaneously, the pipeline stops cleanly and labels the issue `merge error` — nothing is lost.
+By default, `@leaddev implement` runs tasks sequentially — no merge conflicts possible.
 
-Recovery is straightforward: see the [Merge Conflict Recovery runbook](.oneticket/docs/run/merge-recovery.md).
+Add `--parallel` to enable FAN-OUT parallel execution (faster, but merge conflicts possible when two tasks modify the same file). If that happens, the pipeline stops cleanly and labels the issue `merge error` — nothing is lost.
 
-> By default, `@leaddev implement` runs tasks sequentially — no merge conflicts. Use `--parallel` only when you need speed and understand the trade-off.
+Recovery: see the [Merge Conflict Recovery runbook](.oneticket/docs/run/merge-recovery.md).
 
 ---
 
@@ -297,8 +297,8 @@ Full list: `https://opencode.ai/zen/v1/models`
 | **v0.1.0** — released | GitHub-native pipeline fully operational end-to-end |
 | **v0.5.0** — released | AppShell + Breakout delivered, product-spec stable, pipeline doc aligned |
 | **v0.6.0** — released | reverse-doc, label flow, 50 skills catalog, MonJournal app delivered, APM integration live |
-| **v0.7.0** — current | Sprints replace slices as implementation planning unit, reinforced deterministic workflow (rogue branch prevention) |
-| **V1** — planned | Routing & handoff matrix, autonomous mode, full-stack skills, sprint planning (`@po plan-sprint`) |
+| **v0.7.0** — current | Sprints replace slices, rogue branch prevention, sequential execution by default (`--parallel` opt-in), `@role` restricted to collaborators |
+| **V1** — planned | Routing & handoff matrix, autonomous mode, full-stack skills |
 | **V2** — planned | Cloud runtime, persistent sandboxes, multi-sandbox fan-out, observability |
 
 > V1 and V2 are planning labels, not SemVer versions. Official releases follow semantic versioning carried by git tags.
