@@ -54,21 +54,6 @@ The pipeline posts two live URLs directly in the PR comment:
 
 > ✋ *External debug — required human or stronger model intervention to fix issues*
 
-### Token & cost details
-
-> PRs closed without merge excluded. Overlapping sessions split 50/50 between apps.
-
-| App | Tokens in | Tokens out | Cost |
-|---|---|---|---|
-| SpaceInvaders | ~46.3M | ~359K | ~$8 |
-| MonJournal | — | — | pending |
-| OneTicket | — | — | pending |
-| AppShell | — | — | pending |
-| Breakout | — | — | pending |
-| Flashcards | — | — | pending |
-
-> Costs are [Zen](https://opencode.ai/docs/zen) pay-as-you-go. BYOK sessions billed directly by provider.
-
 ---
 
 ## Prerequisites
