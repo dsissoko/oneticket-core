@@ -58,7 +58,7 @@ cleanup_on_success: true
 #
 # Set to 'oneticket-core' to work on the framework itself.
 # Set to your project name (e.g. breakout) to work on an application project.
-current_project: flashcards
+current_project: r3edge-client
 
 # ---------------------------------------------------------------------------
 # Documentation path resolution
@@ -92,8 +92,9 @@ agent_config:
     # model: opencode/qwen3.6-plus       ← qwen (previous)
     # model: opencode/claude-haiku-4-5   ← haiku (validated)
     # model: opencode/deepseek-v4-pro    ← too slow on manifest generation
+    # model: opencode/claude-sonnet-4-6  ← sonnet (previous)
     # model: opencode/gpt-5.1-codex      ← deprecated 2026-07-23
-    model: opencode/claude-sonnet-4-6
+    model: opencode/nemotron-3-ultra-free
     permission:
       "*": allow
       task: deny
