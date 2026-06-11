@@ -43,14 +43,14 @@ The pipeline posts two live URLs directly in the PR comment:
 
 **Live examples** — all built by OneTicket:
 
-| Project | Doc | App | Model | External debug |
+| Project | Doc | App | Models | External debug |
 |---|---|---|---|---|
 | MonJournal — *personal journal, tags, timeline, surprise* | [docs](https://dsissoko.github.io/oneticket-core/monjournal/docs/) | [app](https://dsissoko.github.io/oneticket-core/monjournal/app/) | claude-haiku-4-5 | — |
 | Breakout — *classic arcade, vanilla JS, no dependencies* | [docs](https://dsissoko.github.io/oneticket-core/breakout/docs/) | [app](https://dsissoko.github.io/oneticket-core/breakout/app/) | claude-haiku-4-5 | — |
-| SpaceInvaders — *retro shooter, ECS architecture* | [docs](https://dsissoko.github.io/oneticket-core/spaceinvaders/docs/) | [app](https://dsissoko.github.io/oneticket-core/spaceinvaders/app/) | qwen3.6-plus | — |
+| SpaceInvaders — *retro shooter, ECS architecture* | [docs](https://dsissoko.github.io/oneticket-core/spaceinvaders/docs/) | [app](https://dsissoko.github.io/oneticket-core/spaceinvaders/app/) | qwen3.6-plus, claude-haiku-4-5 | — |
 | AppShell — *the reusable scaffold, bootstrap any project with `@leaddev init-appshell`* | [docs](https://dsissoko.github.io/oneticket-core/appshell/docs/) | [app](https://dsissoko.github.io/oneticket-core/appshell/app/) | claude-haiku-4-5 | — |
-| Flashcards — *world capitals, multiplication tables, french conjugations* | [docs](https://dsissoko.github.io/oneticket-core/flashcards/docs/) | [app](https://dsissoko.github.io/oneticket-core/flashcards/app/) | minimax-m2.5 | ✋ |
-| OneTicket — *partially built by itself* | [docs](https://dsissoko.github.io/oneticket-core/framework/docs/) | — | claude-haiku-4-5 | — |
+| Flashcards — *17 themes: world capitals, solfège, multiplications, conjugations and more* | [docs](https://dsissoko.github.io/oneticket-core/flashcards/docs/) | [app](https://dsissoko.github.io/oneticket-core/flashcards/app/) | minimax-m2.5, claude-haiku-4-5, claude-sonnet-4-6 | ✋ |
+| OneTicket — *partially built by itself* | [docs](https://dsissoko.github.io/oneticket-core/framework/docs/) | — | claude-haiku-4-5, claude-sonnet-4-6 | ✋ |
 
 > ✋ *External debug — required human or stronger model intervention to fix issues*
 
@@ -58,17 +58,14 @@ The pipeline posts two live URLs directly in the PR comment:
 
 > PRs closed without merge excluded. Overlapping sessions split 50/50 between apps.
 
-| App | Model | Tokens in | Tokens out | Cost |
-|---|---|---|---|---|
-| SpaceInvaders | `claude-haiku-4-5` | ~39.8M | ~287K | $6.87 |
-| SpaceInvaders | `qwen3.6-plus` | ~6.4M | ~70K | $0.80 |
-| SpaceInvaders | `gpt-5-nano` | ~52K | ~1K | $0.00 |
-| **SpaceInvaders TOTAL** | | **~46.3M** | **~359K** | **$7.68** |
-| MonJournal | `claude-haiku-4-5` | ~9.2M | ~76K | $1.68 |
-| OneTicket | `claude-haiku-4-5` | ~10.9M | ~89K | $1.99 |
-| AppShell | — | — | — | pending |
-| Breakout | — | — | — | pending |
-| Flashcards | — | — | — | pending |
+| App | Tokens in | Tokens out | Cost |
+|---|---|---|---|
+| SpaceInvaders | ~46.3M | ~359K | ~$8 |
+| MonJournal | — | — | pending |
+| OneTicket | — | — | pending |
+| AppShell | — | — | pending |
+| Breakout | — | — | pending |
+| Flashcards | — | — | pending |
 
 > Costs are [Zen](https://opencode.ai/docs/zen) pay-as-you-go. BYOK sessions billed directly by provider.
 
@@ -110,7 +107,7 @@ In your repository **Settings → Secrets and variables → Actions**, add:
 
 1. `OPENCODE_API_KEY` — your API key from [opencode.ai/auth](https://opencode.ai/auth)
 2. `ONETICKET_GH_PAT` — a GitHub PAT with scopes `contents:write`, `pull-requests:write`, `issues:write`, `actions:write` — create one in your profile **Settings → Developer settings → Personal access tokens** ([github.com/settings](https://github.com/settings))
-3. Enable GitHub Pages — **Settings → Pages → Source → GitHub Actions**
+3. Enable GitHub Pages — **Settings → Pages → Source → Deploy from a branch → gh-pages / root**
 4. (Optional but recommended) Enable automatic branch deletion — **Settings → General → Pull Requests → Automatically delete head branches** — keeps your repository clean as feature and task branches accumulate fast.
 
 ### 3. (Optional) Customize your OneTicket repository
