@@ -251,7 +251,6 @@ async function main() {
     docsPath, appPath, currentProject, contextBlock,
     originType, prNumber, replyToCommentId,
     commentPath, commentLine, commentDiffHunk, config, safeMode,
-    commentPath, commentLine, commentDiffHunk, config,
   });
   console.log(`[agent-dispatch] Prompt built (${prompt.length} chars).`);
 
