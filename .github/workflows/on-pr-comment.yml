@@ -18,7 +18,12 @@ concurrency:
 
 jobs:
   dispatch:
-    if: "github.event.issue.pull_request != null && startsWith(github.event.comment.body, '@')"
+    if: |
+      github.event.issue.pull_request != null &&
+      startsWith(github.event.comment.body, '@') &&
+      (github.event.comment.author_association == 'OWNER' ||
+       github.event.comment.author_association == 'COLLABORATOR' ||
+       github.event.comment.author_association == 'MEMBER')
     runs-on: ubuntu-latest
     permissions:
       contents: write

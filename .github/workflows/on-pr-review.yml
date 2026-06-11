@@ -26,6 +26,10 @@ concurrency:
 
 jobs:
   dispatch:
+    if: |
+      github.event.review.author_association == 'OWNER' ||
+      github.event.review.author_association == 'COLLABORATOR' ||
+      github.event.review.author_association == 'MEMBER'
     runs-on: ubuntu-latest
     permissions:
       contents: write
