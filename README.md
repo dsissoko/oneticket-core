@@ -20,7 +20,7 @@ GitHub-native autonomous multi-agent framework. Invoke agents by commenting `@ro
   PR created automatically
 ```
 
-All orchestration is deterministic code — zero LLM in the pipeline logic. LLMs only generate content. Agent behavior is guided by 50+ skills available via [dsissoko/oneticket-skills](https://github.com/dsissoko/oneticket-skills) — architecture, C4, epics, user stories, frontend stack, testing, and more.
+All orchestration is deterministic code — zero LLM in the pipeline logic. LLMs only generate content. Agent behavior is guided by 50+ skills available via [dsissoko/oneticket-skills](https://github.com/dsissoko/oneticket-skills) — architecture, [C4](https://c4model.com), epics, user stories, frontend stack, testing, and more.
 
 ### What's in the PR
 
@@ -28,7 +28,7 @@ Every PR contains two artifacts, both instantly accessible via a live preview:
 
 **Structured documentation** — four sections, generated and kept in sync with the code:
 - `what/` — product vision, epics, user stories
-- `how/` — architecture, C4 diagrams, implementation sprints, ADRs
+- `how/` — architecture, [C4 diagrams](https://c4model.com/diagrams), implementation sprints, ADRs
 - `ship/` — CI/CD, deployment
 - `run/` — operational runbooks
 
@@ -138,7 +138,7 @@ The framework handles the rest.
 | `@po <describe your product>` | Generates product-spec, epics, user stories |
 | `@po plan-sprint` | Plans a sprint — selects US from backlog, creates sprint.md + GitHub Milestone |
 | `@po close-sprint` | Closes a sprint — velocity summary, closes GitHub Milestone |
-| `@architect create` | Generates architecture.md, C4 diagrams — also completes Technical Notes in sprints and authors ADRs |
+| `@architect create` | Generates architecture.md, [C4 diagrams](https://c4model.com/diagrams) — also completes Technical Notes in sprints and authors ADRs |
 | `@leaddev init-<template>` | Bootstraps the app from a template (e.g. `@leaddev init-appshell`) |
 | `@leaddev <implement request>` | Decomposes into tasks, triggers FAN-OUT, delivers a PR |
 | `@dev <request>` | Implements directly on the feature branch (no decomposition) |
