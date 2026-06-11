@@ -221,6 +221,9 @@ jobs:
           name: doc-site-static
           path: dist/
 
+      - name: Ensure .nojekyll
+        run: touch dist/.nojekyll
+
       - name: Deploy doc preview
         uses: JamesIves/github-pages-deploy-action@v4
         with:
@@ -267,6 +270,9 @@ jobs:
         with:
           name: doc-site-static
           path: dist/
+
+      - name: Ensure .nojekyll
+        run: touch dist/.nojekyll
 
       - name: Deploy doc
         uses: JamesIves/github-pages-deploy-action@v4
