@@ -51,8 +51,8 @@ async function getExistingPR(branch, repo, token) {
 // ---------------------------------------------------------------------------
 
 export function parseComment(commentBody) {
-  const safeMode = commentBody.includes('--safe');
-  const cleanBody = commentBody.replace('--safe', '').trim();
+  const parallelMode = commentBody.includes('--parallel');
+  const cleanBody = commentBody.replace('--parallel', '').trim();
   const match = cleanBody.match(/@([a-zA-Z][a-zA-Z0-9_-]*)/);
   if (!match) {
     console.log('[agent-dispatch] No @role found in comment — exiting.');
@@ -60,7 +60,8 @@ export function parseComment(commentBody) {
   }
   const role    = match[1].toLowerCase();
   const request = cleanBody.replace(match[0], '').trim();
-  console.log(`[agent-dispatch] role="${role}", safeMode=${safeMode}, request="${request.slice(0, 80)}..."`);
+  const safeMode = !parallelMode; // sequential by default, --parallel opts into FAN-OUT
+  console.log(`[agent-dispatch] role="${role}", safeMode=${safeMode}, parallelMode=${parallelMode}, request="${request.slice(0, 80)}..."`);
   return { role, request, safeMode };
 }
 

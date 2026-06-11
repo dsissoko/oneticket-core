@@ -140,7 +140,7 @@ The framework handles the rest.
 | `@po close-sprint` | Closes a sprint — velocity summary, closes GitHub Milestone |
 | `@architect create` | Generates architecture.md, [C4 diagrams](https://c4model.com/diagrams) — also completes Technical Notes in sprints and authors ADRs |
 | `@leaddev init-<template>` | Bootstraps the app from a template (e.g. `@leaddev init-appshell`) |
-| `@leaddev <implement request>` | Decomposes into tasks, triggers FAN-OUT, delivers a PR |
+| `@leaddev <implement request>` | Decomposes into tasks, executes sequentially by default — delivers a PR. Add `--parallel` to enable FAN-OUT parallel execution (faster, but merge conflicts possible) |
 | `@dev <request>` | Implements directly on the feature branch (no decomposition) |
 | `@qa validate` | Reviews a PR — code quality, spec conformance, test coverage |
 | `@po reverse-doc <scope>` | Synchronizes documentation with existing code |
@@ -171,7 +171,8 @@ Merge when ready.
 Comment: `@leaddev init-<template>` (optional — first Sprint Execution only)
 → PR opened with app scaffold. Merge before proceeding.
 Comment: `@leaddev implement`
-→ Reads `docs/how/sprints/sprint-N/sprint.md` — FAN-OUT/GATHER — PR opened when all tasks complete.
+→ Reads `docs/how/sprints/sprint-N/sprint.md` — tasks execute sequentially by default — PR opened when all tasks complete.
+Add `--parallel` to enable FAN-OUT/GATHER for faster execution.
 Iterate with `@dev fix` or `@qa validate` comments on the PR. Merge → app in production.
 
 #### Ticket 4 — Sprint Review *(each sprint)*
@@ -215,13 +216,13 @@ OneTicket is designed to be fully customizable. Here are the main axes:
 
 ---
 
-## Merge conflicts — don't panic
+## Merge conflicts
 
-Merge conflicts are **normal and expected** in a parallel pipeline. When two tasks modify the same file, the pipeline stops cleanly and labels the issue `merge error` — nothing is lost.
+Merge conflicts can occur when using `--parallel` mode. When two tasks modify the same file simultaneously, the pipeline stops cleanly and labels the issue `merge error` — nothing is lost.
 
 Recovery is straightforward: see the [Merge Conflict Recovery runbook](.oneticket/docs/run/merge-recovery.md).
 
-To eliminate the risk entirely, add `--safe` to any `@leaddev` command — this forces sequential execution (A→B→C) at the cost of speed.
+> By default, `@leaddev implement` runs tasks sequentially — no merge conflicts. Use `--parallel` only when you need speed and understand the trade-off.
 
 ---
 
