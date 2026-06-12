@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>R3edge-client</title>
+  <script>
+    // GitHub Pages SPA fallback — preserve the requested path so React Router can handle it.
+    // Stores the full path (including search/hash) in sessionStorage, then redirects to index.html.
+    // The app reads this value on startup and navigates to the correct route.
+    var path = window.location.pathname + window.location.search + window.location.hash;
+    sessionStorage.setItem('spa-redirect-path', path);
+    // Redirect to the base path (index.html is served from here)
+    window.location.replace('./');
+  </script>
+</head>
+<body>
+  <p>Redirecting...</p>
+</body>
+</html>
