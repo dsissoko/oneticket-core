@@ -92,8 +92,7 @@ In your repository **Settings → Secrets and variables → Actions**, add:
 
 1. `OPENCODE_API_KEY` — your API key from [opencode.ai/auth](https://opencode.ai/auth)
 2. `ONETICKET_GH_PAT` — a GitHub PAT with scopes `contents:write`, `pull-requests:write`, `issues:write`, `actions:write` — create one in your profile **Settings → Developer settings → Personal access tokens** ([github.com/settings](https://github.com/settings))
-3. Enable GitHub Pages — **Settings → Pages → Source → Deploy from a branch → gh-pages / root**
-4. (Optional but recommended) Enable automatic branch deletion — **Settings → General → Pull Requests → Automatically delete head branches** — keeps your repository clean as feature and task branches accumulate fast.
+3. (Optional but recommended) Enable automatic branch deletion — **Settings → General → Pull Requests → Automatically delete head branches** — keeps your repository clean as feature and task branches accumulate fast.
 
 ### 3. (Optional) Customize your OneTicket repository
 
@@ -110,6 +109,10 @@ See [Customize OneTicket](#customize-oneticket) for the full list of options.
 ```
 @po init-doc
 ```
+
+This creates the documentation structure and triggers the first deploy, which creates the `gh-pages` branch.
+
+Once it completes, enable GitHub Pages — **Settings → Pages → Source → Deploy from a branch → gh-pages / root**
 
 The framework handles the rest.
 
