@@ -272,6 +272,8 @@ Full list: `https://opencode.ai/zen/v1/models`
 | `opencode/qwen3.6-plus` | ✅ | Validated in prod |
 | `opencode/minimax-m2.5` | ✅ | Validated in prod |
 | `opencode/deepseek-v4-pro` | ❌ | Loops indefinitely on manifest generation, never writes the file |
+| `opencode/qwen3.6-plus-free` | ⚠️ | Intermittent — model sometimes unavailable or too slow (upstream idle timeout) |
+| `opencode/nemotron-3-ultra-free` | ⚠️ | Intermittent — upstream idle timeout exceeded (~6min), prefer paid model |
 
 ---
 
