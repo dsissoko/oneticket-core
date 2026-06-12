@@ -58,7 +58,7 @@ cleanup_on_success: true
 #
 # Set to 'oneticket-core' to work on the framework itself.
 # Set to your project name (e.g. breakout) to work on an application project.
-current_project: r3edge-client
+current_project: oneticket-core
 
 # ---------------------------------------------------------------------------
 # Documentation path resolution
@@ -95,7 +95,7 @@ agent_config:
     # model: opencode/claude-sonnet-4-6      ← sonnet (previous)
     # model: opencode/gpt-5.1-codex          ← deprecated 2026-07-23
     # model: opencode/nemotron-3-ultra-free  ← upstream idle timeout exceeded
-    model: opencode/qwen3.6-plus-free
+    model: opencode/qwen3.6-plus
     permission:
       "*": allow
       task: deny
