@@ -62,7 +62,7 @@ The pipeline posts two live URLs directly in the PR comment:
 - **GitHub PAT** — scopes: `contents:write`, `pull-requests:write`, `issues:write`, `actions:write`
 - **GitHub Pages** — must be enabled on your repository
 - **Project name** — set `current_project` in `.oneticket/config.yml` to your project name before invoking any agent
-- **Initial version** — set your starting version in `.release-please-manifest.json` (e.g. `{ "apps/my-app": "0.1.0" }`) before the first release — otherwise release-please will infer a version from your commit history
+- **Initial version** — set your starting version in `.release-please-manifest.json` before the first release
 
 ---
 
@@ -94,7 +94,13 @@ In your repository **Settings → Secrets and variables → Actions**, add:
 
 1. `OPENCODE_API_KEY` — your API key from [opencode.ai/auth](https://opencode.ai/auth)
 2. `ONETICKET_GH_PAT` — a GitHub PAT with scopes `contents:write`, `pull-requests:write`, `issues:write`, `actions:write` — create one in your profile **Settings → Developer settings → Personal access tokens** ([github.com/settings](https://github.com/settings))
-3. (Optional but recommended) Enable automatic branch deletion — **Settings → General → Pull Requests → Automatically delete head branches** — keeps your repository clean as feature and task branches accumulate fast.
+3. Initialize `.release-please-manifest.json` at the root of your repository with your project's starting version:
+   ```json
+   {
+     "apps/my-app": "0.1.0"
+   }
+   ```
+4. (Optional but recommended) Enable automatic branch deletion — **Settings → General → Pull Requests → Automatically delete head branches** — keeps your repository clean as feature and task branches accumulate fast.
 
 ### 3. (Optional) Customize your OneTicket repository
 
