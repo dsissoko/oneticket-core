@@ -114,6 +114,8 @@ This creates the documentation structure and triggers the first deploy, which cr
 
 Once it completes, enable GitHub Pages — **Settings → Pages → Source → Deploy from a branch → gh-pages / root**
 
+Then re-trigger the doc site by adding the `ready for review` label on the PR created by `@po init-doc`.
+
 The framework handles the rest.
 
 ---
