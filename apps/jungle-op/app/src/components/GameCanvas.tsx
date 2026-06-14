@@ -12,13 +12,13 @@ import { circlesOverlap } from '../utils/collision';
 const CANVAS_BG_COLOR = '#1a1a2e';
 const JUNGLE_BG_COLOR = '#2d4a2d';
 const JUNGLE_ZONE_RATIO = 0.2; // bottom 20%
-const SPRINKLER_RADIUS = 25;
-const FIRE_JET_RADIUS = 6;
+const SPRINKLER_RADIUS = 20;
+const FIRE_JET_RADIUS = 5;
 const FIRE_JET_SPEED = 350; // pixels per second
 const FIRE_JET_TRAIL_LENGTH = 8;
-const ANIMAL_EMOJI_SIZE = 80;
-const ANIMAL_HP_BAR_HEIGHT = 8;
-const ANIMAL_HP_BAR_WIDTH = 80;
+const ANIMAL_EMOJI_SIZE = 64;
+const ANIMAL_HP_BAR_HEIGHT = 6;
+const ANIMAL_HP_BAR_WIDTH = 64;
 const ANIMAL_MOVE_SPEED = 250; // pixels per second
 const TEXT_COLOR = '#ffffff';
 const OVERLAY_BG = 'rgba(0, 0, 0, 0.7)';
@@ -286,7 +286,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
 
       // Draw HP text
       ctx.fillStyle = TEXT_COLOR;
-      ctx.font = 'bold 12px Arial';
+      ctx.font = 'bold 10px Arial';
       ctx.textAlign = 'center';
       ctx.fillText(`${animal.hp}/${animal.def.maxHp}`, animal.x + animal.width / 2, hpBarY - 3);
 
@@ -333,7 +333,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
 
     const drawUI = (state: JungleState) => {
       ctx.fillStyle = TEXT_COLOR;
-      ctx.font = 'bold 18px Arial';
+      ctx.font = 'bold 14px Arial';
       ctx.textAlign = 'left';
       ctx.textBaseline = 'top';
       ctx.fillText(`Score: ${state.score}`, 15, 15);
@@ -354,18 +354,18 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
 
       // Title
       ctx.fillStyle = '#e67e22';
-      ctx.font = 'bold 52px Arial';
+      ctx.font = 'bold 42px Arial';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText('\u{1F334} OP\u00C9RATION JUNGLE \u{1F334}', canvas.width / 2, canvas.height / 2 - 120);
 
       // Subtitle
       ctx.fillStyle = TEXT_COLOR;
-      ctx.font = '18px Arial';
+      ctx.font = '14px Arial';
       ctx.fillText('Sauvez les animaux des jets de feu!', canvas.width / 2, canvas.height / 2 - 70);
 
       // Speed slider label
-      ctx.font = 'bold 20px Arial';
+      ctx.font = 'bold 16px Arial';
       ctx.fillText('Vitesse de la boule', canvas.width / 2, canvas.height / 2 - 20);
 
       // Speed slider visualization
@@ -397,11 +397,11 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
 
       // Speed text
       ctx.fillStyle = TEXT_COLOR;
-      ctx.font = '18px Arial';
+      ctx.font = '14px Arial';
       ctx.fillText(`${speedMultiplierRef.current.toFixed(1)}x`, canvas.width / 2, sliderY + 50);
 
       // Labels
-      ctx.font = '14px Arial';
+      ctx.font = '11px Arial';
       ctx.textAlign = 'left';
       ctx.fillText('0.5x', sliderX - 5, sliderY + sliderHeight + 15);
       ctx.textAlign = 'right';
@@ -409,9 +409,9 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
 
       // Animal preview
       ctx.textAlign = 'center';
-      ctx.font = '16px Arial';
+      ctx.font = '13px Arial';
       ctx.fillText('Animaux \u00E0 sauver:', canvas.width / 2, canvas.height / 2 + 110);
-      ctx.font = '36px serif';
+      ctx.font = '29px serif';
       const animalText = ANIMAL_DEFS.map(a => `${a.emoji}${a.maxHp}PV`).join('  ');
       ctx.fillText(animalText, canvas.width / 2, canvas.height / 2 + 150);
 
@@ -426,14 +426,14 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
       ctx.roundRect(buttonX, buttonY, buttonWidth, buttonHeight, 8);
       ctx.fill();
       ctx.fillStyle = BUTTON_TEXT_COLOR;
-      ctx.font = 'bold 20px Arial';
+      ctx.font = 'bold 16px Arial';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText('COMMENCER', canvas.width / 2, buttonY + buttonHeight / 2);
 
       // Controls info
       ctx.fillStyle = '#aaa';
-      ctx.font = '14px Arial';
+      ctx.font = '11px Arial';
       ctx.textBaseline = 'top';
       ctx.fillText('\u2190 \u2192 ou swipe pour d\u00E9placer l\'animal', canvas.width / 2, buttonY + buttonHeight + 20);
     };
@@ -443,13 +443,13 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       ctx.fillStyle = '#e74c3c';
-      ctx.font = 'bold 52px Arial';
+      ctx.font = 'bold 42px Arial';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 60);
 
       ctx.fillStyle = TEXT_COLOR;
-      ctx.font = '24px Arial';
+      ctx.font = '19px Arial';
       ctx.fillText(`Score final: ${state.score}`, canvas.width / 2, canvas.height / 2);
 
       // Restart button
@@ -463,7 +463,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
       ctx.roundRect(buttonX, buttonY, buttonWidth, buttonHeight, 8);
       ctx.fill();
       ctx.fillStyle = BUTTON_TEXT_COLOR;
-      ctx.font = 'bold 20px Arial';
+      ctx.font = 'bold 16px Arial';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText('RECOMMENCER', canvas.width / 2, buttonY + buttonHeight / 2);
@@ -476,16 +476,16 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
       const allSaved = state.savedCount >= ANIMAL_DEFS.length;
 
       ctx.fillStyle = allSaved ? '#27ae60' : '#e67e22';
-      ctx.font = 'bold 52px Arial';
+      ctx.font = 'bold 42px Arial';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(allSaved ? 'VICTOIRE!' : 'PRESQUE!', canvas.width / 2, canvas.height / 2 - 60);
 
       ctx.fillStyle = TEXT_COLOR;
-      ctx.font = '24px Arial';
+      ctx.font = '19px Arial';
       ctx.fillText(`Score final: ${state.score}`, canvas.width / 2, canvas.height / 2);
 
-      ctx.font = '18px Arial';
+      ctx.font = '14px Arial';
       if (allSaved) {
         ctx.fillText('Tous les animaux ont \u00E9t\u00E9 sauv\u00E9s!', canvas.width / 2, canvas.height / 2 + 35);
       } else {
