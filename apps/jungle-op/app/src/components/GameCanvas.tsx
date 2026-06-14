@@ -783,8 +783,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
             state.animalIndex++;
             if (state.animalIndex >= ANIMAL_DEFS.length) {
               // All animals processed — check how many were saved
-              state.phase = state.savedCount > 0 ? 'victory' : 'gameOver';
-              state.currentAnimal = null;
+state.phase = 'victory';
             } else {
               state.currentAnimal = createAnimal(state.animalIndex);
             }
@@ -815,7 +814,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
                 state.animalIndex++;
                 if (state.animalIndex >= ANIMAL_DEFS.length) {
                   // All animals processed — check how many were saved
-                  state.phase = state.savedCount > 0 ? 'victory' : 'gameOver';
+                  state.phase = 'victory';
                 } else {
                   state.currentAnimal = createAnimal(state.animalIndex);
                 }
