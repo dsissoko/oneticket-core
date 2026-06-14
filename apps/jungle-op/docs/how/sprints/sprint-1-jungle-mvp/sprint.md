@@ -6,12 +6,12 @@ title: 'Sprint 1 — Jungle MVP'
 Deliver a fully playable Opération Jungle MVP with start screen, red ball fire jets, animal movement, health/scoring, and animal sequence — all 5 user stories in a single sprint.
 
 ## Cross-references
-- Epic: [epic-0-mvp](../../what/epics/epic-0-mvp/epic.md)
-- us-001 — Game Start and Speed Configuration (pending)
-- us-002 — Red Ball Automatic Fire Jets (pending)
-- us-003 — Animal Movement Controls (pending)
-- us-004 — Animal Health and Scoring System (pending)
-- us-005 — Animal Sequence and Game Progression (pending)
+- Epic: [Epic 0 — MVP Opération Jungle](epic-0-mvp/epic.md)
+- us-001 — [US-001 — Game Start and Speed Configuration](us-001-game-start-and-speed.md)
+- us-002 — [US-002 — Red Ball Automatic Fire Jets](us-002-red-ball-fire-jets.md)
+- us-003 — [US-003 — Animal Movement Controls](us-003-animal-movement-controls.md)
+- us-004 — [US-004 — Animal Health and Scoring System](us-004-animal-health-and-scoring.md)
+- us-005 — [US-005 — Animal Sequence and Game Progression](us-005-animal-sequence-and-game-progression.md)
 
 ---
 

@@ -23,13 +23,12 @@ Engaging, accessible game with simple controls and clear scoring — works on bo
 
 ## Related User Stories
 
-<!-- @analyst fills this section — write filename only, no relative path, no ../
-     US files are always in user-stories/ subfolder — never flat in the epic directory
-     The build script resolves the correct path automatically.
-     Example: [US-001 — Skeleton Setup](us-001-skeleton-setup.md) -->
+- [US-001 — Game Start and Speed Configuration](us-001-game-start-and-speed.md)
+- [US-002 — Red Ball Automatic Fire Jets](us-002-red-ball-fire-jets.md)
+- [US-003 — Animal Movement Controls](us-003-animal-movement-controls.md)
+- [US-004 — Animal Health and Scoring System](us-004-animal-health-and-scoring.md)
+- [US-005 — Animal Sequence and Game Progression](us-005-animal-sequence-and-game-progression.md)
 
 ## Related Sprints
 
-<!-- @po fills this section after producing sprints — write filename only, no relative path, no ../
-     The build script resolves the correct path automatically.
-     Example: [Sprint 1 — Skeleton Foundation](sprint-1/sprint.md) -->
+- [Sprint 1 — Jungle MVP](sprint-1-jungle-mvp/sprint.md)

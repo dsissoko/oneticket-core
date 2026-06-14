@@ -24,3 +24,4 @@ Each animal has a specific HP pool: Lion=20, Mouse=5, Girafe=15, Elephant=25. Wh
 
 ## Related Sprints
 
+- [Sprint 1 — Jungle MVP](sprint-1-jungle-mvp/sprint.md)

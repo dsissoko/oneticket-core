@@ -25,6 +25,4 @@ The currently active animal appears on the left side of the jungle zone (bottom 
 
 ## Related Sprints
 
-<!-- @po fills this section after producing sprints — write filename only, no relative path, no ../
-     The build script resolves the correct path automatically.
-     Example: [Sprint 1 — Skeleton Foundation](sprint-1/sprint.md) -->
+- [Sprint 1 — Jungle MVP](sprint-1-jungle-mvp/sprint.md)

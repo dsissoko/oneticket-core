@@ -25,3 +25,4 @@ Red ball is positioned at top-center of the game screen. It rotates and shoots f
 
 ## Related Sprints
 
+- [Sprint 1 — Jungle MVP](sprint-1-jungle-mvp/sprint.md)
