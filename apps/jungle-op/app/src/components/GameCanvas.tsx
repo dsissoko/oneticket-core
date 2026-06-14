@@ -1,0 +1,885 @@
+import React, { useRef, useEffect } from 'react';
+import {
+  JungleState,
+  Animal,
+  FireJet,
+  SprinklerBall,
+  ANIMAL_DEFS,
+} from '../types';
+import { circlesOverlap } from '../utils/collision';
+
+// Canvas configuration constants
+const CANVAS_BG_COLOR = '#1a1a2e';
+const JUNGLE_BG_COLOR = '#2d4a2d';
+const JUNGLE_ZONE_RATIO = 0.2; // bottom 20%
+const SPRINKLER_RADIUS = 25;
+const FIRE_JET_RADIUS = 6;
+const FIRE_JET_SPEED = 350; // pixels per second
+const FIRE_JET_TRAIL_LENGTH = 8;
+const ANIMAL_EMOJI_SIZE = 80;
+const ANIMAL_HP_BAR_HEIGHT = 8;
+const ANIMAL_HP_BAR_WIDTH = 80;
+const ANIMAL_MOVE_SPEED = 250; // pixels per second
+const TEXT_COLOR = '#ffffff';
+const OVERLAY_BG = 'rgba(0, 0, 0, 0.7)';
+const BUTTON_COLOR = '#e67e22';
+const BUTTON_TEXT_COLOR = '#ffffff';
+const HP_BAR_BG = '#333333';
+const HP_BAR_FILL = '#27ae60';
+const HP_BAR_LOW = '#e74c3c';
+
+// Behavior cycle constants
+const BARRAGE_DURATION_MIN = 2.0; // seconds
+const BARRAGE_DURATION_MAX = 5.0;
+const ERRATIC_DURATION_MIN = 1.5;
+const ERRATIC_DURATION_MAX = 3.5;
+const REGULAR_DURATION_MIN = 2.0;
+const REGULAR_DURATION_MAX = 4.0;
+const ERRATIC_MOVE_SPEED = 420; // pixels per second — assez rapide pour traverser l'écran
+const BARRAGE_DISPERSION_ANGLE = Math.PI / 12; // ±15 degrees
+const NORMAL_JETS_PER_SPAWN = 3; // 1.5x base (was effectively 1)
+const BARRAGE_JETS_PER_SPAWN = 9; // 3x normal (3 * 3)
+const BARRAGE_SHOOT_INTERVAL_FACTOR = 0.5; // shoot twice as fast during barrage
+
+interface GameCanvasProps {}
+
+export const GameCanvas: React.FC<GameCanvasProps> = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const gameStateRef = useRef<JungleState | null>(null);
+  const lastTimeRef = useRef<number>(0);
+  const frameCountRef = useRef<number>(0);
+  const keysRef = useRef<{ left: boolean; right: boolean }>({ left: false, right: false });
+  const touchRef = useRef<{ startX: number; currentX: number; active: boolean; zoneCheck: boolean }>({ startX: 0, currentX: 0, active: false, zoneCheck: false });
+  const speedMultiplierRef = useRef<number>(1.0);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) {
+      console.warn('Canvas element not available');
+      return;
+    }
+
+    // Set canvas size to parent container dimensions
+    const updateCanvasSize = () => {
+      const parent = canvas.parentElement;
+      canvas.width = parent ? parent.clientWidth : window.innerWidth;
+      canvas.height = parent ? parent.clientHeight : window.innerHeight;
+    };
+
+    updateCanvasSize();
+    window.addEventListener('resize', updateCanvasSize);
+
+    // Initialize 2D context
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      console.warn('Unable to get 2D context from canvas');
+      return;
+    }
+
+    const getJungleZoneY = () => canvas.height * (1 - JUNGLE_ZONE_RATIO);
+
+    // Initialize sprinkler ball
+    const createSprinkler = (): SprinklerBall => ({
+      x: canvas.width / 2,
+      y: canvas.height * 0.15,
+      radius: SPRINKLER_RADIUS,
+      angle: 0,
+      rotationSpeed: Math.PI * 0.8, // ~0.8 rotations per second
+      shootInterval: 0.35, // seconds between shots
+      shootTimer: 0,
+      // Behavior cycle
+      behavior: 'regular',
+      behaviorTimer: REGULAR_DURATION_MIN + Math.random() * (REGULAR_DURATION_MAX - REGULAR_DURATION_MIN),
+      jetsPerSpawn: NORMAL_JETS_PER_SPAWN,
+      erraticTargetX: canvas.width / 2,
+      lastBarrageProgress: -1,
+    });
+
+    // Initialize animal
+    const createAnimal = (defIndex: number): Animal => {
+      const def = ANIMAL_DEFS[defIndex];
+      const jungleY = getJungleZoneY();
+      const animalY = jungleY + (canvas.height * JUNGLE_ZONE_RATIO - ANIMAL_EMOJI_SIZE) / 2;
+      return {
+        def,
+        x: 10,
+        y: animalY,
+        hp: def.maxHp,
+        width: ANIMAL_EMOJI_SIZE,
+        height: ANIMAL_EMOJI_SIZE,
+      };
+    };
+
+    // Create initial game state
+    const createInitialState = (): JungleState => ({
+      phase: 'menu',
+      sprinkler: createSprinkler(),
+      fireJets: [],
+      currentAnimal: null,
+      animalIndex: 0,
+      savedCount: 0,
+      score: 0,
+      speedMultiplier: 1.0,
+      jungleZoneY: getJungleZoneY(),
+    });
+
+    gameStateRef.current = createInitialState();
+
+    // Spawn fire jets from the sprinkler — supports multi-jet and dispersion
+    const spawnFireJet = (state: JungleState, dispersionAngle: number = 0) => {
+      const s = state.sprinkler;
+      const angle = s.angle + dispersionAngle;
+      const spreadAngle = Math.sin(angle) * (Math.PI * 0.45);
+      const speed = FIRE_JET_SPEED * state.speedMultiplier;
+      const jet: FireJet = {
+        x: s.x,
+        y: s.y + s.radius,
+        radius: FIRE_JET_RADIUS,
+        vx: Math.sin(spreadAngle) * speed,
+        vy: Math.cos(spreadAngle) * speed * 0.6 + speed * 0.4,
+        trail: [],
+      };
+      state.fireJets.push(jet);
+    };
+
+    // Spawn jets based on current behavior state
+    const spawnJetsForBehavior = (state: JungleState) => {
+      const s = state.sprinkler;
+      const count = s.jetsPerSpawn;
+
+      if (s.behavior === 'barrage') {
+        // Barrage: multiple jets with ±15° dispersion
+        for (let i = 0; i < count; i++) {
+          const dispersion = (Math.random() - 0.5) * 2 * BARRAGE_DISPERSION_ANGLE;
+          spawnFireJet(state, dispersion);
+        }
+      } else {
+        // Normal (regular or erratic): standard multi-jet spread
+        for (let i = 0; i < count; i++) {
+          spawnFireJet(state, 0);
+        }
+      }
+    };
+
+    // Calculate animal's horizontal progress (0–100%)
+    const getAnimalProgress = (animal: Animal): number => {
+      const travelDistance = canvas.width - animal.width - 10; // from x=10 to right edge
+      if (travelDistance <= 0) return 100;
+      const traveled = animal.x - 10;
+      return Math.max(0, Math.min(100, (traveled / travelDistance) * 100));
+    };
+
+    // Barrage trigger checkpoints
+    const BARRAGE_CHECKPOINTS = [40, 60, 90];
+
+    // Check if a barrage should be triggered based on animal progression
+    const checkBarrageTrigger = (state: JungleState): boolean => {
+      if (!state.currentAnimal || state.sprinkler.behavior !== 'regular') return false;
+      const progress = getAnimalProgress(state.currentAnimal);
+      const s = state.sprinkler;
+
+      for (const checkpoint of BARRAGE_CHECKPOINTS) {
+        // Trigger when we cross the checkpoint and haven't already triggered for it
+        if (progress >= checkpoint && s.lastBarrageProgress < checkpoint) {
+          s.lastBarrageProgress = checkpoint;
+          return true;
+        }
+      }
+      return false;
+    };
+
+    // Transition to barrage phase
+    const startBarrage = (s: SprinklerBall) => {
+      s.behavior = 'barrage';
+      s.behaviorTimer = BARRAGE_DURATION_MIN + Math.random() * (BARRAGE_DURATION_MAX - BARRAGE_DURATION_MIN);
+      s.jetsPerSpawn = BARRAGE_JETS_PER_SPAWN;
+    };
+
+    // Transition to erratic phase
+    const startErratic = (s: SprinklerBall) => {
+      s.behavior = 'erratic';
+      s.behaviorTimer = ERRATIC_DURATION_MIN + Math.random() * (ERRATIC_DURATION_MAX - ERRATIC_DURATION_MIN);
+      s.jetsPerSpawn = NORMAL_JETS_PER_SPAWN;
+      // Choisir une première cible aléatoire sur toute la largeur
+      s.erraticTargetX = s.radius + Math.random() * (canvas.width - 2 * s.radius);
+    };
+
+    // Transition to regular phase
+    const startRegular = (s: SprinklerBall) => {
+      s.behavior = 'regular';
+      s.behaviorTimer = REGULAR_DURATION_MIN + Math.random() * (REGULAR_DURATION_MAX - REGULAR_DURATION_MIN);
+      s.jetsPerSpawn = NORMAL_JETS_PER_SPAWN;
+    };
+
+    // Rendering functions
+    const drawSprinklerBall = (state: JungleState) => {
+      const s = state.sprinkler;
+
+      // Glow effect
+      const glowGrad = ctx.createRadialGradient(s.x, s.y, s.radius * 0.5, s.x, s.y, s.radius * 2);
+      glowGrad.addColorStop(0, 'rgba(255, 80, 0, 0.3)');
+      glowGrad.addColorStop(1, 'rgba(255, 80, 0, 0)');
+      ctx.fillStyle = glowGrad;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.radius * 2, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Main ball
+      const ballGrad = ctx.createRadialGradient(s.x - 5, s.y - 5, 2, s.x, s.y, s.radius);
+      ballGrad.addColorStop(0, '#ff4444');
+      ballGrad.addColorStop(0.7, '#cc0000');
+      ballGrad.addColorStop(1, '#880000');
+      ctx.fillStyle = ballGrad;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Rotation indicator (shows direction)
+      ctx.strokeStyle = '#ffcc00';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(s.x, s.y);
+      ctx.lineTo(
+        s.x + Math.sin(s.angle) * s.radius,
+        s.y + Math.cos(s.angle) * s.radius
+      );
+      ctx.stroke();
+    };
+
+    const drawFireJet = (jet: FireJet) => {
+      // Draw trail
+      for (let i = 0; i < jet.trail.length; i++) {
+        const t = jet.trail[i];
+        ctx.fillStyle = `rgba(255, 100, 0, ${t.alpha * 0.5})`;
+        ctx.beginPath();
+        ctx.arc(t.x, t.y, jet.radius * (0.5 + t.alpha * 0.5), 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Main jet with radial gradient (yellow center, red/orange edge)
+      const grad = ctx.createRadialGradient(jet.x, jet.y, 0, jet.x, jet.y, jet.radius);
+      grad.addColorStop(0, '#ffff00');
+      grad.addColorStop(0.4, '#ff8800');
+      grad.addColorStop(1, '#ff2200');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(jet.x, jet.y, jet.radius, 0, Math.PI * 2);
+      ctx.fill();
+    };
+
+    // Emojis that face left by default and need a horizontal flip
+    const FLIP_EMOJIS = new Set(['\u{1F992}', '\u{1F418}']); // giraffe, elephant
+
+    const drawAnimal = (animal: Animal) => {
+      // Draw HP bar background
+      const hpBarX = animal.x + (animal.width - ANIMAL_HP_BAR_WIDTH) / 2;
+      const hpBarY = animal.y - ANIMAL_HP_BAR_HEIGHT - 4;
+      ctx.fillStyle = HP_BAR_BG;
+      ctx.fillRect(hpBarX, hpBarY, ANIMAL_HP_BAR_WIDTH, ANIMAL_HP_BAR_HEIGHT);
+
+      // Draw HP bar fill
+      const hpRatio = animal.hp / animal.def.maxHp;
+      ctx.fillStyle = hpRatio > 0.3 ? HP_BAR_FILL : HP_BAR_LOW;
+      ctx.fillRect(hpBarX, hpBarY, ANIMAL_HP_BAR_WIDTH * hpRatio, ANIMAL_HP_BAR_HEIGHT);
+
+      // Draw HP text
+      ctx.fillStyle = TEXT_COLOR;
+      ctx.font = 'bold 12px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText(`${animal.hp}/${animal.def.maxHp}`, animal.x + animal.width / 2, hpBarY - 3);
+
+      // Draw emoji — flip horizontally for left-facing animals
+      ctx.font = `${ANIMAL_EMOJI_SIZE}px serif`;
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'top';
+
+      if (FLIP_EMOJIS.has(animal.def.emoji)) {
+        ctx.save();
+        ctx.translate(animal.x + animal.width, animal.y);
+        ctx.scale(-1, 1);
+        ctx.fillText(animal.def.emoji, 0, 0);
+        ctx.restore();
+      } else {
+        ctx.fillText(animal.def.emoji, animal.x, animal.y);
+      }
+    };
+
+    const drawJungleZone = (state: JungleState) => {
+      const jungleY = state.jungleZoneY;
+
+      // Jungle background
+      ctx.fillStyle = JUNGLE_BG_COLOR;
+      ctx.fillRect(0, jungleY, canvas.width, canvas.height - jungleY);
+
+      // Jungle border line
+      ctx.strokeStyle = '#4a7a4a';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, jungleY);
+      ctx.lineTo(canvas.width, jungleY);
+      ctx.stroke();
+
+      // Decorative trees/bushes
+      ctx.font = '30px serif';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'top';
+      const treeSpacing = 120;
+      for (let x = 20; x < canvas.width; x += treeSpacing) {
+        ctx.fillText('\u{1F334}', x, jungleY + 5);
+      }
+    };
+
+    const drawUI = (state: JungleState) => {
+      ctx.fillStyle = TEXT_COLOR;
+      ctx.font = 'bold 18px Arial';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'top';
+      ctx.fillText(`Score: ${state.score}`, 15, 15);
+
+      ctx.textAlign = 'right';
+      ctx.fillText(`Speed: ${state.speedMultiplier.toFixed(1)}x`, canvas.width - 15, 15);
+
+      // Show current animal indicator
+      if (state.currentAnimal) {
+        ctx.textAlign = 'center';
+        ctx.fillText(`Animal: ${state.currentAnimal.def.emoji}`, canvas.width / 2, 15);
+      }
+    };
+
+    const drawMenuOverlay = () => {
+      ctx.fillStyle = OVERLAY_BG;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Title
+      ctx.fillStyle = '#e67e22';
+      ctx.font = 'bold 52px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('\u{1F334} OP\u00C9RATION JUNGLE \u{1F334}', canvas.width / 2, canvas.height / 2 - 120);
+
+      // Subtitle
+      ctx.fillStyle = TEXT_COLOR;
+      ctx.font = '18px Arial';
+      ctx.fillText('Sauvez les animaux des jets de feu!', canvas.width / 2, canvas.height / 2 - 70);
+
+      // Speed slider label
+      ctx.font = 'bold 20px Arial';
+      ctx.fillText('Vitesse de la boule', canvas.width / 2, canvas.height / 2 - 20);
+
+      // Speed slider visualization
+      const sliderY = canvas.height / 2 + 10;
+      const sliderWidth = 240;
+      const sliderX = canvas.width / 2 - sliderWidth / 2;
+      const sliderHeight = 24;
+
+      // Slider track
+      ctx.fillStyle = '#333';
+      ctx.fillRect(sliderX, sliderY, sliderWidth, sliderHeight);
+
+      // Slider fill
+      const sliderProgress = (speedMultiplierRef.current - 0.5) / 1.5;
+      ctx.fillStyle = BUTTON_COLOR;
+      ctx.fillRect(sliderX, sliderY, sliderWidth * sliderProgress, sliderHeight);
+
+      // Slider border
+      ctx.strokeStyle = '#555';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(sliderX, sliderY, sliderWidth, sliderHeight);
+
+      // Slider thumb
+      const thumbX = sliderX + sliderWidth * sliderProgress;
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(thumbX, sliderY + sliderHeight / 2, 12, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Speed text
+      ctx.fillStyle = TEXT_COLOR;
+      ctx.font = '18px Arial';
+      ctx.fillText(`${speedMultiplierRef.current.toFixed(1)}x`, canvas.width / 2, sliderY + 50);
+
+      // Labels
+      ctx.font = '14px Arial';
+      ctx.textAlign = 'left';
+      ctx.fillText('0.5x', sliderX - 5, sliderY + sliderHeight + 15);
+      ctx.textAlign = 'right';
+      ctx.fillText('2.0x', sliderX + sliderWidth + 5, sliderY + sliderHeight + 15);
+
+      // Animal preview
+      ctx.textAlign = 'center';
+      ctx.font = '16px Arial';
+      ctx.fillText('Animaux \u00E0 sauver:', canvas.width / 2, canvas.height / 2 + 110);
+      ctx.font = '36px serif';
+      const animalText = ANIMAL_DEFS.map(a => `${a.emoji}${a.maxHp}PV`).join('  ');
+      ctx.fillText(animalText, canvas.width / 2, canvas.height / 2 + 150);
+
+      // Start button
+      const buttonY = canvas.height / 2 + 190;
+      const buttonWidth = 180;
+      const buttonHeight = 50;
+      const buttonX = canvas.width / 2 - buttonWidth / 2;
+
+      ctx.fillStyle = BUTTON_COLOR;
+      ctx.beginPath();
+      ctx.roundRect(buttonX, buttonY, buttonWidth, buttonHeight, 8);
+      ctx.fill();
+      ctx.fillStyle = BUTTON_TEXT_COLOR;
+      ctx.font = 'bold 20px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('COMMENCER', canvas.width / 2, buttonY + buttonHeight / 2);
+
+      // Controls info
+      ctx.fillStyle = '#aaa';
+      ctx.font = '14px Arial';
+      ctx.textBaseline = 'top';
+      ctx.fillText('\u2190 \u2192 ou swipe pour d\u00E9placer l\'animal', canvas.width / 2, buttonY + buttonHeight + 20);
+    };
+
+    const drawGameOverOverlay = (state: JungleState) => {
+      ctx.fillStyle = OVERLAY_BG;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = '#e74c3c';
+      ctx.font = 'bold 52px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 60);
+
+      ctx.fillStyle = TEXT_COLOR;
+      ctx.font = '24px Arial';
+      ctx.fillText(`Score final: ${state.score}`, canvas.width / 2, canvas.height / 2);
+
+      // Restart button
+      const buttonY = canvas.height / 2 + 50;
+      const buttonWidth = 180;
+      const buttonHeight = 50;
+      const buttonX = canvas.width / 2 - buttonWidth / 2;
+
+      ctx.fillStyle = BUTTON_COLOR;
+      ctx.beginPath();
+      ctx.roundRect(buttonX, buttonY, buttonWidth, buttonHeight, 8);
+      ctx.fill();
+      ctx.fillStyle = BUTTON_TEXT_COLOR;
+      ctx.font = 'bold 20px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('RECOMMENCER', canvas.width / 2, buttonY + buttonHeight / 2);
+    };
+
+    const drawVictoryOverlay = (state: JungleState) => {
+      ctx.fillStyle = OVERLAY_BG;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const allSaved = state.savedCount >= ANIMAL_DEFS.length;
+
+      ctx.fillStyle = allSaved ? '#27ae60' : '#e67e22';
+      ctx.font = 'bold 52px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(allSaved ? 'VICTOIRE!' : 'PRESQUE!', canvas.width / 2, canvas.height / 2 - 60);
+
+      ctx.fillStyle = TEXT_COLOR;
+      ctx.font = '24px Arial';
+      ctx.fillText(`Score final: ${state.score}`, canvas.width / 2, canvas.height / 2);
+
+      ctx.font = '18px Arial';
+      if (allSaved) {
+        ctx.fillText('Tous les animaux ont \u00E9t\u00E9 sauv\u00E9s!', canvas.width / 2, canvas.height / 2 + 35);
+      } else {
+        ctx.fillText(
+          `Vous avez presque sauv\u00E9 tous les animaux! (${state.savedCount}/${ANIMAL_DEFS.length})`,
+          canvas.width / 2,
+          canvas.height / 2 + 35
+        );
+      }
+
+      // Restart button
+      const buttonY = canvas.height / 2 + 80;
+      const buttonWidth = 180;
+      const buttonHeight = 50;
+      const buttonX = canvas.width / 2 - buttonWidth / 2;
+
+      ctx.fillStyle = BUTTON_COLOR;
+      ctx.beginPath();
+      ctx.roundRect(buttonX, buttonY, buttonWidth, buttonHeight, 8);
+      ctx.fill();
+      ctx.fillStyle = BUTTON_TEXT_COLOR;
+      ctx.font = 'bold 20px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('RECOMMENCER', canvas.width / 2, buttonY + buttonHeight / 2);
+    };
+
+    const drawFrame = (state: JungleState) => {
+      // Clear canvas
+      ctx.fillStyle = CANVAS_BG_COLOR;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      if (state.phase === 'playing') {
+        drawJungleZone(state);
+        drawSprinklerBall(state);
+        state.fireJets.forEach(drawFireJet);
+        if (state.currentAnimal) {
+          drawAnimal(state.currentAnimal);
+        }
+        drawUI(state);
+      } else if (state.phase === 'menu') {
+        drawMenuOverlay();
+      } else if (state.phase === 'gameOver') {
+        drawJungleZone(state);
+        drawSprinklerBall(state);
+        state.fireJets.forEach(drawFireJet);
+        drawGameOverOverlay(state);
+      } else if (state.phase === 'victory') {
+        drawJungleZone(state);
+        drawVictoryOverlay(state);
+      }
+    };
+
+    // Restart game function
+    const restartGame = () => {
+      gameStateRef.current = createInitialState();
+    };
+
+    // Start game function
+    const startGame = () => {
+      const state = gameStateRef.current;
+      if (!state) return;
+      state.phase = 'playing';
+      state.speedMultiplier = speedMultiplierRef.current;
+      state.sprinkler = createSprinkler();
+      state.fireJets = [];
+      state.animalIndex = 0;
+      state.savedCount = 0;
+      state.score = 0;
+      state.currentAnimal = createAnimal(0);
+      state.jungleZoneY = getJungleZoneY();
+    };
+
+    // Check if point is inside the start/restart button
+    const isOnButton = (x: number, y: number, phase: string): boolean => {
+      let buttonY: number;
+      if (phase === 'menu') {
+        buttonY = canvas.height / 2 + 190;
+      } else {
+        buttonY = canvas.height / 2 + (phase === 'gameOver' ? 50 : 80);
+      }
+      const buttonWidth = 180;
+      const buttonHeight = 50;
+      const buttonX = canvas.width / 2 - buttonWidth / 2;
+      return x >= buttonX && x <= buttonX + buttonWidth && y >= buttonY && y <= buttonY + buttonHeight;
+    };
+
+    // Check if point is inside the slider
+    const isOnSlider = (x: number, y: number): boolean => {
+      const sliderY = canvas.height / 2 + 10;
+      const sliderWidth = 240;
+      const sliderX = canvas.width / 2 - sliderWidth / 2;
+      const sliderHeight = 24;
+      return x >= sliderX && x <= sliderX + sliderWidth && y >= sliderY && y <= sliderY + sliderHeight;
+    };
+
+    // Mouse click handler
+    const handleCanvasClick = (event: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      const state = gameStateRef.current;
+      if (!state) return;
+
+      if (state.phase === 'menu') {
+        if (isOnSlider(x, y)) {
+          const sliderWidth = 240;
+          const sliderX = canvas.width / 2 - sliderWidth / 2;
+          const sliderProgress = Math.max(0, Math.min(1, (x - sliderX) / sliderWidth));
+          const newMultiplier = 0.5 + sliderProgress * 1.5;
+          speedMultiplierRef.current = newMultiplier;
+          state.speedMultiplier = newMultiplier;
+          return;
+        }
+        if (isOnButton(x, y, 'menu')) {
+          startGame();
+        }
+      } else if (state.phase === 'gameOver' || state.phase === 'victory') {
+        if (isOnButton(x, y, state.phase)) {
+          restartGame();
+        }
+      }
+    };
+
+    // Mouse move handler — slider during menu only
+    const handleCanvasMouseMove = (event: MouseEvent) => {
+      const state = gameStateRef.current;
+      if (!state || state.phase !== 'menu') return;
+
+      const rect = canvas.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      if (isOnSlider(x, y)) {
+        const sliderWidth = 240;
+        const sliderX = canvas.width / 2 - sliderWidth / 2;
+        const sliderProgress = Math.max(0, Math.min(1, (x - sliderX) / sliderWidth));
+        const newMultiplier = 0.5 + sliderProgress * 1.5;
+        speedMultiplierRef.current = newMultiplier;
+        state.speedMultiplier = newMultiplier;
+      }
+    };
+
+    // Keyboard handlers
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowLeft') keysRef.current.left = true;
+      if (event.key === 'ArrowRight') keysRef.current.right = true;
+    };
+    const handleKeyUp = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowLeft') keysRef.current.left = false;
+      if (event.key === 'ArrowRight') keysRef.current.right = false;
+    };
+
+    // Touch handlers — only in jungle zone
+    const handleTouchStart = (event: TouchEvent) => {
+      const state = gameStateRef.current;
+      if (!state) return;
+
+      const rect = canvas.getBoundingClientRect();
+      const touch = event.touches[0];
+      const y = touch.clientY - rect.top;
+
+      // Only accept touch in jungle zone
+      if (y >= state.jungleZoneY) {
+        touchRef.current.startX = touch.clientX;
+        touchRef.current.currentX = touch.clientX;
+        touchRef.current.active = true;
+        touchRef.current.zoneCheck = true;
+      }
+    };
+
+    const handleTouchMove = (event: TouchEvent) => {
+      if (!touchRef.current.active || !touchRef.current.zoneCheck || event.touches.length === 0) return;
+      const touch = event.touches[0];
+      touchRef.current.currentX = touch.clientX;
+    };
+
+    const handleTouchEnd = () => {
+      touchRef.current.active = false;
+      touchRef.current.zoneCheck = false;
+    };
+
+    // Game loop
+    let animationFrameId: number;
+
+    const gameLoop = (currentTime: number) => {
+      frameCountRef.current++;
+
+      // Calculate deltaTime in seconds
+      let deltaTime = 0;
+      if (lastTimeRef.current > 0) {
+        deltaTime = Math.min((currentTime - lastTimeRef.current) / 1000, 0.05); // cap at 50ms
+      }
+      lastTimeRef.current = currentTime;
+
+      const state = gameStateRef.current;
+      if (state && state.phase === 'playing') {
+        const s = state.sprinkler;
+
+        // Update sprinkler rotation (speed unchanged — only jet count varies)
+        s.angle += s.rotationSpeed * deltaTime * state.speedMultiplier;
+
+        // Behavior cycle state machine
+        if (state.currentAnimal) {
+          // Check for barrage trigger at checkpoints (40%, 60%, 90%)
+          if (checkBarrageTrigger(state)) {
+            startBarrage(s);
+          }
+
+          // Update behavior timer
+          s.behaviorTimer -= deltaTime * state.speedMultiplier;
+
+          if (s.behaviorTimer <= 0) {
+            if (s.behavior === 'barrage') {
+              // After barrage → erratic phase
+              startErratic(s);
+            } else if (s.behavior === 'erratic') {
+              // After erratic → regular phase
+              startRegular(s);
+            } else {
+              // Regular phase expired → start a new random regular duration
+              s.behaviorTimer = REGULAR_DURATION_MIN + Math.random() * (REGULAR_DURATION_MAX - REGULAR_DURATION_MIN);
+            }
+          }
+
+          // Erratic movement: fonce vers une cible aléatoire, en choisit une nouvelle à l'arrivée
+          if (s.behavior === 'erratic') {
+            const dist = s.erraticTargetX - s.x;
+            if (Math.abs(dist) < 4) {
+              // Cible atteinte → nouvelle cible aléatoire de l'autre côté de l'écran
+              const minX = s.radius;
+              const maxX = canvas.width - s.radius;
+              // Forcer la cible dans l'autre moitié pour garantir un vrai déplacement
+              s.erraticTargetX = s.x < canvas.width / 2
+                ? canvas.width * 0.5 + Math.random() * canvas.width * 0.45
+                : canvas.width * 0.05 + Math.random() * canvas.width * 0.45;
+              s.erraticTargetX = Math.max(minX, Math.min(maxX, s.erraticTargetX));
+            }
+            // Avancer vers la cible
+            const dir = dist > 0 ? 1 : -1;
+            s.x += dir * ERRATIC_MOVE_SPEED * deltaTime;
+            s.x = Math.max(s.radius, Math.min(canvas.width - s.radius, s.x));
+          }
+        }
+
+        // Shoot fire jets based on current behavior
+        const effectiveInterval = s.behavior === 'barrage'
+          ? s.shootInterval * BARRAGE_SHOOT_INTERVAL_FACTOR
+          : s.shootInterval;
+        s.shootTimer += deltaTime * state.speedMultiplier;
+        if (s.shootTimer >= effectiveInterval) {
+          s.shootTimer = 0;
+          spawnJetsForBehavior(state);
+        }
+
+        // Update fire jets
+        for (let i = state.fireJets.length - 1; i >= 0; i--) {
+          const jet = state.fireJets[i];
+          jet.x += jet.vx * deltaTime;
+          jet.y += jet.vy * deltaTime;
+
+          // Update trail
+          jet.trail.unshift({ x: jet.x, y: jet.y, alpha: 1.0 });
+          if (jet.trail.length > FIRE_JET_TRAIL_LENGTH) {
+            jet.trail.pop();
+          }
+          // Fade trail
+          for (let t = 0; t < jet.trail.length; t++) {
+            jet.trail[t].alpha = 1.0 - (t / jet.trail.length);
+          }
+
+          // Remove jets that are off screen
+          if (jet.y > canvas.height + jet.radius || jet.x < -jet.radius || jet.x > canvas.width + jet.radius) {
+            state.fireJets.splice(i, 1);
+          }
+        }
+
+        // Move current animal with keyboard
+        if (state.currentAnimal) {
+          const animal = state.currentAnimal;
+          if (keysRef.current.left) {
+            animal.x = Math.max(0, animal.x - ANIMAL_MOVE_SPEED * deltaTime);
+          }
+          if (keysRef.current.right) {
+            animal.x = Math.min(canvas.width - animal.width, animal.x + ANIMAL_MOVE_SPEED * deltaTime);
+          }
+
+          // Move current animal with touch
+          if (touchRef.current.active) {
+            const deltaX = touchRef.current.currentX - touchRef.current.startX;
+            const newX = animal.x + deltaX;
+            animal.x = Math.max(0, Math.min(canvas.width - animal.width, newX));
+            touchRef.current.startX = touchRef.current.currentX;
+          }
+
+          // Check if animal reached right edge (saved)
+          if (animal.x + animal.width >= canvas.width - 5) {
+            state.score += animal.hp;
+            state.savedCount++;
+            state.animalIndex++;
+            if (state.animalIndex >= ANIMAL_DEFS.length) {
+              // All animals processed — check how many were saved
+state.phase = 'victory';
+            } else {
+              state.currentAnimal = createAnimal(state.animalIndex);
+            }
+          }
+        }
+
+        // Collision detection: fire jets vs current animal
+        if (state.currentAnimal && state.fireJets.length > 0) {
+          const animal = state.currentAnimal;
+          // Animal collision circle (center of emoji)
+          const animalCircle = {
+            x: animal.x + animal.width / 2,
+            y: animal.y + animal.height / 2,
+            radius: animal.width / 2 * 0.7, // slightly smaller than full width for better feel
+          };
+
+          for (let i = state.fireJets.length - 1; i >= 0; i--) {
+            const jet = state.fireJets[i];
+            const jetCircle = { x: jet.x, y: jet.y, radius: jet.radius };
+
+            if (circlesOverlap(jetCircle, animalCircle)) {
+              animal.hp--;
+              state.fireJets.splice(i, 1);
+
+              if (animal.hp <= 0) {
+                // Animal died
+                state.currentAnimal = null;
+                state.animalIndex++;
+                if (state.animalIndex >= ANIMAL_DEFS.length) {
+                  // All animals processed — check how many were saved
+                  state.phase = 'victory';
+                } else {
+                  state.currentAnimal = createAnimal(state.animalIndex);
+                }
+              }
+            }
+          }
+        }
+
+        // Update jungle zone Y (in case of resize)
+        state.jungleZoneY = getJungleZoneY();
+      }
+
+      // Render current frame
+      if (state) {
+        drawFrame(state);
+      }
+
+      // Continue loop
+      animationFrameId = requestAnimationFrame(gameLoop);
+    };
+
+    // Start the game loop
+    animationFrameId = requestAnimationFrame(gameLoop);
+
+    // Add event listeners
+    canvas.addEventListener('click', handleCanvasClick);
+    canvas.addEventListener('mousemove', handleCanvasMouseMove);
+    canvas.addEventListener('touchstart', handleTouchStart, { passive: true });
+    canvas.addEventListener('touchmove', handleTouchMove, { passive: true });
+    canvas.addEventListener('touchend', handleTouchEnd);
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    // Cleanup
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('resize', updateCanvasSize);
+      canvas.removeEventListener('click', handleCanvasClick);
+      canvas.removeEventListener('mousemove', handleCanvasMouseMove);
+      canvas.removeEventListener('touchstart', handleTouchStart);
+      canvas.removeEventListener('touchmove', handleTouchMove);
+      canvas.removeEventListener('touchend', handleTouchEnd);
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        display: 'block',
+        width: '100%',
+        height: '100%',
+        margin: 0,
+        padding: 0,
+        cursor: 'default',
+        touchAction: 'none',
+      }}
+    />
+  );
+};
+
+export default GameCanvas;
