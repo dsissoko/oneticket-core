@@ -4,3 +4,4 @@
 2026-06-14 11:36 | D | apps/jungle-op/docs/what/epics/epic-0-mvp/user-stories/us-002-red-ball-fire-jets.md
 2026-06-14 11:40 | E | apps/jungle-op/docs/what/epics/epic-0-mvp/user-stories/us-003-animal-movement-controls.md
 2026-06-14 11:44 | F | apps/jungle-op/docs/what/epics/epic-0-mvp/user-stories/us-004-animal-health-and-scoring.md
+2026-06-14 11:49 | G | apps/jungle-op/docs/what/epics/epic-0-mvp/user-stories/us-005-animal-sequence-and-game-progression.md
