@@ -92,6 +92,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
       behaviorTimer: REGULAR_DURATION_MIN + Math.random() * (REGULAR_DURATION_MAX - REGULAR_DURATION_MIN),
       jetsPerSpawn: NORMAL_JETS_PER_SPAWN,
       erraticTargetX: canvas.width / 2,
+      regularTime: 0,
       lastBarrageProgress: -1,
     });
 
@@ -209,6 +210,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
       s.behavior = 'regular';
       s.behaviorTimer = REGULAR_DURATION_MIN + Math.random() * (REGULAR_DURATION_MAX - REGULAR_DURATION_MIN);
       s.jetsPerSpawn = NORMAL_JETS_PER_SPAWN;
+      s.regularTime = 0; // repart d'une phase aléatoire pour varier le point de départ
     };
 
     // Rendering functions
@@ -699,14 +701,11 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
 
           if (s.behaviorTimer <= 0) {
             if (s.behavior === 'barrage') {
-              // After barrage → erratic phase
+              // After barrage → erratic (jamais regular)
               startErratic(s);
             } else if (s.behavior === 'erratic') {
-              // After erratic → regular phase
-              startRegular(s);
-            } else {
-              // Regular phase expired → start a new random regular duration
-              s.behaviorTimer = REGULAR_DURATION_MIN + Math.random() * (REGULAR_DURATION_MAX - REGULAR_DURATION_MIN);
+              // After erratic → erratic avec nouvelle cible (mouvement continu)
+              startErratic(s);
             }
           }
 
@@ -728,6 +727,13 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
             s.x += dir * ERRATIC_MOVE_SPEED * deltaTime;
             s.x = Math.max(s.radius, Math.min(canvas.width - s.radius, s.x));
           }
+
+          // Regular movement: aller-retour sinusoïdal lent d'un bord à l'autre (désactivé — conservé pour usage futur)
+          // if (s.behavior === 'regular') {
+          //   s.regularTime += deltaTime * 0.6;
+          //   const amplitude = (canvas.width / 2 - s.radius);
+          //   s.x = canvas.width / 2 + Math.sin(s.regularTime) * amplitude;
+          // }
         }
 
         // Shoot fire jets based on current behavior
