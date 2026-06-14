@@ -7,7 +7,7 @@
       "file": "apps/jungle-op/docs/what/product-spec.md",
       "content": "Create the product specification for 'Opération Jungle' — a browser-based arcade game. Use the template at .oneticket/templates/product-spec.md. Fill in all sections based on this context:\n\nProduct: Opération Jungle — a 2D arcade game where players save animals from fire jets shot by a red ball.\n\nProblem: Players want a fun, accessible arcade game with touch and keyboard controls, progressive difficulty, and animal rescue theme.\n\nMain capabilities V1: (1) Start screen with speed slider for the red ball (-2x to +2x normal speed), (2) Red ball at top-center automatically shoots fire jets in sprinkler-like patterns onto the jungle terrain (bottom 20% of screen), (3) Player moves animals left-to-right across the jungle terrain using keyboard arrows (desktop) or touch drag (mobile) to avoid fire jets.\n\nActors: Player (desktop keyboard user, mobile touch user).\n\nBusiness rules: Animals appear successively from the left. Each animal has HP: Lion=20, Mouse=5, Girafe=15, Elephant=25. Each fire jet hit removes 1 HP. Animal disappears at 0 HP. When an animal reaches the right edge, player earns points equal to remaining HP. Next animal appears after current one is saved or disappears. Game ends when all animals have passed or failed.\n\nReplace the SITE_DESCRIPTION placeholder with: 'Opération Jungle — sauvez les animaux des jets de feu de la boule rouge dans ce jeu d\\'arcade accessible clavier et tactile.'\n\nInclude frontmatter: ---\ntitle: 'Product Specification — Opération Jungle'\n---",
       "depends_on": [],
-      "status": "in_progress",
+      "status": "done",
       "role": "analyst"
     },
     {
