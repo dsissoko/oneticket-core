@@ -51,7 +51,7 @@
       "depends_on": [
         "D"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "analyst"
     },
     {
