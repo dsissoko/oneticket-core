@@ -205,14 +205,6 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
       s.erraticTargetX = s.radius + Math.random() * (canvas.width - 2 * s.radius);
     };
 
-    // Transition to regular phase
-    const startRegular = (s: SprinklerBall) => {
-      s.behavior = 'regular';
-      s.behaviorTimer = REGULAR_DURATION_MIN + Math.random() * (REGULAR_DURATION_MAX - REGULAR_DURATION_MIN);
-      s.jetsPerSpawn = NORMAL_JETS_PER_SPAWN;
-      s.regularTime = 0; // repart d'une phase aléatoire pour varier le point de départ
-    };
-
     // Rendering functions
     const drawSprinklerBall = (state: JungleState) => {
       const s = state.sprinkler;

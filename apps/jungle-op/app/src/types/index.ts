@@ -47,6 +47,7 @@ export interface SprinklerBall {
   behaviorTimer: number;   // seconds remaining in current behavior phase
   jetsPerSpawn: number;    // how many jets to spawn per tick
   erraticTargetX: number;  // cible X vers laquelle la boule fonce en mode erratique
+  regularTime: number;     // temps accumulé pour le mouvement sinusoïdal en mode regular (conservé, désactivé)
   lastBarrageProgress: number; // last progression % where barrage was triggered (avoid re-trigger)
 }
 
