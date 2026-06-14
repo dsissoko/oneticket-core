@@ -46,8 +46,7 @@ export interface SprinklerBall {
   behavior: BallBehavior;
   behaviorTimer: number;   // seconds remaining in current behavior phase
   jetsPerSpawn: number;    // how many jets to spawn per tick
-  erraticDir: number;      // -1 (left) or +1 (right) for erratic movement
-  erraticChangeTimer: number; // time until next erratic direction change
+  erraticTargetX: number;  // cible X vers laquelle la boule fonce en mode erratique
   lastBarrageProgress: number; // last progression % where barrage was triggered (avoid re-trigger)
 }
 

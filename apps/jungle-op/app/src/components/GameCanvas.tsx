@@ -35,8 +35,7 @@ const ERRATIC_DURATION_MIN = 1.5;
 const ERRATIC_DURATION_MAX = 3.5;
 const REGULAR_DURATION_MIN = 2.0;
 const REGULAR_DURATION_MAX = 4.0;
-const ERRATIC_CHANGE_INTERVAL = 0.3; // seconds between erratic direction changes
-const ERRATIC_MOVE_SPEED = 180; // pixels per second for erratic ball movement
+const ERRATIC_MOVE_SPEED = 420; // pixels per second — assez rapide pour traverser l'écran
 const BARRAGE_DISPERSION_ANGLE = Math.PI / 12; // ±15 degrees
 const NORMAL_JETS_PER_SPAWN = 3; // 1.5x base (was effectively 1)
 const BARRAGE_JETS_PER_SPAWN = 9; // 3x normal (3 * 3)
@@ -92,8 +91,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
       behavior: 'regular',
       behaviorTimer: REGULAR_DURATION_MIN + Math.random() * (REGULAR_DURATION_MAX - REGULAR_DURATION_MIN),
       jetsPerSpawn: NORMAL_JETS_PER_SPAWN,
-      erraticDir: 1,
-      erraticChangeTimer: ERRATIC_CHANGE_INTERVAL,
+      erraticTargetX: canvas.width / 2,
       lastBarrageProgress: -1,
     });
 
@@ -202,8 +200,8 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
       s.behavior = 'erratic';
       s.behaviorTimer = ERRATIC_DURATION_MIN + Math.random() * (ERRATIC_DURATION_MAX - ERRATIC_DURATION_MIN);
       s.jetsPerSpawn = NORMAL_JETS_PER_SPAWN;
-      s.erraticDir = Math.random() > 0.5 ? 1 : -1;
-      s.erraticChangeTimer = ERRATIC_CHANGE_INTERVAL;
+      // Choisir une première cible aléatoire sur toute la largeur
+      s.erraticTargetX = s.radius + Math.random() * (canvas.width - 2 * s.radius);
     };
 
     // Transition to regular phase
@@ -712,16 +710,22 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
             }
           }
 
-          // Erratic movement: jerky left/right with random direction changes
+          // Erratic movement: fonce vers une cible aléatoire, en choisit une nouvelle à l'arrivée
           if (s.behavior === 'erratic') {
-            s.erraticChangeTimer -= deltaTime;
-            if (s.erraticChangeTimer <= 0) {
-              s.erraticDir = s.erraticDir * -1; // flip direction
-              s.erraticChangeTimer = ERRATIC_CHANGE_INTERVAL * (0.5 + Math.random());
+            const dist = s.erraticTargetX - s.x;
+            if (Math.abs(dist) < 4) {
+              // Cible atteinte → nouvelle cible aléatoire de l'autre côté de l'écran
+              const minX = s.radius;
+              const maxX = canvas.width - s.radius;
+              // Forcer la cible dans l'autre moitié pour garantir un vrai déplacement
+              s.erraticTargetX = s.x < canvas.width / 2
+                ? canvas.width * 0.5 + Math.random() * canvas.width * 0.45
+                : canvas.width * 0.05 + Math.random() * canvas.width * 0.45;
+              s.erraticTargetX = Math.max(minX, Math.min(maxX, s.erraticTargetX));
             }
-            // Move ball horizontally in erratic direction
-            s.x += s.erraticDir * ERRATIC_MOVE_SPEED * deltaTime;
-            // Clamp ball position within canvas bounds
+            // Avancer vers la cible
+            const dir = dist > 0 ? 1 : -1;
+            s.x += dir * ERRATIC_MOVE_SPEED * deltaTime;
             s.x = Math.max(s.radius, Math.min(canvas.width - s.radius, s.x));
           }
         }
