@@ -32,6 +32,8 @@ export interface FireJet {
   trail: { x: number; y: number; alpha: number }[];
 }
 
+export type BallBehavior = 'regular' | 'barrage' | 'erratic';
+
 export interface SprinklerBall {
   x: number;          // center x
   y: number;          // center y
@@ -40,6 +42,13 @@ export interface SprinklerBall {
   rotationSpeed: number; // radians per second
   shootInterval: number; // seconds between shots
   shootTimer: number;
+  // Behavior cycle state
+  behavior: BallBehavior;
+  behaviorTimer: number;   // seconds remaining in current behavior phase
+  jetsPerSpawn: number;    // how many jets to spawn per tick
+  erraticDir: number;      // -1 (left) or +1 (right) for erratic movement
+  erraticChangeTimer: number; // time until next erratic direction change
+  lastBarrageProgress: number; // last progression % where barrage was triggered (avoid re-trigger)
 }
 
 export interface JungleState {

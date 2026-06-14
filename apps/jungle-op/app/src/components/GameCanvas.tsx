@@ -28,6 +28,20 @@ const HP_BAR_BG = '#333333';
 const HP_BAR_FILL = '#27ae60';
 const HP_BAR_LOW = '#e74c3c';
 
+// Behavior cycle constants
+const BARRAGE_DURATION_MIN = 2.0; // seconds
+const BARRAGE_DURATION_MAX = 5.0;
+const ERRATIC_DURATION_MIN = 1.5;
+const ERRATIC_DURATION_MAX = 3.5;
+const REGULAR_DURATION_MIN = 2.0;
+const REGULAR_DURATION_MAX = 4.0;
+const ERRATIC_CHANGE_INTERVAL = 0.3; // seconds between erratic direction changes
+const ERRATIC_MOVE_SPEED = 180; // pixels per second for erratic ball movement
+const BARRAGE_DISPERSION_ANGLE = Math.PI / 12; // ±15 degrees
+const NORMAL_JETS_PER_SPAWN = 3; // 1.5x base (was effectively 1)
+const BARRAGE_JETS_PER_SPAWN = 9; // 3x normal (3 * 3)
+const BARRAGE_SHOOT_INTERVAL_FACTOR = 0.5; // shoot twice as fast during barrage
+
 interface GameCanvasProps {}
 
 export const GameCanvas: React.FC<GameCanvasProps> = () => {
@@ -74,6 +88,13 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
       rotationSpeed: Math.PI * 0.8, // ~0.8 rotations per second
       shootInterval: 0.35, // seconds between shots
       shootTimer: 0,
+      // Behavior cycle
+      behavior: 'regular',
+      behaviorTimer: REGULAR_DURATION_MIN + Math.random() * (REGULAR_DURATION_MAX - REGULAR_DURATION_MIN),
+      jetsPerSpawn: NORMAL_JETS_PER_SPAWN,
+      erraticDir: 1,
+      erraticChangeTimer: ERRATIC_CHANGE_INTERVAL,
+      lastBarrageProgress: -1,
     });
 
     // Initialize animal
@@ -105,24 +126,90 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
 
     gameStateRef.current = createInitialState();
 
-    // Spawn a fire jet from the sprinkler
-    const spawnFireJet = (state: JungleState) => {
+    // Spawn fire jets from the sprinkler — supports multi-jet and dispersion
+    const spawnFireJet = (state: JungleState, dispersionAngle: number = 0) => {
       const s = state.sprinkler;
-      // The sprinkler rotates and shoots in the direction it's facing
-      // We want it to shoot downward in a sweeping pattern
-      const angle = s.angle;
-      // Spread: the jet goes downward with a horizontal spread based on angle
-      const spreadAngle = Math.sin(angle) * (Math.PI * 0.45); // -45 to +45 degrees spread
+      const angle = s.angle + dispersionAngle;
+      const spreadAngle = Math.sin(angle) * (Math.PI * 0.45);
       const speed = FIRE_JET_SPEED * state.speedMultiplier;
       const jet: FireJet = {
         x: s.x,
         y: s.y + s.radius,
         radius: FIRE_JET_RADIUS,
         vx: Math.sin(spreadAngle) * speed,
-        vy: Math.cos(spreadAngle) * speed * 0.6 + speed * 0.4, // biased downward
+        vy: Math.cos(spreadAngle) * speed * 0.6 + speed * 0.4,
         trail: [],
       };
       state.fireJets.push(jet);
+    };
+
+    // Spawn jets based on current behavior state
+    const spawnJetsForBehavior = (state: JungleState) => {
+      const s = state.sprinkler;
+      const count = s.jetsPerSpawn;
+
+      if (s.behavior === 'barrage') {
+        // Barrage: multiple jets with ±15° dispersion
+        for (let i = 0; i < count; i++) {
+          const dispersion = (Math.random() - 0.5) * 2 * BARRAGE_DISPERSION_ANGLE;
+          spawnFireJet(state, dispersion);
+        }
+      } else {
+        // Normal (regular or erratic): standard multi-jet spread
+        for (let i = 0; i < count; i++) {
+          spawnFireJet(state, 0);
+        }
+      }
+    };
+
+    // Calculate animal's horizontal progress (0–100%)
+    const getAnimalProgress = (animal: Animal): number => {
+      const travelDistance = canvas.width - animal.width - 10; // from x=10 to right edge
+      if (travelDistance <= 0) return 100;
+      const traveled = animal.x - 10;
+      return Math.max(0, Math.min(100, (traveled / travelDistance) * 100));
+    };
+
+    // Barrage trigger checkpoints
+    const BARRAGE_CHECKPOINTS = [40, 60, 90];
+
+    // Check if a barrage should be triggered based on animal progression
+    const checkBarrageTrigger = (state: JungleState): boolean => {
+      if (!state.currentAnimal || state.sprinkler.behavior !== 'regular') return false;
+      const progress = getAnimalProgress(state.currentAnimal);
+      const s = state.sprinkler;
+
+      for (const checkpoint of BARRAGE_CHECKPOINTS) {
+        // Trigger when we cross the checkpoint and haven't already triggered for it
+        if (progress >= checkpoint && s.lastBarrageProgress < checkpoint) {
+          s.lastBarrageProgress = checkpoint;
+          return true;
+        }
+      }
+      return false;
+    };
+
+    // Transition to barrage phase
+    const startBarrage = (s: SprinklerBall) => {
+      s.behavior = 'barrage';
+      s.behaviorTimer = BARRAGE_DURATION_MIN + Math.random() * (BARRAGE_DURATION_MAX - BARRAGE_DURATION_MIN);
+      s.jetsPerSpawn = BARRAGE_JETS_PER_SPAWN;
+    };
+
+    // Transition to erratic phase
+    const startErratic = (s: SprinklerBall) => {
+      s.behavior = 'erratic';
+      s.behaviorTimer = ERRATIC_DURATION_MIN + Math.random() * (ERRATIC_DURATION_MAX - ERRATIC_DURATION_MIN);
+      s.jetsPerSpawn = NORMAL_JETS_PER_SPAWN;
+      s.erraticDir = Math.random() > 0.5 ? 1 : -1;
+      s.erraticChangeTimer = ERRATIC_CHANGE_INTERVAL;
+    };
+
+    // Transition to regular phase
+    const startRegular = (s: SprinklerBall) => {
+      s.behavior = 'regular';
+      s.behaviorTimer = REGULAR_DURATION_MIN + Math.random() * (REGULAR_DURATION_MAX - REGULAR_DURATION_MIN);
+      s.jetsPerSpawn = NORMAL_JETS_PER_SPAWN;
     };
 
     // Rendering functions
@@ -585,14 +672,56 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
 
       const state = gameStateRef.current;
       if (state && state.phase === 'playing') {
-        // Update sprinkler rotation
-        state.sprinkler.angle += state.sprinkler.rotationSpeed * deltaTime * state.speedMultiplier;
+        const s = state.sprinkler;
 
-        // Shoot fire jets
-        state.sprinkler.shootTimer += deltaTime * state.speedMultiplier;
-        if (state.sprinkler.shootTimer >= state.sprinkler.shootInterval) {
-          state.sprinkler.shootTimer = 0;
-          spawnFireJet(state);
+        // Update sprinkler rotation (speed unchanged — only jet count varies)
+        s.angle += s.rotationSpeed * deltaTime * state.speedMultiplier;
+
+        // Behavior cycle state machine
+        if (state.currentAnimal) {
+          // Check for barrage trigger at checkpoints (40%, 60%, 90%)
+          if (checkBarrageTrigger(state)) {
+            startBarrage(s);
+          }
+
+          // Update behavior timer
+          s.behaviorTimer -= deltaTime * state.speedMultiplier;
+
+          if (s.behaviorTimer <= 0) {
+            if (s.behavior === 'barrage') {
+              // After barrage → erratic phase
+              startErratic(s);
+            } else if (s.behavior === 'erratic') {
+              // After erratic → regular phase
+              startRegular(s);
+            } else {
+              // Regular phase expired → start a new random regular duration
+              s.behaviorTimer = REGULAR_DURATION_MIN + Math.random() * (REGULAR_DURATION_MAX - REGULAR_DURATION_MIN);
+            }
+          }
+
+          // Erratic movement: jerky left/right with random direction changes
+          if (s.behavior === 'erratic') {
+            s.erraticChangeTimer -= deltaTime;
+            if (s.erraticChangeTimer <= 0) {
+              s.erraticDir = s.erraticDir * -1; // flip direction
+              s.erraticChangeTimer = ERRATIC_CHANGE_INTERVAL * (0.5 + Math.random());
+            }
+            // Move ball horizontally in erratic direction
+            s.x += s.erraticDir * ERRATIC_MOVE_SPEED * deltaTime;
+            // Clamp ball position within canvas bounds
+            s.x = Math.max(s.radius, Math.min(canvas.width - s.radius, s.x));
+          }
+        }
+
+        // Shoot fire jets based on current behavior
+        const effectiveInterval = s.behavior === 'barrage'
+          ? s.shootInterval * BARRAGE_SHOOT_INTERVAL_FACTOR
+          : s.shootInterval;
+        s.shootTimer += deltaTime * state.speedMultiplier;
+        if (s.shootTimer >= effectiveInterval) {
+          s.shootTimer = 0;
+          spawnJetsForBehavior(state);
         }
 
         // Update fire jets
