@@ -42,13 +42,20 @@ export interface SprinklerBall {
   rotationSpeed: number; // radians per second
   shootInterval: number; // seconds between shots
   shootTimer: number;
-  // Behavior cycle state
+  // Behavior cycle state (controls shooting pattern, NOT movement)
   behavior: BallBehavior;
   behaviorTimer: number;   // seconds remaining in current behavior phase
   jetsPerSpawn: number;    // how many jets to spawn per tick
-  erraticDir: number;      // -1 (left) or +1 (right) for erratic movement
-  erraticChangeTimer: number; // time until next erratic direction change
   lastBarrageProgress: number; // last progression % where barrage was triggered (avoid re-trigger)
+  // Constant erratic movement state
+  targetX: number;         // destination x for current crossing
+  startX: number;          // origin x for current crossing
+  crossingDuration: number; // seconds to complete this crossing (1.5–3s)
+  crossingProgress: number; // 0–1 progress through current crossing
+  oscillationPhase: number; // phase accumulator for micro-oscillations
+  oscillationAmplitude: number; // pixel amplitude of micro-oscillations
+  oscillationFreq1: number; // first oscillation frequency (cycles per crossing)
+  oscillationFreq2: number; // second oscillation frequency (cycles per crossing)
 }
 
 export interface JungleState {

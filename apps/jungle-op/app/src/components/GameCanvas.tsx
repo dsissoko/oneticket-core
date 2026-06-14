@@ -28,15 +28,19 @@ const HP_BAR_BG = '#333333';
 const HP_BAR_FILL = '#27ae60';
 const HP_BAR_LOW = '#e74c3c';
 
-// Behavior cycle constants
+// Behavior cycle constants (shooting patterns only — movement is now constant)
 const BARRAGE_DURATION_MIN = 2.0; // seconds
 const BARRAGE_DURATION_MAX = 5.0;
 const ERRATIC_DURATION_MIN = 1.5;
 const ERRATIC_DURATION_MAX = 3.5;
 const REGULAR_DURATION_MIN = 2.0;
 const REGULAR_DURATION_MAX = 4.0;
-const ERRATIC_CHANGE_INTERVAL = 0.3; // seconds between erratic direction changes
-const ERRATIC_MOVE_SPEED = 180; // pixels per second for erratic ball movement
+// Constant erratic movement parameters
+const CROSSING_DURATION_MIN = 1.5; // seconds to cross screen
+const CROSSING_DURATION_MAX = 3.0;
+const OSCILLATION_FREQ_MIN = 3; // oscillations per crossing
+const OSCILLATION_FREQ_MAX = 8;
+const OSCILLATION_AMP_RATIO = 0.12; // fraction of crossing distance
 const BARRAGE_DISPERSION_ANGLE = Math.PI / 12; // ±15 degrees
 const NORMAL_JETS_PER_SPAWN = 3; // 1.5x base (was effectively 1)
 const BARRAGE_JETS_PER_SPAWN = 9; // 3x normal (3 * 3)
@@ -80,22 +84,55 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
     const getJungleZoneY = () => canvas.height * (1 - JUNGLE_ZONE_RATIO);
 
     // Initialize sprinkler ball
-    const createSprinkler = (): SprinklerBall => ({
-      x: canvas.width / 2,
-      y: canvas.height * 0.15,
-      radius: SPRINKLER_RADIUS,
-      angle: 0,
-      rotationSpeed: Math.PI * 0.8, // ~0.8 rotations per second
-      shootInterval: 0.35, // seconds between shots
-      shootTimer: 0,
-      // Behavior cycle
-      behavior: 'regular',
-      behaviorTimer: REGULAR_DURATION_MIN + Math.random() * (REGULAR_DURATION_MAX - REGULAR_DURATION_MIN),
-      jetsPerSpawn: NORMAL_JETS_PER_SPAWN,
-      erraticDir: 1,
-      erraticChangeTimer: ERRATIC_CHANGE_INTERVAL,
-      lastBarrageProgress: -1,
-    });
+    const createSprinkler = (): SprinklerBall => {
+      const startX = canvas.width / 2;
+      const sprinkler: SprinklerBall = {
+        x: startX,
+        y: canvas.height * 0.15,
+        radius: SPRINKLER_RADIUS,
+        angle: 0,
+        rotationSpeed: Math.PI * 0.8, // ~0.8 rotations per second
+        shootInterval: 0.35, // seconds between shots
+        shootTimer: 0,
+        // Behavior cycle (shooting patterns)
+        behavior: 'regular',
+        behaviorTimer: REGULAR_DURATION_MIN + Math.random() * (REGULAR_DURATION_MAX - REGULAR_DURATION_MIN),
+        jetsPerSpawn: NORMAL_JETS_PER_SPAWN,
+        lastBarrageProgress: -1,
+        // Constant erratic movement (placeholder — startNewCrossing sets real values)
+        targetX: startX,
+        startX,
+        crossingDuration: CROSSING_DURATION_MIN,
+        crossingProgress: 0,
+        oscillationPhase: 0,
+        oscillationAmplitude: 30,
+        oscillationFreq1: 5,
+        oscillationFreq2: 8,
+      };
+      // Start first crossing immediately
+      startNewCrossing(sprinkler);
+      return sprinkler;
+    };
+
+    // Start a new erratic crossing toward the opposite side of the screen
+    const startNewCrossing = (s: SprinklerBall) => {
+      const margin = s.radius + 20;
+      // Pick target on the opposite side, with some randomness
+      const goingRight = s.x < canvas.width / 2;
+      s.startX = s.x;
+      s.targetX = goingRight
+        ? canvas.width - margin - Math.random() * canvas.width * 0.3
+        : margin + Math.random() * canvas.width * 0.3;
+      s.crossingDuration = CROSSING_DURATION_MIN + Math.random() * (CROSSING_DURATION_MAX - CROSSING_DURATION_MIN);
+      s.crossingProgress = 0;
+      s.oscillationPhase = Math.random() * Math.PI * 2;
+      // Amplitude scales with crossing distance for visible micro-jitters
+      const distance = Math.abs(s.targetX - s.startX);
+      s.oscillationAmplitude = distance * OSCILLATION_AMP_RATIO;
+      // Oscillation frequencies set once per crossing for smooth motion
+      s.oscillationFreq1 = OSCILLATION_FREQ_MIN + Math.random() * (OSCILLATION_FREQ_MAX - OSCILLATION_FREQ_MIN);
+      s.oscillationFreq2 = s.oscillationFreq1 * 1.7; // harmonic-ish second wave
+    };
 
     // Initialize animal
     const createAnimal = (defIndex: number): Animal => {
@@ -197,13 +234,11 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
       s.jetsPerSpawn = BARRAGE_JETS_PER_SPAWN;
     };
 
-    // Transition to erratic phase
+    // Transition to erratic phase (shooting pattern only — movement is always active)
     const startErratic = (s: SprinklerBall) => {
       s.behavior = 'erratic';
       s.behaviorTimer = ERRATIC_DURATION_MIN + Math.random() * (ERRATIC_DURATION_MAX - ERRATIC_DURATION_MIN);
       s.jetsPerSpawn = NORMAL_JETS_PER_SPAWN;
-      s.erraticDir = Math.random() > 0.5 ? 1 : -1;
-      s.erraticChangeTimer = ERRATIC_CHANGE_INTERVAL;
     };
 
     // Transition to regular phase
@@ -711,18 +746,30 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
               s.behaviorTimer = REGULAR_DURATION_MIN + Math.random() * (REGULAR_DURATION_MAX - REGULAR_DURATION_MIN);
             }
           }
+        }
 
-          // Erratic movement: jerky left/right with random direction changes
-          if (s.behavior === 'erratic') {
-            s.erraticChangeTimer -= deltaTime;
-            if (s.erraticChangeTimer <= 0) {
-              s.erraticDir = s.erraticDir * -1; // flip direction
-              s.erraticChangeTimer = ERRATIC_CHANGE_INTERVAL * (0.5 + Math.random());
-            }
-            // Move ball horizontally in erratic direction
-            s.x += s.erraticDir * ERRATIC_MOVE_SPEED * deltaTime;
-            // Clamp ball position within canvas bounds
+        // Constant erratic movement — always active
+        {
+          s.crossingProgress += (deltaTime * state.speedMultiplier) / s.crossingDuration;
+
+          if (s.crossingProgress >= 1) {
+            // Crossing complete — start a new one
+            startNewCrossing(s);
+          } else {
+            // Interpolate base position
+            const p = s.crossingProgress;
+            const baseX = s.startX + (s.targetX - s.startX) * p;
+
+            // Micro-oscillations: two sin waves at different frequencies for irregularity
+            const oscillation = Math.sin(s.oscillationPhase + p * s.oscillationFreq1 * Math.PI * 2) * s.oscillationAmplitude * 0.6
+              + Math.sin(s.oscillationPhase + p * s.oscillationFreq2 * Math.PI * 2) * s.oscillationAmplitude * 0.4;
+
+            s.x = baseX + oscillation;
+            // Clamp within canvas bounds
             s.x = Math.max(s.radius, Math.min(canvas.width - s.radius, s.x));
+
+            // Slowly drift phase for variety across crossings
+            s.oscillationPhase += deltaTime * 0.5;
           }
         }
 
