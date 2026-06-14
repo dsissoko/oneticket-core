@@ -84,7 +84,7 @@
       "depends_on": [
         "G"
       ],
-      "status": "pending",
+      "status": "in_progress",
       "role": "architect"
     },
     {
