@@ -25,3 +25,4 @@ Start screen shows a slider ranging from -2x (slower than normal) to +2x (faster
 
 ## Related Sprints
 
+- [Sprint 1 — Jungle MVP](sprint-1-jungle-mvp/sprint.md)

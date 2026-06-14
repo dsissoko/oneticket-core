@@ -25,3 +25,4 @@ Animals appear in a fixed sequence from the left: Lion → Mouse → Girafe → 
 
 ## Related Sprints
 
+- [Sprint 1 — Jungle MVP](sprint-1-jungle-mvp/sprint.md)
