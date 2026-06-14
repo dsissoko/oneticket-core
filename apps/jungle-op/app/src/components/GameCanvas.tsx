@@ -181,6 +181,9 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
       ctx.fill();
     };
 
+    // Emojis that face left by default and need a horizontal flip
+    const FLIP_EMOJIS = new Set(['\u{1F992}', '\u{1F418}']); // giraffe, elephant
+
     const drawAnimal = (animal: Animal) => {
       // Draw HP bar background
       const hpBarX = animal.x + (animal.width - ANIMAL_HP_BAR_WIDTH) / 2;
@@ -199,11 +202,20 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
       ctx.textAlign = 'center';
       ctx.fillText(`${animal.hp}/${animal.def.maxHp}`, animal.x + animal.width / 2, hpBarY - 3);
 
-      // Draw emoji
+      // Draw emoji — flip horizontally for left-facing animals
       ctx.font = `${ANIMAL_EMOJI_SIZE}px serif`;
       ctx.textAlign = 'left';
       ctx.textBaseline = 'top';
-      ctx.fillText(animal.def.emoji, animal.x, animal.y);
+
+      if (FLIP_EMOJIS.has(animal.def.emoji)) {
+        ctx.save();
+        ctx.translate(animal.x + animal.width, animal.y);
+        ctx.scale(-1, 1);
+        ctx.fillText(animal.def.emoji, 0, 0);
+        ctx.restore();
+      } else {
+        ctx.fillText(animal.def.emoji, animal.x, animal.y);
+      }
     };
 
     const drawJungleZone = (state: JungleState) => {
