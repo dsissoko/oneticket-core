@@ -128,7 +128,7 @@
       "depends_on": [
         "K"
       ],
-      "status": "in_progress",
+      "status": "done",
       "role": "analyst"
     }
   ]
