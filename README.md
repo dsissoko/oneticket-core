@@ -47,6 +47,7 @@ The pipeline posts two live URLs directly in the PR comment:
 |---|---|---|---|---|
 | MonJournal — *personal journal, tags, timeline, surprise* | [docs](https://dsissoko.github.io/oneticket-core/monjournal/docs/) | [app](https://dsissoko.github.io/oneticket-core/monjournal/app/) | claude-haiku-4-5 | — |
 | Breakout — *classic arcade, vanilla JS, no dependencies* | [docs](https://dsissoko.github.io/oneticket-core/breakout/docs/) | [app](https://dsissoko.github.io/oneticket-core/breakout/app/) | claude-haiku-4-5 | — |
+| Jungle op — *ECS arcade designed by my 6 years old daughter* | [docs](https://dsissoko.github.io/oneticket-core/jungle-op/docs/) | [app](https://dsissoko.github.io/oneticket-core/jungle-op/app/) | qwen3.6-plus | — |
 | SpaceInvaders — *retro shooter, ECS architecture* | [docs](https://dsissoko.github.io/oneticket-core/spaceinvaders/docs/) | [app](https://dsissoko.github.io/oneticket-core/spaceinvaders/app/) | qwen3.6-plus, claude-haiku-4-5 | — |
 | AppShell — *the reusable scaffold, bootstrap any project with `@leaddev init-appshell`* | [docs](https://dsissoko.github.io/oneticket-core/appshell/docs/) | [app](https://dsissoko.github.io/oneticket-core/appshell/app/) | claude-haiku-4-5 | — |
 | Flashcards — *17 themes: world capitals, solfège, multiplications, conjugations and more* | [docs](https://dsissoko.github.io/oneticket-core/flashcards/docs/) | [app](https://dsissoko.github.io/oneticket-core/flashcards/app/) | minimax-m2.5, claude-haiku-4-5, claude-sonnet-4-6 | ✋ |
