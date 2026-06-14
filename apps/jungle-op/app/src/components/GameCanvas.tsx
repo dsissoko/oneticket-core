@@ -119,6 +119,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
       fireJets: [],
       currentAnimal: null,
       animalIndex: 0,
+      savedCount: 0,
       score: 0,
       speedMultiplier: 1.0,
       jungleZoneY: getJungleZoneY(),
@@ -472,18 +473,28 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
       ctx.fillStyle = OVERLAY_BG;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = '#27ae60';
+      const allSaved = state.savedCount >= ANIMAL_DEFS.length;
+
+      ctx.fillStyle = allSaved ? '#27ae60' : '#e67e22';
       ctx.font = 'bold 52px Arial';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText('VICTOIRE!', canvas.width / 2, canvas.height / 2 - 60);
+      ctx.fillText(allSaved ? 'VICTOIRE!' : 'PRESQUE!', canvas.width / 2, canvas.height / 2 - 60);
 
       ctx.fillStyle = TEXT_COLOR;
       ctx.font = '24px Arial';
       ctx.fillText(`Score final: ${state.score}`, canvas.width / 2, canvas.height / 2);
 
       ctx.font = '18px Arial';
-      ctx.fillText('Tous les animaux ont \u00E9t\u00E9 sauv\u00E9s!', canvas.width / 2, canvas.height / 2 + 35);
+      if (allSaved) {
+        ctx.fillText('Tous les animaux ont \u00E9t\u00E9 sauv\u00E9s!', canvas.width / 2, canvas.height / 2 + 35);
+      } else {
+        ctx.fillText(
+          `Vous avez presque sauv\u00E9 tous les animaux! (${state.savedCount}/${ANIMAL_DEFS.length})`,
+          canvas.width / 2,
+          canvas.height / 2 + 35
+        );
+      }
 
       // Restart button
       const buttonY = canvas.height / 2 + 80;
@@ -542,6 +553,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
       state.sprinkler = createSprinkler();
       state.fireJets = [];
       state.animalIndex = 0;
+      state.savedCount = 0;
       state.score = 0;
       state.currentAnimal = createAnimal(0);
       state.jungleZoneY = getJungleZoneY();
@@ -767,10 +779,11 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
           // Check if animal reached right edge (saved)
           if (animal.x + animal.width >= canvas.width - 5) {
             state.score += animal.hp;
+            state.savedCount++;
             state.animalIndex++;
             if (state.animalIndex >= ANIMAL_DEFS.length) {
-              // All animals passed — victory!
-              state.phase = 'victory';
+              // All animals processed — check how many were saved
+              state.phase = state.savedCount > 0 ? 'victory' : 'gameOver';
               state.currentAnimal = null;
             } else {
               state.currentAnimal = createAnimal(state.animalIndex);
@@ -801,8 +814,8 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
                 state.currentAnimal = null;
                 state.animalIndex++;
                 if (state.animalIndex >= ANIMAL_DEFS.length) {
-                  // All animals dead — game over
-                  state.phase = 'gameOver';
+                  // All animals processed — check how many were saved
+                  state.phase = state.savedCount > 0 ? 'victory' : 'gameOver';
                 } else {
                   state.currentAnimal = createAnimal(state.animalIndex);
                 }

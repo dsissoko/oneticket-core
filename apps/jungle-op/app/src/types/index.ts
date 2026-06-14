@@ -8,10 +8,10 @@ export interface AnimalDef {
 }
 
 export const ANIMAL_DEFS: AnimalDef[] = [
-  { emoji: '\u{1F981}', maxHp: 20 },  // Lion
-  { emoji: '\u{1F42D}', maxHp: 5 },   // Mouse
-  { emoji: '\u{1F992}', maxHp: 15 },  // Giraffe
-  { emoji: '\u{1F418}', maxHp: 25 },  // Elephant
+  { emoji: '\u{1F981}', maxHp: 7 },   // Lion  (20/3 ≈ 7)
+  { emoji: '\u{1F42D}', maxHp: 2 },   // Mouse (special: 2 PV)
+  { emoji: '\u{1F992}', maxHp: 5 },   // Giraffe (15/3 = 5)
+  { emoji: '\u{1F418}', maxHp: 8 },   // Elephant (25/3 ≈ 8)
 ];
 
 export interface Animal {
@@ -57,6 +57,7 @@ export interface JungleState {
   fireJets: FireJet[];
   currentAnimal: Animal | null;
   animalIndex: number;       // which animal in ANIMAL_DEFS is next
+  savedCount: number;        // how many animals successfully crossed
   score: number;
   speedMultiplier: number;
   jungleZoneY: number;       // y-coordinate where jungle zone starts
