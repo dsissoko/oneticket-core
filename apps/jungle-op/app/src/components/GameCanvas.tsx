@@ -33,8 +33,6 @@ const BARRAGE_DURATION_MIN = 2.0; // seconds
 const BARRAGE_DURATION_MAX = 5.0;
 const ERRATIC_DURATION_MIN = 1.5;
 const ERRATIC_DURATION_MAX = 3.5;
-const REGULAR_DURATION_MIN = 2.0;
-const REGULAR_DURATION_MAX = 4.0;
 const ERRATIC_MOVE_SPEED = 420; // pixels per second — assez rapide pour traverser l'écran
 const BARRAGE_DISPERSION_ANGLE = Math.PI / 12; // ±15 degrees
 const NORMAL_JETS_PER_SPAWN = 3; // 1.5x base (was effectively 1)
@@ -84,15 +82,13 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
       y: canvas.height * 0.15,
       radius: SPRINKLER_RADIUS,
       angle: 0,
-      rotationSpeed: Math.PI * 0.8, // ~0.8 rotations per second
-      shootInterval: 0.35, // seconds between shots
+      rotationSpeed: Math.PI * 0.8,
+      shootInterval: 0.35,
       shootTimer: 0,
-      // Behavior cycle
-      behavior: 'regular',
-      behaviorTimer: REGULAR_DURATION_MIN + Math.random() * (REGULAR_DURATION_MAX - REGULAR_DURATION_MIN),
+      behavior: 'erratic',
+      behaviorTimer: ERRATIC_DURATION_MIN + Math.random() * (ERRATIC_DURATION_MAX - ERRATIC_DURATION_MIN),
       jetsPerSpawn: NORMAL_JETS_PER_SPAWN,
-      erraticTargetX: canvas.width / 2,
-      regularTime: 0,
+      erraticTargetX: canvas.width * 0.1 + Math.random() * canvas.width * 0.8,
       lastBarrageProgress: -1,
     });
 
@@ -175,7 +171,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
 
     // Check if a barrage should be triggered based on animal progression
     const checkBarrageTrigger = (state: JungleState): boolean => {
-      if (!state.currentAnimal || state.sprinkler.behavior !== 'regular') return false;
+      if (!state.currentAnimal || state.sprinkler.behavior === 'barrage') return false;
       const progress = getAnimalProgress(state.currentAnimal);
       const s = state.sprinkler;
 
@@ -681,51 +677,35 @@ export const GameCanvas: React.FC<GameCanvasProps> = () => {
         // Update sprinkler rotation (speed unchanged — only jet count varies)
         s.angle += s.rotationSpeed * deltaTime * state.speedMultiplier;
 
-        // Behavior cycle state machine
-        if (state.currentAnimal) {
-          // Check for barrage trigger at checkpoints (40%, 60%, 90%)
-          if (checkBarrageTrigger(state)) {
-            startBarrage(s);
+        // Behavior cycle state machine — tourne en permanence (pas conditionné par currentAnimal)
+        s.behaviorTimer -= deltaTime * state.speedMultiplier;
+        if (s.behaviorTimer <= 0) {
+          if (s.behavior === 'barrage') {
+            startErratic(s);
+          } else {
+            startErratic(s);
           }
+        }
 
-          // Update behavior timer
-          s.behaviorTimer -= deltaTime * state.speedMultiplier;
+        // Barrage trigger aux checkpoints de progression de l'animal
+        if (state.currentAnimal && checkBarrageTrigger(state)) {
+          startBarrage(s);
+        }
 
-          if (s.behaviorTimer <= 0) {
-            if (s.behavior === 'barrage') {
-              // After barrage → erratic (jamais regular)
-              startErratic(s);
-            } else if (s.behavior === 'erratic') {
-              // After erratic → erratic avec nouvelle cible (mouvement continu)
-              startErratic(s);
-            }
+        // Mouvement erratique — permanent, même entre deux animaux
+        {
+          const dist = s.erraticTargetX - s.x;
+          if (Math.abs(dist) < 4) {
+            const minX = s.radius;
+            const maxX = canvas.width - s.radius;
+            s.erraticTargetX = s.x < canvas.width / 2
+              ? canvas.width * 0.5 + Math.random() * canvas.width * 0.45
+              : canvas.width * 0.05 + Math.random() * canvas.width * 0.45;
+            s.erraticTargetX = Math.max(minX, Math.min(maxX, s.erraticTargetX));
           }
-
-          // Erratic movement: fonce vers une cible aléatoire, en choisit une nouvelle à l'arrivée
-          if (s.behavior === 'erratic') {
-            const dist = s.erraticTargetX - s.x;
-            if (Math.abs(dist) < 4) {
-              // Cible atteinte → nouvelle cible aléatoire de l'autre côté de l'écran
-              const minX = s.radius;
-              const maxX = canvas.width - s.radius;
-              // Forcer la cible dans l'autre moitié pour garantir un vrai déplacement
-              s.erraticTargetX = s.x < canvas.width / 2
-                ? canvas.width * 0.5 + Math.random() * canvas.width * 0.45
-                : canvas.width * 0.05 + Math.random() * canvas.width * 0.45;
-              s.erraticTargetX = Math.max(minX, Math.min(maxX, s.erraticTargetX));
-            }
-            // Avancer vers la cible
-            const dir = dist > 0 ? 1 : -1;
-            s.x += dir * ERRATIC_MOVE_SPEED * deltaTime;
-            s.x = Math.max(s.radius, Math.min(canvas.width - s.radius, s.x));
-          }
-
-          // Regular movement: aller-retour sinusoïdal lent d'un bord à l'autre (désactivé — conservé pour usage futur)
-          // if (s.behavior === 'regular') {
-          //   s.regularTime += deltaTime * 0.6;
-          //   const amplitude = (canvas.width / 2 - s.radius);
-          //   s.x = canvas.width / 2 + Math.sin(s.regularTime) * amplitude;
-          // }
+          const dir = dist > 0 ? 1 : -1;
+          s.x += dir * ERRATIC_MOVE_SPEED * deltaTime;
+          s.x = Math.max(s.radius, Math.min(canvas.width - s.radius, s.x));
         }
 
         // Shoot fire jets based on current behavior
@@ -795,14 +775,16 @@ state.phase = 'victory';
         // Collision detection: fire jets vs current animal
         if (state.currentAnimal && state.fireJets.length > 0) {
           const animal = state.currentAnimal;
-          // Animal collision circle (center of emoji)
           const animalCircle = {
             x: animal.x + animal.width / 2,
             y: animal.y + animal.height / 2,
-            radius: animal.width / 2 * 0.7, // slightly smaller than full width for better feel
+            radius: animal.width / 2 * 0.7,
           };
 
           for (let i = state.fireJets.length - 1; i >= 0; i--) {
+            // Vérifier que l'animal est toujours vivant à chaque itération
+            if (!state.currentAnimal) break;
+
             const jet = state.fireJets[i];
             const jetCircle = { x: jet.x, y: jet.y, radius: jet.radius };
 
@@ -811,15 +793,16 @@ state.phase = 'victory';
               state.fireJets.splice(i, 1);
 
               if (animal.hp <= 0) {
-                // Animal died
+                // Animal mort — passer au suivant
                 state.currentAnimal = null;
                 state.animalIndex++;
                 if (state.animalIndex >= ANIMAL_DEFS.length) {
-                  // All animals processed — check how many were saved
                   state.phase = 'victory';
                 } else {
                   state.currentAnimal = createAnimal(state.animalIndex);
                 }
+                // Sortir immédiatement — plus d'animal à vérifier cette frame
+                break;
               }
             }
           }
