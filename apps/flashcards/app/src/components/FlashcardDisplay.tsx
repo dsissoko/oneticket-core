@@ -79,14 +79,14 @@ export function FlashcardDisplay({
 
         {/* Back face — rendered via engine (score + audio) with text answer */}
         <div
-          className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-border bg-card text-card-foreground text-center text-2xl font-semibold shadow-md"
+          className="absolute inset-0 flex flex-col items-center justify-center rounded-xl border-2 border-border bg-card text-card-foreground text-center text-2xl font-semibold shadow-md"
           style={{
             backfaceVisibility: 'hidden',
             transform: 'rotateY(180deg)',
           }}
           data-testid="flashcard-back"
-          ref={backRef}
         >
+          <div ref={backRef} />
           {card.label && (
             <p
               data-testid="flashcard-label"
