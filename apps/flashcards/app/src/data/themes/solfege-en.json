@@ -6,8 +6,16 @@
       "id": "en-c-whole",
       "label": "C",
       "front": {
-        "renderEngineId": "text",
-        "data": "C"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "C4",
+              "duration": "w"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -26,8 +34,16 @@
       "id": "en-c-half",
       "label": "C",
       "front": {
-        "renderEngineId": "text",
-        "data": "C"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "C4",
+              "duration": "h"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -46,8 +62,16 @@
       "id": "en-c-quarter",
       "label": "C",
       "front": {
-        "renderEngineId": "text",
-        "data": "C"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "C4",
+              "duration": "q"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -66,8 +90,16 @@
       "id": "en-d-whole",
       "label": "D",
       "front": {
-        "renderEngineId": "text",
-        "data": "D"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "D4",
+              "duration": "w"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -86,8 +118,16 @@
       "id": "en-d-half",
       "label": "D",
       "front": {
-        "renderEngineId": "text",
-        "data": "D"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "D4",
+              "duration": "h"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -106,8 +146,16 @@
       "id": "en-d-quarter",
       "label": "D",
       "front": {
-        "renderEngineId": "text",
-        "data": "D"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "D4",
+              "duration": "q"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -126,8 +174,16 @@
       "id": "en-e-whole",
       "label": "E",
       "front": {
-        "renderEngineId": "text",
-        "data": "E"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "E4",
+              "duration": "w"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -146,8 +202,16 @@
       "id": "en-e-half",
       "label": "E",
       "front": {
-        "renderEngineId": "text",
-        "data": "E"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "E4",
+              "duration": "h"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -166,8 +230,16 @@
       "id": "en-e-quarter",
       "label": "E",
       "front": {
-        "renderEngineId": "text",
-        "data": "E"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "E4",
+              "duration": "q"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -186,8 +258,16 @@
       "id": "en-f-whole",
       "label": "F",
       "front": {
-        "renderEngineId": "text",
-        "data": "F"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "F4",
+              "duration": "w"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -206,8 +286,16 @@
       "id": "en-f-half",
       "label": "F",
       "front": {
-        "renderEngineId": "text",
-        "data": "F"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "F4",
+              "duration": "h"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -226,8 +314,16 @@
       "id": "en-f-quarter",
       "label": "F",
       "front": {
-        "renderEngineId": "text",
-        "data": "F"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "F4",
+              "duration": "q"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -246,8 +342,16 @@
       "id": "en-g-whole",
       "label": "G",
       "front": {
-        "renderEngineId": "text",
-        "data": "G"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "G4",
+              "duration": "w"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -266,8 +370,16 @@
       "id": "en-g-half",
       "label": "G",
       "front": {
-        "renderEngineId": "text",
-        "data": "G"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "G4",
+              "duration": "h"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -286,8 +398,16 @@
       "id": "en-g-quarter",
       "label": "G",
       "front": {
-        "renderEngineId": "text",
-        "data": "G"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "G4",
+              "duration": "q"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -306,8 +426,16 @@
       "id": "en-a-whole",
       "label": "A",
       "front": {
-        "renderEngineId": "text",
-        "data": "A"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "A4",
+              "duration": "w"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -326,8 +454,16 @@
       "id": "en-a-half",
       "label": "A",
       "front": {
-        "renderEngineId": "text",
-        "data": "A"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "A4",
+              "duration": "h"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -346,8 +482,16 @@
       "id": "en-a-quarter",
       "label": "A",
       "front": {
-        "renderEngineId": "text",
-        "data": "A"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "A4",
+              "duration": "q"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -366,8 +510,16 @@
       "id": "en-b-whole",
       "label": "B",
       "front": {
-        "renderEngineId": "text",
-        "data": "B"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "B4",
+              "duration": "w"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -386,8 +538,16 @@
       "id": "en-b-half",
       "label": "B",
       "front": {
-        "renderEngineId": "text",
-        "data": "B"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "B4",
+              "duration": "h"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -406,8 +566,16 @@
       "id": "en-b-quarter",
       "label": "B",
       "front": {
-        "renderEngineId": "text",
-        "data": "B"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "B4",
+              "duration": "q"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",

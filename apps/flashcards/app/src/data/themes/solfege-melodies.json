@@ -6,8 +6,28 @@
       "id": "frere-jacques",
       "label": "Frère Jacques",
       "front": {
-        "renderEngineId": "text",
-        "data": "Frère Jacques"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "C4",
+              "duration": "q"
+            },
+            {
+              "note": "D4",
+              "duration": "q"
+            },
+            {
+              "note": "E4",
+              "duration": "q"
+            },
+            {
+              "note": "C4",
+              "duration": "q"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -38,8 +58,36 @@
       "id": "au-clair-de-la-lune",
       "label": "Au clair de la lune",
       "front": {
-        "renderEngineId": "text",
-        "data": "Au clair de la lune"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "C4",
+              "duration": "q"
+            },
+            {
+              "note": "C4",
+              "duration": "q"
+            },
+            {
+              "note": "C4",
+              "duration": "q"
+            },
+            {
+              "note": "D4",
+              "duration": "q"
+            },
+            {
+              "note": "E4",
+              "duration": "h"
+            },
+            {
+              "note": "D4",
+              "duration": "h"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -78,8 +126,36 @@
       "id": "une-souris-verte",
       "label": "Une souris verte",
       "front": {
-        "renderEngineId": "text",
-        "data": "Une souris verte"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "C4",
+              "duration": "q"
+            },
+            {
+              "note": "D4",
+              "duration": "q"
+            },
+            {
+              "note": "E4",
+              "duration": "q"
+            },
+            {
+              "note": "F4",
+              "duration": "q"
+            },
+            {
+              "note": "G4",
+              "duration": "h"
+            },
+            {
+              "note": "G4",
+              "duration": "h"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -118,8 +194,40 @@
       "id": "promenons-nous",
       "label": "Promenons-nous",
       "front": {
-        "renderEngineId": "text",
-        "data": "Promenons-nous"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "G4",
+              "duration": "q"
+            },
+            {
+              "note": "A4",
+              "duration": "q"
+            },
+            {
+              "note": "G4",
+              "duration": "q"
+            },
+            {
+              "note": "F4",
+              "duration": "q"
+            },
+            {
+              "note": "E4",
+              "duration": "q"
+            },
+            {
+              "note": "D4",
+              "duration": "q"
+            },
+            {
+              "note": "C4",
+              "duration": "h"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -162,8 +270,44 @@
       "id": "gamme-do-majeur",
       "label": "Gamme de do",
       "front": {
-        "renderEngineId": "text",
-        "data": "Gamme de do"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "C4",
+              "duration": "q"
+            },
+            {
+              "note": "D4",
+              "duration": "q"
+            },
+            {
+              "note": "E4",
+              "duration": "q"
+            },
+            {
+              "note": "F4",
+              "duration": "q"
+            },
+            {
+              "note": "G4",
+              "duration": "q"
+            },
+            {
+              "note": "A4",
+              "duration": "q"
+            },
+            {
+              "note": "B4",
+              "duration": "q"
+            },
+            {
+              "note": "C5",
+              "duration": "h"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",

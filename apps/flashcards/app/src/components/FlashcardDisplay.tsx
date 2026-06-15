@@ -68,13 +68,25 @@ export function FlashcardDisplay({
             transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
         >
-        {/* Front face — rendered via engine */}
+        {/* Front face — rendered via engine (score only, no text hints) */}
         <div
           className="absolute inset-0 flex flex-col items-center justify-center rounded-xl border-2 border-border bg-card text-card-foreground text-center text-2xl font-semibold shadow-md backface-hidden"
           style={{ backfaceVisibility: 'hidden' }}
           data-testid="flashcard-front"
         >
           <div ref={frontRef} />
+        </div>
+
+        {/* Back face — rendered via engine (score + audio) with text answer */}
+        <div
+          className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-border bg-card text-card-foreground text-center text-2xl font-semibold shadow-md"
+          style={{
+            backfaceVisibility: 'hidden',
+            transform: 'rotateY(180deg)',
+          }}
+          data-testid="flashcard-back"
+          ref={backRef}
+        >
           {card.label && (
             <p
               data-testid="flashcard-label"
@@ -90,17 +102,6 @@ export function FlashcardDisplay({
             </p>
           )}
         </div>
-
-        {/* Back face — rendered via engine */}
-        <div
-          className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-border bg-card text-card-foreground text-center text-2xl font-semibold shadow-md"
-          style={{
-            backfaceVisibility: 'hidden',
-            transform: 'rotateY(180deg)',
-          }}
-          data-testid="flashcard-back"
-          ref={backRef}
-        />
       </button>
       </div>
     </div>

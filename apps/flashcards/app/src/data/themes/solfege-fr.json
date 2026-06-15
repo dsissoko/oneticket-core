@@ -6,8 +6,16 @@
       "id": "fr-do-whole",
       "label": "do",
       "front": {
-        "renderEngineId": "text",
-        "data": "do"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "C4",
+              "duration": "w"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -26,8 +34,16 @@
       "id": "fr-do-half",
       "label": "do",
       "front": {
-        "renderEngineId": "text",
-        "data": "do"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "C4",
+              "duration": "h"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -46,8 +62,16 @@
       "id": "fr-do-quarter",
       "label": "do",
       "front": {
-        "renderEngineId": "text",
-        "data": "do"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "C4",
+              "duration": "q"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -66,8 +90,16 @@
       "id": "fr-re-whole",
       "label": "ré",
       "front": {
-        "renderEngineId": "text",
-        "data": "ré"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "D4",
+              "duration": "w"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -86,8 +118,16 @@
       "id": "fr-re-half",
       "label": "ré",
       "front": {
-        "renderEngineId": "text",
-        "data": "ré"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "D4",
+              "duration": "h"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -106,8 +146,16 @@
       "id": "fr-re-quarter",
       "label": "ré",
       "front": {
-        "renderEngineId": "text",
-        "data": "ré"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "D4",
+              "duration": "q"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -126,8 +174,16 @@
       "id": "fr-mi-whole",
       "label": "mi",
       "front": {
-        "renderEngineId": "text",
-        "data": "mi"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "E4",
+              "duration": "w"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -146,8 +202,16 @@
       "id": "fr-mi-half",
       "label": "mi",
       "front": {
-        "renderEngineId": "text",
-        "data": "mi"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "E4",
+              "duration": "h"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -166,8 +230,16 @@
       "id": "fr-mi-quarter",
       "label": "mi",
       "front": {
-        "renderEngineId": "text",
-        "data": "mi"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "E4",
+              "duration": "q"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -186,8 +258,16 @@
       "id": "fr-fa-whole",
       "label": "fa",
       "front": {
-        "renderEngineId": "text",
-        "data": "fa"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "F4",
+              "duration": "w"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -206,8 +286,16 @@
       "id": "fr-fa-half",
       "label": "fa",
       "front": {
-        "renderEngineId": "text",
-        "data": "fa"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "F4",
+              "duration": "h"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -226,8 +314,16 @@
       "id": "fr-fa-quarter",
       "label": "fa",
       "front": {
-        "renderEngineId": "text",
-        "data": "fa"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "F4",
+              "duration": "q"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -246,8 +342,16 @@
       "id": "fr-sol-whole",
       "label": "sol",
       "front": {
-        "renderEngineId": "text",
-        "data": "sol"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "G4",
+              "duration": "w"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -266,8 +370,16 @@
       "id": "fr-sol-half",
       "label": "sol",
       "front": {
-        "renderEngineId": "text",
-        "data": "sol"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "G4",
+              "duration": "h"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -286,8 +398,16 @@
       "id": "fr-sol-quarter",
       "label": "sol",
       "front": {
-        "renderEngineId": "text",
-        "data": "sol"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "G4",
+              "duration": "q"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -306,8 +426,16 @@
       "id": "fr-la-whole",
       "label": "la",
       "front": {
-        "renderEngineId": "text",
-        "data": "la"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "A4",
+              "duration": "w"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -326,8 +454,16 @@
       "id": "fr-la-half",
       "label": "la",
       "front": {
-        "renderEngineId": "text",
-        "data": "la"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "A4",
+              "duration": "h"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -346,8 +482,16 @@
       "id": "fr-la-quarter",
       "label": "la",
       "front": {
-        "renderEngineId": "text",
-        "data": "la"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "A4",
+              "duration": "q"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -366,8 +510,16 @@
       "id": "fr-si-whole",
       "label": "si",
       "front": {
-        "renderEngineId": "text",
-        "data": "si"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "B4",
+              "duration": "w"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -386,8 +538,16 @@
       "id": "fr-si-half",
       "label": "si",
       "front": {
-        "renderEngineId": "text",
-        "data": "si"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "B4",
+              "duration": "h"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -406,8 +566,16 @@
       "id": "fr-si-quarter",
       "label": "si",
       "front": {
-        "renderEngineId": "text",
-        "data": "si"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "B4",
+              "duration": "q"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",

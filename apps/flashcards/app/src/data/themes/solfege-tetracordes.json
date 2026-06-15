@@ -6,8 +6,28 @@
       "id": "do-re-mi-fa",
       "label": "do ré mi fa",
       "front": {
-        "renderEngineId": "text",
-        "data": "do ré mi fa"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "C4",
+              "duration": "q"
+            },
+            {
+              "note": "D4",
+              "duration": "q"
+            },
+            {
+              "note": "E4",
+              "duration": "q"
+            },
+            {
+              "note": "F4",
+              "duration": "q"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -38,8 +58,28 @@
       "id": "mi-fa-sol-la",
       "label": "mi fa sol la",
       "front": {
-        "renderEngineId": "text",
-        "data": "mi fa sol la"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "E4",
+              "duration": "q"
+            },
+            {
+              "note": "F4",
+              "duration": "q"
+            },
+            {
+              "note": "G4",
+              "duration": "q"
+            },
+            {
+              "note": "A4",
+              "duration": "q"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -70,8 +110,28 @@
       "id": "sol-la-si-do",
       "label": "sol la si do",
       "front": {
-        "renderEngineId": "text",
-        "data": "sol la si do"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "G4",
+              "duration": "q"
+            },
+            {
+              "note": "A4",
+              "duration": "q"
+            },
+            {
+              "note": "B4",
+              "duration": "q"
+            },
+            {
+              "note": "C5",
+              "duration": "q"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -102,8 +162,28 @@
       "id": "fa-mi-re-do",
       "label": "fa mi ré do",
       "front": {
-        "renderEngineId": "text",
-        "data": "fa mi ré do"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "F4",
+              "duration": "q"
+            },
+            {
+              "note": "E4",
+              "duration": "q"
+            },
+            {
+              "note": "D4",
+              "duration": "q"
+            },
+            {
+              "note": "C4",
+              "duration": "q"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -134,8 +214,28 @@
       "id": "la-sol-fa-mi",
       "label": "la sol fa mi",
       "front": {
-        "renderEngineId": "text",
-        "data": "la sol fa mi"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "A4",
+              "duration": "q"
+            },
+            {
+              "note": "G4",
+              "duration": "q"
+            },
+            {
+              "note": "F4",
+              "duration": "q"
+            },
+            {
+              "note": "E4",
+              "duration": "q"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
@@ -166,8 +266,28 @@
       "id": "do-si-la-sol",
       "label": "do si la sol",
       "front": {
-        "renderEngineId": "text",
-        "data": "do si la sol"
+        "renderEngineId": "score",
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "C5",
+              "duration": "q"
+            },
+            {
+              "note": "B4",
+              "duration": "q"
+            },
+            {
+              "note": "A4",
+              "duration": "q"
+            },
+            {
+              "note": "G4",
+              "duration": "q"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
