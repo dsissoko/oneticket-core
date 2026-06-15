@@ -6,252 +6,420 @@
       "id": "do-whole",
       "label": "do / C",
       "front": {
-        "renderEngineId": "score",
-        "data": { "clef": "treble", "notes": [{ "note": "C4", "duration": "w" }] }
+        "renderEngineId": "text",
+        "data": "do / C"
       },
       "back": {
         "renderEngineId": "score-audio",
-        "data": { "clef": "treble", "notes": [{ "note": "C4", "duration": "w" }] }
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "C4",
+              "duration": "w"
+            }
+          ]
+        }
       }
     },
     {
       "id": "do-half",
       "label": "do / C",
       "front": {
-        "renderEngineId": "score",
-        "data": { "clef": "treble", "notes": [{ "note": "C4", "duration": "h" }] }
+        "renderEngineId": "text",
+        "data": "do / C"
       },
       "back": {
         "renderEngineId": "score-audio",
-        "data": { "clef": "treble", "notes": [{ "note": "C4", "duration": "h" }] }
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "C4",
+              "duration": "h"
+            }
+          ]
+        }
       }
     },
     {
       "id": "do-quarter",
       "label": "do / C",
       "front": {
-        "renderEngineId": "score",
-        "data": { "clef": "treble", "notes": [{ "note": "C4", "duration": "q" }] }
+        "renderEngineId": "text",
+        "data": "do / C"
       },
       "back": {
         "renderEngineId": "score-audio",
-        "data": { "clef": "treble", "notes": [{ "note": "C4", "duration": "q" }] }
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "C4",
+              "duration": "q"
+            }
+          ]
+        }
       }
     },
     {
       "id": "re-whole",
       "label": "ré / D",
       "front": {
-        "renderEngineId": "score",
-        "data": { "clef": "treble", "notes": [{ "note": "D4", "duration": "w" }] }
+        "renderEngineId": "text",
+        "data": "ré / D"
       },
       "back": {
         "renderEngineId": "score-audio",
-        "data": { "clef": "treble", "notes": [{ "note": "D4", "duration": "w" }] }
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "D4",
+              "duration": "w"
+            }
+          ]
+        }
       }
     },
     {
       "id": "re-half",
       "label": "ré / D",
       "front": {
-        "renderEngineId": "score",
-        "data": { "clef": "treble", "notes": [{ "note": "D4", "duration": "h" }] }
+        "renderEngineId": "text",
+        "data": "ré / D"
       },
       "back": {
         "renderEngineId": "score-audio",
-        "data": { "clef": "treble", "notes": [{ "note": "D4", "duration": "h" }] }
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "D4",
+              "duration": "h"
+            }
+          ]
+        }
       }
     },
     {
       "id": "re-quarter",
       "label": "ré / D",
       "front": {
-        "renderEngineId": "score",
-        "data": { "clef": "treble", "notes": [{ "note": "D4", "duration": "q" }] }
+        "renderEngineId": "text",
+        "data": "ré / D"
       },
       "back": {
         "renderEngineId": "score-audio",
-        "data": { "clef": "treble", "notes": [{ "note": "D4", "duration": "q" }] }
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "D4",
+              "duration": "q"
+            }
+          ]
+        }
       }
     },
     {
       "id": "mi-whole",
       "label": "mi / E",
       "front": {
-        "renderEngineId": "score",
-        "data": { "clef": "treble", "notes": [{ "note": "E4", "duration": "w" }] }
+        "renderEngineId": "text",
+        "data": "mi / E"
       },
       "back": {
         "renderEngineId": "score-audio",
-        "data": { "clef": "treble", "notes": [{ "note": "E4", "duration": "w" }] }
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "E4",
+              "duration": "w"
+            }
+          ]
+        }
       }
     },
     {
       "id": "mi-half",
       "label": "mi / E",
       "front": {
-        "renderEngineId": "score",
-        "data": { "clef": "treble", "notes": [{ "note": "E4", "duration": "h" }] }
+        "renderEngineId": "text",
+        "data": "mi / E"
       },
       "back": {
         "renderEngineId": "score-audio",
-        "data": { "clef": "treble", "notes": [{ "note": "E4", "duration": "h" }] }
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "E4",
+              "duration": "h"
+            }
+          ]
+        }
       }
     },
     {
       "id": "mi-quarter",
       "label": "mi / E",
       "front": {
-        "renderEngineId": "score",
-        "data": { "clef": "treble", "notes": [{ "note": "E4", "duration": "q" }] }
+        "renderEngineId": "text",
+        "data": "mi / E"
       },
       "back": {
         "renderEngineId": "score-audio",
-        "data": { "clef": "treble", "notes": [{ "note": "E4", "duration": "q" }] }
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "E4",
+              "duration": "q"
+            }
+          ]
+        }
       }
     },
     {
       "id": "fa-whole",
       "label": "fa / F",
       "front": {
-        "renderEngineId": "score",
-        "data": { "clef": "treble", "notes": [{ "note": "F4", "duration": "w" }] }
+        "renderEngineId": "text",
+        "data": "fa / F"
       },
       "back": {
         "renderEngineId": "score-audio",
-        "data": { "clef": "treble", "notes": [{ "note": "F4", "duration": "w" }] }
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "F4",
+              "duration": "w"
+            }
+          ]
+        }
       }
     },
     {
       "id": "fa-half",
       "label": "fa / F",
       "front": {
-        "renderEngineId": "score",
-        "data": { "clef": "treble", "notes": [{ "note": "F4", "duration": "h" }] }
+        "renderEngineId": "text",
+        "data": "fa / F"
       },
       "back": {
         "renderEngineId": "score-audio",
-        "data": { "clef": "treble", "notes": [{ "note": "F4", "duration": "h" }] }
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "F4",
+              "duration": "h"
+            }
+          ]
+        }
       }
     },
     {
       "id": "fa-quarter",
       "label": "fa / F",
       "front": {
-        "renderEngineId": "score",
-        "data": { "clef": "treble", "notes": [{ "note": "F4", "duration": "q" }] }
+        "renderEngineId": "text",
+        "data": "fa / F"
       },
       "back": {
         "renderEngineId": "score-audio",
-        "data": { "clef": "treble", "notes": [{ "note": "F4", "duration": "q" }] }
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "F4",
+              "duration": "q"
+            }
+          ]
+        }
       }
     },
     {
       "id": "sol-whole",
       "label": "sol / G",
       "front": {
-        "renderEngineId": "score",
-        "data": { "clef": "treble", "notes": [{ "note": "G4", "duration": "w" }] }
+        "renderEngineId": "text",
+        "data": "sol / G"
       },
       "back": {
         "renderEngineId": "score-audio",
-        "data": { "clef": "treble", "notes": [{ "note": "G4", "duration": "w" }] }
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "G4",
+              "duration": "w"
+            }
+          ]
+        }
       }
     },
     {
       "id": "sol-half",
       "label": "sol / G",
       "front": {
-        "renderEngineId": "score",
-        "data": { "clef": "treble", "notes": [{ "note": "G4", "duration": "h" }] }
+        "renderEngineId": "text",
+        "data": "sol / G"
       },
       "back": {
         "renderEngineId": "score-audio",
-        "data": { "clef": "treble", "notes": [{ "note": "G4", "duration": "h" }] }
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "G4",
+              "duration": "h"
+            }
+          ]
+        }
       }
     },
     {
       "id": "sol-quarter",
       "label": "sol / G",
       "front": {
-        "renderEngineId": "score",
-        "data": { "clef": "treble", "notes": [{ "note": "G4", "duration": "q" }] }
+        "renderEngineId": "text",
+        "data": "sol / G"
       },
       "back": {
         "renderEngineId": "score-audio",
-        "data": { "clef": "treble", "notes": [{ "note": "G4", "duration": "q" }] }
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "G4",
+              "duration": "q"
+            }
+          ]
+        }
       }
     },
     {
       "id": "la-whole",
       "label": "la / A",
       "front": {
-        "renderEngineId": "score",
-        "data": { "clef": "treble", "notes": [{ "note": "A4", "duration": "w" }] }
+        "renderEngineId": "text",
+        "data": "la / A"
       },
       "back": {
         "renderEngineId": "score-audio",
-        "data": { "clef": "treble", "notes": [{ "note": "A4", "duration": "w" }] }
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "A4",
+              "duration": "w"
+            }
+          ]
+        }
       }
     },
     {
       "id": "la-half",
       "label": "la / A",
       "front": {
-        "renderEngineId": "score",
-        "data": { "clef": "treble", "notes": [{ "note": "A4", "duration": "h" }] }
+        "renderEngineId": "text",
+        "data": "la / A"
       },
       "back": {
         "renderEngineId": "score-audio",
-        "data": { "clef": "treble", "notes": [{ "note": "A4", "duration": "h" }] }
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "A4",
+              "duration": "h"
+            }
+          ]
+        }
       }
     },
     {
       "id": "la-quarter",
       "label": "la / A",
       "front": {
-        "renderEngineId": "score",
-        "data": { "clef": "treble", "notes": [{ "note": "A4", "duration": "q" }] }
+        "renderEngineId": "text",
+        "data": "la / A"
       },
       "back": {
         "renderEngineId": "score-audio",
-        "data": { "clef": "treble", "notes": [{ "note": "A4", "duration": "q" }] }
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "A4",
+              "duration": "q"
+            }
+          ]
+        }
       }
     },
     {
       "id": "si-whole",
       "label": "si / B",
       "front": {
-        "renderEngineId": "score",
-        "data": { "clef": "treble", "notes": [{ "note": "B4", "duration": "w" }] }
+        "renderEngineId": "text",
+        "data": "si / B"
       },
       "back": {
         "renderEngineId": "score-audio",
-        "data": { "clef": "treble", "notes": [{ "note": "B4", "duration": "w" }] }
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "B4",
+              "duration": "w"
+            }
+          ]
+        }
       }
     },
     {
       "id": "si-half",
       "label": "si / B",
       "front": {
-        "renderEngineId": "score",
-        "data": { "clef": "treble", "notes": [{ "note": "B4", "duration": "h" }] }
+        "renderEngineId": "text",
+        "data": "si / B"
       },
       "back": {
         "renderEngineId": "score-audio",
-        "data": { "clef": "treble", "notes": [{ "note": "B4", "duration": "h" }] }
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "B4",
+              "duration": "h"
+            }
+          ]
+        }
       }
     },
     {
       "id": "si-quarter",
       "label": "si / B",
       "front": {
-        "renderEngineId": "score",
-        "data": { "clef": "treble", "notes": [{ "note": "B4", "duration": "q" }] }
+        "renderEngineId": "text",
+        "data": "si / B"
       },
       "back": {
         "renderEngineId": "score-audio",
-        "data": { "clef": "treble", "notes": [{ "note": "B4", "duration": "q" }] }
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "B4",
+              "duration": "q"
+            }
+          ]
+        }
       }
     }
   ]
