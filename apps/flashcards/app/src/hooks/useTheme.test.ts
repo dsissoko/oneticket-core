@@ -14,9 +14,9 @@ describe('useTheme', () => {
     vi.unstubAllGlobals();
   });
 
-  it('loads 17 themes including africa', () => {
+  it('loads 19 themes including africa', () => {
     const { result } = renderHook(() => useTheme());
-    expect(result.current.themes).toHaveLength(17);
+    expect(result.current.themes).toHaveLength(19);
     expect(result.current.themes[0].id).toBe('africa');
   });
 

@@ -7,21 +7,51 @@
       "label": "do ré mi fa",
       "front": {
         "renderEngineId": "score",
-        "data": { "clef": "treble", "notes": [
-          { "note": "C4", "duration": "q" },
-          { "note": "D4", "duration": "q" },
-          { "note": "E4", "duration": "q" },
-          { "note": "F4", "duration": "q" }
-        ]}
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "C4",
+              "duration": "q"
+            },
+            {
+              "note": "D4",
+              "duration": "q"
+            },
+            {
+              "note": "E4",
+              "duration": "q"
+            },
+            {
+              "note": "F4",
+              "duration": "q"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
-        "data": { "clef": "treble", "notes": [
-          { "note": "C4", "duration": "q" },
-          { "note": "D4", "duration": "q" },
-          { "note": "E4", "duration": "q" },
-          { "note": "F4", "duration": "q" }
-        ]}
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "C4",
+              "duration": "q"
+            },
+            {
+              "note": "D4",
+              "duration": "q"
+            },
+            {
+              "note": "E4",
+              "duration": "q"
+            },
+            {
+              "note": "F4",
+              "duration": "q"
+            }
+          ]
+        }
       }
     },
     {
@@ -29,21 +59,51 @@
       "label": "mi fa sol la",
       "front": {
         "renderEngineId": "score",
-        "data": { "clef": "treble", "notes": [
-          { "note": "E4", "duration": "q" },
-          { "note": "F4", "duration": "q" },
-          { "note": "G4", "duration": "q" },
-          { "note": "A4", "duration": "q" }
-        ]}
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "E4",
+              "duration": "q"
+            },
+            {
+              "note": "F4",
+              "duration": "q"
+            },
+            {
+              "note": "G4",
+              "duration": "q"
+            },
+            {
+              "note": "A4",
+              "duration": "q"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
-        "data": { "clef": "treble", "notes": [
-          { "note": "E4", "duration": "q" },
-          { "note": "F4", "duration": "q" },
-          { "note": "G4", "duration": "q" },
-          { "note": "A4", "duration": "q" }
-        ]}
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "E4",
+              "duration": "q"
+            },
+            {
+              "note": "F4",
+              "duration": "q"
+            },
+            {
+              "note": "G4",
+              "duration": "q"
+            },
+            {
+              "note": "A4",
+              "duration": "q"
+            }
+          ]
+        }
       }
     },
     {
@@ -51,21 +111,51 @@
       "label": "sol la si do",
       "front": {
         "renderEngineId": "score",
-        "data": { "clef": "treble", "notes": [
-          { "note": "G4", "duration": "q" },
-          { "note": "A4", "duration": "q" },
-          { "note": "B4", "duration": "q" },
-          { "note": "C5", "duration": "q" }
-        ]}
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "G4",
+              "duration": "q"
+            },
+            {
+              "note": "A4",
+              "duration": "q"
+            },
+            {
+              "note": "B4",
+              "duration": "q"
+            },
+            {
+              "note": "C5",
+              "duration": "q"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
-        "data": { "clef": "treble", "notes": [
-          { "note": "G4", "duration": "q" },
-          { "note": "A4", "duration": "q" },
-          { "note": "B4", "duration": "q" },
-          { "note": "C5", "duration": "q" }
-        ]}
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "G4",
+              "duration": "q"
+            },
+            {
+              "note": "A4",
+              "duration": "q"
+            },
+            {
+              "note": "B4",
+              "duration": "q"
+            },
+            {
+              "note": "C5",
+              "duration": "q"
+            }
+          ]
+        }
       }
     },
     {
@@ -73,21 +163,51 @@
       "label": "fa mi ré do",
       "front": {
         "renderEngineId": "score",
-        "data": { "clef": "treble", "notes": [
-          { "note": "F4", "duration": "q" },
-          { "note": "E4", "duration": "q" },
-          { "note": "D4", "duration": "q" },
-          { "note": "C4", "duration": "q" }
-        ]}
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "F4",
+              "duration": "q"
+            },
+            {
+              "note": "E4",
+              "duration": "q"
+            },
+            {
+              "note": "D4",
+              "duration": "q"
+            },
+            {
+              "note": "C4",
+              "duration": "q"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
-        "data": { "clef": "treble", "notes": [
-          { "note": "F4", "duration": "q" },
-          { "note": "E4", "duration": "q" },
-          { "note": "D4", "duration": "q" },
-          { "note": "C4", "duration": "q" }
-        ]}
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "F4",
+              "duration": "q"
+            },
+            {
+              "note": "E4",
+              "duration": "q"
+            },
+            {
+              "note": "D4",
+              "duration": "q"
+            },
+            {
+              "note": "C4",
+              "duration": "q"
+            }
+          ]
+        }
       }
     },
     {
@@ -95,21 +215,51 @@
       "label": "la sol fa mi",
       "front": {
         "renderEngineId": "score",
-        "data": { "clef": "treble", "notes": [
-          { "note": "A4", "duration": "q" },
-          { "note": "G4", "duration": "q" },
-          { "note": "F4", "duration": "q" },
-          { "note": "E4", "duration": "q" }
-        ]}
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "A4",
+              "duration": "q"
+            },
+            {
+              "note": "G4",
+              "duration": "q"
+            },
+            {
+              "note": "F4",
+              "duration": "q"
+            },
+            {
+              "note": "E4",
+              "duration": "q"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
-        "data": { "clef": "treble", "notes": [
-          { "note": "A4", "duration": "q" },
-          { "note": "G4", "duration": "q" },
-          { "note": "F4", "duration": "q" },
-          { "note": "E4", "duration": "q" }
-        ]}
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "A4",
+              "duration": "q"
+            },
+            {
+              "note": "G4",
+              "duration": "q"
+            },
+            {
+              "note": "F4",
+              "duration": "q"
+            },
+            {
+              "note": "E4",
+              "duration": "q"
+            }
+          ]
+        }
       }
     },
     {
@@ -117,21 +267,51 @@
       "label": "do si la sol",
       "front": {
         "renderEngineId": "score",
-        "data": { "clef": "treble", "notes": [
-          { "note": "C5", "duration": "q" },
-          { "note": "B4", "duration": "q" },
-          { "note": "A4", "duration": "q" },
-          { "note": "G4", "duration": "q" }
-        ]}
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "C5",
+              "duration": "q"
+            },
+            {
+              "note": "B4",
+              "duration": "q"
+            },
+            {
+              "note": "A4",
+              "duration": "q"
+            },
+            {
+              "note": "G4",
+              "duration": "q"
+            }
+          ]
+        }
       },
       "back": {
         "renderEngineId": "score-audio",
-        "data": { "clef": "treble", "notes": [
-          { "note": "C5", "duration": "q" },
-          { "note": "B4", "duration": "q" },
-          { "note": "A4", "duration": "q" },
-          { "note": "G4", "duration": "q" }
-        ]}
+        "data": {
+          "clef": "treble",
+          "notes": [
+            {
+              "note": "C5",
+              "duration": "q"
+            },
+            {
+              "note": "B4",
+              "duration": "q"
+            },
+            {
+              "note": "A4",
+              "duration": "q"
+            },
+            {
+              "note": "G4",
+              "duration": "q"
+            }
+          ]
+        }
       }
     }
   ]
