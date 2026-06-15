@@ -58,7 +58,7 @@ cleanup_on_success: true
 #
 # Set to 'oneticket-core' to work on the framework itself.
 # Set to your project name (e.g. breakout) to work on an application project.
-current_project: jungle-op
+current_project: flashcards
 
 # ---------------------------------------------------------------------------
 # Documentation path resolution
