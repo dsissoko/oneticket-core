@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="oneticket.png" alt="OneTicket logo" width="300" />
+  <img src="oneticket.png" alt="OneTicket logo" width="600" />
 </p>
 
 # oneticket-core
