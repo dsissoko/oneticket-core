@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.8.0](https://github.com/dsissoko/oneticket-core/compare/OneTicket-v0.7.0...OneTicket-v0.8.0) (2026-06-12)
+
+
+### Features
+
+* **appshell-auth0:** add Auth0-authenticated appshell template ([aea9c5a](https://github.com/dsissoko/oneticket-core/commit/aea9c5a95c50544790ff4c5a6824dfe561474b76))
+* **appshell-auth0:** add Auth0-authenticated appshell template ([b446da0](https://github.com/dsissoko/oneticket-core/commit/b446da0b02af041ebf8bae433c5759d2b083362c))
+* **pipeline:** sequential execution by default, --parallel opts into FAN-OUT ([0371965](https://github.com/dsissoko/oneticket-core/commit/037196504cdf243325e655f4319763dbfbe640af))
+* **pipeline:** sequential execution by default, --parallel opts into FAN-OUT ([cd4e8fb](https://github.com/dsissoko/oneticket-core/commit/cd4e8fb7eae61622b8a18ed57b9f19ae0f3a8502))
+
+
+### Bug Fixes
+
+* **ci:** prevent deploy-prod from running on pull_request events ([4f9b001](https://github.com/dsissoko/oneticket-core/commit/4f9b0010542d4423af21e76a19639a94a3d8674d))
+* **ci:** restrict [@role](https://github.com/role) dispatch to OWNER, COLLABORATOR, MEMBER ([f549719](https://github.com/dsissoko/oneticket-core/commit/f54971910e6af622da700d3fe66858d9bd394ea4))
+* **ci:** restrict [@role](https://github.com/role) dispatch to OWNER, COLLABORATOR, MEMBER ([ede0b3f](https://github.com/dsissoko/oneticket-core/commit/ede0b3fe7cdd83afe9065e80846cbc2c3a640266))
+* **dispatch:** remove duplicate keys in buildPrompt call ([d7a14bf](https://github.com/dsissoko/oneticket-core/commit/d7a14bfb89517f788bfcb2151f1a53bab93e3a04))
+* **docs-site:** ensure .nojekyll in deploy artifact ([a62e0ee](https://github.com/dsissoko/oneticket-core/commit/a62e0ee0d1fa123bf31c0690fdf48fbfde68ee99))
+
 ## [0.7.0](https://github.com/dsissoko/oneticket-core/compare/OneTicket-v0.6.0...OneTicket-v0.7.0) (2026-06-10)
 
 
